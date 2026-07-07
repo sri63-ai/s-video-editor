@@ -1,0 +1,276 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S - Premium Studio</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- 1. INTRO PAGE / WORKSPACE SELECTOR -->
+    <div class="intro-container" id="introPage">
+        <div class="intro-card">
+            <h1 class="intro-logo">S STUDIO</h1>
+            <p class="intro-subtitle">Select your creative workspace to begin editing</p>
+            <div class="choice-grid">
+                
+                <!-- Video Editing Card -->
+                <div class="choice-card active-studio" onclick="enterStudio('video')">
+                    <span class="choice-icon">🎥</span>
+                    <h3>Video Editing</h3>
+                    <p>ADVANCED AI REWIND AND SUBTITLES, PROFESSIONAL EDITING.</p>
+                </div>
+                
+                <!-- Hidden Input to Launch System Gallery Picker Safely -->
+                <input type="file" id="videoInput" accept="video/*" onchange="loadVideo(event)" style="display: none;">
+                
+                <!-- Photo Editing Card (Locked) -->
+                <div class="choice-card locked-studio" onclick="enterStudio('photo')">
+                    <span class="choice-icon">🖼️</span>
+                    <h3>Photo Editing</h3>
+                    <p class="coming-soon">Coming Soon in Next Update</p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. MAIN EDITOR STUDIO WORKSPACE -->
+    <div class="editor-container hidden" id="editorPage">
+        <header class="navbar">
+            <div class="brand">
+                <span class="logo-s" onclick="resetToHome()">S</span>
+                <span class="logo-text">Studio</span>
+            </div>
+            <div class="menu-items">
+                <button class="nav-btn upload-trigger" id="mainUploadBtn" onclick="requestUploadPermission()">📥 Upload</button>
+            </div>
+            
+            <div class="action-group media-dependent hidden">
+                <button class="nav-btn" onclick="undoAction()">↩️ Undo</button>
+                <button class="nav-btn" onclick="redoAction()">↪️ Redo</button>
+                <button class="export-btn-main" onclick="toggleExportModal(true)">Export Video</button>
+                <button class="nav-btn" id="authNavBtn" onclick="toggleAuthModal(true)" style="background: rgba(255,255,255,0.05); color: white; border: 1px solid #2f3542; margin-left: 8px;">👤 Login</button>
+            </div>
+        </header>
+
+        <!-- Main Workspace (VN Mobile Layout) -->
+        <main class="workspace">
+            <div class="preview-window">
+                <!-- Video Display Frame Layer -->
+                <div class="video-wrapper" id="videoWrapper">
+                    <p id="placeholderText">No media loaded. Click "Upload Video" to start.</p>
+                    
+                    <!-- Floating Text Customization Bar -->
+                    <div id="floatingTextTools" class="hidden" style="position: absolute; z-index: 100; background: #161920; padding: 6px; border-radius: 8px; border: 1px solid #2f3542; display: flex; gap: 6px; align-items: center;">
+                        <input type="color" id="textColorPicker" value="#ffffff" onchange="changeTextColor(this.value)">
+                        <button class="control-btn" onclick="toggleTextBold()" style="padding: 2px 6px; font-weight: bold;">B</button>
+                        <button class="control-btn" onclick="toggleTextItalic()" style="padding: 2px 6px; font-style: italic;">I</button>
+                        <button class="control-btn" onclick="applyFontStyle('modern')" style="padding: 2px 6px; font-size: 10px;">Modern</button>
+                        <button class="control-btn" onclick="applyFontStyle('neon')" style="padding: 2px 6px; font-size: 10px;">Neon</button>
+                        <button class="control-btn" onclick="deleteActiveText()" style="padding: 2px 6px; background: #ff4757;">🗑️</button>
+                    </div>
+                </div>
+            
+                <!-- Mini Player Controls Below Video -->
+                <div class="player-controls media-dependent hidden" id="playerControlsBox">
+                    <button class="player-btn" onclick="videoBack()">⏮️</button>
+                    <button class="player-btn play-main" onclick="togglePlay()">▶️</button>
+                    <button class="player-btn" onclick="videoForward()">⏭️</button> 
+<button id="btnStartPresentation" type="button" onclick="launchPresentationMode()" style="display: none; background: #6c5ce7; color: white; border: none; padding: 6px 12px; border-radius: 4px; font-size: 12px; font-weight: bold; cursor: pointer; margin-left: 8px;">
+    📺 Start Presentation Mode
+</button>
+                </div>
+            </div>
+        </main>
+
+        <!-- Premium Timeline Area Box -->
+        <footer class="timeline-area media-dependent hidden" id="timelineAreaBox">
+            <div class="timeline-tracks">
+                <!-- Line 1: Text Track -->
+                <div class="track-row text-track" style="cursor: pointer;" onclick="addTextOverlay()">
+                    <span class="track-icon" style="background: rgba(108, 92, 231, 0.1); font-weight: bold;">📝 +</span>
+                    <div class="track-block" id="textTrackBlock"></div>
+                </div>
+
+                <!-- Line 2: Music Track -->
+                <div class="track-row audio-track" style="cursor: pointer;" onclick="addMusicOverlay()">
+                    <span class="track-icon" style="background: rgba(16, 172, 132, 0.1); font-weight: bold;">🎵 +</span>
+                    <div class="track-block" id="audioTrackBlock"></div>
+                </div>
+
+                <!-- Line 3: PIP / Stickers Track -->
+                <div class="track-row pip-track" style="cursor: pointer;" onclick="executeTool('Stickers')">
+                    <span class="track-icon" style="background: rgba(255, 159, 67, 0.1); font-weight: bold;">🖼️ +</span>
+                    <div class="track-block" id="pipTrackBlock"></div>
+                </div>
+                
+                <!-- Line 4: Main Video Master Track -->
+                <div class="track-row video-track">
+                    <span class="track-icon">🎥</span>
+                    <div class="track-block active-video-track" id="frameTimelineTrack" onclick="movePlayhead(event)">
+                        <div id="framesContainer"></div> 
+                        <div id="playhead"></div> 
+                    </div>
+                </div>
+            </div>
+
+            <!-- CONTROL BUTTONS MATRIX -->
+            <div class="timeline-controls" style="display: flex !important; flex-wrap: wrap; gap: 8px; padding: 12px; background: #161920; min-height: 100px;">
+                <!-- Blur Controller Slider -->
+                <div class="control-group" style="display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.03); padding: 4px 8px; border-radius: 4px;">
+                    <label style="font-size: 11px; color: #a4b0be; white-space: nowrap;">▓▓ Blur:</label>
+                    <input type="range" id="blurSlider" min="0" max="30" step="1" value="0" oninput="if(typeof changeVideoBlur==='function') changeVideoBlur(this.value); document.getElementById('blurDisplay').innerText = this.value+'px';" style="width: 70px;">
+                    <span id="blurDisplay" style="font-size: 11px; color: #fff; min-width: 25px;">0px</span>
+                </div>
+
+                <div class="tools-container" style="display: flex; flex-wrap: wrap; gap: 6px;">
+                    <button class="tool-btn" onclick="executeTool('Split')">Split</button>
+                    <button class="tool-btn" onclick="executeTool('Crop')">Crop Preset</button>
+                    <button class="tool-btn" onclick="executeTool('Speed')">Video Speed</button> 
+                    <button class="tool-btn" onclick="executeTool('Fill')">Fill / Fit</button>
+                    <button class="tool-btn" onclick="executeTool('Zoom')">Zoom In</button>
+                    <button class="tool-btn" onclick="executeTool('Opacity')">Opacity</button>
+                    <button class="tool-btn" onclick="executeTool('Rotate')">Rotate</button>
+                    <button class="tool-btn" onclick="executeTool('Filters')">Filters</button>  <button class="tool-btn chroma-btn" onclick="executeTool('Chroma Key')" style="background: rgba(16, 172, 132, 0.2); border: 1px solid #10ac84; color: #10ac84;">🟢 Chroma Key</button>
+                    <button class="tool-btn ai-btn" onclick="executeTool('Review AI')">Review AI</button>
+                    <button class="tool-btn ai-btn" onclick="executeTool('Ask AI')" style="background: rgba(108, 92, 231, 0.2); border: 1px solid #6c5ce7; color: #a8a5ff;">🤖 Ask AI</button>
+                    <button class="tool-btn delete-btn" onclick="executeTool('Delete')">Delete</button>
+                </div>
+            </div>
+        </footer>
+
+        <!-- Sriram Groups Official Branding Footer Panel -->
+        <div class="sriram-official-footer media-dependent" style="background: #0d0e12; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255, 255, 255, 0.05); font-family: sans-serif;">
+            <div style="font-size: 12px; color: #a4b0be;">
+                © Powered by <a href="https://sriramgroupsofficial.com/" target="_blank" style="color: #6c5ce7; text-decoration: none; font-weight: bold;">Sriram Groups Official 🌐</a>
+            </div>
+            <div style="font-size: 12px;">
+                <span style="color: #a4b0be; margin-right: 5px;">Got suggestions?</span>
+                <a href="mailto:sriramgroupsofficial@gmail.com?subject=S Studio Editor Feedback" style="background: rgba(108, 92, 231, 0.15); color: #6c5ce7; padding: 4px 12px; border-radius: 20px; text-decoration: none; font-weight: 500; font-size: 11px; border: 1px solid rgba(108, 92, 231, 0.3);">📩 sriramgroupsofficial@gmail.com</a>
+            </div>
+        </div>
+    </div> 
+
+    <!-- 3. EXPORT SETTINGS MODAL -->
+    <div class="export-modal" id="exportModal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Export Settings</h3>
+                <button class="close-modal" onclick="toggleExportModal(false)">✕</button>
+            </div>
+            <div class="mode-selector">
+                <button class="mode-btn active" id="btnAuto" onclick="setExportMode('auto')">Auto</button>
+                <button class="mode-btn" id="btnManual" onclick="setExportMode('manual')">Manual</button>
+            </div>
+            <div class="manual-settings dimmed" id="manualSettingsPanel">
+                <div class="setting-group">
+                    <label>Resolution</label>
+                    <div class="options-grid">
+                        <button class="opt-btn" onclick="selectOption(this, 'res', 240)">240p</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'res', 360)">360p</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'res', 520)">520p</button>
+                        <button class="opt-btn active" onclick="selectOption(this, 'res', 720)">720p</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'res', 1080)">1080p</button>
+                    </div>
+                </div>
+                <div class="setting-group">
+                    <label>Frame Rate (FPS)</label>
+                    <div class="options-grid">
+                        <button class="opt-btn" onclick="selectOption(this, 'fps', 24)">24 FPS</button>
+                        <button class="opt-btn active" onclick="selectOption(this, 'fps', 30)">30 FPS</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'fps', 50)">50 FPS</button>
+                        <button class="opt-btn" onclick="selectOption(this, 'fps', 60)">60 FPS</button>
+                    </div>
+                </div>
+                <div class="setting-group">
+                    <div class="slider-header">
+                        <label>Bitrate (Mbps)</label>
+                        <span id="mbpsValue">12 Mbps</span>
+                    </div>
+                    <input type="range" min="2" max="50" value="12" class="mbps-slider" id="mbpsSlider" oninput="updateMbps(this.value)">
+                </div>
+            </div>
+            <div class="auto-info-msg" id="autoInfoMsg">✨ Auto Mode: High compatibility output mode selected.</div>
+            <div class="auto-info-msg" style="border: 1px dashed #6c5ce7; font-weight: bold; color: #a8a5ff;">
+                📦 Estimated File Size: <span id="estimatedSizeValue">0.00 MB</span>
+            </div>
+            <button class="start-export-btn" onclick="downloadToGallery()">Save to Gallery (Download)</button>
+        </div>
+    </div>
+
+    <!-- 4. AUTHENTICATION MODAL -->
+    <div class="export-modal" id="authModal" style="display: none;">
+        <div class="modal-content" style="max-width: 360px;">
+            <div class="modal-header">
+                <h3 id="authModalTitle">Login to S Studio</h3>
+                <button class="close-modal" onclick="toggleAuthModal(false)">✕</button>
+            </div>
+            <!-- Login Form -->
+            <form id="loginForm" onsubmit="handleAuthSubmit(event, 'login')">
+                <div class="setting-group">
+                    <label>Mobile Number or Email</label>
+                    <input type="text" id="loginUser" required style="width: 100%; background: #0d0e12; border: 1px solid #2f3542; color: white; padding: 10px; border-radius: 6px; box-sizing: border-box; margin-top: 5px;">
+                </div>
+                <div class="setting-group" style="margin-top: 15px;">
+                    <label>Password</label>
+                    <input type="password" id="loginPassword" required style="width: 100%; background: #0d0e12; border: 1px solid #2f3542; color: white; padding: 10px; border-radius: 6px; box-sizing: border-box; margin-top: 5px;">
+                </div>
+                <button type="submit" class="start-export-btn" style="margin-top: 20px;">Login</button>
+                <div style="display: flex; justify-content: space-between; margin-top: 15px; font-size: 12px;">
+                    <a href="#" onclick="switchAuthView('register')" style="color: #6c5ce7; text-decoration: none;">Create Account (Register)</a>
+                    <a href="#" onclick="switchAuthView('forgot')" style="color: #a4b0be; text-decoration: none;">Forgot Password?</a>
+                </div>
+            </form>
+
+            <!-- Register Form -->
+            <form id="registerForm" class="hidden" onsubmit="handleAuthSubmit(event, 'register')">
+                <div class="setting-group">
+                    <label>Full Name</label>
+                    <input type="text" id="regName" required style="width: 100%; background: #0d0e12; border: 1px solid #2f3542; color: white; padding: 10px; border-radius: 6px; box-sizing: border-box; margin-top: 5px;">
+                </div>
+                <div class="setting-group" style="margin-top: 12px;">
+                    <label>Mobile Number or Email</label>
+                    <input type="text" id="regUser" required style="width: 100%; background: #0d0e12; border: 1px solid #2f3542; color: white; padding: 10px; border-radius: 6px; box-sizing: border-box; margin-top: 5px;">
+                </div>
+                <div class="setting-group" style="margin-top: 12px;">
+                    <label>Create Password</label>
+                    <input type="password" id="regPassword" required style="width: 100%; background: #0d0e12; border: 1px solid #2f3542; color: white; padding: 10px; border-radius: 6px; box-sizing: border-box; margin-top: 5px;">
+                </div>
+                <button type="submit" class="start-export-btn" style="margin-top: 20px;">Register</button>
+                <div style="margin-top: 15px; text-align: center; font-size: 12px;">
+                    <a href="#" onclick="switchAuthView('login')" style="color: #6c5ce7; text-decoration: none;">Already have an account? Login</a>
+                </div>
+            </form>
+
+            <!-- Forgot Password Form -->
+            <form id="forgotForm" class="hidden" onsubmit="handleAuthSubmit(event, 'forgot')">
+                <p style="font-size: 12px; color: #a4b0be; margin-bottom: 15px;">Enter your registered email or mobile number to reset your password.</p>
+                <div class="setting-group">
+                    <label>Mobile Number or Email</label>
+                    <input type="text" id="forgotUser" required style="width: 100%; background: #0d0e12; border: 1px solid #2f3542; color: white; padding: 10px; border-radius: 6px; box-sizing: border-box; margin-top: 5px;">
+                </div>
+                <button type="submit" class="start-export-btn" style="margin-top: 20px;">Send Reset Link</button>
+                <div style="margin-top: 15px; text-align: center; font-size: 12px;">
+                    <a href="#" onclick="switchAuthView('login')" style="color: #6c5ce7; text-decoration: none;">Back to Login</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+<!-- LUXURY FULL SCREEN PRESENTATION OVERLAY LAYER -->
+<div id="presentationOverlay" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000; z-index: 999999; flex-direction: column; justify-content: center; align-items: center; font-family: sans-serif;">
+    <button type="button" onclick="closePresentationMode()" style="position: absolute; top: 20px; right: 25px; background: rgba(255,71,87,0.2); border: 1px solid #ff4757; color: #ff4757; font-size: 20px; padding: 5px 12px; border-radius: 50%; cursor: pointer; font-weight: bold;">✕</button>
+    <div id="presentationVideoContainer" style="width: 85%; height: 70%; display: flex; justify-content: center; align-items: center;"></div>
+    <div style="margin-top: 30px; display: flex; align-items: center; gap: 20px; background: rgba(255,255,255,0.03); padding: 10px 30px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.05);">
+        <button type="button" onclick="videoBack()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: white;">⏮️</button>
+        <button type="button" class="play-main" onclick="togglePlay()" style="background: #6c5ce7; border: none; font-size: 24px; cursor: pointer; color: white; width: 50px; height: 50px; border-radius: 50%; display: flex; justify-content: center; align-items: center;">▶️</button>
+        <button type="button" onclick="videoForward()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: white;">⏭️</button>
+    </div>
+</div>
+    <!-- MAIN CORE SCRIPT LINK -->
+    <script src="script.js"></script>
+</body>
+</html>
