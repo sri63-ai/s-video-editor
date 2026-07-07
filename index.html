@@ -15,6 +15,98 @@
 
   gtag('config', 'G-0Y8V3GGLC6');
 </script>
+    <style>
+    /* Global viewport optimization resets */
+    html, body {
+        max-width: 100vw !important;
+        overflow-x: hidden !important;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* Target standard mobile breakpoints automatically */
+    @media screen and (max-width: 768px) {
+        /* 1. Main Container Workspace layout structural overrides */
+        .workspace, #workspace, .main-container, .editor-container {
+            display: flex !important;
+            flex-direction: column !important;
+            padding: 8px !important;
+            height: auto !important;
+            gap: 12px !important;
+        }
+
+        /* 2. Primary Media Player adjustments to stay visible and centered */
+        #videoWrapper, .video-wrapper, #presentationVideoContainer {
+            width: 100% !important;
+            max-width: 100% !important;
+            height: auto !important;
+            min-height: 220px !important;
+            aspect-ratio: 16 / 9 !important;
+            margin: 0 auto !important;
+        }
+
+        video, #mainPlayer, #videoPlayer, .main-player {
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: contain !important;
+        }
+
+        /* 3. Horizontal layout controls for sidebars and settings panels */
+        .sidebar, #sidebar, .controls-panel, .left-panel, .right-panel {
+            width: 100% !important;
+            max-width: 100% !important;
+            height: auto !important;
+            order: 2 !important; /* Forces panels below the primary video */
+            padding: 10px !important;
+            box-sizing: border-box !important;
+        }
+
+        /* 4. Timeline slider axis wrap modifications */
+        .timeline, #timeline, .timeline-container {
+            width: 100% !important;
+            overflow-x: auto !important;
+            padding: 6px !important;
+            margin-top: 10px !important;
+        }
+
+        /* 5. Clean Grid wrapping for the 19 PIP toolbar buttons */
+        .toolbar, .pip-toolbar, .button-grid {
+            display: grid !important;
+            grid-template-columns: repeat(auto-fill, minmax(75px, 1fr)) !important;
+            gap: 6px !important;
+            width: 100% !important;
+            padding: 8px !important;
+        }
+
+        .toolbar button, .pip-toolbar button {
+            padding: 8px 4px !important;
+            font-size: 11px !important;
+            width: 100% !important;
+            text-align: center !important;
+            white-space: nowrap !important;
+            overflow: hidden !important;
+            text-overflow: ellipsis !important;
+        }
+
+        /* 6. Header adaptations for "Select your creative workspace..." layout */
+        h1, h2, .main-heading {
+            font-size: 16px !important;
+            text-align: center !important;
+            line-height: 1.4 !important;
+        }
+
+        #sStudioHeaderHelpContainer {
+            margin-left: 4px !important;
+            display: inline-block !important;
+            width: 100% !important;
+            text-align: center !important;
+            margin-top: 5px !important;
+        }
+
+        #sStudioHeaderHelpContainer span {
+            display: none !important; /* Hides vertical line separator on mobile devices */
+        }
+    }
+</style>
 </head>
 <body>
 
