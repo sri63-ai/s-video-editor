@@ -1,0 +1,766 @@
+:root {
+    --bg-main: #0d0e12;
+    --bg-darker: #050608;
+    --bg-panel: #161920;
+    --accent-color: #6c5ce7;
+    --accent-hover: #5b4cd8;
+    --text-primary: #ffffff;
+    --text-secondary: #a4b0be;
+    --border-color: #2f3542;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    overflow: hidden;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* INTRO PAGE STYLES */
+.intro-container {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--bg-darker);
+}
+
+.intro-card {
+    text-align: center;
+    width: 600px;
+    padding: 40px;
+}
+
+.intro-logo h1 {
+    font-size: 45px;
+    font-weight: 800;
+    background: linear-gradient(135deg, #6c5ce7, #a8a5ff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.intro-subtitle {
+    color: var(--text-secondary);
+    margin-bottom: 40px;
+}
+
+.choice-grid {
+    display: flex;
+    gap: 24px;
+}
+
+.choice-card {
+    flex: 1;
+    background-color: var(--bg-panel);
+    border: 1px solid var(--border-color);
+    padding: 30px 20px;
+    border-radius: 16px;
+    cursor: pointer;
+    transition: transform 0.2s, border-color 0.2s;
+}
+
+.choice-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--accent-color);
+}
+
+.choice-icon {
+    font-size: 40px;
+    display: block;
+    margin-bottom: 15px;
+}
+
+.coming-soon {
+    color: #ff4757;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.locked-studio {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* EDITOR SCREEN PANEL LAYOUT */
+.editor-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.navbar {
+    background-color: var(--bg-panel);
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+.logo-s {
+    background: linear-gradient(135deg, #6c5ce7, #a8a5ff);
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.logo-text {
+    font-weight: 600;
+    font-size: 18px;
+}
+
+.menu-items {
+    display: flex;
+    gap: 12px;
+}
+
+.action-group {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.nav-btn {
+    background-color: transparent;
+    color: var(--text-secondary);
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.upload-trigger {
+    background-color: var(--accent-color) !important;
+    color: white !important;
+}
+
+.export-btn-main {
+    background-color: #ff4757;
+    color: white;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+/* WORKSPACE SETUP */
+.workspace {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #050608;
+    padding: 15px;
+}
+
+.preview-window {
+    width: 100%;
+    height: 100%;
+    max-width: 480px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    justify-content: center;
+    align-items: center;
+}
+
+.video-wrapper {
+    width: 100%;
+    height: 280px;
+    background-color: #000000;
+    border-radius: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    border: 1px solid #2f3542;
+    position: relative;
+}
+
+.video-wrapper video {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+/* LIVE TEXT PREVIEW INSIDE CANVAS */
+.live-text-box {
+    position: absolute;
+    top: 40%;
+    left: 35%;
+    color: #ffffff;
+    background: transparent;
+    padding: 6px 10px;
+    font-size: 24px;
+    font-weight: normal;
+    font-style: normal;
+    cursor: move;
+    outline: none;
+    border: 1px dashed transparent;
+    user-select: none;
+}
+
+.live-text-box.selected-active {
+    border: 1px dashed #6c5ce7;
+    background: rgba(108, 92, 231, 0.05);
+}
+
+#placeholderText {
+    color: var(--text-secondary);
+    font-size: 14px;
+}
+
+.player-controls {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    align-items: center;
+}
+
+.player-btn {
+    background-color: var(--bg-panel);
+    color: white;
+    border: 1px solid var(--border-color);
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+.play-main {
+    background-color: var(--accent-color);
+    border: none;
+    padding: 10px 24px;
+    font-weight: bold;
+}
+
+/* TIMELINE STACK ENGINE (TRACKS TOP, CONTROLS BOTTOM) */
+.timeline-area {
+    height: 280px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    background-color: #111318;
+    overflow: hidden !important;
+    border-top: 1px solid var(--border-color);
+}
+
+/* 4-LINE TIMELINE TRACKS WINDOW */
+.timeline-tracks {
+    height: 130px !important;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 8px 16px;
+    background-color: #0d0e12;
+    overflow-y: auto;
+    position: relative;
+}
+
+.track-row {
+    display: flex;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.02);
+    border-radius: 6px;
+    height: 38px;
+    border: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.track-icon {
+    width: 45px;
+    font-size: 14px;
+    text-align: center;
+    color: #a4b0be;
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.track-label {
+    width: 80px;
+    font-size: 12px;
+    color: var(--text-secondary);
+    padding-left: 12px;
+}
+
+.track-block {
+    flex: 1;
+    height: 100%;
+    border-left: 1px solid var(--border-color);
+    position: relative;
+}
+
+.active-video-track {
+    background: linear-gradient(90deg, rgba(108, 92, 231, 0.2), transparent);
+    border-left: 4px solid var(--accent-color);
+    display: flex;
+    align-items: center;
+    padding-left: 15px;
+    font-size: 12px;
+    color: #a8a5ff;
+}
+
+#frameTimelineTrack {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background-color: #1b1d26;
+    overflow-x: auto;
+}
+
+#framesContainer {
+    display: flex;
+    height: 100%;
+}
+
+.video-thumb-frame {
+    height: 100%;
+    width: 60px;
+    object-fit: cover;
+    border-right: 1px solid #333333;
+}
+
+/* MASTER WHITE PLAYHEAD INDICATOR STRIP */
+#playhead {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 3px;
+    height: 100%;
+    background-color: #ffffff;
+    box-shadow: 0 0 8px #6c5ce7;
+    pointer-events: none;
+    z-index: 100;
+    transition: left 0.1s linear;
+}
+
+/* LAPTOP OPTIMIZED TOOLS BAR (CROP, ZOOM BUTTONS LAYER) */
+.timeline-controls {
+    flex: 1;
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 6px 12px !important;
+    align-items: center;
+    background-color: #161920;
+    padding: 10px 16px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    overflow-y: auto !important;
+    max-height: 150px;
+}
+
+.timeline-controls::-webkit-scrollbar {
+    height: 8px !important;
+    display: block !important;
+}
+
+.timeline-controls::-webkit-scrollbar-track {
+    background: var(--bg-darker);
+}
+
+.timeline-controls::-webkit-scrollbar-thumb {
+    background: #4e5569;
+    border-radius: 4px;
+}
+
+.timeline-controls::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-color);
+}
+
+/* SLIDERS BOX GENERATOR SETUP */
+.control-group {
+    display: inline-flex;
+    gap: 6px;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.02);
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+
+.control-group input[type="range"] {
+    width: 75px;
+    accent-color: var(--accent-color);
+}
+
+.control-group label,
+.control-group span {
+    font-size: 11px !important;
+    color: var(--text-secondary);
+}
+
+/* BUTTONS LOOK (CROP, ZOOM OUT, ADD TEXT ETC) */
+.control-btn {
+    padding: 6px 14px;
+    font-size: 12px;
+    border-radius: 4px;
+    background-color: #222733;
+    color: #fff;
+    cursor: pointer;
+    border: none;
+    flex-shrink: 0;
+    transition: background-color 0.2s;
+}
+
+.control-btn:hover {
+    background-color: var(--accent-color);
+}
+
+.delete-btn:hover {
+    background-color: #ff4757 !important;
+}
+
+/* EXPORT MODAL STYLES */
+.export-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+}
+
+.modal-content {
+    background-color: var(--bg-panel);
+    width: 420px;
+    padding: 24px;
+    border-radius: 16px;
+    border: 1px solid var(--border-color);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.close-modal {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.mode-selector {
+    display: flex;
+    background-color: var(--bg-darker);
+    padding: 4px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.mode-btn {
+    flex: 1;
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    padding: 8px;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.mode-btn.active {
+    background-color: var(--accent-color);
+    color: white;
+}
+
+.setting-group {
+    margin-bottom: 20px;
+}
+
+.setting-group label {
+    display: block;
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+}
+
+.options-grid {
+    display: flex;
+    gap: 8px;
+}
+
+.opt-btn {
+    background-color: var(--bg-darker);
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.opt-btn.active {
+    border-color: var(--accent-color);
+    color: var(--accent-color);
+    background-color: rgba(108, 92, 231, 0.1);
+}
+
+.slider-header {
+    display: flex;
+    justify-content: space-between;
+}
+
+.mbps-slider {
+    width: 100%;
+    margin-top: 8px;
+    accent-color: var(--accent-color);
+}
+
+.dimmed {
+    opacity: 0.2;
+    pointer-events: none;
+}
+
+.auto-info-msg {
+    background-color: rgba(255, 255, 255, 0.03);
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.start-export-btn {
+    width: 100%;
+    background: linear-gradient(135deg, #6c5ce7, #a8a5ff);
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.editor-active-state .upload-trigger {
+    display: none !important;
+}
+/* Keeps all tool buttons in a single compact row */
+.tools-container {
+    display: flex;
+    flex-wrap: nowrap; 
+    align-items: center;
+    gap: 8px; 
+    padding: 10px;
+    overflow-x: auto; 
+}
+
+/* Makes buttons look smaller and clean */
+.tool-btn {
+    padding: 6px 12px;
+    font-size: 13px;
+    border-radius: 4px;
+    transition: transform 0.2s ease; 
+}
+
+/* Micro-interaction: Pops up 15% bigger with glow effect when clicked */
+.tool-btn:active {
+    transform: scale(1.15); 
+    box-shadow: 0 0 10px rgba(255,255,255,0.5); 
+}
+/* 1. SHRINKS THE VIDEO PREVIEW WORKSPACE AREA */
+.workspace {
+    flex: none !important;
+    height: 240px !important; 
+    padding: 5px !important;
+    background-color: #050608;
+}
+
+.preview-window {
+    max-width: 320px !important; 
+    gap: 6px !important;
+}
+
+.video-wrapper {
+    height: 160px !important; 
+}
+
+.player-controls {
+    gap: 10px !important;
+}
+
+.player-btn {
+    padding: 4px 10px !important;
+    font-size: 11px !important;
+}
+
+/* 2. EXPANDS THE TIMELINE AREA TO TAKE OVER MOST OF THE SCREEN */
+.timeline-area {
+    flex: 1 !important; 
+    height: calc(100vh - 300px) !important; 
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+/* 3. MAKES THE 4 EDITING TRACKS MASSIVE AND SPACIOUS */
+.timeline-tracks {
+    flex: 1 !important; 
+    height: auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 6px !important;
+    padding: 10px 16px !important;
+}
+
+.track-row {
+    flex: 1 !important; 
+    min-height: 55px !important; 
+}
+
+.track-label, .track-icon {
+    font-size: 13px !important;
+    font-weight: bold !important;
+}
+
+/* 4. SHRINKS ALL BUTTONS AND CONTROLS TO A COMPACT BOTTOM ROW */
+.timeline-controls {
+    flex: none !important;
+    height: 50px !important; 
+    padding: 4px 12px !important;
+    gap: 4px 8px !important;
+    background-color: #161920;
+    overflow-x: auto !important; 
+    flex-wrap: nowrap !important; 
+}
+
+/* 5. MICRO SIZING FOR ALL BUTTONS INSIDE THE BOTTOM TRAY */
+.timeline-controls button,
+.timeline-controls .control-btn,
+.timeline-controls .tool-btn,
+.timeline-controls .ai-btn,
+.timeline-controls .delete-btn {
+    padding: 4px 8px !important;
+    font-size: 11px !important;
+    height: 26px !important;
+    line-height: 1 !important;
+    border-radius: 4px !important;
+    flex-shrink: 0 !important;
+    white-space: nowrap !important;
+}
+
+.timeline-controls .control-group,
+.timeline-controls .tool-item {
+    padding: 2px 4px !important;
+    height: 26px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+}
+
+.timeline-controls input[type="range"] {
+    width: 55px !important;
+}
+
+.timeline-controls label,
+.timeline-controls span {
+    font-size: 10px !important;
+}
+/* S STUDIO AI PANEL SLIDE ANIMATION */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+/* ==========================================================================
+   📱 S VIDEO EDITING - MOBILE RESPONSIVE ENGINE & TIMELINE RE-MATRIX
+   ========================================================================== */
+
+@media screen and (max-width: 768px) {
+    /* 1. Entire Layout Shifts to Vertical Stack */
+    body, .main-container, .studio-workspace {
+        flex-direction: column !important;
+        overflow-y: auto !important;
+        padding: 5px !important;
+    }
+
+    /* 2. Top Toolbar Buttons Wrap Cleanly (No Crowding) */
+    .toolbar, .action-bar, .menu-row {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        gap: 6px !important;
+        justify-content: center !important;
+        padding: 8px !important;
+    }
+
+    .toolbar button, .action-bar button {
+        flex: 1 1 calc(30% - 6px) !important; /* Forces 3 buttons per row on tiny screens */
+        min-width: 80px !important;
+        font-size: 11px !important;
+        padding: 8px 4px !important;
+        text-align: center !important;
+    }
+
+    /* 3. Main Preview Player Adjustments */
+    #mainPlayer, .video-preview-box, .canvas-container {
+        width: 100% !important;
+        max-width: 100% !important;
+        height: auto !important;
+        aspect-ratio: 16 / 9 !important; /* Keeps standard aspect ratio */
+        margin: 10px 0 !important;
+    }
+
+    /* 4. Timeline Control Matrix (The Big Problem Solver) */
+    .timeline-container, #timeline, .track-wrapper {
+        width: 100% !important;
+        min-height: 120px !important;
+        overflow-x: auto !important; /* Allows horizontal swipe to view long edits */
+        overflow-y: hidden !important;
+        background: #161920 !important;
+        border: 1px solid #333 !important;
+        padding: 10px 5px !important;
+        box-sizing: border-box !important;
+        -webkit-overflow-scrolling: touch; /* Smooth mobile swiping */
+    }
+
+    /* Track Channels (Audio/Video rows inside timeline) */
+    .timeline-track, #audioTrackBlock, .text-track {
+        min-width: 600px !important; /* Keeps the timeline wide inside the scrollbox so it doesn't squish */
+        margin-bottom: 8px !important;
+    }
+
+    /* 5. Floating AI Assistant Chat Box Adjustments */
+    #sStudioAiHelpHub {
+        width: 90% !important;
+        left: 5% !important;
+        right: 5% !important;
+        bottom: 20px !important;
+        box-sizing: border-box !important;
+    }
+}
+
+/* Landscape Mode Quick Optimization (When user rotates phone) */
+@media screen and (max-width: 900px) and (orientation: landscape) {
+    .toolbar button {
+        flex: 1 1 auto !important;
+        font-size: 10px !important;
+        padding: 4px 6px !important;
+    }
+    #mainPlayer {
+        max-width: 60% !important;
+        margin: 0 auto !important;
+    }
+}
