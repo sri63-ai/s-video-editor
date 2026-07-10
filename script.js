@@ -2789,8 +2789,23 @@ function reinitializeCoreEditorButtons() {
     }
 }
 
-setTimeout(() => { attachWorkspaceImageTriggers(); reinitializeCoreEditorButtons(); }, 400);
-setInterval(reinitializeCoreEditorButtons, 900);
+// ==========================================================================
+// 🚀 FIXED CORE INITIALIZATION TIMERS (CORRECT SYNTAX)
+// ==========================================================================
+setTimeout(function() { 
+    if (typeof attachWorkspaceImageTriggers === "function") {
+        attachWorkspaceImageTriggers(); 
+    }
+    if (typeof reinitializeCoreEditorButtons === "function") {
+        reinitializeCoreEditorButtons(); 
+    }
+}, 400);
+
+setInterval(function() {
+    if (typeof reinitializeCoreEditorButtons === "function") {
+        reinitializeCoreEditorButtons(); 
+    }
+}, 900);
 
 // ==========================================================================
 // 🎛️ 🎉 S-STUDIO COMPLETE PIP POWER INTEGRATION ENGINE (ALL-IN-ONE FIX)
