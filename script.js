@@ -163,6 +163,42 @@ function enterStudio(type) {
         requestUploadPermission();
     }
 }
+// ==========================================================================
+// 🚀 STUDIO SWITCHER WITH AUTOMATIC SEO GUIDE HIDE LOGIC
+// ==========================================================================
+function enterStudio(studioType) {
+    if (studioType === 'video') {
+        // 1. Hide Intro Page container completely (This hides all SEO text instantly)
+        const introPage = document.getElementById('introPage');
+        if (introPage) {
+            introPage.style.display = 'none';
+        }
+
+        // 2. Hide Scrollable Guide Box specifically if placed outside
+        const guideBox = document.getElementById('sStudioScrollableGuide');
+        if (guideBox) {
+            guideBox.style.display = 'none';
+        }
+
+        // 3. Show Video Editor Studio Page
+        const editorPage = document.getElementById('editorPage');
+        if (editorPage) {
+            editorPage.style.display = 'block';
+            editorPage.classList.remove('hidden');
+        }
+
+        console.log("Entering Video Studio. Home SEO text hidden successfully.");
+
+        // Automatically trigger File Picker
+        setTimeout(function() {
+            if (typeof triggerVideoUpload === 'function') {
+                triggerVideoUpload();
+            }
+        }, 300);
+    } else if (studioType === 'photo') {
+        alert("Photo Editing Studio is coming soon in the next update!");
+    }
+}
 
 function requestUploadPermission() {
     const inputNode = document.getElementById('videoInput');
@@ -3542,3 +3578,87 @@ if (document.readyState === 'loading') {
 }
 // Continuous loop reinforcement to intercept dynamic rendering pipelines
 setTimeout(injectWorkspaceHeaderGuide, 1500);
+
+// ==========================================================================
+// ❓ HOW TO USE MODAL CONTROLLER ENGINE (PURE ENGLISH)
+// ==========================================================================
+function toggleHowToUseModal(show) {
+    const modal = document.getElementById('howToUseModal');
+    if (modal) {
+        modal.style.display = show ? 'flex' : 'none';
+    }
+}
+
+// Bind trigger click to 'How to Use? ❓' button automatically
+document.addEventListener('DOMContentLoaded', function() {
+    const helpBtn = document.getElementById('sStudioHeaderHelpContainer') || document.querySelector('.guide-trigger');
+    if (helpBtn) {
+        helpBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            toggleHowToUseModal(true);
+        });
+    }
+});
+
+// ==========================================================================
+// 📜 TERMS & CONDITIONS MODAL CONTROLLER
+// ==========================================================================
+function toggleTermsModal(show) {
+    const modal = document.getElementById('termsModal');
+    if (modal) {
+        modal.style.display = show ? 'flex' : 'none';
+    }
+}
+
+// Connect the Terms & Conditions link trigger
+function showHiddenPage(pageType) {
+    if (pageType === 'terms') {
+        toggleTermsModal(true);
+    } else if (pageType === 'privacy') {
+        alert("Privacy Policy: S Studio values user privacy. All video rendering is processed locally in your browser. No video data is permanently stored on server drives.");
+    }
+}
+
+// ==========================================================================
+// 🔒 PRIVACY POLICY MODAL CONTROLLER
+// ==========================================================================
+function togglePrivacyModal(show) {
+    const modal = document.getElementById('privacyModal');
+    if (modal) {
+        modal.style.display = show ? 'flex' : 'none';
+    }
+}
+
+// Master trigger handler for hidden legal pages
+function showHiddenPage(pageType) {
+    if (pageType === 'terms') {
+        if (typeof toggleTermsModal === 'function') {
+            toggleTermsModal(true);
+        }
+    } else if (pageType === 'privacy') {
+        togglePrivacyModal(true);
+    }
+}
+
+// Universal Modal Toggle Function
+function toggleModal(modalId, show) {
+    const modal = document.getElementById(modalId);
+    if (modal) {
+        modal.style.display = show ? 'flex' : 'none';
+    }
+}
+
+// Master Legal Navigation Handler
+function showHiddenPage(pageType) {
+    if (pageType === 'terms') {
+        toggleModal('termsModal', true);
+    } else if (pageType === 'privacy') {
+        toggleModal('privacyModal', true);
+    } else if (pageType === 'cookies') {
+        toggleModal('cookiesModal', true);
+    } else if (pageType === 'copyright') {
+        toggleModal('copyrightModal', true);
+    } else if (pageType === 'founder') {
+        toggleModal('founderModal', true);
+    }
+}
