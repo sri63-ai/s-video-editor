@@ -164,39 +164,69 @@ function enterStudio(type) {
     }
 }
 // ==========================================================================
-// 🚀 STUDIO SWITCHER WITH AUTOMATIC SEO GUIDE HIDE LOGIC
+// 🚀 STUDIO SWITCHER - COMPLETE HOME CONTENT HIDE LOGIC
 // ==========================================================================
 function enterStudio(studioType) {
     if (studioType === 'video') {
-        // 1. Hide Intro Page container completely (This hides all SEO text instantly)
+        // 1. Hide the ENTIRE Home/Intro Container (Hides Vision Card, Guides, Legal Row, Footer)
         const introPage = document.getElementById('introPage');
         if (introPage) {
             introPage.style.display = 'none';
         }
 
-        // 2. Hide Scrollable Guide Box specifically if placed outside
+        // 2. Hide Scrollable Guide Box & Vision Card explicitly (Extra Safety Lock)
         const guideBox = document.getElementById('sStudioScrollableGuide');
         if (guideBox) {
             guideBox.style.display = 'none';
         }
 
-        // 3. Show Video Editor Studio Page
+        const visionCard = document.querySelector('.founders-vision-card-large');
+        if (visionCard) {
+            visionCard.style.display = 'none';
+        }
+
+        // 3. Show Video Editor Workspace ONLY
         const editorPage = document.getElementById('editorPage');
         if (editorPage) {
             editorPage.style.display = 'block';
             editorPage.classList.remove('hidden');
         }
 
-        console.log("Entering Video Studio. Home SEO text hidden successfully.");
+        console.log("Entering Video Editor. Home elements hidden safely.");
 
-        // Automatically trigger File Picker
+        // Automatically trigger File Picker after entering studio
         setTimeout(function() {
             if (typeof triggerVideoUpload === 'function') {
                 triggerVideoUpload();
             }
         }, 300);
+
     } else if (studioType === 'photo') {
         alert("Photo Editing Studio is coming soon in the next update!");
+    }
+}
+
+// Function to return to Home Page when clicking 'S' Logo or Home Button in navbar
+function resetToHome() {
+    const editorPage = document.getElementById('editorPage');
+    if (editorPage) {
+        editorPage.style.display = 'none';
+        editorPage.classList.add('hidden');
+    }
+
+    const introPage = document.getElementById('introPage');
+    if (introPage) {
+        introPage.style.display = 'block';
+    }
+
+    const guideBox = document.getElementById('sStudioScrollableGuide');
+    if (guideBox) {
+        guideBox.style.display = 'block';
+    }
+
+    const visionCard = document.querySelector('.founders-vision-card-large');
+    if (visionCard) {
+        visionCard.style.display = 'block';
     }
 }
 
