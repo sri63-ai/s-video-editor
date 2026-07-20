@@ -3443,10 +3443,6 @@ function injectTermsAndConditionsAbsolute() {
     
     // Using absolute highest z-index and explicit alignment rules
     bottomFooter.style.cssText = "position: fixed !important; bottom: 8px !important; left: 50% !important; transform: translateX(-50%) !important; font-size: 11px !important; font-weight: 600 !important; font-family: sans-serif !important; z-index: 2147483647 !important; pointer-events: auto !important; background: rgba(20, 23, 31, 0.8) !important; padding: 4px 12px !important; border-radius: 20px !important; border: 1px solid rgba(255,255,255,0.05) !important; box-shadow: 0 4px 12px rgba(0,0,0,0.5) !important; display: block !important;";
-    
-    bottomFooter.innerHTML = `
-        <a href="#" id="sStudioBottomTermsLink" style="color: #8892b0 !important; text-decoration: none !important; border-bottom: 1px solid rgba(136, 146, 176, 0.4) !important; padding-bottom: 1px !important; cursor: pointer !important; display: inline-block !important;">Terms & Conditions</a>
-    `;
 
     document.body.appendChild(bottomFooter);
 
