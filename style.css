@@ -1,3 +1,6 @@
+/* ==========================================================================
+   🌐 GLOBAL VARIABLES & CORE RESETS (PREMIUM DARK THEME)
+   ========================================================================== */
 :root {
     --bg-main: #0d0e12;
     --bg-darker: #050608;
@@ -7,53 +10,138 @@
     --text-primary: #ffffff;
     --text-secondary: #a4b0be;
     --border-color: #2f3542;
+    --danger-color: #ff4757;
+    --success-color: #10ac84;
+    --cyan-accent: #00f2fe;
 }
 
-body {
-    margin: 0;
-    padding: 0;
+*, *::before, *::after {
+    box-sizing: border-box !important;
+}
+
+html, body {
+    width: 100% !important;
+    min-height: 100vh !important;
+    margin: 0 !important;
+    padding: 0 !important;
     background-color: var(--bg-main);
     color: var(--text-primary);
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    overflow: hidden;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    display: flex;
+    flex-direction: column;
 }
 
 .hidden {
     display: none !important;
 }
 
-/* INTRO PAGE STYLES */
-.intro-container {
-    height: 100vh;
+/* ==========================================================================
+   🏠 INTRO LANDING PAGE (FULL WIDTH CONTAINER)
+   ========================================================================== */
+#introPage, .intro-container {
+    width: 100% !important;
+    max-width: 100vw !important;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    background-color: var(--bg-darker);
+    padding: 30px 2% !important;
+}
+
+.brand-header-box {
+    text-align: center;
+    margin-bottom: 30px;
+    width: 100%;
+}
+
+/* Inline horizontal flexbox for logo & S STUDIO text */
+.main-logo-wrapper {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 15px !important;
+    margin-bottom: 12px;
+    flex-wrap: nowrap !important;
+}
+
+.logo-box-container {
+    width: 90px !important;
+    height: 90px !important;
+    margin: 0 !important;
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: var(--bg-darker);
+    background: rgba(0, 242, 254, 0.08);
+    border: 2px solid var(--cyan-accent);
+    border-radius: 18px;
+    padding: 8px;
+    box-shadow: 0 0 20px rgba(0, 242, 254, 0.25);
+    flex-shrink: 0;
 }
 
-.intro-card {
-    text-align: center;
-    width: 600px;
-    padding: 40px;
+.s-main-logo {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain !important;
+    filter: drop-shadow(0 0 8px rgba(0, 242, 254, 0.4));
 }
 
-.intro-logo h1 {
-    font-size: 45px;
-    font-weight: 800;
-    background: linear-gradient(135deg, #6c5ce7, #a8a5ff);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
+.main-heading-title {
+    margin: 0 !important;
+    font-size: 38px !important;
+    color: var(--cyan-accent);
+    font-weight: 900;
+    letter-spacing: 1.5px;
+    line-height: 1;
+    white-space: nowrap;
 }
 
-.intro-subtitle {
+.powered-by-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #38bdf8;
+    text-decoration: none;
+    margin-top: 10px;
+    padding: 6px 16px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(56, 189, 248, 0.25);
+    border-radius: 20px;
+    transition: all 0.3s ease;
+}
+
+.powered-by-link:hover {
+    color: var(--cyan-accent);
+    border-color: var(--cyan-accent);
+    box-shadow: 0 0 12px rgba(0, 242, 254, 0.3);
+}
+
+.sriram-sub-logo {
+    width: 28px !important;
+    height: 28px !important;
+    object-fit: contain;
+    vertical-align: middle;
+}
+
+.select-workspace-sub {
     color: var(--text-secondary);
-    margin-bottom: 40px;
+    font-size: 14px;
+    margin-top: 10px;
 }
 
-.choice-grid {
+.workspace-choice-container {
     display: flex;
-    gap: 24px;
+    gap: 20px;
+    justify-content: center;
+    width: 95% !important;
+    max-width: 1400px !important;
+    margin: 0 auto 30px auto;
 }
 
 .choice-card {
@@ -64,45 +152,115 @@ body {
     border-radius: 16px;
     cursor: pointer;
     transition: transform 0.2s, border-color 0.2s;
+    text-align: center;
 }
 
 .choice-card:hover {
-    transform: translateY(-5px);
+    transform: translateY(-4px);
     border-color: var(--accent-color);
 }
 
 .choice-icon {
-    font-size: 40px;
+    font-size: 36px;
     display: block;
-    margin-bottom: 15px;
+    margin-bottom: 12px;
 }
 
 .coming-soon {
-    color: #ff4757;
+    color: var(--danger-color);
     font-size: 12px;
     font-weight: bold;
+    margin-top: 5px;
 }
 
 .locked-studio {
-    opacity: 0.5;
+    opacity: 0.6;
     cursor: not-allowed;
 }
 
-/* EDITOR SCREEN PANEL LAYOUT */
-.editor-container {
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
+/* ==========================================================================
+   🖼️ FULL PAGE CARDS & CONTENT BOXES
+   ========================================================================== */
+.scrollable-guide-box,
+.founders-vision-card-large,
+.upcoming-updates-card,
+.feedback-reward-card,
+.support-channels-card,
+.innovation-rewards-card {
+    width: 95% !important;
+    max-width: 1400px !important;
+    margin: 25px auto !important;
+    background: #11141f !important;
+    border: 1px solid #232a3b !important;
+    border-radius: 16px !important;
+    padding: 30px !important;
+    box-sizing: border-box !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4) !important;
+}
+
+.scrollable-guide-content {
+    color: #cbd5e1;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+.guide-section {
+    margin-bottom: 22px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding-bottom: 15px;
+}
+
+.guide-section h3 { 
+    color: var(--cyan-accent); 
+    font-size: 16px; 
+    margin-bottom: 8px; 
+}
+
+.guide-section p, .guide-section li { 
+    color: var(--text-secondary); 
+    font-size: 13px; 
+    line-height: 1.6; 
+}
+
+.pip-highlight {
+    background: rgba(108, 92, 231, 0.05);
+    border: 1px solid rgba(108, 92, 231, 0.2);
+    border-radius: 8px;
+    padding: 15px;
+}
+
+.pip-grid span { 
+    display: block; 
+    font-size: 12.5px; 
+    color: #cbd5e1; 
+    margin-bottom: 6px; 
+}
+
+/* ==========================================================================
+   💻 EDITOR SCREEN NAVBAR & WORKSPACE
+   ========================================================================== */
+.editor-container, #editorPage {
+    width: 100vw !important;
+    height: 100vh !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
 }
 
 .navbar {
+    width: 100% !important;
     background-color: var(--bg-panel);
     height: 60px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 24px;
+    padding: 0 20px !important;
     border-bottom: 1px solid var(--border-color);
+    flex-shrink: 0;
 }
 
 .brand {
@@ -118,6 +276,7 @@ body {
     border-radius: 8px;
     font-weight: bold;
     font-size: 18px;
+    color: white;
 }
 
 .logo-text {
@@ -125,12 +284,7 @@ body {
     font-size: 18px;
 }
 
-.menu-items {
-    display: flex;
-    gap: 12px;
-}
-
-.action-group {
+.menu-items, .action-group {
     display: flex;
     gap: 10px;
     align-items: center;
@@ -139,69 +293,84 @@ body {
 .nav-btn {
     background-color: transparent;
     color: var(--text-secondary);
-    border: none;
+    border: 1px solid transparent;
     padding: 8px 16px;
     border-radius: 6px;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 13px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.nav-btn:hover {
+    color: white;
+    background-color: rgba(255, 255, 255, 0.05);
 }
 
 .upload-trigger {
     background-color: var(--accent-color) !important;
     color: white !important;
+    font-weight: bold !important;
 }
 
 .export-btn-main {
-    background-color: #ff4757;
+    background-color: var(--danger-color);
     color: white;
     border: none;
-    padding: 8px 20px;
+    padding: 8px 18px;
     border-radius: 6px;
     font-weight: 600;
+    font-size: 13px;
     cursor: pointer;
 }
 
-/* WORKSPACE SETUP */
-.workspace {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #050608;
-    padding: 15px;
+/* ==========================================================================
+   🎥 PREVIEW WINDOW & WORKSPACE AREA
+   ========================================================================== */
+.workspace, main.workspace {
+    flex: 1 !important;
+    width: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background-color: var(--bg-darker);
+    padding: 10px !important;
+    overflow: hidden !important;
 }
 
 .preview-window {
-    width: 100%;
-    height: 100%;
-    max-width: 480px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    justify-content: center;
-    align-items: center;
+    width: 100% !important;
+    height: 100% !important;
+    max-width: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
 }
 
-.video-wrapper {
-    width: 100%;
-    height: 280px;
+.video-wrapper, #videoWrapper {
+    width: 95% !important;
+    height: 100% !important;
+    max-height: 62vh !important;
+    aspect-ratio: 16 / 9 !important;
     background-color: #000000;
     border-radius: 12px;
     display: flex;
     justify-content: center;
     align-items: center;
     overflow: hidden;
-    border: 1px solid #2f3542;
+    border: 1px solid var(--border-color);
     position: relative;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.7);
 }
 
-.video-wrapper video {
+.video-wrapper video, .video-wrapper img {
     max-width: 100%;
     max-height: 100%;
     object-fit: contain;
 }
 
-/* LIVE TEXT PREVIEW INSIDE CANVAS */
 .live-text-box {
     position: absolute;
     top: 40%;
@@ -219,8 +388,8 @@ body {
 }
 
 .live-text-box.selected-active {
-    border: 1px dashed #6c5ce7;
-    background: rgba(108, 92, 231, 0.05);
+    border: 1px dashed var(--accent-color);
+    background: rgba(108, 92, 231, 0.1);
 }
 
 #placeholderText {
@@ -231,8 +400,9 @@ body {
 .player-controls {
     display: flex;
     justify-content: center;
-    gap: 20px;
+    gap: 12px;
     align-items: center;
+    margin-top: 10px;
 }
 
 .player-btn {
@@ -242,33 +412,37 @@ body {
     padding: 8px 16px;
     border-radius: 20px;
     cursor: pointer;
+    font-size: 13px;
 }
 
 .play-main {
     background-color: var(--accent-color);
     border: none;
-    padding: 10px 24px;
+    padding: 8px 22px;
     font-weight: bold;
 }
 
-/* TIMELINE STACK ENGINE (TRACKS TOP, CONTROLS BOTTOM) */
-.timeline-area {
-    height: 280px !important;
-    display: flex !important;
-    flex-direction: column !important;
-    background-color: #111318;
-    overflow: hidden !important;
-    border-top: 1px solid var(--border-color);
-}
-
-/* 4-LINE TIMELINE TRACKS WINDOW */
-.timeline-tracks {
-    height: 130px !important;
+/* ==========================================================================
+   🎞️ TIMELINE STACK ENGINE
+   ========================================================================== */
+.timeline-area, #timelineAreaBox {
+    width: 100% !important;
+    min-height: 220px;
     display: flex;
     flex-direction: column;
-    gap: 4px;
-    padding: 8px 16px;
-    background-color: #0d0e12;
+    background-color: #11141f;
+    border-top: 1px solid var(--border-color);
+    flex-shrink: 0;
+}
+
+.timeline-tracks {
+    width: 100% !important;
+    min-height: 130px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 10px 16px;
+    background-color: var(--bg-main);
     overflow-y: auto;
     position: relative;
 }
@@ -284,17 +458,14 @@ body {
 
 .track-icon {
     width: 45px;
-    font-size: 14px;
+    font-size: 13px;
     text-align: center;
-    color: #a4b0be;
-    border-right: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.track-label {
-    width: 80px;
-    font-size: 12px;
     color: var(--text-secondary);
-    padding-left: 12px;
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
 }
 
 .track-block {
@@ -302,13 +473,13 @@ body {
     height: 100%;
     border-left: 1px solid var(--border-color);
     position: relative;
+    display: flex;
+    align-items: center;
 }
 
 .active-video-track {
     background: linear-gradient(90deg, rgba(108, 92, 231, 0.2), transparent);
     border-left: 4px solid var(--accent-color);
-    display: flex;
-    align-items: center;
     padding-left: 15px;
     font-size: 12px;
     color: #a8a5ff;
@@ -334,7 +505,6 @@ body {
     border-right: 1px solid #333333;
 }
 
-/* MASTER WHITE PLAYHEAD INDICATOR STRIP */
 #playhead {
     position: absolute;
     top: 0;
@@ -342,52 +512,72 @@ body {
     width: 3px;
     height: 100%;
     background-color: #ffffff;
-    box-shadow: 0 0 8px #6c5ce7;
+    box-shadow: 0 0 8px var(--accent-color);
     pointer-events: none;
     z-index: 100;
     transition: left 0.1s linear;
 }
 
-/* LAPTOP OPTIMIZED TOOLS BAR (CROP, ZOOM BUTTONS LAYER) */
+/* ==========================================================================
+   🛠️ BOTTOM TOOLBAR MATRIX
+   ========================================================================== */
 .timeline-controls {
-    flex: 1;
     display: flex !important;
     flex-wrap: wrap !important;
-    gap: 6px 12px !important;
+    gap: 8px 12px;
     align-items: center;
-    background-color: #161920;
+    background-color: var(--bg-panel);
     padding: 10px 16px;
     border-top: 1px solid rgba(255, 255, 255, 0.08);
-    overflow-y: auto !important;
-    max-height: 150px;
 }
 
-.timeline-controls::-webkit-scrollbar {
-    height: 8px !important;
-    display: block !important;
+.tools-container {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
 }
 
-.timeline-controls::-webkit-scrollbar-track {
-    background: var(--bg-darker);
+.tool-btn, .control-btn {
+    padding: 6px 14px;
+    font-size: 12px;
+    font-weight: 500;
+    border-radius: 6px;
+    background-color: #222733;
+    color: #fff;
+    cursor: pointer;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.2s ease;
 }
 
-.timeline-controls::-webkit-scrollbar-thumb {
-    background: #4e5569;
-    border-radius: 4px;
+.tool-btn:hover, .control-btn:hover {
+    background-color: var(--accent-color);
+    border-color: var(--accent-color);
 }
 
-.timeline-controls::-webkit-scrollbar-thumb:hover {
-    background: var(--accent-color);
+.tool-btn:active, .control-btn:active {
+    transform: scale(0.96);
 }
 
-/* SLIDERS BOX GENERATOR SETUP */
+.delete-btn {
+    background-color: rgba(255, 71, 87, 0.15) !important;
+    border-color: rgba(255, 71, 87, 0.3) !important;
+    color: #ff4757 !important;
+}
+
+.delete-btn:hover {
+    background-color: var(--danger-color) !important;
+    color: white !important;
+}
+
 .control-group {
     display: inline-flex;
     gap: 6px;
     align-items: center;
-    background: rgba(255, 255, 255, 0.02);
+    background: rgba(255, 255, 255, 0.03);
     padding: 4px 8px;
-    border-radius: 4px;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .control-group input[type="range"] {
@@ -395,53 +585,35 @@ body {
     accent-color: var(--accent-color);
 }
 
-.control-group label,
-.control-group span {
-    font-size: 11px !important;
+.control-group label, .control-group span {
+    font-size: 11px;
     color: var(--text-secondary);
 }
 
-/* BUTTONS LOOK (CROP, ZOOM OUT, ADD TEXT ETC) */
-.control-btn {
-    padding: 6px 14px;
-    font-size: 12px;
-    border-radius: 4px;
-    background-color: #222733;
-    color: #fff;
-    cursor: pointer;
-    border: none;
-    flex-shrink: 0;
-    transition: background-color 0.2s;
-}
-
-.control-btn:hover {
-    background-color: var(--accent-color);
-}
-
-.delete-btn:hover {
-    background-color: #ff4757 !important;
-}
-
-/* EXPORT MODAL STYLES */
+/* ==========================================================================
+   📦 MODAL POPUPS & DIALOGS
+   ========================================================================== */
 .export-modal {
     position: fixed;
     top: 0;
     left: 0;
     width: 100vw;
     height: 100vh;
-    background-color: rgba(0, 0, 0, 0.8);
+    background-color: rgba(0, 0, 0, 0.85);
     display: none;
     justify-content: center;
     align-items: center;
-    z-index: 999;
+    z-index: 999999;
 }
 
 .modal-content {
     background-color: var(--bg-panel);
-    width: 420px;
+    width: 90%;
+    max-width: 440px;
     padding: 24px;
     border-radius: 16px;
     border: 1px solid var(--border-color);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
 }
 
 .modal-header {
@@ -455,411 +627,156 @@ body {
     background: none;
     border: none;
     color: var(--text-secondary);
-    font-size: 18px;
+    font-size: 20px;
     cursor: pointer;
-}
-
-.mode-selector {
-    display: flex;
-    background-color: var(--bg-darker);
-    padding: 4px;
-    border-radius: 8px;
-    margin-bottom: 20px;
-}
-
-.mode-btn {
-    flex: 1;
-    background: none;
-    border: none;
-    color: var(--text-secondary);
-    padding: 8px;
-    font-weight: 600;
-    border-radius: 6px;
-    cursor: pointer;
-}
-
-.mode-btn.active {
-    background-color: var(--accent-color);
-    color: white;
-}
-
-.setting-group {
-    margin-bottom: 20px;
-}
-
-.setting-group label {
-    display: block;
-    font-size: 13px;
-    color: var(--text-secondary);
-    margin-bottom: 8px;
-}
-
-.options-grid {
-    display: flex;
-    gap: 8px;
-}
-
-.opt-btn {
-    background-color: var(--bg-darker);
-    border: 1px solid var(--border-color);
-    color: var(--text-secondary);
-    padding: 6px 12px;
-    border-radius: 6px;
-    cursor: pointer;
-}
-
-.opt-btn.active {
-    border-color: var(--accent-color);
-    color: var(--accent-color);
-    background-color: rgba(108, 92, 231, 0.1);
-}
-
-.slider-header {
-    display: flex;
-    justify-content: space-between;
-}
-
-.mbps-slider {
-    width: 100%;
-    margin-top: 8px;
-    accent-color: var(--accent-color);
-}
-
-.dimmed {
-    opacity: 0.2;
-    pointer-events: none;
-}
-
-.auto-info-msg {
-    background-color: rgba(255, 255, 255, 0.03);
-    padding: 12px;
-    border-radius: 8px;
-    font-size: 12px;
-    color: var(--text-secondary);
-    margin-bottom: 20px;
-    text-align: center;
-}
-
-.start-export-btn {
-    width: 100%;
-    background: linear-gradient(135deg, #6c5ce7, #a8a5ff);
-    color: white;
-    border: none;
-    padding: 12px;
-    border-radius: 8px;
     font-weight: bold;
-    font-size: 15px;
-    cursor: pointer;
 }
 
-.editor-active-state .upload-trigger {
-    display: none !important;
-}
-/* Keeps all tool buttons in a single compact row */
-.tools-container {
-    display: flex;
-    flex-wrap: nowrap; 
-    align-items: center;
-    gap: 8px; 
-    padding: 10px;
-    overflow-x: auto; 
-}
-
-/* Makes buttons look smaller and clean */
-.tool-btn {
-    padding: 6px 12px;
-    font-size: 13px;
-    border-radius: 4px;
-    transition: transform 0.2s ease; 
-}
-
-/* Micro-interaction: Pops up 15% bigger with glow effect when clicked */
-.tool-btn:active {
-    transform: scale(1.15); 
-    box-shadow: 0 0 10px rgba(255,255,255,0.5); 
-}
-/* 1. SHRINKS THE VIDEO PREVIEW WORKSPACE AREA */
-.workspace {
-    flex: none !important;
-    height: 240px !important; 
-    padding: 5px !important;
-    background-color: #050608;
-}
-
-.preview-window {
-    max-width: 320px !important; 
-    gap: 6px !important;
-}
-
-.video-wrapper {
-    height: 160px !important; 
-}
-
-.player-controls {
-    gap: 10px !important;
-}
-
-.player-btn {
-    padding: 4px 10px !important;
-    font-size: 11px !important;
-}
-
-/* 2. EXPANDS THE TIMELINE AREA TO TAKE OVER MOST OF THE SCREEN */
-.timeline-area {
-    flex: 1 !important; 
-    height: calc(100vh - 300px) !important; 
-    display: flex !important;
-    flex-direction: column !important;
-}
-
-/* 3. MAKES THE 4 EDITING TRACKS MASSIVE AND SPACIOUS */
-.timeline-tracks {
-    flex: 1 !important; 
-    height: auto !important;
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 6px !important;
-    padding: 10px 16px !important;
-}
-
-.track-row {
-    flex: 1 !important; 
-    min-height: 55px !important; 
-}
-
-.track-label, .track-icon {
-    font-size: 13px !important;
-    font-weight: bold !important;
-}
-
-/* 4. SHRINKS ALL BUTTONS AND CONTROLS TO A COMPACT BOTTOM ROW */
-.timeline-controls {
-    flex: none !important;
-    height: 50px !important; 
-    padding: 4px 12px !important;
-    gap: 4px 8px !important;
-    background-color: #161920;
-    overflow-x: auto !important; 
-    flex-wrap: nowrap !important; 
-}
-
-/* 5. MICRO SIZING FOR ALL BUTTONS INSIDE THE BOTTOM TRAY */
-.timeline-controls button,
-.timeline-controls .control-btn,
-.timeline-controls .tool-btn,
-.timeline-controls .ai-btn,
-.timeline-controls .delete-btn {
-    padding: 4px 8px !important;
-    font-size: 11px !important;
-    height: 26px !important;
-    line-height: 1 !important;
-    border-radius: 4px !important;
-    flex-shrink: 0 !important;
-    white-space: nowrap !important;
-}
-
-.timeline-controls .control-group,
-.timeline-controls .tool-item {
-    padding: 2px 4px !important;
-    height: 26px !important;
-    display: inline-flex !important;
-    align-items: center !important;
-}
-
-.timeline-controls input[type="range"] {
-    width: 55px !important;
-}
-
-.timeline-controls label,
-.timeline-controls span {
-    font-size: 10px !important;
-}
-/* S STUDIO AI PANEL SLIDE ANIMATION */
-@keyframes slideIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
 /* ==========================================================================
-   🌐 GLOBAL VIEWPORT & STANDALONE FOOTER STYLES
+   🏢 SRI RAM GROUPS - 4-COLUMN MASTER FOOTER
    ========================================================================== */
-*, *::before, *::after {
+.s-studio-master-footer {
+    width: 100% !important;
+    background-color: #0d0e12;
+    border-top: 1px solid #232a3b;
+    padding: 40px 5% 0 5% !important;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    color: #cbd5e1;
+    margin-top: 40px;
     box-sizing: border-box !important;
 }
 
-html, body {
+.footer-grid-container {
     width: 100% !important;
-    max-width: 100vw !important;
-    overflow-x: hidden !important;
-    margin: 0;
+    max-width: 1400px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px;
+    padding-bottom: 30px;
+}
+
+.footer-col-title {
+    color: var(--cyan-accent);
+    font-size: 16px;
+    font-weight: 700;
+    margin-top: 0;
+    margin-bottom: 18px;
+}
+
+.company-desc-text {
+    font-size: 12.5px;
+    line-height: 1.6;
+    color: #94a3b8;
+    margin-bottom: 15px;
+}
+
+.footer-links-list {
+    list-style: none;
     padding: 0;
+    margin: 0;
 }
 
-/* Scrollable Guide Box */
-.scrollable-guide-box {
-    display: block !important;
-    margin: 25px auto 15px auto;
-    width: 100%;
-    max-width: 950px;
-    height: 380px;
-    overflow-y: auto;
-    background: #0f121d;
-    border: 1px solid #232a3b;
-    border-radius: 12px;
-    padding: 24px;
-    box-sizing: border-box;
-    text-align: left;
-    box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
+.footer-links-list li {
+    margin-bottom: 10px;
+    font-size: 13px;
 }
 
-.scrollable-guide-box::-webkit-scrollbar { width: 6px; }
-.scrollable-guide-box::-webkit-scrollbar-track { background: #090b10; border-radius: 4px; }
-.scrollable-guide-box::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #00f2fe, #6c5ce7); border-radius: 4px; }
-
-.guide-section {
-    margin-bottom: 22px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    padding-bottom: 15px;
+.footer-links-list a {
+    color: #94a3b8;
+    text-decoration: none;
+    transition: color 0.2s ease;
 }
 
-.guide-section h3 { color: #00f2fe; font-size: 16px; margin-bottom: 8px; }
-.guide-section p, .guide-section li { color: #a4b0be; font-size: 13px; line-height: 1.6; }
+.footer-links-list a:hover {
+    color: var(--cyan-accent);
+    text-decoration: underline;
+}
 
-.pip-highlight {
-    background: rgba(108, 92, 231, 0.05);
-    border: 1px solid rgba(108, 92, 231, 0.2);
+.contact-list li {
+    color: #cbd5e1;
+    font-size: 12.5px;
+    word-break: break-all;
+}
+
+.contact-list a {
+    color: #38bdf8;
+}
+
+.report-bug-btn {
+    background: rgba(255, 71, 87, 0.12);
+    color: #ff4757;
+    border: 1px dashed #ff4757;
+    padding: 10px 14px;
     border-radius: 8px;
-    padding: 15px;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    width: 100%;
+    transition: all 0.2s ease;
 }
 
-.pip-grid span { display: block; font-size: 12.5px; color: #cbd5e1; margin-bottom: 6px; }
-
-.guide-footer-copyright { text-align: center; font-size: 12px; color: #64748b; margin-top: 15px; }
-.guide-footer-copyright a { color: #6c5ce7; text-decoration: none; }
+.report-bug-btn:hover {
+    background: #ff4757;
+    color: #ffffff;
+    box-shadow: 0 4px 15px rgba(255, 71, 87, 0.4);
+}
 
 .standalone-copyright-footer {
-    text-align: center;
-    padding: 15px 0 25px 0;
-    margin-top: 10px;
     border-top: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 20px 0;
+    text-align: center;
     width: 100%;
 }
 
-.standalone-copyright-footer p { color: #64748b; font-size: 12px; font-family: system-ui, -apple-system, sans-serif; margin: 0; }
-.standalone-copyright-footer a { color: #6c5ce7; text-decoration: none; font-weight: 500; transition: color 0.2s ease; }
-.standalone-copyright-footer a:hover { color: #00f2fe; text-decoration: underline; }
-
-.founder-highlight { color: #00f2fe !important; font-weight: 600; }
-.founder-highlight:hover { color: #a8a5ff !important; text-shadow: 0 0 8px rgba(108, 92, 231, 0.6); }
+.standalone-copyright-footer p {
+    margin: 0;
+    font-size: 12px;
+    color: #64748b;
+}
 
 /* ==========================================================================
-   📱 CONSOLIDATED UNIFIED MOBILE & TABLET RESPONSIVE ENGINE (MAX-WIDTH: 768px)
+   📱 CLEAN RESPONSIVE MEDIA QUERIES (MOBILE & TABLET)
    ========================================================================== */
-@media screen and (max-width: 768px) {
-    /* 1. Entire Layout Shifts to Vertical Stack */
-    body, .main-container, .studio-workspace, .workspace, #workspace {
-        display: flex !important;
+@media screen and (max-width: 900px) {
+    .footer-grid-container {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 25px;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .logo-box-container {
+        width: 65px !important;
+        height: 65px !important;
+        border-radius: 12px;
+    }
+    .main-heading-title {
+        font-size: 26px !important;
+    }
+    .workspace-choice-container {
         flex-direction: column !important;
-        overflow-y: auto !important;
-        padding: 6px !important;
-        gap: 10px !important;
-        width: 100% !important;
+        gap: 12px !important;
     }
-
-    /* 2. Founder's Vision Card Mobile Optimization */
-    .founders-vision-card-large {
-        padding: 18px 14px !important;
-        margin: 20px 10px !important;
-        border-width: 1px !important;
+    .scrollable-guide-box,
+    .founders-vision-card-large,
+    .upcoming-updates-card,
+    .feedback-reward-card,
+    .support-channels-card,
+    .innovation-rewards-card {
+        padding: 18px !important;
+        margin: 15px auto !important;
+        width: 98% !important;
     }
-
-    .founders-vision-card-large h2 { font-size: 18px !important; }
-    .founders-vision-card-large p, 
-    .founders-vision-card-large li { font-size: 12.5px !important; line-height: 1.6 !important; }
-
-    /* 3. Intro & Home Elements Responsive */
-    .intro-container { padding: 15px 10px !important; width: 100% !important; }
-    .intro-card { width: 100% !important; padding: 20px 12px !important; }
-    .choice-grid { grid-template-columns: 1fr !important; gap: 15px !important; }
-    .scrollable-guide-box { height: 320px !important; padding: 15px !important; margin: 20px auto !important; }
-
-    /* 4. Toolbar & Utility Buttons Grid */
-    .toolbar, .action-bar, .menu-row, .tools-container, .timeline-controls {
-        display: flex !important;
-        flex-wrap: wrap !important;
-        gap: 6px !important;
+    .tools-container, .timeline-controls {
         justify-content: center !important;
-        padding: 8px 4px !important;
-        width: 100% !important;
     }
-
-    .toolbar button, .action-bar button, .tool-btn {
-        flex: 1 1 calc(30% - 6px) !important;
-        min-width: 75px !important;
+    .tool-btn, .control-btn {
         font-size: 11px !important;
-        padding: 8px 4px !important;
-        text-align: center !important;
-        white-space: nowrap !important;
-        overflow: hidden !important;
-        text-overflow: ellipsis !important;
+        padding: 6px 8px !important;
     }
-
-    /* 5. Main Preview Player Adjustment */
-    #mainPlayer, .video-preview-box, .canvas-container, .preview-window, #videoWrapper, .video-wrapper {
-        width: 100% !important;
-        max-width: 100% !important;
-        height: auto !important;
-        min-height: 200px !important;
-        aspect-ratio: 16 / 9 !important;
-        margin: 10px 0 !important;
+    .footer-grid-container {
+        grid-template-columns: 1fr;
+        text-align: center;
     }
-
-    video { width: 100% !important; height: 100% !important; object-fit: contain !important; }
-
-    /* 6. Timeline Control Matrix & Track Rows */
-    .timeline-area, .timeline-container, #timeline, .track-wrapper {
-        width: 100% !important;
-        min-height: 120px !important;
-        overflow-x: auto !important;
-        overflow-y: hidden !important;
-        background: #161920 !important;
-        border: 1px solid #333 !important;
-        padding: 8px 4px !important;
-        box-sizing: border-box !important;
-        -webkit-overflow-scrolling: touch;
-    }
-
-    .timeline-track, #audioTrackBlock, .text-track {
-        min-width: 600px !important;
-        margin-bottom: 8px !important;
-    }
-
-    .track-row { height: 40px !important; }
-
-    /* 7. Footer & Legal Navigation Links */
-    .legal-contact-container { padding: 12px 8px !important; }
-    .legal-links-wrapper { flex-direction: column !important; gap: 10px !important; text-align: center !important; }
-    .legal-divider { display: none !important; }
-
-    /* 8. Modals & AI Assistant Popup Fixes */
-    .modal-content { width: 95% !important; max-height: 90vh !important; padding: 18px 12px !important; }
-    #sStudioAiHelpHub { width: 90% !important; left: 5% !important; right: 5% !important; bottom: 20px !important; }
-}
-
-/* Landscape Mode Optimization (Mobile rotated horizontally) */
-@media screen and (max-width: 900px) and (orientation: landscape) {
-    .toolbar button { flex: 1 1 auto !important; font-size: 10px !important; padding: 4px 6px !important; }
-    #mainPlayer { max-width: 60% !important; margin: 0 auto !important; }
-}
-
-/* Small Screen Extra Tweaks (Up to 480px) */
-@media screen and (max-width: 480px) {
-    .intro-logo { font-size: 24px !important; }
-    .guide-mini-header h2 { font-size: 16px !important; }
-    .scrollable-guide-content { font-size: 12px !important; }
 }
