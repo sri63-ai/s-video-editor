@@ -1,144 +1,551 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6989714433605558"
-     crossorigin="anonymous"></script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6989714433605558" crossorigin="anonymous"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>S - Premium Studio</title>
     <link rel="stylesheet" href="style.css">
+    
     <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-0Y8V3GGLC6"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-0Y8V3GGLC6');
-</script>
-    <style>
-    /* Global viewport optimization resets */
-    html, body {
-        max-width: 100vw !important;
-        overflow-x: hidden !important;
-        -webkit-overflow-scrolling: touch;
-    }
-
-    /* Target standard mobile breakpoints automatically */
-    @media screen and (max-width: 768px) {
-        /* 1. Main Container Workspace layout structural overrides */
-        .workspace, #workspace, .main-container, .editor-container {
-            display: flex !important;
-            flex-direction: column !important;
-            padding: 8px !important;
-            height: auto !important;
-            gap: 12px !important;
-        }
-
-        /* 2. Primary Media Player adjustments to stay visible and centered */
-        #videoWrapper, .video-wrapper, #presentationVideoContainer {
-            width: 100% !important;
-            max-width: 100% !important;
-            height: auto !important;
-            min-height: 220px !important;
-            aspect-ratio: 16 / 9 !important;
-            margin: 0 auto !important;
-        }
-
-        video, #mainPlayer, #videoPlayer, .main-player {
-            width: 100% !important;
-            height: 100% !important;
-            object-fit: contain !important;
-        }
-
-        /* 3. Horizontal layout controls for sidebars and settings panels */
-        .sidebar, #sidebar, .controls-panel, .left-panel, .right-panel {
-            width: 100% !important;
-            max-width: 100% !important;
-            height: auto !important;
-            order: 2 !important; /* Forces panels below the primary video */
-            padding: 10px !important;
-            box-sizing: border-box !important;
-        }
-
-        /* 4. Timeline slider axis wrap modifications */
-        .timeline, #timeline, .timeline-container {
-            width: 100% !important;
-            overflow-x: auto !important;
-            padding: 6px !important;
-            margin-top: 10px !important;
-        }
-
-        /* 5. Clean Grid wrapping for the 19 PIP toolbar buttons */
-        .toolbar, .pip-toolbar, .button-grid {
-            display: grid !important;
-            grid-template-columns: repeat(auto-fill, minmax(75px, 1fr)) !important;
-            gap: 6px !important;
-            width: 100% !important;
-            padding: 8px !important;
-        }
-
-        .toolbar button, .pip-toolbar button {
-            padding: 8px 4px !important;
-            font-size: 11px !important;
-            width: 100% !important;
-            text-align: center !important;
-            white-space: nowrap !important;
-            overflow: hidden !important;
-            text-overflow: ellipsis !important;
-        }
-
-        /* 6. Header adaptations for "Select your creative workspace..." layout */
-        h1, h2, .main-heading {
-            font-size: 16px !important;
-            text-align: center !important;
-            line-height: 1.4 !important;
-        }
-
-        #sStudioHeaderHelpContainer {
-            margin-left: 4px !important;
-            display: inline-block !important;
-            width: 100% !important;
-            text-align: center !important;
-            margin-top: 5px !important;
-        }
-
-        #sStudioHeaderHelpContainer span {
-            display: none !important; /* Hides vertical line separator on mobile devices */
-        }
-    }
-</style>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-0Y8V3GGLC6"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-0Y8V3GGLC6');
+    </script>
 </head>
 <body>
 
-    <!-- 1. INTRO PAGE / WORKSPACE SELECTOR -->
-    <div class="intro-container" id="introPage">
-        <div class="intro-card">
-            <h1 class="intro-logo">S STUDIO</h1>
-            <p class="intro-subtitle">Select your creative workspace to begin editing</p>
-            <div class="choice-grid">
-                
-                <!-- Video Editing Card -->
-                <div class="choice-card active-studio" onclick="enterStudio('video')">
-                    <span class="choice-icon">🎥</span>
-                    <h3>Video Editing</h3>
-                    <p>ADVANCED AI REWIND AND SUBTITLES, PROFESSIONAL EDITING.</p>
+   <!-- 1. INTRO PAGE / WORKSPACE SELECTOR -->
+<div id="introPage">
+    <div class="brand-header-box">
+        <!-- Logo and Heading Side-by-Side -->
+        <div class="main-logo-wrapper">
+            <div class="logo-box-container">
+                <img src="https://lh3.googleusercontent.com/d/1F4GgiyEVVlRXOWlmJ_IGBYpiTJH6Yot-" alt="S Studio Logo" class="s-main-logo">
+            </div>
+            <h1 class="main-heading-title">S STUDIO</h1>
+        </div>
+
+        <div>
+            <a href="https://sriramgroupsofficial.com/" target="_blank" rel="noopener noreferrer" class="powered-by-link">
+                <img src="https://lh3.googleusercontent.com/d/1HQZbmwZXZUw9x_L7hv_N-kle4W2DHNTV" alt="Sriram Groups Official Logo" class="sriram-sub-logo">
+                <span>Powered by Sriram Groups Official 🌐</span>
+            </a>
+        </div>
+        <p class="select-workspace-sub">Select your creative workspace to begin editing</p>
+    </div>
+
+    <div class="workspace-choice-container">
+        <!-- Video Editing Card -->
+        <div class="choice-card active-studio" onclick="enterStudio('video')">
+            <span class="choice-icon">🎥</span>
+            <h3>Video Editing</h3>
+            <p>ADVANCED AI REWIND AND SUBTITLES, PROFESSIONAL EDITING.</p>
+        </div>
+        
+        <!-- Hidden Input to Launch System Gallery Picker Safely -->
+        <input type="file" id="videoInput" accept="video/*" onchange="loadVideo(event)" style="display: none;">
+        
+        <!-- Photo Editing Card (Locked) -->
+        <div class="choice-card locked-studio" onclick="enterStudio('photo')">
+            <span class="choice-icon">🖼️</span>
+            <h3>Photo Editing</h3>
+            <p class="coming-soon">Coming Soon in Next Update</p>
+        </div>
+    </div>
+</div>
+
+        <!-- Scrollable User Guide Box (Expanded Feature Matrix) -->
+<div id="sStudioScrollableGuide" class="scrollable-guide-box">
+    <div class="scrollable-guide-content">
+        
+        <header class="guide-mini-header">
+            <h2>🎬 S Studio (svideoeditor.com) – Ultimate Browser Video Editing Workspace</h2>
+            <p>Perform high-end video editing workflows directly within your web browser. Edit seamlessly and completely free of cost, without installing heavy desktop software. S Studio is engineered as an all-in-one educational and professional creative hub, continuously updated to support modern content creators, students, and digital marketers.</p>
+        </header>
+
+        <!-- Section 1 -->
+        <section class="guide-section">
+            <h3>📂 1. How to Upload Media Files</h3>
+            <p>Click the prominent <strong>"Upload Video"</strong> button on the editor interface to open system storage permissions. Securely import high-resolution raw footage, voice tracks, or mobile camera clips directly from your local phone gallery or PC storage. Once imported, all studio editing toolsets unlock automatically for immediate use.</p>
+        </section>
+
+        <!-- Section 2 -->
+        <section class="guide-section">
+            <h3>🎞️ 2. Timeline Control & Unlimited PiP Overlays</h3>
+            <p>The timeline acts as the main engine of S Studio, placed right beneath the primary video viewport:</p>
+            <ul>
+                <li><strong>🎬 Video Track:</strong> Displays imported master clips frame-by-frame for precise splits and cuts, enabling accurate timeline editing and seamless sequencing.</li>
+                <li><strong>🖼️ PiP (Picture-in-Picture) Layering:</strong> Overlay unlimited secondary images and video clips simultaneously. Ideal for gaming facecams, reaction channels, product reviews, and multi-frame video collages.</li>
+            </ul>
+        </section>
+
+        <!-- Section 3 -->
+        <section class="guide-section">
+            <h3>🎵 3. Dedicated Audio & Background Music Library</h3>
+            <p>Elevate your composition using built-in high-quality sound libraries or custom sound uploads:</p>
+            <ul>
+                <li><strong>📂 Local Track Import:</strong> Effortlessly upload your custom voiceovers, background tracks, and personal audio recordings directly from your smartphone or desktop storage with seamless drag-and-drop integration.</li>
+                <li><strong>🎥 Cinematic Beats BGM:</strong> High-impact, immersive background tracks and powerful sound design engineered to give your action sequences, travel vlogs, and blockbuster-style trailers that dramatic cinematic elevation.</li>
+                <li><strong>💼 Corporate Info Music:</strong> Sleek, highly polished, and non-distracting background scores specifically curated to give your business pitch decks, corporate presentations, and instructional tutorial guides a sharp, professional edge.</li>
+                <li><strong>🔥 Upbeat Vlog Sounds:</strong> Catchy, high-energy, and viral-ready soundscapes tailored to grab instant attention on fast-paced content platforms like YouTube Shorts, Instagram Reels, and TikTok clips.</li>
+                <li><strong>☕ Chill Lofi Loops:</strong> Smooth, relaxing, and ambient low-fidelity beats perfectly suited for soulful poetry readings, aesthetic slow-motion shots, late-night vlogs, and tranquil background moods.</li>
+            </ul>
+        </section>
+
+        <!-- Section 4 -->
+        <section class="guide-section">
+            <h3>🛠️ 4. Advanced Text & Smart AI Toolsets</h3>
+            <ul>
+                <li><strong>📝 Designer Text Overlays:</strong> Add titles, lower-thirds, and custom captions with rich formatting, bold/italic styles, custom fonts, and vibrant color palettes.</li>
+                <li><strong>🤖 Auto AI Subtitles:</strong> Automatically detect speech from your audio and generate frame-synced subtitles for multi-lingual viewers and accessibility.</li>
+                <li><strong>ℹ️ 'i' Info Trigger:</strong> Quick feature helper button providing instant context, tips, and functional guides on every editing tool.</li>
+                <li><strong>🔊 Background Denoise:</strong> Suppress ambient fan hums, wind distortions, and background noise with a single click to produce crisp studio audio.</li>
+                <li><strong>✨ Dynamic Font Styling:</strong> Switch between Modern, Neon, and Classic typography presets with single-click live rendering.</li>
+            </ul>
+        </section>
+
+        <!-- Section 5 -->
+        <section class="guide-section">
+            <h3>✂️ 5. Master Editing Controls & Utility Matrix</h3>
+            <div class="step-card-grid">
+                <p><strong>↩️ Undo / ↪️ Redo:</strong> Effortlessly step backward or forward through your editing history states to safely correct accidental mistakes and experiment with different creative choices worry-free.</p>
+                <p><strong>💧 Blur Mask:</strong> Easily protect sensitive content, private details, faces, or vehicle license plates by applying localized blur layers and customizable privacy masks directly onto your footage.</p>
+                <p><strong>✂️ Split Clip:</strong> Slice long video tracks and audio clips into precise individual segments anywhere on the timeline, giving you total freedom to trim, reorder, or delete specific moments.</p>
+                <p><strong>📐 Crop Presets:</strong> Instantly transform and re-frame your project's aspect ratios with pre-configured dimensions tailored specifically for YouTube widescreen (16:9), Shorts/Reels/TikTok (9:16), Instagram posts (1:1), and custom social formats.</p>
+                <p><strong>⚡ Speed Modifier:</strong> Dynamically adjust your video tempo by accelerating playback up to 2x for energetic fast-motion time-lapses or slowing it down to 0.5x for smooth, high-impact slow-motion sequences.</p>
+                <p><strong>🖼️ Fill & Fit Canvas:</strong> Seamlessly eliminate ugly black sidebars, scale media clips, and resize videos to perfectly align with your native project canvas dimensions.</p>
+                <p><strong>🔍 Zoom In:</strong> Magnify specific display coordinates to focus directly on key visual details, highlight actions, or achieve closer crop perspectives.</p>
+                <p><strong>👻 Opacity Adjustment:</strong> Fine-tune visual transparency levels across media elements, video overlays, and graphics to create beautiful blended visuals and smooth fade effects.</p>
+                <p><strong>🔄 Rotate & Flip:</strong> Spin video clips by 90°, 180°, or horizontally/vertically mirror canvas orientations in seconds to fix upside-down shots or create fun inverted angles.</p>
+                <p><strong>🎨 Color Filters:</strong> Instantly apply cinema-grade color grading presets, warm tones, and vintage aesthetics to completely transform the visual mood and storytelling tone of your video.</p>
+                <p><strong>🟩 Chroma Key:</strong> Effortlessly isolate and key out green screen backgrounds to seamlessly replace them with custom virtual sets, backdrop images, or new video environments.</p>
+                <p><strong>🎙️ Direct Voiceover:</strong> Record crystal-clear voiceovers in real-time, fully synchronized with live timeline playback, to deliver professional commentary, narration, and dubbing.</p>
+                <p><strong>👁️ Review AI:</strong> Carefully inspect automated AI subtitle accuracy, smart captions, and automated timeline cuts before proceeding to final high-resolution output rendering.</p>
+                <p><strong>💬 Ask AI Assistant:</strong> Prompt the integrated artificial intelligence helper anytime to receive real-time editing troubleshooting, step-by-step feature guidance, learning resources, and creative workflow suggestions.</p>
+                <p><strong>🗑️ Delete Element:</strong> Instantly purge unwanted video clips, extra audio tracks, overlay stickers, or text blocks from your project timeline in just one click.</p>
+                <p><strong>💾 Auto Session Restore:</strong> Never lose your creative work—S Studio temporarily saves editing progress in browser cache for worry-free crashes or refreshes.</p>
+            </div>
+        </section>
+
+        <!-- Section 6: PIP Suite -->
+        <section class="guide-section pip-highlight">
+            <h3>🖼️ PiP (Picture-in-Picture) Advanced Floating Control Suite</h3>
+            <p>Selecting any active PiP overlay unlocks a specialized 13-tool floating utility bar:</p>
+            <div class="pip-grid">
+                <span><strong>🔄 Replace:</strong> Seamlessly swap out media clips or graphic elements with new assets while completely preserving your existing keyframes, applied effects, spatial positions, and timeline timing.</span>
+                <span><strong>🎬 Motion Animations:</strong> Bring your media to life by applying smooth, customizable In-Animations, Out-Animations, and seamless scale transitions to any element on your timeline.</span>
+                <span><strong>🔑 Keyframe Tracking:</strong> Smoothly animate floating graphics, text callouts, or facecam overlays along precise moving path points for professional dynamic tracking effects.</span>
+                <span><strong>🔒 Transform Lock:</strong> Securely lock specific element positions and properties to prevent accidental movements, misalignments, or unwanted edits while working on complex timeline operations.</span>
+                <span><strong>👯 Duplicate Layer:</strong> Instantly clone active overlay elements, stickers, or text blocks with all matched parameters, effects, and styling intact to save editing time.</span>
+                <span><strong>✂️ Precision Crop:</strong> Easily trim away unwanted video edges, remove distracting background borders, and tightly isolate key focal areas with micro-level control.</span>
+                <span><strong>⏱️ Duration Timer:</strong> Set exact, down-to-the-frame visibility timeframes (such as 3s, 5s, or 10s) to keep your visual overlays perfectly timed with your audio and main footage.</span>
+                <span><strong>✂️ AI Cutout:</strong> Effortlessly remove background scenes and automatically isolate human subjects or primary objects using advanced AI edge-detection technology.</span>
+                <span><strong>🔄 Rotate & Flip:</strong> Quickly adjust orientation angles, turn elements 90° or 180°, and flip media upside-down to correct camera angles or create stylized inverted perspectives.</span>
+                <span><strong>🪞 Mirror Effect:</strong> Instantly reflect media assets horizontally or vertically to create symmetrical visual patterns, dual-view perspectives, or stylized graphic mirror layouts.</span>
+                <span><strong>📐 Auto Fit:</strong> Intelligent 1-click scaling that automatically resizes floating graphics, overlays, and images to match your primary video canvas boundaries perfectly.</span>
+                <span><strong>💧 Layer Blur:</strong> Smoothly blend floating overlays into background scenes using localized blur controls, depth-of-field adjustments, and customizable softness levels.</span>
+                <span><strong>🗑️ Quick Purge:</strong> Instantly erase selected Picture-in-Picture (PiP) nodes, unused media layers, and unwanted assets directly from your active project memory to keep your workspace clean.</span>
+            </div>
+        </section>
+
+        <!-- Section 7: Export -->
+        <section class="guide-section">
+            <h3>📥 6. Export Engine & Lifetime Cloud Saving</h3>
+            <ul>
+                <li><strong>Auto / Manual Resolution Matrix:</strong> Render via "Auto Mode" for default optimization or select custom manual configurations up to sharp 1440p (2K Quality) for high-definition playback.</li>
+                <li><strong>Smart File Compression:</strong> Advanced bitrate encoding keeps overall file sizes light (1MB - 100MB max) while preserving crisp visual fidelity to save device storage and processing bandwidth.</li>
+                <li><strong>⚡ Zero Watermark Exports:</strong> Render clean, professional-grade videos without annoying forced watermarks or hidden branding logos.</li>
+                <li><strong>🔐 Lifetime Cloud Sync & Educational Hub:</strong> Log into your free account to store active timeline projects securely in cloud storage for lifetime access across devices. Continuously updated with new features, tutorials, and editing guides to ensure a seamless learning experience for every user.</li>
+            </ul>
+        </section>
+<!-- CONTINUOUS INNOVATION & CREATOR EMPOWERMENT CARD -->
+<div class="innovation-rewards-card" style="background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(17, 24, 39, 0.98)); border: 2px solid #6c5ce7; border-radius: 16px; padding: 35px 30px; margin: 35px auto 25px auto; max-width: 980px; text-align: left; box-sizing: border-box; box-shadow: 0 12px 35px rgba(108, 92, 231, 0.2);">
+    
+    <!-- Section Header -->
+    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 18px; border-bottom: 1px solid rgba(108, 92, 231, 0.25); padding-bottom: 15px; flex-wrap: wrap;">
+        <span style="font-size: 32px;">⚡</span>
+        <div style="flex: 1; min-width: 250px;">
+            <h2 style="color: #a8a5ff; margin: 0; font-size: 23px; font-weight: 800; letter-spacing: -0.3px;">⚡ CONTINUOUS INNOVATION</h2>
+            <p style="color: #38bdf8; font-size: 13.5px; margin: 4px 0 0 0; font-weight: 600;">Empowering Creators Worldwide Through Constant Technological Evolution..!</p>
+        </div>
+    </div>
+
+    <!-- Content Body -->
+    <div style="color: #e2e8f0; font-size: 14px; line-height: 1.8; font-family: system-ui, -apple-system, sans-serif;">
+        
+        <p style="margin-bottom: 20px;">
+            The <strong>S Studio (svideoeditor.com) Team</strong> is constantly working around the clock to update this platform, optimize rendering performance, and integrate cutting-edge technologies to empower creators worldwide completely free of charge.
+        </p>
+
+        <!-- Innovation Callout Box -->
+        <div style="background: rgba(108, 92, 231, 0.08); border-left: 4px solid #6c5ce7; padding: 18px; border-radius: 6px; margin-bottom: 22px;">
+            <p style="margin: 0; color: #f1f5f9; font-size: 14px;">
+                💡 <em>If you discover a new editing concept, invent a unique workflow feature, or spot a technical bug, share your insights with us through the Feedback & Rewards section below. Submit your valuable ideas today and win exciting rewards!</em>
+            </p>
+        </div>
+
+        <!-- Call to Action Banner -->
+        <div style="text-align: center; margin-top: 25px; padding: 15px; background: rgba(0, 242, 254, 0.05); border: 1px solid rgba(0, 242, 254, 0.25); border-radius: 10px;">
+            <span style="color: #00f2fe; font-weight: bold; font-size: 14.5px;">💖 Let’s innovate together and shape the future of free creative technology..!</span>
+        </div>
+
+    </div>
+</div>
+    </div>
+</div>
+
+        <!-- Founder's Vision Card (With S Studio Official Logo) -->
+<div class="founders-vision-card-large" style="background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(17, 24, 39, 0.98)); border: 2px solid #00f2fe; border-radius: 16px; padding: 35px 30px; margin: 35px auto 25px auto; max-width: 980px; text-align: left; box-sizing: border-box; box-shadow: 0 12px 35px rgba(0, 242, 254, 0.15);">
+    
+    <!-- Card Header: Logo + Title -->
+    <div style="display: flex; align-items: center; gap: 18px; margin-bottom: 18px; border-bottom: 1px solid rgba(0, 242, 254, 0.2); padding-bottom: 18px; flex-wrap: wrap;">
+        
+        <!-- 🖼️ S Studio Official Logo Box -->
+        <div style="width: 55px; height: 55px; background: rgba(0, 242, 254, 0.08); border: 1.5px solid #00f2fe; border-radius: 12px; display: flex; justify-content: center; align-items: center; padding: 5px; box-shadow: 0 0 15px rgba(0, 242, 254, 0.2); flex-shrink: 0;">
+            <img src="https://lh3.googleusercontent.com/d/1F4GgiyEVVlRXOWlmJ_IGBYpiTJH6Yot-" alt="S Studio Logo" style="width: 100%; height: 100%; object-fit: contain;">
+        </div>
+
+        <!-- Title & Subtitle Container -->
+        <div style="flex: 1; min-width: 250px;">
+            <h2 style="color: #00f2fe; margin: 0; font-size: 23px; font-weight: 800; letter-spacing: -0.3px; line-height: 1.3;">🌟 S Studio (svideoeditor.com) – Technology Belongs to Everyone..!</h2>
+            <p style="color: #38bdf8; font-size: 13.5px; margin: 5px 0 0 0; font-weight: 600;">Powered by Sriram Groups Official... A 99% Free Digital Revolution & Empowerment Initiative..!</p>
+        </div>
+    </div>
+
+    <!-- Content Body -->
+    <div style="color: #e2e8f0; font-size: 14px; line-height: 1.8; font-family: system-ui, -apple-system, sans-serif;">
+        <p style="margin-bottom: 16px;">
+            At <strong>Sriram Groups Official</strong>, our guiding principle is firm, clear, and unwavering: <em>poverty, financial difficulties, or a lack of expensive hardware should never restrict a passionate creator's talent, vision, and extraordinary potential.</em>
+        </p>
+
+        <p style="margin-bottom: 16px;">
+            In today's fast-moving digital economy, high-impact video production has become an absolute necessity for YouTube success, social media marketing, real estate promotions, business growth, and personal branding. However, standard video editing platforms demand expensive recurring monthly subscriptions or top-tier computer specifications. Unable to pay thousands of rupees or afford high-end desktop setups, countless ambitious creators, young students, small business owners, and aspiring filmmakers are forced to abandon their dreams halfway.
+        </p>
+
+        <p style="margin-bottom: 20px; background: rgba(0, 242, 254, 0.05); border-left: 4px solid #00f2fe; padding: 12px 16px; border-radius: 4px;">
+            <strong>S Studio (svideoeditor.com)</strong> was created as a permanent, accessible solution to bridge this gap! We operate this platform not as a profit-driven commercial enterprise, but as a genuine, high-impact <strong>Philanthropic Digital Initiative</strong>—offering 99% of its robust editing capabilities completely free to creators worldwide.
+        </p>
+
+        <h3 style="color: #ffffff; font-size: 16px; margin: 20px 0 10px 0;">💡 Why S Studio Stands Out:</h3>
+        <ul style="padding-left: 20px; color: #cbd5e1; margin-bottom: 25px; list-style: none;">
+            <li style="margin-bottom: 10px;">🚫 <strong>Zero Premium Paywalls:</strong> Enjoy unrestricted access to high-tier video editing tools without hidden fees, locked features, or unexpected monthly subscription charges.</li>
+            <li style="margin-bottom: 10px;">🛠️ <strong>High-End Studio Suite:</strong> Harness the full power of cutting-edge creative tools—including AI Rewind, automated AI Subtitles, multi-track timeline editing, unlimited Picture-in-Picture (PiP) layering, and crisp 2K HD rendering at zero cost.</li>
+            <li style="margin-bottom: 10px;">📱 <strong>Equal Technological Access:</strong> Democratizing content creation by allowing you to edit seamlessly on both entry-level smartphones and desktop PCs through your web browser without performance bottlenecks.</li>
+        </ul>
+
+        <div style="background: rgba(108, 92, 231, 0.1); border: 1px solid rgba(108, 92, 231, 0.4); padding: 22px; border-radius: 12px; margin: 25px 0;">
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                <span style="font-size: 20px;">💌</span>
+                <h4 style="color: #a8a5ff; margin: 0; font-size: 16px; font-weight: 700;">Official Message from S. Purushotham (Founder & CEO, Sriram Groups):</h4>
+            </div>
+            <p style="color: #f1f5f9; font-style: italic; font-size: 14px; margin: 0; line-height: 1.7;">
+                "All you truly need is a great idea and the courage to execute it. Even if you lack expensive desktop software or financial resources, Sriram Groups stands firmly behind you. We sincerely encourage every creator to fully utilize svideoeditor.com, sharpen your creative craft, build your digital presence, and rise to extraordinary heights in society..!"
+            </p>
+        </div>
+    </div>
+
+    <!-- Card Footer -->
+    <div style="display: flex; justify-content: center; align-items: center; margin-top: 20px; padding-top: 15px; border-top: 1px solid rgba(255, 255, 255, 0.1); text-align: center;">
+        <span style="color: #00f2fe; font-size: 14px; font-weight: 700;">✨ The Talent is Yours... The Technological Power is From Sriram Groups..!</span>
+    </div>
+</div>
+
+<!-- UPCOMING UPDATES CARD -->
+<div class="upcoming-updates-card" style="background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(17, 24, 39, 0.98)); border: 2px dashed #a8a5ff; border-radius: 16px; padding: 35px 30px; margin: 35px auto 25px auto; max-width: 980px; text-align: left; box-sizing: border-box; box-shadow: 0 12px 35px rgba(108, 92, 231, 0.2);">
+    
+    <!-- Section Header -->
+    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 18px; border-bottom: 1px solid rgba(168, 165, 255, 0.2); padding-bottom: 15px;">
+        <span style="font-size: 32px;">✨</span>
+        <div>
+            <h2 style="color: #a8a5ff; margin: 0; font-size: 24px; font-weight: 800; letter-spacing: -0.3px;">✨ UPCOMING UPDATES ✨</h2>
+            <p style="color: #cbd5e1; font-size: 13.5px; margin: 4px 0 0 0;">Powerful new creative suites are coming very soon to S Studio (svideoeditor.com)..!</p>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div style="color: #e2e8f0; font-size: 14px; line-height: 1.8; font-family: system-ui, -apple-system, sans-serif;">
+        
+        <p style="margin-bottom: 20px;">
+            We are thrilled to announce that powerful new creative suites are coming very soon to <strong>S Studio (svideoeditor.com)</strong>..! Get ready for the next level of digital editing, designed to give you professional control with maximum efficiency.
+        </p>
+
+        <!-- Feature 1 Box -->
+        <div style="background: rgba(0, 242, 254, 0.05); border-left: 4px solid #00f2fe; padding: 16px; border-radius: 6px; margin-bottom: 20px;">
+            <h3 style="color: #00f2fe; margin: 0 0 8px 0; font-size: 16px; font-weight: 700;">📷 Advanced Professional Photo Editing (Launching Soon)</h3>
+            <p style="margin: 0; color: #cbd5e1; font-size: 13.5px;">
+                In just a few days, we will be rolling out a comprehensive, high-end Photo Editing Suite. Equipped with professional-grade tools, layer options, precise controls, and retouching features, you will be able to edit and customize your photos effortlessly without needing complex desktop software.
+            </p>
+        </div>
+
+        <!-- Feature 2 Box -->
+        <div style="background: rgba(108, 92, 231, 0.08); border-left: 4px solid #6c5ce7; padding: 16px; border-radius: 6px; margin-bottom: 20px;">
+            <h3 style="color: #a8a5ff; margin: 0 0 8px 0; font-size: 16px; font-weight: 700;">🎬 Next-Gen AI & VFX Video Editing</h3>
+            <p style="margin: 0 0 10px 0; color: #cbd5e1; font-size: 13.5px;">
+                We are actively engineering S Studio (svideoeditor.com) to go far beyond basic editing. Along with advanced photo retouching, our team is developing cutting-edge video editing capabilities:
+            </p>
+            <ul style="padding-left: 20px; color: #cbd5e1; margin: 0;">
+                <li style="margin-bottom: 6px;"><strong>True Photo Modification:</strong> Full manual and assisted photo manipulation—giving you complete creative freedom beyond simple text-to-image prompts.</li>
+                <li style="margin-bottom: 6px;"><strong>Rapid Professional Video Generation:</strong> Produce high-impact, studio-quality videos in record time.</li>
+                <li style="margin-bottom: 6px;"><strong>VFX & Special Effects:</strong> Integrated Visual Effects (VFX) tools tailored for creators, filmmakers, and digital marketers.</li>
+            </ul>
+        </div>
+
+        <p style="margin-bottom: 20px; font-weight: 600; color: #38bdf8;">
+            If all goes according to plan, these powerful features will be live very soon..! Stay tuned..!
+        </p>
+
+        <!-- Call to Action Section -->
+        <div style="border-top: 1px dashed rgba(255, 255, 255, 0.15); padding-top: 20px; margin-top: 20px;">
+            <h4 style="color: #ffffff; margin: 0 0 8px 0; font-size: 15px;">🚀 Spread the Word & Empower Others</h4>
+            <p style="margin: 0 0 16px 0; color: #94a3b8; font-size: 13.5px;">
+                Help us democratize creative technology..! Share our free video editing website (<strong>svideoeditor.com</strong>) with your friends, family, and creator community so everyone can benefit from high-end editing tools at zero cost.
+            </p>
+
+            <h4 style="color: #ffffff; margin: 0 0 8px 0; font-size: 15px;">🌐 Stay Connected for Official Announcements</h4>
+            <p style="margin: 0 0 8px 0; color: #94a3b8; font-size: 13.5px;">
+                For official news, feature rollouts, and platform updates:
+            </p>
+            <ul style="padding-left: 20px; color: #cbd5e1; margin: 0 0 15px 0;">
+                <li style="margin-bottom: 6px;">
+                    <strong>Official Website:</strong> Visit <a href="https://sriramgroupsofficial.com" target="_blank" style="color: #00f2fe; text-decoration: none; font-weight: bold;">sriramgroupsofficial.com 🌐</a>
+                </li>
+                <li style="margin-bottom: 6px;">
+                    <strong>Social Media:</strong> Follow Sriram Groups Official across all social platforms.
+                </li>
+            </ul>
+        </div>
+
+        <!-- Thank you note -->
+        <div style="text-align: center; margin-top: 20px; padding: 12px; background: rgba(255, 255, 255, 0.03); border-radius: 8px;">
+            <span style="color: #ff4757; font-weight: bold; font-size: 14px;">💖 Thank you for your incredible support and patience..!</span>
+        </div>
+
+    </div>
+</div>
+<!-- FEEDBACK & CREATIVE IDEAS CARD -->
+<div class="feedback-reward-card" style="background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(17, 24, 39, 0.98)); border: 2px solid #10ac84; border-radius: 16px; padding: 35px 30px; margin: 35px auto 25px auto; max-width: 980px; text-align: left; box-sizing: border-box; box-shadow: 0 12px 35px rgba(16, 172, 132, 0.15);">
+    
+    <!-- Section Header -->
+    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 18px; border-bottom: 1px solid rgba(16, 172, 132, 0.2); padding-bottom: 15px; flex-wrap: wrap;">
+        <span style="font-size: 32px;">💡</span>
+        <div style="flex: 1; min-width: 250px;">
+            <h2 style="color: #10ac84; margin: 0; font-size: 23px; font-weight: 800; letter-spacing: -0.3px;"> WE WANT YOUR FEEDBACK & CREATIVE IDEAS..!</h2>
+            <p style="color: #38bdf8; font-size: 13.5px; margin: 4px 0 0 0; font-weight: 600;">Shape the Future of S Studio & Win Exciting Rewards..!</p>
+        </div>
+    </div>
+
+    <!-- Content Body -->
+    <div style="color: #e2e8f0; font-size: 14px; line-height: 1.8; font-family: system-ui, -apple-system, sans-serif;">
+        
+        <p style="margin-bottom: 20px;">
+            Got an idea to make <strong>S Studio (svideoeditor.com)</strong> even better..? Found a bug or think a specific feature could be improved..? We are offering you an incredible opportunity to shape the future of our platform and win exciting rewards..!
+        </p>
+
+        <h3 style="color: #ffffff; font-size: 16px; margin: 20px 0 12px 0;">💡 How You Can Participate & Get Rewarded:</h3>
+        
+        <!-- Highlights Box -->
+        <div style="background: rgba(16, 172, 132, 0.05); border-left: 4px solid #10ac84; padding: 16px; border-radius: 6px; margin-bottom: 22px;">
+            <ul style="padding-left: 18px; color: #cbd5e1; margin: 0; list-style: none;">
+                <li style="margin-bottom: 10px;">
+                    🎯 <strong>Share Your Ideas & Feedback:</strong> Tell us what features you’d love to see, what improvements we can make, or share your honest review/feedback about your experience using S Studio.
+                </li>
+                <li style="margin-bottom: 10px;">
+                    🐛 <strong>Report Bugs or Glitches:</strong> If you notice any technical issues, broken features, or layout bugs, let us know right away.
+                </li>
+                <li style="margin-bottom: 0;">
+                    🚀 <strong>Submit Your Creative Technology Concepts:</strong> Explain your creative tech ideas or editing workflow concepts in a simple, easy-to-understand way.
+                </li>
+            </ul>
+        </div>
+
+        <!-- Submission Methods Box -->
+        <div style="background: rgba(108, 92, 231, 0.1); border: 1px solid rgba(108, 92, 231, 0.3); padding: 22px; border-radius: 12px; margin: 25px 0;">
+            <h4 style="color: #a8a5ff; margin: 0 0 12px 0; font-size: 16px; font-weight: 700;">📩 How to Submit:</h4>
+            
+            <p style="margin: 0 0 10px 0;">
+                ✉️ <strong>Via Email:</strong> Send your detailed thoughts, suggestions, or bug reports to our official inbox: 
+                <a href="mailto:sriramgroupsofficial@gmail.com" style="color: #00f2fe; font-weight: bold; text-decoration: none;">sriramgroupsofficial@gmail.com</a>
+            </p>
+            
+            <p style="margin: 0;">
+                🛠️ <strong>In-App Submission:</strong> Click the <button onclick="toggleModal('bugReportModal', true)" style="background: rgba(255, 71, 87, 0.2); color: #ff4757; border: 1px dashed #ff4757; padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: bold; cursor: pointer; margin: 0 4px;">"Report a Bug & Get Reward!"</button> button directly on the website to submit your findings instantly.
+            </p>
+        </div>
+
+        <!-- Comments & Review Section -->
+        <div style="border-top: 1px dashed rgba(255, 255, 255, 0.15); padding-top: 18px; margin-top: 20px;">
+            <h4 style="color: #ffffff; margin: 0 0 8px 0; font-size: 15px;">💬 Leave a Review & Comment:</h4>
+            <p style="margin: 0; color: #94a3b8; font-size: 13.5px;">
+                Don’t forget to drop your thoughts in the comment section as well! Let us know how S Studio is helping your content creation journey—if you love using the platform, share your review with us and help us grow.
+            </p>
+        </div>
+
+        <!-- Footer Callout -->
+        <div style="text-align: center; margin-top: 22px; padding: 12px; background: rgba(0, 242, 254, 0.04); border: 1px solid rgba(0, 242, 254, 0.2); border-radius: 8px;">
+            <span style="color: #00f2fe; font-weight: bold; font-size: 13.5px;"> Our team is actively waiting for your valuable messages. Let’s build the ultimate free video editing suite together..!</span>
+        </div>
+
+    </div>
+</div>
+<!-- HELP LINE & CUSTOMER SUPPORT CARD -->
+<div class="support-channels-card" style="background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(17, 24, 39, 0.98)); border: 2px solid #38bdf8; border-radius: 16px; padding: 35px 30px; margin: 35px auto 25px auto; max-width: 980px; text-align: left; box-sizing: border-box; box-shadow: 0 12px 35px rgba(56, 189, 248, 0.15);">
+    
+    <!-- Section Header -->
+    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 18px; border-bottom: 1px solid rgba(56, 189, 248, 0.2); padding-bottom: 15px; flex-wrap: wrap;">
+        <span style="font-size: 32px;">📞</span>
+        <div style="flex: 1; min-width: 250px;">
+            <h2 style="color: #38bdf8; margin: 0; font-size: 23px; font-weight: 800; letter-spacing: -0.3px;">📞 Help Line & Customer Support</h2>
+            <p style="color: #cbd5e1; font-size: 13.5px; margin: 4px 0 0 0;">Need assistance, technical help, or have questions about our platforms..? Connect with us directly!</p>
+        </div>
+    </div>
+
+    <!-- Content Body -->
+    <div style="color: #e2e8f0; font-size: 14px; line-height: 1.8; font-family: system-ui, -apple-system, sans-serif;">
+        
+        <!-- Email Support Box -->
+        <div style="background: rgba(56, 189, 248, 0.05); border-left: 4px solid #38bdf8; padding: 18px; border-radius: 6px; margin-bottom: 25px;">
+            <h3 style="color: #ffffff; margin: 0 0 10px 0; font-size: 16px; font-weight: 700;">📩 Email Support:</h3>
+            
+            <p style="margin: 0 0 8px 0;">
+                🆘 <strong>Support & Help Desk:</strong> 
+                <a href="mailto:sriramgroup.help@gmail.com" style="color: #00f2fe; text-decoration: none; font-weight: bold;">sriramgroup.help@gmail.com</a>
+            </p>
+            
+            <p style="margin: 0;">
+                🏢 <strong>Official Main Business & Inquiries:</strong> 
+                <a href="mailto:sriramgroupsofficial@gmail.com" style="color: #00f2fe; text-decoration: none; font-weight: bold;">sriramgroupsofficial@gmail.com</a>
+            </p>
+        </div>
+
+        <!-- Social Media Grid Section -->
+        <h3 style="color: #ffffff; font-size: 16px; margin: 20px 0 12px 0;">🌐 Connect With Us on Social Media:</h3>
+        <p style="color: #94a3b8; font-size: 13.5px; margin-top: 0; margin-bottom: 15px;">
+            Stay updated with the latest news, announcements, and platform releases by following our official social media handles:
+        </p>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; margin-bottom: 25px;">
+            
+            <!-- Instagram -->
+            <a href="https://www.instagram.com/sriramgroupsofficial?igsh=aXV4eGs4ejhxNW0y" target="_blank" rel="noopener noreferrer" style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); padding: 12px 15px; border-radius: 8px; text-decoration: none; color: #f1f5f9; display: flex; align-items: center; gap: 10px; transition: all 0.2s ease;">
+                <span style="font-size: 20px;">📸</span>
+                <div>
+                    <strong style="display: block; font-size: 13px; color: #e1306c;">Instagram</strong>
+                    <span style="font-size: 12px; color: #94a3b8;">Sriram Groups Official</span>
                 </div>
+            </a>
+
+            <!-- YouTube -->
+            <a href="https://youtube.com/@sriramgroups-i7t?si=J_jklV3t-tU1qFT4" target="_blank" rel="noopener noreferrer" style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); padding: 12px 15px; border-radius: 8px; text-decoration: none; color: #f1f5f9; display: flex; align-items: center; gap: 10px; transition: all 0.2s ease;">
+                <span style="font-size: 20px;">▶️</span>
+                <div>
+                    <strong style="display: block; font-size: 13px; color: #ff0000;">YouTube</strong>
+                    <span style="font-size: 12px; color: #94a3b8;">Sriram Groups Official</span>
+                </div>
+            </a>
+
+            <!-- Facebook -->
+            <a href="https://www.facebook.com/share/1684AA7XhtV/" target="_blank" rel="noopener noreferrer" style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); padding: 12px 15px; border-radius: 8px; text-decoration: none; color: #f1f5f9; display: flex; align-items: center; gap: 10px; transition: all 0.2s ease;">
+                <span style="font-size: 20px;">📘</span>
+                <div>
+                    <strong style="display: block; font-size: 13px; color: #1877f2;">Facebook</strong>
+                    <span style="font-size: 12px; color: #94a3b8;">Sriram Groups Official</span>
+                </div>
+            </a>
+
+            <!-- X / Twitter -->
+            <a href="https://x.com/sriramgroupsown" target="_blank" rel="noopener noreferrer" style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); padding: 12px 15px; border-radius: 8px; text-decoration: none; color: #f1f5f9; display: flex; align-items: center; gap: 10px; transition: all 0.2s ease;">
+                <span style="font-size: 20px;">𝕏</span>
+                <div>
+                    <strong style="display: block; font-size: 13px; color: #ffffff;">X (Twitter)</strong>
+                    <span style="font-size: 12px; color: #94a3b8;">@sriramgroupsown</span>
+                </div>
+            </a>
+
+            <!-- Website -->
+            <a href="https://sriramgroupsofficial.com" target="_blank" rel="noopener noreferrer" style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); padding: 12px 15px; border-radius: 8px; text-decoration: none; color: #f1f5f9; display: flex; align-items: center; gap: 10px; transition: all 0.2s ease;">
+                <span style="font-size: 20px;">🌐</span>
+                <div>
+                    <strong style="display: block; font-size: 13px; color: #00f2fe;">Official Website</strong>
+                    <span style="font-size: 12px; color: #94a3b8;">sriramgroupsofficial.com</span>
+                </div>
+            </a>
+
+        </div>
+
+        <!-- Thank you note -->
+        <div style="text-align: center; margin-top: 20px; padding: 12px; background: rgba(56, 189, 248, 0.04); border: 1px solid rgba(56, 189, 248, 0.2); border-radius: 8px;">
+            <span style="color: #38bdf8; font-weight: bold; font-size: 13.5px;">💖 Thank you for connecting with Sriram Groups..!</span>
+        </div>
+
+    </div>
+</div>
+
+        <!-- SRI RAM GROUPS - OFFICIAL 4-COLUMN FOOTER SYSTEM -->
+        <footer class="s-studio-master-footer">
+            <div class="footer-grid-container">
                 
-                <!-- Hidden Input to Launch System Gallery Picker Safely -->
-                <input type="file" id="videoInput" accept="video/*" onchange="loadVideo(event)" style="display: none;">
-                
-                <!-- Photo Editing Card (Locked) -->
-                <div class="choice-card locked-studio" onclick="enterStudio('photo')">
-                    <span class="choice-icon">🖼️</span>
-                    <h3>Photo Editing</h3>
-                    <p class="coming-soon">Coming Soon in Next Update</p>
+                <!-- Column 1: S Studio Policies -->
+                <div class="footer-col">
+                    <h3 class="footer-col-title">📜 S Studio Policies</h3>
+                    <ul class="footer-links-list">
+                        <li><a href="javascript:void(0)" onclick="toggleModal('termsModal', true)">📄 Terms & Conditions</a></li>
+                        <li><a href="javascript:void(0)" onclick="toggleModal('privacyModal', true)">🔒 Privacy Policy</a></li>
+                        <li><a href="javascript:void(0)" onclick="toggleModal('cookiesModal', true)">🍪 Cookies Policy</a></li>
+                        <li><a href="javascript:void(0)" onclick="toggleModal('copyrightModal', true)">© Copyright Policy</a></li>
+                    </ul>
+                </div>
+
+                <!-- Column 2: Company Details -->
+                <div class="footer-col">
+                    <h3 class="footer-col-title">📄 Company Details</h3>
+                    <p class="company-desc-text">
+                        <strong>Sriram Groups Official</strong> is a digital revolutionary organization dedicated to providing technology, creative tools, and free educational services to everyone.
+                    </p>
+                    <ul class="footer-links-list">
+                        <li><a href="javascript:void(0)" onclick="toggleModal('founderModal', true)">👑 Founder & CEO (S. Purushotham)</a></li>
+                        <li><a href="javascript:void(0)" onclick="toggleModal('visionModal', true)">💡 Theme & Vision of Sriram Groups</a></li>
+                    </ul>
+                </div>
+
+                <!-- Column 3: Contact & Links -->
+                <div class="footer-col">
+                    <h3 class="footer-col-title">📞 Contact & Links</h3>
+                    <ul class="footer-links-list contact-list">
+                        <li>📩 <strong>Support Mail:</strong> <a href="mailto:sriramgroup.help@gmail.com">sriramgroup.help@gmail.com</a></li>
+                        <li>📩 <strong>Official Mail:</strong> <a href="mailto:sriramgroupsofficial@gmail.com">sriramgroupsofficial@gmail.com</a></li>
+                        <li>🌐 <strong>Official Website:</strong> <a href="https://sriramgroupsofficial.com" target="_blank">sriramgroupsofficial.com</a></li>
+                        <li>📺 <strong>YouTube Channel:</strong> <a href="https://youtube.com/@sriramgroupsofficial" target="_blank">Sriram Groups Official</a></li>
+                    </ul>
+                </div>
+
+                <!-- Column 4: Why Best & Support -->
+                <div class="footer-col">
+                    <h3 class="footer-col-title">🌟 Why Best & Support</h3>
+                    <ul class="footer-links-list">
+                        <li><a href="javascript:void(0)" onclick="toggleModal('whyBestModal', true)">🚀 Reasons: Why S Studio is Best?</a></li>
+                        <li><a href="javascript:void(0)" onclick="toggleModal('faqModal', true)">❓ Frequently Asked Questions (FAQs)</a></li>
+                    </ul>
+                    <div style="margin-top: 15px;">
+                        <button class="report-bug-btn" onclick="toggleModal('bugReportModal', true)">
+                            🎁 Report a Bug & Get Reward! 🎁
+                        </button>
+                    </div>
                 </div>
 
             </div>
-        </div>
+
+            <!-- 📌 COPYRIGHT ROW AT THE VERY BOTTOM -->
+            <div class="standalone-copyright-footer" style="text-align: center; padding: 20px; color: #a4b0be; font-size: 12px; border-top: 1px solid rgba(255,255,255,0.05);">
+                <p>© 2026 Sriram Groups Official. All Rights Reserved.</p>
+            </div>
+        </footer>
+
     </div>
+    <!-- End introPage -->
 
     <!-- 2. MAIN EDITOR STUDIO WORKSPACE -->
     <div class="editor-container hidden" id="editorPage">
@@ -159,10 +566,9 @@
             </div>
         </header>
 
-        <!-- Main Workspace (VN Mobile Layout) -->
+        <!-- Main Workspace -->
         <main class="workspace">
             <div class="preview-window">
-                <!-- Video Display Frame Layer -->
                 <div class="video-wrapper" id="videoWrapper">
                     <p id="placeholderText">No media loaded. Click "Upload Video" to start.</p>
                     
@@ -182,14 +588,14 @@
                     <button class="player-btn" onclick="videoBack()">⏮️</button>
                     <button class="player-btn play-main" onclick="togglePlay()">▶️</button>
                     <button class="player-btn" onclick="videoForward()">⏭️</button> 
-<button id="btnStartPresentation" type="button" onclick="launchPresentationMode()" style="display: none; background: #6c5ce7; color: white; border: none; padding: 6px 12px; border-radius: 4px; font-size: 12px; font-weight: bold; cursor: pointer; margin-left: 8px;">
-    📺 Start Presentation Mode
-</button>
+                    <button id="btnStartPresentation" type="button" onclick="launchPresentationMode()" style="background: #6c5ce7; color: white; border: none; padding: 6px 12px; border-radius: 4px; font-size: 12px; font-weight: bold; cursor: pointer; margin-left: 8px;">
+                        📺 Start Presentation Mode
+                    </button>
                 </div>
             </div>
         </main>
 
-        <!-- Premium Timeline Area Box -->
+        <!-- Timeline Area Box -->
         <footer class="timeline-area media-dependent hidden" id="timelineAreaBox">
             <div class="timeline-tracks">
                 <!-- Line 1: Text Track -->
@@ -220,9 +626,8 @@
                 </div>
             </div>
 
-            <!-- CONTROL BUTTONS MATRIX -->
+            <!-- Control Buttons Matrix -->
             <div class="timeline-controls" style="display: flex !important; flex-wrap: wrap; gap: 8px; padding: 12px; background: #161920; min-height: 100px;">
-                <!-- Blur Controller Slider -->
                 <div class="control-group" style="display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.03); padding: 4px 8px; border-radius: 4px;">
                     <label style="font-size: 11px; color: #a4b0be; white-space: nowrap;">▓▓ Blur:</label>
                     <input type="range" id="blurSlider" min="0" max="30" step="1" value="0" oninput="if(typeof changeVideoBlur==='function') changeVideoBlur(this.value); document.getElementById('blurDisplay').innerText = this.value+'px';" style="width: 70px;">
@@ -237,778 +642,476 @@
                     <button class="tool-btn" onclick="executeTool('Zoom')">Zoom In</button>
                     <button class="tool-btn" onclick="executeTool('Opacity')">Opacity</button>
                     <button class="tool-btn" onclick="executeTool('Rotate')">Rotate</button>
-                    <button class="tool-btn" onclick="executeTool('Filters')">Filters</button>  <button class="tool-btn chroma-btn" onclick="executeTool('Chroma Key')" style="background: rgba(16, 172, 132, 0.2); border: 1px solid #10ac84; color: #10ac84;">🟢 Chroma Key</button>
+                    <button class="tool-btn" onclick="executeTool('Filters')">Filters</button>
+                    <button class="tool-btn chroma-btn" onclick="executeTool('Chroma Key')" style="background: rgba(16, 172, 132, 0.2); border: 1px solid #10ac84; color: #10ac84;">🟢 Chroma Key</button>
                     <button class="tool-btn ai-btn" onclick="executeTool('Review AI')">Review AI</button>
                     <button class="tool-btn ai-btn" onclick="executeTool('Ask AI')" style="background: rgba(108, 92, 231, 0.2); border: 1px solid #6c5ce7; color: #a8a5ff;">🤖 Ask AI</button>
                     <button class="tool-btn delete-btn" onclick="executeTool('Delete')">Delete</button>
                 </div>
             </div>
         </footer>
-
-        <!-- Sriram Groups Official Branding Footer Panel -->
-        <div class="sriram-official-footer media-dependent" style="background: #0d0e12; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255, 255, 255, 0.05); font-family: sans-serif;">
-            <div style="font-size: 12px; color: #a4b0be;">
-                © Powered by <a href="https://sriramgroupsofficial.com/" target="_blank" style="color: #6c5ce7; text-decoration: none; font-weight: bold;">Sriram Groups Official 🌐</a>
-            </div>
-            <div style="font-size: 12px;">
-                <span style="color: #a4b0be; margin-right: 5px;">Got suggestions?</span>
-                <a href="mailto:sriramgroupsofficial@gmail.com?subject=S Studio Editor Feedback" style="background: rgba(108, 92, 231, 0.15); color: #6c5ce7; padding: 4px 12px; border-radius: 20px; text-decoration: none; font-weight: 500; font-size: 11px; border: 1px solid rgba(108, 92, 231, 0.3);">📩 sriramgroupsofficial@gmail.com</a>
-            </div>
-        </div>
-    </div> 
-
-    <!-- 3. EXPORT SETTINGS MODAL -->
-    <div class="export-modal" id="exportModal" style="display: none;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Export Settings</h3>
-                <button class="close-modal" onclick="toggleExportModal(false)">✕</button>
-            </div>
-            <div class="mode-selector">
-                <button class="mode-btn active" id="btnAuto" onclick="setExportMode('auto')">Auto</button>
-                <button class="mode-btn" id="btnManual" onclick="setExportMode('manual')">Manual</button>
-            </div>
-            <div class="manual-settings dimmed" id="manualSettingsPanel">
-                <div class="setting-group">
-                    <label>Resolution</label>
-                    <div class="options-grid">
-                        <button class="opt-btn" onclick="selectOption(this, 'res', 240)">240p</button>
-                        <button class="opt-btn" onclick="selectOption(this, 'res', 360)">360p</button>
-                        <button class="opt-btn" onclick="selectOption(this, 'res', 520)">520p</button>
-                        <button class="opt-btn active" onclick="selectOption(this, 'res', 720)">720p</button>
-                        <button class="opt-btn" onclick="selectOption(this, 'res', 1080)">1080p</button>
-                    </div>
-                </div>
-                <div class="setting-group">
-                    <label>Frame Rate (FPS)</label>
-                    <div class="options-grid">
-                        <button class="opt-btn" onclick="selectOption(this, 'fps', 24)">24 FPS</button>
-                        <button class="opt-btn active" onclick="selectOption(this, 'fps', 30)">30 FPS</button>
-                        <button class="opt-btn" onclick="selectOption(this, 'fps', 50)">50 FPS</button>
-                        <button class="opt-btn" onclick="selectOption(this, 'fps', 60)">60 FPS</button>
-                    </div>
-                </div>
-                <div class="setting-group">
-                    <div class="slider-header">
-                        <label>Bitrate (Mbps)</label>
-                        <span id="mbpsValue">12 Mbps</span>
-                    </div>
-                    <input type="range" min="2" max="50" value="12" class="mbps-slider" id="mbpsSlider" oninput="updateMbps(this.value)">
-                </div>
-            </div>
-            <div class="auto-info-msg" id="autoInfoMsg">✨ Auto Mode: High compatibility output mode selected.</div>
-            <div class="auto-info-msg" style="border: 1px dashed #6c5ce7; font-weight: bold; color: #a8a5ff;">
-                📦 Estimated File Size: <span id="estimatedSizeValue">0.00 MB</span>
-            </div>
-            <button class="start-export-btn" onclick="downloadToGallery()">Save to Gallery (Download)</button>
-        </div>
     </div>
 
-    <!-- 4. AUTHENTICATION MODAL -->
-    <div class="export-modal" id="authModal" style="display: none;">
-        <div class="modal-content" style="max-width: 360px;">
-            <div class="modal-header">
-                <h3 id="authModalTitle">Login to S Studio</h3>
-                <button class="close-modal" onclick="toggleAuthModal(false)">✕</button>
+    <!-- ==========================================================================
+         📦 MODALS & POPUPS
+         ========================================================================== -->
+
+    <!-- TERMS & CONDITIONS MODAL -->
+    <div id="termsModal" class="export-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.85); z-index: 999999; justify-content: center; align-items: center;">
+        <div class="modal-content" style="max-width: 850px; width: 92%; max-height: 85vh; overflow-y: auto; background: #0f121d; border: 1px solid #232a3b; border-radius: 12px; padding: 30px; text-align: left; box-shadow: 0 10px 30px rgba(0,0,0,0.8);">
+            
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #232a3b; padding-bottom: 15px; margin-bottom: 20px;">
+                <h2 style="color: #00f2fe; margin: 0; font-size: 20px;">📜 TERMS & CONDITIONS AND LEGAL DISCLAIMER</h2>
+                <button onclick="toggleModal('termsModal', false)" style="background: none; border: none; color: #ff4757; font-size: 24px; cursor: pointer; font-weight: bold;">✕</button>
             </div>
-            <!-- Login Form -->
-            <form id="loginForm" onsubmit="handleAuthSubmit(event, 'login')">
-                <div class="setting-group">
-                    <label>Mobile Number or Email</label>
-                    <input type="text" id="loginUser" required style="width: 100%; background: #0d0e12; border: 1px solid #2f3542; color: white; padding: 10px; border-radius: 6px; box-sizing: border-box; margin-top: 5px;">
-                </div>
-                <div class="setting-group" style="margin-top: 15px;">
-                    <label>Password</label>
-                    <input type="password" id="loginPassword" required style="width: 100%; background: #0d0e12; border: 1px solid #2f3542; color: white; padding: 10px; border-radius: 6px; box-sizing: border-box; margin-top: 5px;">
-                </div>
-                <button type="submit" class="start-export-btn" style="margin-top: 20px;">Login</button>
-                <div style="display: flex; justify-content: space-between; margin-top: 15px; font-size: 12px;">
-                    <a href="#" onclick="switchAuthView('register')" style="color: #6c5ce7; text-decoration: none;">Create Account (Register)</a>
-                    <a href="#" onclick="switchAuthView('forgot')" style="color: #a4b0be; text-decoration: none;">Forgot Password?</a>
-                </div>
-            </form>
 
-            <!-- Register Form -->
-            <form id="registerForm" class="hidden" onsubmit="handleAuthSubmit(event, 'register')">
-                <div class="setting-group">
-                    <label>Full Name</label>
-                    <input type="text" id="regName" required style="width: 100%; background: #0d0e12; border: 1px solid #2f3542; color: white; padding: 10px; border-radius: 6px; box-sizing: border-box; margin-top: 5px;">
-                </div>
-                <div class="setting-group" style="margin-top: 12px;">
-                    <label>Mobile Number or Email</label>
-                    <input type="text" id="regUser" required style="width: 100%; background: #0d0e12; border: 1px solid #2f3542; color: white; padding: 10px; border-radius: 6px; box-sizing: border-box; margin-top: 5px;">
-                </div>
-                <div class="setting-group" style="margin-top: 12px;">
-                    <label>Create Password</label>
-                    <input type="password" id="regPassword" required style="width: 100%; background: #0d0e12; border: 1px solid #2f3542; color: white; padding: 10px; border-radius: 6px; box-sizing: border-box; margin-top: 5px;">
-                </div>
-                <button type="submit" class="start-export-btn" style="margin-top: 20px;">Register</button>
-                <div style="margin-top: 15px; text-align: center; font-size: 12px;">
-                    <a href="#" onclick="switchAuthView('login')" style="color: #6c5ce7; text-decoration: none;">Already have an account? Login</a>
-                </div>
-            </form>
+            <div style="color: #cbd5e1; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 13px; line-height: 1.7;">
+                <p style="color: #94a3b8; font-size: 12px; margin-bottom: 15px;">
+                    <strong>Official Legal Document for Website:</strong> Svideoeditor.com | <strong>Last Updated:</strong> August 2026
+                </p>
 
-            <!-- Forgot Password Form -->
-            <form id="forgotForm" class="hidden" onsubmit="handleAuthSubmit(event, 'forgot')">
-                <p style="font-size: 12px; color: #a4b0be; margin-bottom: 15px;">Enter your registered email or mobile number to reset your password.</p>
-                <div class="setting-group">
-                    <label>Mobile Number or Email</label>
-                    <input type="text" id="forgotUser" required style="width: 100%; background: #0d0e12; border: 1px solid #2f3542; color: white; padding: 10px; border-radius: 6px; box-sizing: border-box; margin-top: 5px;">
+                <div style="background: rgba(255, 71, 87, 0.08); border-left: 3px solid #ff4757; padding: 12px; border-radius: 4px; margin-bottom: 20px;">
+                    <strong style="color: #ff4757;">IMPORTANT NOTICE:</strong> Please read these Terms and Conditions and Legal Disclaimer carefully before accessing, utilizing, or interacting with the online video processing tools provided by Svideoeditor.com. By accessing or using any part of this platform, you acknowledge that you have read, understood, and agreed to be legally bound by all the terms outlined herein.
                 </div>
-                <button type="submit" class="start-export-btn" style="margin-top: 20px;">Send Reset Link</button>
-                <div style="margin-top: 15px; text-align: center; font-size: 12px;">
-                    <a href="#" onclick="switchAuthView('login')" style="color: #6c5ce7; text-decoration: none;">Back to Login</a>
+
+                <!-- Section 1 -->
+                <h3 style="color: #ffffff; font-size: 15px; margin-top: 20px; border-bottom: 1px solid #1e293b; padding-bottom: 5px;">1. ACCEPTANCE OF TERMS & SERVICE PURPOSE</h3>
+                <p>Welcome to <strong>Svideoeditor.com</strong> ("Website", "Platform", "We", "Us", or "Our"). This Website is designed, operated, and maintained to provide accessible, browser-based, free online video editing and media manipulation utilities. Our primary objective is to empower content creators, educators, students, and general internet users with free and efficient digital media editing capabilities.</p>
+                <p>By accessing, browsing, or using Svideoeditor.com, you ("User", "Visitor", or "Client") explicitly agree to comply with and be bound by these Terms and Conditions and Legal Disclaimer. If you do not agree with any part of these terms, you are strictly prohibited from using this Website and must discontinue use immediately.</p>
+
+                <!-- Section 2 -->
+                <h3 style="color: #ffffff; font-size: 15px; margin-top: 20px; border-bottom: 1px solid #1e293b; padding-bottom: 5px;">2. AUTHORIZED USE & PLATFORM INTENT</h3>
+                <p>Svideoeditor.com is made available strictly for legitimate, lawful, personal, and educational video editing purposes. Users are authorized to utilize the tool to edit, trim, convert, enhance, or process video files that they lawfully own, have created themselves, or have obtained explicit permissions or open-source licenses to modify.</p>
+                <p>We provide this service in good faith to assist the public with utility software. However, the availability of these editing tools does not grant users any permission or legal right to violate intellectual property, privacy rights, or applicable statutory laws in any jurisdiction.</p>
+
+                <!-- Section 3 -->
+                <h3 style="color: #ffffff; font-size: 15px; margin-top: 20px; border-bottom: 1px solid #1e293b; padding-bottom: 5px;">3. USER RESPONSIBILITY & CONTENT OWNERSHIP</h3>
+                <p>Svideoeditor.com operates solely as a passive software utility. We do not curate, pre-screen, store permanently, monitor, review, or control the content, audio, images, or media files uploaded, processed, or exported by users through the platform.</p>
+                <p>As a user of this Website, you assume 100% full legal and financial responsibility for:</p>
+                <ul style="padding-left: 20px; color: #a4b0be;">
+                    <li>All media files, videos, audio tracks, images, or text overlays you upload to or process via Svideoeditor.com.</li>
+                    <li>Ensuring that you possess all necessary rights, titles, licenses, and legal permissions to edit and modify the uploaded content.</li>
+                    <li>Any legal liabilities, copyright claims, privacy violations, or damages arising from your creation, processing, or distribution of modified media.</li>
+                </ul>
+
+                <!-- Section 4 -->
+                <h3 style="color: #ff4757; font-size: 15px; margin-top: 20px; border-bottom: 1px solid #1e293b; padding-bottom: 5px;">4. STRICTLY PROHIBITED ACTIVITIES & CONTENT</h3>
+                <p>Under no circumstances may Svideoeditor.com be used for unlawful, harmful, or unethical activities. You explicitly agree that you will not use this Website to create, edit, process, or assist in the distribution of content that includes, but is not limited to:</p>
+                <ol style="padding-left: 20px; color: #a4b0be;">
+                    <li><strong>Copyright Infringement:</strong> Any material owned by third parties, studios, artists, or broadcasting networks without explicit written authorization or legal fair-use entitlement.</li>
+                    <li><strong>Defamatory & Hate Speech:</strong> Content that is libelous, slanderous, abusive, harassing, threatening, discriminatory, or promotes violence or hatred against any individual or group.</li>
+                    <li><strong>Illegal & Harmful Content:</strong> Videos depicting illegal acts, terrorism, non-consensual imagery, explicit sexual material, or child exploitation material.</li>
+                    <li><strong>Misinformation & Deception:</strong> Manipulated media intended to defraud, deceive, impersonate others (including unauthorized deepfakes), perform financial scams, or spread dangerous public misinformation.</li>
+                    <li><strong>Malicious Distribution:</strong> Uploading files containing malware, viruses, Trojan horses, or harmful code designed to compromise website infrastructure or third-party devices.</li>
+                </ol>
+
+                <!-- Section 5 -->
+                <h3 style="color: #ffffff; font-size: 15px; margin-top: 20px; border-bottom: 1px solid #1e293b; padding-bottom: 5px;">5. THIRD-PARTY WEBSITES & EXTERNAL DISTRIBUTION DISCLAIMER</h3>
+                <p>Once a user edits or processes a media file using Svideoeditor.com and downloads it to their local device, Svideoeditor.com retains zero control over how, where, or for what purpose that media is published, uploaded, distributed, or broadcasted.</p>
+                <p>If a user uploads or shares an edited video to third-party platforms—including but not limited to YouTube, Facebook, Instagram, TikTok, Twitter/X, websites, or public forums—Svideoeditor.com, its owners, developers, and parent company (Sriram Groups) shall have absolutely no association, involvement, or legal liability regarding such distribution.</p>
+                <p>Any copyright strike, takedown notice, civil lawsuit, or criminal investigation arising from the publication of edited media on third-party channels is strictly between the user and the respective platform, copyright owner, or legal authority.</p>
+
+                <!-- Section 6 -->
+                <h3 style="color: #ffffff; font-size: 15px; margin-top: 20px; border-bottom: 1px solid #1e293b; padding-bottom: 5px;">6. INTELLECTUAL PROPERTY & TRADEMARK ACKNOWLEDGMENT</h3>
+                <p>All brand names, product names, logos, trademarks, and service marks referenced on Svideoeditor.com belong to their respective owners. Svideoeditor.com is an independent utility platform and is not affiliated, endorsed, sponsored, or associated with any social media platform, video streaming network, or third-party software provider unless explicitly stated.</p>
+                <p>The compilation, branding, source code, layout, and visual identity of Svideoeditor.com are protected under intellectual property laws. Unconsented copying, scraping, or reproduction of our website infrastructure is strictly prohibited.</p>
+
+                <!-- Section 7 -->
+                <h3 style="color: #ffffff; font-size: 15px; margin-top: 20px; border-bottom: 1px solid #1e293b; padding-bottom: 5px;">7. DISCLAIMER OF WARRANTIES ("AS-IS" PROVISION)</h3>
+                <p>Svideoeditor.com is provided on an "AS IS" and "AS AVAILABLE" basis without warranties of any kind, whether express, implied, statutory, or otherwise. To the fullest extent permissible under applicable law, Svideoeditor.com expressly disclaims all warranties, including but not limited to:</p>
+                <ul style="padding-left: 20px; color: #a4b0be;">
+                    <li>Implied warranties of merchantability, fitness for a particular purpose, and non-infringement.</li>
+                    <li>Guarantees that the Website will operate uninterrupted, secure, error-free, or free from server outages or technical defects.</li>
+                    <li>Guarantees regarding the accuracy, quality, resolution, or complete data integrity of edited or converted video files.</li>
+                </ul>
+                <p>Users download and process media files at their own discretion and risk. You are solely responsible for backing up your original files prior to using our tools.</p>
+
+                <!-- Section 8 -->
+                <h3 style="color: #ffffff; font-size: 15px; margin-top: 20px; border-bottom: 1px solid #1e293b; padding-bottom: 5px;">8. LIMITATION OF LIABILITY & INDEMNIFICATION</h3>
+                <p>To the maximum extent permitted by governing laws, in no event shall Svideoeditor.com, its founders, operators, employees, affiliates, or technical partners be held liable for any direct, indirect, incidental, consequential, special, punitive, or exemplary damages (including loss of data, loss of revenue, legal fees, or business interruption) resulting from:</p>
+                <ul style="padding-left: 20px; color: #a4b0be;">
+                    <li>The use or inability to use our tools and website services.</li>
+                    <li>Any unauthorized access, alteration, or misuse of user media by third parties.</li>
+                    <li>Any legal disputes, copyright infringement actions, or third-party claims resulting from user-uploaded or user-edited content.</li>
+                </ul>
+                <p><strong>Indemnification:</strong> You agree to defend, indemnify, and hold harmless Svideoeditor.com and its management from and against any claims, liabilities, losses, damages, expenses, or legal costs arising from your violation of these Terms or misuse of the platform.</p>
+
+                <!-- Section 9 -->
+                <h3 style="color: #ffffff; font-size: 15px; margin-top: 20px; border-bottom: 1px solid #1e293b; padding-bottom: 5px;">9. POLICY UPDATES & MODIFICATIONS</h3>
+                <p>Svideoeditor.com reserves the right to revise, update, or modify these Terms & Conditions and Legal Disclaimer at any time without prior individual notice. All updates will become effective immediately upon being published on this page. Your continued use of the Website following any changes constitutes your binding acceptance of the updated terms.</p>
+
+                <!-- Contact Section -->
+                <div style="margin-top: 25px; padding: 15px; background: rgba(0, 242, 254, 0.05); border: 1px solid rgba(0, 242, 254, 0.2); border-radius: 6px;">
+                    <h4 style="color: #00f2fe; margin-top: 0; margin-bottom: 8px;">Contact & Legal Inquiries:</h4>
+                    <p style="margin: 0; font-size: 12.5px;">If you have questions regarding these Terms & Conditions, copyright concerns, or legal notices, please reach out to our team via our official Contact Us page or email:</p>
+                    <p style="margin: 8px 0 0 0; font-size: 12.5px;">
+                        <strong>Email:</strong> <a href="mailto:support@svideoeditor.com" style="color: #00f2fe;">support@svideoeditor.com</a> / <a href="mailto:legal@svideoeditor.com" style="color: #00f2fe;">legal@svideoeditor.com</a><br>
+                        <strong>Website:</strong> Svideoeditor.com (A unit of Sriram Groups)
+                    </p>
                 </div>
-            </form>
+            </div>
+
+            <button onclick="toggleModal('termsModal', false)" style="width: 100%; margin-top: 25px; padding: 12px; background: linear-gradient(135deg, #00f2fe, #4facfe); color: #000; font-weight: bold; font-size: 14px; border: none; border-radius: 6px; cursor: pointer;">
+                I HAVE READ & AGREE TO THE TERMS 👍
+            </button>
         </div>
     </div>
 
-<!-- LUXURY FULL SCREEN PRESENTATION OVERLAY LAYER -->
-<div id="presentationOverlay" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000; z-index: 999999; flex-direction: column; justify-content: center; align-items: center; font-family: sans-serif;">
-    <button type="button" onclick="closePresentationMode()" style="position: absolute; top: 20px; right: 25px; background: rgba(255,71,87,0.2); border: 1px solid #ff4757; color: #ff4757; font-size: 20px; padding: 5px 12px; border-radius: 50%; cursor: pointer; font-weight: bold;">✕</button>
-    <div id="presentationVideoContainer" style="width: 85%; height: 70%; display: flex; justify-content: center; align-items: center;"></div>
-    <div style="margin-top: 30px; display: flex; align-items: center; gap: 20px; background: rgba(255,255,255,0.03); padding: 10px 30px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.05);">
-        <button type="button" onclick="videoBack()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: white;">⏮️</button>
-        <button type="button" class="play-main" onclick="togglePlay()" style="background: #6c5ce7; border: none; font-size: 24px; cursor: pointer; color: white; width: 50px; height: 50px; border-radius: 50%; display: flex; justify-content: center; align-items: center;">▶️</button>
-        <button type="button" onclick="videoForward()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: white;">⏭️</button>
+    <!-- PRIVACY POLICY MODAL -->
+    <div id="privacyModal" class="export-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.85); z-index: 999999; justify-content: center; align-items: center;">
+        <div class="modal-content" style="max-width: 850px; width: 92%; max-height: 85vh; overflow-y: auto; background: #0f121d; border: 1px solid #232a3b; border-radius: 12px; padding: 30px; text-align: left; box-shadow: 0 10px 30px rgba(0,0,0,0.8);">
+            
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #232a3b; padding-bottom: 15px; margin-bottom: 20px;">
+                <h2 style="color: #00f2fe; margin: 0; font-size: 20px;">🔒 PRIVACY POLICY & DATA SECURITY GUARANTEE</h2>
+                <button onclick="toggleModal('privacyModal', false)" style="background: none; border: none; color: #ff4757; font-size: 24px; cursor: pointer; font-weight: bold;">✕</button>
+            </div>
+
+            <div style="color: #cbd5e1; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 13px; line-height: 1.7;">
+                <p style="color: #94a3b8; font-size: 12px; margin-bottom: 15px;">
+                    <strong>Official Legal Policy for Website:</strong> Svideoeditor.com | <strong>Last Updated:</strong> August 2026
+                </p>
+
+                <div style="background: rgba(0, 242, 254, 0.08); border-left: 3px solid #00f2fe; padding: 12px; border-radius: 4px; margin-bottom: 20px;">
+                    <strong style="color: #00f2fe;">PRIVACY COMMITMENT:</strong> At Svideoeditor.com, protecting your personal data, video content, and user privacy is our highest priority. We strictly guarantee that your uploaded videos, edited files, and personal data are never sold, rented, or shared with third parties under any ordinary circumstances.
+                </div>
+
+                <!-- Section 1 -->
+                <h3 style="color: #ffffff; font-size: 15px; margin-top: 20px; border-bottom: 1px solid #1e293b; padding-bottom: 5px;">1. INTRODUCTION & CORE PRIVACY GUARANTEE</h3>
+                <p>Welcome to <strong>Svideoeditor.com</strong> ("Website", "Platform", "We", "Us", or "Our"). This Privacy Policy governs the collection, processing, storage, and protection of information when you interact with our online video editing tools and services.</p>
+                <p>We respect user confidentiality. We explicitly declare that 99.9% of user interactions, uploaded video media, and account data remain completely private and inaccessible to any external parties or unauthorized entities. We do not monetise or trade your personal files or user information.</p>
+
+                <!-- Section 2 -->
+                <h3 style="color: #ffffff; font-size: 15px; margin-top: 20px; border-bottom: 1px solid #1e293b; padding-bottom: 5px;">2. PROTECTION OF UPLOADED MEDIA & PROCESSED VIDEOS</h3>
+                <p>Your original video files, audio tracks, images, and final edited video outputs are treated with the highest degree of technical security and privacy:</p>
+                <ul style="padding-left: 20px; color: #a4b0be;">
+                    <li><strong>No Third-Party Sharing:</strong> Your uploaded videos and edited output files are never provided, shared, published, or transmitted to any third parties, advertisers, or external platforms.</li>
+                    <li><strong>Temporary Processing & Automatic Erasure:</strong> Video processing is executed in secure temporary environments (or locally within your browser session whenever technical design permits). Uploaded and processed media files are automatically deleted from temporary server buffers after processing, ensuring no permanent public archiving of your personal media.</li>
+                    <li><strong>No Public Content Indexing:</strong> Search engines and automated Web Crawlers are strictly prevented from indexing your uploaded or processed video files.</li>
+                </ul>
+
+                <!-- Section 3 -->
+                <h3 style="color: #ffffff; font-size: 15px; margin-top: 20px; border-bottom: 1px solid #1e293b; padding-bottom: 5px;">3. USER ACCOUNT & LOGIN DATA CONFIDENTIALITY</h3>
+                <p>If you create an account, log in, or interact with Svideoeditor.com, any personal data collected (such as your email address, username, IP address, or session credentials) is strictly protected:</p>
+                <ul style="padding-left: 20px; color: #a4b0be;">
+                    <li><strong>Non-Disclosure Commitment:</strong> Under standard operations, your login credentials and profile information will never be disclosed, shared, or distributed to third-party marketers or unauthorized individuals.</li>
+                    <li><strong>Data Encryption:</strong> All account interactions, login sessions, and data transfers are protected using industry-standard Secure Sockets Layer (SSL) encryption protocols to prevent interception.</li>
+                </ul>
+
+                <!-- Section 4 -->
+                <h3 style="color: #ff4757; font-size: 15px; margin-top: 20px; border-bottom: 1px solid #1e293b; padding-bottom: 5px;">4. TECHNICAL EXCEPTIONS & LAWFUL DISCLOSURES (THE LEGAL 1% EXCEPTION)</h3>
+                <p>While we maintain a strict 99.9% non-disclosure rule for user data, applicable statutory laws require us to declare the narrow legal exceptions where disclosure may be mandated:</p>
+                <ul style="padding-left: 20px; color: #a4b0be;">
+                    <li><strong>Compliance with Lawful Court Orders:</strong> In the rare event of receiving a legally enforceable court order, search warrant, or official subpoena from recognized governmental legal authorities, we must comply with applicable law.</li>
+                    <li><strong>Prevention of Severe Harm:</strong> Information may be disclosed only if strictly necessary to investigate or prevent illegal acts, severe cyber security breaches, or direct threats to public safety.</li>
+                </ul>
+
+                <!-- Section 5 -->
+                <h3 style="color: #ffffff; font-size: 15px; margin-top: 20px; border-bottom: 1px solid #1e293b; padding-bottom: 5px;">5. COOKIES & ADVERTISING ANALYTICS (GOOGLE ADSENSE COMPLIANCE)</h3>
+                <p>Svideoeditor.com uses standard web analytics and browser cookies to improve platform performance and serve contextual advertisements via Google AdSense:</p>
+                <ul style="padding-left: 20px; color: #a4b0be;">
+                    <li><strong>Google AdSense & DoubleClick Cookies:</strong> As a third-party vendor, Google uses cookies (including the DART cookie) to serve ads based on users' visits to this and other websites. These cookies track anonymous website traffic patterns but do not access your uploaded video files or private media.</li>
+                    <li><strong>Opt-Out Options:</strong> Users may opt out of personalized advertising by visiting Google's Ad Settings (<a href="https://www.google.com/settings/ads" target="_blank" style="color: #00f2fe;">www.google.com/settings/ads</a>) or by adjusting browser cookie preferences.</li>
+                </ul>
+
+                <!-- Section 6 -->
+                <h3 style="color: #ffffff; font-size: 15px; margin-top: 20px; border-bottom: 1px solid #1e293b; padding-bottom: 5px;">6. DATA SECURITY & STORAGE PROTOCOLS</h3>
+                <p>We implement robust technical and organizational measures to defend your information against unauthorized access, loss, or alteration. These measures include encrypted communication protocols (HTTPS), restricted server access control, and routine security checks on our hosting infrastructure.</p>
+
+                <!-- Section 7 -->
+                <h3 style="color: #ffffff; font-size: 15px; margin-top: 20px; border-bottom: 1px solid #1e293b; padding-bottom: 5px;">7. CHILDREN’S PRIVACY</h3>
+                <p>Svideoeditor.com does not knowingly collect or solicit personal information from children under the age of 13. If we become aware that personal information from a child under 13 has been collected without verified parental consent, we take immediate steps to remove such data from our servers.</p>
+
+                <!-- Section 8 -->
+                <h3 style="color: #ffffff; font-size: 15px; margin-top: 20px; border-bottom: 1px solid #1e293b; padding-bottom: 5px;">8. UPDATES TO THIS PRIVACY POLICY</h3>
+                <p>We reserve the right to modify or update this Privacy Policy at any time to reflect technical upgrades or legal compliance requirements. Any revisions will be published on this page with an updated revision date. Continued use of Svideoeditor.com implies acceptance of the updated policy.</p>
+
+                <!-- Contact Section -->
+                <div style="margin-top: 25px; padding: 15px; background: rgba(0, 242, 254, 0.05); border: 1px solid rgba(0, 242, 254, 0.2); border-radius: 6px;">
+                    <h4 style="color: #00f2fe; margin-top: 0; margin-bottom: 8px;">Contact Us Regarding Privacy:</h4>
+                    <p style="margin: 0; font-size: 12.5px;">If you have any questions, concerns, or inquiries regarding your data privacy or this policy, please contact us at:</p>
+                    <p style="margin: 8px 0 0 0; font-size: 12.5px;">
+                        <strong>Email:</strong> <a href="mailto:privacy@svideoeditor.com" style="color: #00f2fe;">privacy@svideoeditor.com</a> / <a href="mailto:support@svideoeditor.com" style="color: #00f2fe;">support@svideoeditor.com</a><br>
+                        <strong>Website:</strong> Svideoeditor.com (A unit of Sriram Groups)
+                    </p>
+                </div>
+            </div>
+
+            <button onclick="toggleModal('privacyModal', false)" style="width: 100%; margin-top: 25px; padding: 12px; background: linear-gradient(135deg, #00f2fe, #4facfe); color: #000; font-weight: bold; font-size: 14px; border: none; border-radius: 6px; cursor: pointer;">
+                I ACKNOWLEDGE & AGREE TO PRIVACY POLICY 👍
+            </button>
+        </div>
     </div>
-</div>
+
+    <!-- COOKIES POLICY MODAL -->
+    <div id="cookiesModal" class="export-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.85); z-index: 999999; justify-content: center; align-items: center;">
+        <div class="modal-content" style="max-width: 750px; width: 90%; max-height: 80vh; overflow-y: auto; background: #0f121d; border: 1px solid #232a3b; border-radius: 12px; padding: 25px; text-align: left; box-shadow: 0 10px 30px rgba(0,0,0,0.8);">
+            
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #232a3b; padding-bottom: 12px; margin-bottom: 15px;">
+                <h3 style="color: #00f2fe; margin: 0; font-size: 20px;">🍪 Cookies Policy & Privacy Guarantee</h3>
+                <button onclick="toggleModal('cookiesModal', false)" style="background: none; border: none; color: #ff4757; font-size: 22px; cursor: pointer; font-weight: bold;">✕</button>
+            </div>
+
+            <div style="color: #cbd5e1; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 13.5px; line-height: 1.6;">
+                <p style="color: #94a3b8; font-size: 12px; margin-bottom: 15px;">
+                    <strong>Official Policy Document:</strong> S Studio (svideoeditor.com) | <strong>Last Updated:</strong> August 2026
+                </p>
+
+                <p><strong>S Studio (svideoeditor.com)</strong> uses cookies and browser local storage technologies to optimize video rendering operations, remember workspace configurations, and deliver relevant advertisements via Google AdSense.</p>
+
+                <!-- Combined Privacy Guarantee Highlights Box -->
+                <div style="background: rgba(0, 242, 254, 0.05); border: 1px solid rgba(0, 242, 254, 0.2); border-radius: 8px; padding: 15px; margin: 15px 0;">
+                    <h4 style="color: #00f2fe; margin-top: 0; margin-bottom: 10px; font-size: 14px;">🛡️ Privacy & Data Security Guarantee:</h4>
+                    <ul style="margin: 0; padding-left: 18px; color: #cbd5e1;">
+                        <li style="margin-bottom: 8px;"><strong>100% Secure Processing:</strong> We never share, sell, rent, or publish your uploaded videos, audio files, or personal login data with anyone.</li>
+                        <li style="margin-bottom: 8px;"><strong>Automatic Erasure:</strong> Your media files are computed locally or temporarily in secure memory buffers and are automatically deleted immediately after processing.</li>
+                        <li><strong>Minimal Cookie Usage:</strong> We only use essential session cookies to preserve your editor settings and basic performance parameters for Google Ads.</li>
+                    </ul>
+                </div>
+
+                <!-- Section 1 -->
+                <h4 style="color: #fff; margin-top: 15px; margin-bottom: 5px;">1. What Are Cookies?</h4>
+                <p style="margin-top: 0;">Cookies are small text data files saved in your local web browser cache. They allow us to remember your editing preferences, export resolution settings, tool configurations, and active user session tokens without saving your private media online.</p>
+
+                <!-- Section 2 -->
+                <h4 style="color: #fff; margin-top: 15px; margin-bottom: 5px;">2. Third-Party Advertising & Google Cookies</h4>
+                <p style="margin-top: 0;">Third-party vendors, including Google, use cookies (such as DART cookies) to serve non-intrusive advertisements based on visits to this and other sites on the web. These cookies collect anonymized performance telemetry and do not access or index your private video media.</p>
+
+                <!-- Section 3 -->
+                <h4 style="color: #fff; margin-top: 15px; margin-bottom: 5px;">3. Managing & Opting Out</h4>
+                <p style="margin-top: 0;">You can customize or block cookies through your browser settings at any time. To opt out of personalized Google Ads, visit <a href="https://www.google.com/settings/ads" target="_blank" style="color: #00f2fe; text-decoration: none;">Google Ad Settings</a>.</p>
+            </div>
+
+            <button onclick="toggleModal('cookiesModal', false)" style="width: 100%; margin-top: 20px; padding: 11px; background: linear-gradient(135deg, #00f2fe, #4facfe); color: #000; font-weight: bold; border: none; border-radius: 6px; cursor: pointer; font-size: 13.5px;">
+                I AGREE & UNDERSTAND 👍
+            </button>
+        </div>
+    </div>
+
+    <!-- COPYRIGHT POLICY MODAL -->
+    <div id="copyrightModal" class="export-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.85); z-index: 999999; justify-content: center; align-items: center;">
+        <div class="modal-content" style="max-width: 780px; width: 90%; max-height: 80vh; overflow-y: auto; background: #0f121d; border: 1px solid #232a3b; border-radius: 12px; padding: 25px; text-align: left; box-shadow: 0 10px 30px rgba(0,0,0,0.8);">
+            
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #232a3b; padding-bottom: 12px; margin-bottom: 15px;">
+                <h3 style="color: #00f2fe; margin: 0; font-size: 20px;">© Intellectual Property & Copyright Policy</h3>
+                <button onclick="toggleModal('copyrightModal', false)" style="background: none; border: none; color: #ff4757; font-size: 22px; cursor: pointer; font-weight: bold;">✕</button>
+            </div>
+
+            <div style="color: #cbd5e1; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 13.5px; line-height: 1.6;">
+                <p style="color: #94a3b8; font-size: 12px; margin-bottom: 15px;">
+                    <strong>Official Document:</strong> S Studio (svideoeditor.com) | <strong>Last Updated:</strong> August 2026
+                </p>
+
+                <p>All source code, core rendering engines, web layouts, branding assets, UI elements, and logos associated with <strong>S Studio (svideoeditor.com)</strong> are protected by intellectual property laws and belong exclusively to <strong>Sriram Groups Official</strong>.</p>
+
+                <!-- Section 1 -->
+                <h4 style="color: #fff; margin-top: 15px; margin-bottom: 5px;">1. Full User Media Ownership</h4>
+                <p style="margin-top: 0;">Users retain <strong>100% full intellectual property ownership</strong> over their raw video footage, audio tracks, images, and final exported video projects processed through S Studio. S Studio and Sriram Groups Official claim zero copyright ownership or licensing rights over your creative output.</p>
+
+                <!-- Section 2 -->
+                <h4 style="color: #fff; margin-top: 15px; margin-bottom: 5px;">2. DMCA & Copyright Infringement Takedowns</h4>
+                <p style="margin-top: 0;">S Studio strictly respects third-party copyright laws and intellectual property rights. If you are a copyright holder and believe that any content hosted or processed through our domain infringes upon your copyright, please submit a formal DMCA takedown notice containing:</p>
+                <ul style="margin: 0; padding-left: 20px; color: #a4b0be;">
+                    <li>Identification of the copyrighted work claimed to have been infringed.</li>
+                    <li>Direct URL or location link of the alleged infringing material.</li>
+                    <li>Your contact details (Name, Address, Email, and Phone Number).</li>
+                </ul>
+
+                <!-- Section 3 -->
+                <h4 style="color: #fff; margin-top: 15px; margin-bottom: 5px;">3. Third-Party Trademarks Disclaimer</h4>
+                <p style="margin-top: 0;">All third-party trademarks, logos, brand names, and social media icons displayed on this platform (e.g., YouTube, Facebook, Instagram) belong to their respective owners. S Studio is an independent utility application and is not officially affiliated with or endorsed by these platforms unless explicitly stated.</p>
+
+                <!-- Contact Box -->
+                <div style="margin-top: 20px; padding: 12px; background: rgba(0, 242, 254, 0.05); border: 1px solid rgba(0, 242, 254, 0.2); border-radius: 6px;">
+                    <p style="margin: 0; font-size: 12.5px;">
+                        <strong>DMCA & Copyright Inquiries Email:</strong> <a href="mailto:sriramgroupsofficial@gmail.com" style="color: #00f2fe; text-decoration: none;">sriramgroupsofficial@gmail.com</a>
+                    </p>
+                </div>
+            </div>
+
+            <button onclick="toggleModal('copyrightModal', false)" style="width: 100%; margin-top: 20px; padding: 11px; background: linear-gradient(135deg, #00f2fe, #4facfe); color: #000; font-weight: bold; border: none; border-radius: 6px; cursor: pointer; font-size: 13.5px;">
+                UNDERSTOOD & CLOSE 👍
+            </button>
+        </div>
+    </div>
+
+    <!-- FOUNDER & EXECUTIVE LEADERSHIP MODAL -->
+    <div id="founderModal" class="export-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.85); z-index: 999999; justify-content: center; align-items: center;">
+        <div class="modal-content" style="max-width: 750px; width: 90%; max-height: 85vh; overflow-y: auto; background: #0f121d; border: 1px solid #6c5ce7; border-radius: 12px; padding: 25px; text-align: left; box-shadow: 0 10px 30px rgba(108, 92, 231, 0.3);">
+            
+            <!-- Modal Header -->
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #232a3b; padding-bottom: 12px; margin-bottom: 20px;">
+                <h3 style="color: #00f2fe; margin: 0; font-size: 20px;">👑 Executive Leadership & Founder Profile</h3>
+                <button onclick="toggleModal('founderModal', false)" style="background: none; border: none; color: #ff4757; font-size: 22px; cursor: pointer; font-weight: bold;">✕</button>
+            </div>
+
+            <!-- Main Grid: Left Side A4 Photo Holder | Right Side Bio & Company Details -->
+            <div style="display: grid; grid-template-columns: 200px 1fr; gap: 20px; align-items: start;">
+                
+                <!-- 🖼️ A4 Size Ratio Reserved Photo Placeholder (For Future Founder Image/Logo) -->
+                <div style="width: 100%; aspect-ratio: 1 / 1.414; background: rgba(108, 92, 231, 0.08); border: 2px dashed #6c5ce7; border-radius: 10px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 10px; color: #a4b0be;">
+                    <div style="font-size: 32px; margin-bottom: 5px;">🖼️</div>
+                    <span style="font-size: 11px; font-weight: bold; color: #00f2fe;">FOUNDER PHOTO</span>
+                    <span style="font-size: 9.5px; color: #64748b; margin-top: 4px;">(A4 Ratio Reserved Space)</span>
+                </div>
+
+                <!-- 📝 Profile & Company Description -->
+                <div style="color: #cbd5e1; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 13px; line-height: 1.6;">
+                    
+                    <!-- Founder Name Header -->
+                    <div style="background: rgba(108, 92, 231, 0.12); border-left: 4px solid #6c5ce7; padding: 12px; border-radius: 6px; margin-bottom: 15px;">
+                        <h2 style="color: #ffffff; margin: 0 0 3px 0; font-size: 20px;">S. Purushotham</h2>
+                        <p style="color: #00f2fe; margin: 0; font-weight: bold; font-size: 12.5px;">Founder & CEO — Sriram Groups Official</p>
+                    </div>
+
+                    <!-- Executive Bio -->
+                    <p style="margin-top: 0;"><strong>S Studio (svideoeditor.com)</strong> was conceptualized and launched under the visionary leadership of <strong>S. Purushotham</strong>. His key objective is to democratize high-performance, browser-based video editing and AI technology for digital creators, students, and professionals worldwide.</p>
+
+                    <!-- Parent Company Overview -->
+                    <h4 style="color: #fff; margin-top: 15px; margin-bottom: 6px; font-size: 14px; border-bottom: 1px solid #232a3b; padding-bottom: 4px;">🏢 About Parent Organization: Sriram Groups Official</h4>
+                    <p style="margin-top: 0; color: #94a3b8; font-size: 12.5px;">
+                        <strong>Sriram Groups Official</strong> is a premier technology, digital media, and educational services organization dedicated to delivering innovative software utilities, online platforms, and digital solutions. The organization operates with the core mission that advanced digital tools and technological resources should be accessible to everyone without heavy financial barriers.
+                    </p>
+
+                    <!-- Official Credentials -->
+                    <div style="background: rgba(0, 0, 0, 0.3); padding: 10px 12px; border-radius: 6px; font-size: 12px; border: 1px solid #232a3b;">
+                        <p style="margin: 0 0 4px 0;"><strong>Parent Enterprise:</strong> Sriram Groups Official</p>
+                        <p style="margin: 0 0 4px 0;"><strong>Official Portal:</strong> <a href="https://sriramgroupsofficial.com" target="_blank" style="color: #00f2fe; text-decoration: none;">sriramgroupsofficial.com</a></p>
+                        <p style="margin: 0;"><strong>Executive Inquiry Email:</strong> <a href="mailto:sriramgroupsofficial@gmail.com" style="color: #00f2fe; text-decoration: none;">sriramgroupsofficial@gmail.com</a></p>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Close Button -->
+            <button onclick="toggleModal('founderModal', false)" style="width: 100%; margin-top: 20px; padding: 11px; background: linear-gradient(135deg, #6c5ce7, #a8a5ff); color: #fff; font-weight: bold; border: none; border-radius: 6px; cursor: pointer; font-size: 13.5px;">
+                CLOSE PROFILE 👍
+            </button>
+        </div>
+    </div>
+
+    <!-- THEME & VISION MODAL -->
+    <div id="visionModal" class="export-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.85); z-index: 999999; justify-content: center; align-items: center;">
+        <div class="modal-content" style="max-width: 780px; width: 90%; max-height: 85vh; overflow-y: auto; background: #0f121d; border: 1px solid #00f2fe; border-radius: 12px; padding: 28px; text-align: left; box-shadow: 0 10px 30px rgba(0, 242, 254, 0.25);">
+            
+            <!-- Modal Header -->
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #232a3b; padding-bottom: 12px; margin-bottom: 20px;">
+                <h3 style="color: #00f2fe; margin: 0; font-size: 20px;">💡 Theme & Vision of Sriram Groups Official</h3>
+                <button onclick="toggleModal('visionModal', false)" style="background: none; border: none; color: #ff4757; font-size: 22px; cursor: pointer; font-weight: bold;">✕</button>
+            </div>
+
+            <div style="color: #cbd5e1; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 13.5px; line-height: 1.7;">
+                
+                <!-- Core Vision Section Box -->
+                <div style="background: rgba(0, 242, 254, 0.05); border-left: 4px solid #00f2fe; padding: 16px; border-radius: 6px; margin-bottom: 22px;">
+                    <h2 style="color: #ffffff; margin: 0 0 8px 0; font-size: 18px; font-weight: 700;">🌐 Technology Should Be For Everyone.</h2>
+                    <p style="margin: 0; color: #38bdf8; font-weight: 600; font-size: 13.5px;">Core Vision Statement:</p>
+                    <p style="margin: 6px 0 0 0; color: #cbd5e1;">
+                        At <strong>Sriram Groups</strong>, our guiding principle is simple yet uncompromising: <em>Technology belongs to everyone, not just those who can afford expensive software.</em>
+                    </p>
+                </div>
+
+                <p>We believe that innovation and powerful digital tools should never be locked behind high paywalls or hidden subscriptions. As a modern digital enterprise, our mission is to build, code, and deliver accessible, high-performance web platforms and real-world tools that empower everyday creators, users, and communities—completely free of charge and built on total transparency.</p>
+
+                <!-- Special Note Section: S-Video Editing / S-Premium Studio -->
+                <div style="margin-top: 25px; border-top: 1px dashed #232a3b; padding-top: 20px;">
+                    <h3 style="color: #a8a5ff; margin-top: 0; margin-bottom: 6px; font-size: 16px; display: flex; align-items: center; gap: 8px;">
+                        🎬 Special Note: S-Video Editing (S-Premium Studio)
+                    </h3>
+                    <p style="color: #00f2fe; font-weight: bold; margin: 0 0 10px 0; font-size: 13px;">Empowerment Through Creative Media</p>
+                    
+                    <p style="margin-top: 0;">
+                        <strong>S-Video Editing (svideoeditor.com)</strong> was born directly out of our core philosophy. Professional-grade video production tools are often far too expensive for independent creators and beginners.
+                    </p>
+                    
+                    <div style="background: rgba(108, 92, 231, 0.1); border: 1px solid rgba(108, 92, 231, 0.3); padding: 14px; border-radius: 8px; margin-top: 12px; color: #e2e8f0;">
+                        Through S-Video Editing, Sriram Groups provides a powerful, web-accessible workspace packed with advanced capabilities. We proudly deliver this high-end creative utility at zero cost to the community, ensuring that every individual has the power to edit, create, and share their story without financial barriers.
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Close Button -->
+            <button onclick="toggleModal('visionModal', false)" style="width: 100%; margin-top: 25px; padding: 11px; background: linear-gradient(135deg, #00f2fe, #4facfe); color: #000; font-weight: bold; border: none; border-radius: 6px; cursor: pointer; font-size: 13.5px;">
+                GOT IT & CLOSE 👍
+            </button>
+        </div>
+    </div>
+
+    <!-- WHY BEST MODAL -->
+    <div id="whyBestModal" class="export-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.85); z-index: 999999; justify-content: center; align-items: center;">
+        <div class="modal-content" style="max-width: 600px; width: 90%; background: #0f121d; border: 1px solid #00f2fe; border-radius: 12px; padding: 25px; text-align: left;">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #232a3b; padding-bottom: 12px; margin-bottom: 15px;">
+                <h3 style="color: #00f2fe; margin: 0; font-size: 20px;">🚀 Why S Studio is the Best?</h3>
+                <button onclick="toggleModal('whyBestModal', false)" style="background: none; border: none; color: #ff4757; font-size: 22px; cursor: pointer; font-weight: bold;">✕</button>
+            </div>
+            <div style="color: #cbd5e1; font-size: 13.5px; line-height: 1.7;">
+                <ul>
+                    <li><strong>100% Free:</strong> No hidden paywalls or subscription fees.</li>
+                    <li><strong>Browser-Based:</strong> No software installation needed.</li>
+                    <li><strong>Privacy First:</strong> Videos are computed locally in your browser.</li>
+                </ul>
+            </div>
+            <button onclick="toggleModal('whyBestModal', false)" style="width: 100%; margin-top: 20px; padding: 11px; background: #00f2fe; color: #000; font-weight: bold; border: none; border-radius: 6px; cursor: pointer;">
+                CLOSE
+            </button>
+        </div>
+    </div>
+
+    <!-- FAQ MODAL -->
+    <div id="faqModal" class="export-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.85); z-index: 999999; justify-content: center; align-items: center;">
+        <div class="modal-content" style="max-width: 650px; width: 90%; max-height: 80vh; overflow-y: auto; background: #0f121d; border: 1px solid #232a3b; border-radius: 12px; padding: 25px; text-align: left;">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #232a3b; padding-bottom: 12px; margin-bottom: 15px;">
+                <h3 style="color: #00f2fe; margin: 0; font-size: 20px;">❓ Frequently Asked Questions (FAQs)</h3>
+                <button onclick="toggleModal('faqModal', false)" style="background: none; border: none; color: #ff4757; font-size: 22px; cursor: pointer; font-weight: bold;">✕</button>
+            </div>
+            <div style="color: #cbd5e1; font-size: 13.5px; line-height: 1.7;">
+                <p><strong>Q: Is S Studio free?</strong><br>A: Yes, 99% of features are completely free.</p>
+                <p><strong>Q: Are my videos stored on a server?</strong><br>A: No, all editing happens locally inside your web browser.</p>
+            </div>
+            <button onclick="toggleModal('faqModal', false)" style="width: 100%; margin-top: 20px; padding: 11px; background: #00f2fe; color: #000; font-weight: bold; border: none; border-radius: 6px; cursor: pointer;">
+                CLOSE
+            </button>
+        </div>
+    </div>
+
+    <!-- BUG REPORT MODAL -->
+    <div id="bugReportModal" class="export-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.85); z-index: 999999; justify-content: center; align-items: center;">
+        <div class="modal-content" style="max-width: 550px; width: 90%; background: #0f121d; border: 1px solid #ff4757; border-radius: 12px; padding: 25px; text-align: left;">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #232a3b; padding-bottom: 12px; margin-bottom: 15px;">
+                <h3 style="color: #ff4757; margin: 0; font-size: 20px;">🎁 Report a Bug & Get Reward!</h3>
+                <button onclick="toggleModal('bugReportModal', false)" style="background: none; border: none; color: #ff4757; font-size: 22px; cursor: pointer; font-weight: bold;">✕</button>
+            </div>
+            <div style="color: #cbd5e1; font-size: 13.5px; line-height: 1.7;">
+                <p>Found a glitch or issue? Send details or screenshots to <a href="mailto:sriramgroup.help@gmail.com" style="color: #00f2fe;">sriramgroup.help@gmail.com</a> to earn rewards!</p>
+            </div>
+            <button onclick="toggleModal('bugReportModal', false)" style="width: 100%; margin-top: 20px; padding: 11px; background: #ff4757; color: #fff; font-weight: bold; border: none; border-radius: 6px; cursor: pointer;">
+                GOT IT 👍
+            </button>
+        </div>
+    </div>
+
+    <!-- PRESENTATION OVERLAY -->
+    <div id="presentationOverlay" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000; z-index: 999999; flex-direction: column; justify-content: center; align-items: center; font-family: sans-serif;">
+        <button type="button" onclick="closePresentationMode()" style="position: absolute; top: 20px; right: 25px; background: rgba(255,71,87,0.2); border: 1px solid #ff4757; color: #ff4757; font-size: 20px; padding: 5px 12px; border-radius: 50%; cursor: pointer; font-weight: bold;">✕</button>
+        <div id="presentationVideoContainer" style="width: 85%; height: 70%; display: flex; justify-content: center; align-items: center;"></div>
+        <div style="margin-top: 30px; display: flex; align-items: center; gap: 20px; background: rgba(255,255,255,0.03); padding: 10px 30px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.05);">
+            <button type="button" onclick="videoBack()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: white;">⏮️</button>
+            <button type="button" class="play-main" onclick="togglePlay()" style="background: #6c5ce7; border: none; font-size: 24px; cursor: pointer; color: white; width: 50px; height: 50px; border-radius: 50%; display: flex; justify-content: center; align-items: center;">▶️</button>
+            <button type="button" onclick="videoForward()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: white;">⏭️</button>
+        </div>
+    </div>
+
     <!-- MAIN CORE SCRIPT LINK -->
     <script src="script.js"></script>
+
+    <!-- Modal Toggle Utility Script -->
+    <script>
+    function toggleModal(modalId, show) {
+        const modal = document.getElementById(modalId);
+        if (modal) {
+            modal.style.display = show ? 'flex' : 'none';
+        }
+    }
+    </script>
 </body>
 </html>
-<!-- ==========================================================================
-     ❓ ALL-IN-ONE SYSTEM GUIDE & USER MANUAL MODAL (PURE ENGLISH)
-     ========================================================================== -->
-<div id="howToUseModal" class="export-modal" style="display: none;">
-    <div class="modal-content" style="max-width: 750px; max-height: 85vh; overflow-y: auto; text-align: left; padding: 25px;">
-        <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #232a3b; padding-bottom: 12px; margin-bottom: 20px;">
-            <h3 style="margin: 0; color: #00f2fe; font-size: 20px;">🎬 S-Studio Complete System Guide</h3>
-            <button class="close-modal" onclick="toggleHowToUseModal(false)" style="background: none; border: none; color: #ff4757; font-size: 20px; cursor: pointer; font-weight: bold;">✕</button>
-        </div>
-
-        <div class="guide-modal-body" style="color: #cbd5e1; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 13.5px; line-height: 1.6;">
-            
-            <!-- Section 0: Brand Intro & SEO Article -->
-            <article style="background: #131722; border: 1px solid #1e293b; border-radius: 8px; padding: 16px; margin-bottom: 20px;">
-                <h4 style="color: #ffffff; margin: 0 0 8px 0; font-size: 15px;">🚀 Boost Your Brand with Next-Gen Online Video Production</h4>
-                <p style="margin: 0; color: #94a3b8; font-size: 12.5px;">In today's digital landscape, high-converting video content is essential for social media success, real estate campaigns, and brand promotion. S-Video Editor, powered by Sriram Groups, provides a lightweight, cloud-accelerated, browser-based video editing engine running flawlessly on desktop and mobile screens completely free of charge.</p>
-            </article>
-
-            <!-- Section 1: Main Flow -->
-            <h4 style="color: #38bdf8; font-size: 15px; margin: 15px 0 8px 0;">1. Main Video Editing Core Flow</h4>
-            <ul style="padding-left: 20px; margin: 0 0 20px 0; color: #94a3b8;">
-                <li style="margin-bottom: 6px;"><strong style="color: #fff;">Media Import:</strong> Launch <a href="https://svideoeditor.com/" target="_blank" style="color: #00f2fe;">svideoeditor.com</a>, click "Upload Video", and securely import raw footage, voice tracks, or clips from local storage.</li>
-                <li style="margin-bottom: 6px;"><strong style="color: #fff;">Timeline Splitting:</strong> Click the "Split" button while playing to slice track components at precise timeline intervals.</li>
-                <li style="margin-bottom: 6px;"><strong style="color: #fff;">Multi-Track Composition:</strong> Arrange media, add text overlays (📝), background music (🎵), logos, or Picture-in-Picture (PIP) graphics (🖼️) over the active grid.</li>
-            </ul>
-
-            <!-- Section 2: AI Assistance -->
-            <h4 style="color: #38bdf8; font-size: 15px; margin: 15px 0 8px 0;">2. AI Smart Assistance Layer</h4>
-            <ul style="padding-left: 20px; margin: 0 0 20px 0; color: #94a3b8;">
-                <li style="margin-bottom: 6px;"><strong style="color: #a8a5ff;">ASK AI 🤖:</strong> Prompt your integrated AI assistant with queries like "speed up" or "mask video" for instant functional execution.</li>
-                <li style="margin-bottom: 6px;"><strong style="color: #a8a5ff;">REDO AI 🔄:</strong> Instantly trigger the automated history matrix to re-compile, step forward, or re-render script logic states seamlessly.</li>
-                <li style="margin-bottom: 6px;"><strong style="color: #a8a5ff;">AI Rewind & Subtitles:</strong> Apply smooth reverse parameters and dynamic automated AI subtitles to boost audience engagement.</li>
-            </ul>
-
-            <!-- Section 3: PIP Toolkit -->
-            <h4 style="color: #38bdf8; font-size: 15px; margin: 15px 0 8px 0;">3. PIP Layer Editing Toolkit Features</h4>
-            <p style="color: #94a3b8; margin-bottom: 10px;">Selecting any loaded secondary file layer activates the 19-button utility tray:</p>
-            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; margin-bottom: 20px;">
-                <div style="background: #181d2c; padding: 8px 12px; border-radius: 6px; font-size: 12px; border: 1px solid #283146;"><strong style="color: #fff;">Replace Elements:</strong> Swap source textures</div>
-                <div style="background: #181d2c; padding: 8px 12px; border-radius: 6px; font-size: 12px; border: 1px solid #283146;"><strong style="color: #fff;">Crop Window:</strong> Exact width/height trim</div>
-                <div style="background: #181d2c; padding: 8px 12px; border-radius: 6px; font-size: 12px; border: 1px solid #283146;"><strong style="color: #fff;">Blur Selection:</strong> Localized boundary mask</div>
-                <div style="background: #181d2c; padding: 8px 12px; border-radius: 6px; font-size: 12px; border: 1px solid #283146;"><strong style="color: #fff;">Lock Transforms 🔒:</strong> Pin layout metrics</div>
-                <div style="background: #181d2c; padding: 8px 12px; border-radius: 6px; font-size: 12px; border: 1px solid #283146;"><strong style="color: #fff;">Duplicate Matrix:</strong> Replicate layer stack</div>
-                <div style="background: #181d2c; padding: 8px 12px; border-radius: 6px; font-size: 12px; border: 1px solid #283146;"><strong style="color: #fff;">Shape Mask:</strong> Toggle geometric circles</div>
-                <div style="background: #181d2c; padding: 8px 12px; border-radius: 6px; font-size: 12px; border: 1px solid #283146;"><strong style="color: #fff;">Delete Module:</strong> Evacuate active node</div>
-            </div>
-
-            <!-- Section 4: Multi-Profile Exporter -->
-            <h4 style="color: #38bdf8; font-size: 15px; margin: 15px 0 8px 0;">4. Multi-Profile High Bitrate Exporter</h4>
-            <ul style="padding-left: 20px; margin: 0 0 20px 0; color: #94a3b8;">
-                <li style="margin-bottom: 6px;"><strong style="color: #fff;">Auto Matrix Export:</strong> Processes unified frames down to baseline safe configurations instantly.</li>
-                <li style="margin-bottom: 6px;"><strong style="color: #fff;">Manual HD Profiles:</strong> Toggle resolution from 240p up to 1440p (2K) with custom bitrates up to 10 Mbps for crisp downloads.</li>
-            </ul>
-
-            <!-- Section 5: Future Roadmap -->
-            <article style="background: rgba(0, 242, 254, 0.03); border-left: 3px solid #00f2fe; padding: 12px; border-radius: 4px; margin-bottom: 20px;">
-                <h4 style="color: #00f2fe; margin: 0 0 6px 0; font-size: 14px;">🔮 What's Coming Next? Photo Editing Studio</h4>
-                <p style="margin: 0; color: #cbd5e1; font-size: 12px;">Our developer sub-layer is actively mounting a comprehensive "Photo Editing Studio". Soon, creators can design real estate graphics, thumbnails, and animations inside a single workspace architecture.</p>
-            </article>
-
-        </div>
-
-        <button class="start-export-btn" onclick="toggleHowToUseModal(false)" style="width: 100%; padding: 12px; background: linear-gradient(135deg, #00c6ff, #0072ff); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 14px; margin-top: 10px;">
-            I UNDERSTAND, START EDITING 👍
-        </button>
-    </div>
-</div>
-
-<!-- ==========================================================================
-     📖 S STUDIO COMPLETE USER MANUAL & SEO ENGINE (PURE ENGLISH HTML)
-     ========================================================================== -->
-<div id="sStudioScrollableGuide" class="scrollable-guide-box">
-    <div class="scrollable-guide-content">
-        
-        <!-- Header Title -->
-        <header class="guide-mini-header">
-            <h2>🎬 S Studio (svideoeditor.com)</h2>
-            <p>Perform high-end video editing workflows directly within your web browser. Edit seamlessly and completely free of cost, without installing heavy desktop software.</p>
-        </header>
-
-        <!-- Section 1: Uploading -->
-        <section class="guide-section">
-            <h3>📂 1. How to Upload Media Files</h3>
-            <p>Click the prominent <strong>"Upload Video"</strong> button on the editor interface to open system storage permissions. Securely import high-resolution raw footage, voice tracks, or mobile camera clips directly from your local phone gallery or PC storage. Once imported, all studio editing toolsets unlock automatically.</p>
-        </section>
-
-        <!-- Section 2: Timeline & PiP -->
-        <section class="guide-section">
-            <h3>🎞️ 2. Timeline Control & Unlimited PiP Overlays</h3>
-            <p>The timeline acts as the main engine of S Studio, placed right beneath the primary video viewport:</p>
-            <ul>
-                <li><strong>🎬 Video Track:</strong> Displays imported master clips frame-by-frame for precise splits and cuts, enabling accurate timeline editing.</li>
-                <li><strong>🖼️ PiP (Picture-in-Picture) Layering:</strong> Overlay unlimited secondary images and video clips simultaneously. Ideal for gaming facecams, reaction channels, product reviews, and multi-frame video collages.</li>
-            </ul>
-        </section>
-
-        <!-- Section 3: Audio & Sound Effects -->
-        <section class="guide-section">
-            <h3>🎵 3. Dedicated Audio & Background Music Library</h3>
-            <p>Elevate your composition using built-in high-quality sound libraries or custom sound uploads:</p>
-            <ul>
-                <li><strong>📂 Local Track Import:</strong> Effortlessly upload your custom voiceovers, background tracks, and personal audio recordings directly from your smartphone or desktop storage with seamless drag-and-drop integration.</li>
-                <li><strong>🎥 Cinematic Beats BGM:</strong>High-impact, immersive background tracks and powerful sound design engineered to give your action sequences, travel vlogs, and blockbuster-style trailers that dramatic cinematic elevation.</li>
-                <li><strong>💼 Corporate Info Music:</strong> Sleek, highly polished, and non-distracting background scores specifically curated to give your business pitch decks, corporate presentations, and instructional tutorial guides a sharp, professional edge.</li>
-                <li><strong>🔥 Upbeat Vlog Sounds:</strong> Catchy, high-energy, and viral-ready soundscapes tailored to grab instant attention on fast-paced content platforms like YouTube Shorts, Instagram Reels, and TikTok clips.</li>
-                <li><strong>☕ Chill Lofi Loops:</strong> Smooth, relaxing, and ambient low-fidelity beats perfectly suited for soulful poetry readings, aesthetic slow-motion shots, late-night vlogs, and tranquil background moods.</li>
-            </ul>
-        </section>
-
-        <!-- Section 4: AI & Text Tools -->
-        <section class="guide-section">
-            <h3>🛠️ 4. Advanced Text & Smart AI Toolsets</h3>
-            <ul>
-                <li><strong>📝 Designer Text Overlays:</strong> Add titles, lower-thirds, and custom captions with rich formatting, bold/italic styles, custom fonts, and color palettes.</li>
-                <li><strong>🤖 Auto AI Subtitles:</strong> Automatically detect speech from your audio and generate frame-synced subtitles for multi-lingual viewers.</li>
-                <li><strong>ℹ️ 'i' Info Trigger:</strong> Quick feature helper button providing instant context on tool functions.</li>
-                <li><strong>🔊 Background Denoise:</strong> Suppress ambient fan hums, wind distortions, and background noise with a single click.</li>
-            </ul>
-        </section>
-
-        <!-- Section 5: Primary Toolbar Actions -->
-        <section class="guide-section">
-            <h3>✂️ 5. Master Editing Controls & Utility Matrix</h3>
-            <div class="step-card-grid">
-                <p><strong>↩️ Undo / ↪️ Redo:</strong> Effortlessly step backward or forward through your editing history states to safely correct accidental mistakes and experiment with different creative choices worry-free.</p>
-                <p><strong>💧 Blur Mask:</strong> Easily protect sensitive content, private details, faces, or vehicle license plates by applying localized blur layers and customizable privacy masks directly onto your footage.</p>
-                <p><strong>✂️ Split Clip:</strong> Slice long video tracks and audio clips into precise individual segments anywhere on the timeline, giving you total freedom to trim, reorder, or delete specific moments.</p>
-                <p><strong>📐 Crop Presets:</strong> Instantly transform and re-frame your project's aspect ratios with pre-configured dimensions tailored specifically for YouTube widescreen (16:9), Shorts/Reels/TikTok (9:16), and Instagram posts (1:1).and others </p>
-                <p><strong>⚡ Speed Modifier:</strong>Dynamically adjust your video tempo by accelerating playback up to 2x for energetic fast-motion time-lapses or slowing it down to 0.5x for smooth, high-impact slow-motion sequences.</p>
-                <p><strong>🖼️ Fill & Fit Canvas:</strong> Seamlessly eliminate ugly black sidebars, scale media clips, and resize videos to perfectly align with your native project canvas dimensions.</p>
-                <p><strong>🔍 Zoom In:</strong> Magnify specific display coordinates to focus directly on key visual details, highlight actions, or achieve closer crop perspectives.</p>
-                <p><strong>👻 Opacity Adjustment:</strong>Fine-tune visual transparency levels across media elements, video overlays, and graphics to create beautiful blended visuals and smooth fade effects.</p>
-                <p><strong>🔄 Rotate & Flip:</strong> Spin video clips by 90°, 180°, or horizontally/vertically mirror canvas orientations in seconds to fix upside-down shots or create fun inverted angles.</p>
-                <p><strong>🎨 Color Filters:</strong> Instantly apply cinema-grade color grading presets, warm tones, and vintage aesthetics to completely transform the visual mood and storytelling tone of your video.</p>
-                <p><strong>🟩 Chroma Key:</strong> Effortlessly isolate and key out green screen backgrounds to seamlessly replace them with custom virtual sets, backdrop images, or new video environments.</p>
-                <p><strong>🎙️ Direct Voiceover:</strong> Record crystal-clear voiceovers in real-time, fully synchronized with live timeline playback, to deliver professional commentary, narration, and dubbing.</p>
-                <p><strong>👁️ Review AI:</strong> Carefully inspect automated AI subtitle accuracy, smart captions, and automated timeline cuts before proceeding to final high-resolution output rendering.</p>
-                <p><strong>💬 Ask AI Assistant:</strong> Prompt the integrated artificial intelligence helper anytime to receive real-time editing troubleshooting, step-by-step feature guidance, and creative workflow suggestions.</p>
-                <p><strong>🗑️ Delete Element:</strong> Instantly purge unwanted video clips, extra audio tracks, overlay stickers, or text blocks from your project timeline in just one click.</p>
-            </div>
-        </section>
-
-        <!-- Section 6: PiP Advanced Suite -->
-        <section class="guide-section pip-highlight">
-            <h3>🖼️ PiP (Picture-in-Picture) Advanced Floating Control Suite</h3>
-            <p>Selecting any active PiP overlay unlocks a specialized 13-tool floating utility bar:</p>
-            <div class="pip-grid">
-                <span><strong>🔄 Replace:</strong> Seamlessly swap out media clips or graphic elements with new assets while completely preserving your existing keyframes, applied effects, spatial positions, and timeline timing.</span>
-                <span><strong>🎬 Motion Animations:</strong>Bring your media to life by applying smooth, customizable In-Animations, Out-Animations, and seamless scale transitions to any element on your timeline.</span>
-                <span><strong>🔑 Keyframe Tracking:</strong> Smoothly animate floating graphics, text callouts, or facecam overlays along precise moving path points for professional dynamic tracking effects.</span>
-                <span><strong>🔒 Transform Lock:</strong> Securely lock specific element positions and properties to prevent accidental movements, misalignments, or unwanted edits while working on complex timeline operations.</span>
-                <span><strong>👯 Duplicate Layer:</strong>Instantly clone active overlay elements, stickers, or text blocks with all matched parameters, effects, and styling intact to save editing time.</span>
-                <span><strong>✂️ Precision Crop:</strong> Easily trim away unwanted video edges, remove distracting background borders, and tightly isolate key focal areas with micro-level control.</span>
-                <span><strong>⏱️ Duration Timer:</strong>Set exact, down-to-the-frame visibility timeframes (such as 3s, 5s, or 10s) to keep your visual overlays perfectly timed with your audio and main footage.</span>
-                <span><strong>✂️ AI Cutout:</strong> Effortlessly remove background scenes and automatically isolate human subjects or primary objects using advanced AI edge-detection technology.</span>
-                <span><strong>🔄 Rotate & Flip:</strong> Quickly adjust orientation angles, turn elements 90° or 180°, and flip media upside-down to correct camera angles or create stylized inverted perspectives.</span>
-                <span><strong>🪞 Mirror Effect:</strong> Instantly reflect media assets horizontally or vertically to create symmetrical visual patterns, dual-view perspectives, or stylized graphic mirror layouts.</span>
-                <span><strong>📐 Auto Fit:</strong> Intelligent 1-click scaling that automatically resizes floating graphics, overlays, and images to match your primary video canvas boundaries perfectly.</span>
-                <span><strong>💧 Layer Blur:</strong> Smoothly blend floating overlays into background scenes using localized blur controls, depth-of-field adjustments, and customizable softness levels.</span>
-                <span><strong>🗑️ Quick Purge:</strong> Instantly erase selected Picture-in-Picture (PiP) nodes, unused media layers, and unwanted assets directly from your active project memory to keep your workspace clean.</span>
-            </div>
-        </section>
-
-        <!-- Section 7: Export & Cloud Saving -->
-        <section class="guide-section">
-            <h3>📥 6. Export Engine & Lifetime Cloud Saving</h3>
-            <ul>
-                <li><strong>Auto / Manual Resolution Matrix:</strong> Render via "Auto Mode" for default optimization or select custom manual configurations up to sharp 1440p (2K Quality).</li>
-                <li><strong>Smart File Compression:</strong> Advanced bitrate encoding keeps overall file sizes light (1MB - 100MB max) while preserving crisp 1080p visual fidelity to save data storage.</li>
-                <li><strong>🔐 Lifetime Cloud Sync (Login Feature):</strong> Log into your free account to store active timeline projects securely in cloud storage for lifetime access and cross-device editing.</li>
-            </ul>
-        </section>
-</div>
-            <!-- ==========================================================================
-     📄 TERMS & CONDITIONS FULL HIDDEN PAGE MODAL (PURE ENGLISH)
-     ========================================================================== -->
-<div id="termsModal" class="export-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.85); z-index: 999999; justify-content: center; align-items: center;">
-    <div class="modal-content" style="max-width: 800px; width: 90%; max-height: 85vh; overflow-y: auto; background: #0f121d; border: 1px solid #232a3b; border-radius: 12px; padding: 30px; text-align: left; box-shadow: 0 10px 30px rgba(0,0,0,0.8);">
-        
-        <!-- Header -->
-        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #232a3b; padding-bottom: 15px; margin-bottom: 20px;">
-            <h2 style="color: #00f2fe; margin: 0; font-size: 22px;">📜 Terms & Conditions & Legal Disclaimer</h2>
-            <button onclick="toggleTermsModal(false)" style="background: none; border: none; color: #ff4757; font-size: 24px; cursor: pointer; font-weight: bold;">✕</button>
-        </div>
-
-        <!-- Document Body -->
-        <div style="color: #cbd5e1; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 13.5px; line-height: 1.7;">
-            <p style="color: #94a3b8; font-size: 12px; margin-bottom: 20px;"><strong>Last Updated: July 2026</strong> | Official Policy Document for S Studio (svideoeditor.com)</p>
-
-            <h3 style="color: #ffffff; font-size: 16px; margin-top: 20px;">1. Legal Usage & Compliance Requirement</h3>
-            <p>Welcome to <strong>S Studio (svideoeditor.com)</strong>, operated under <strong>Sriram Groups Official</strong>. By utilizing our web-based video editing engine, tools, and processing infrastructure, you explicitly agree to comply with all applicable local, national, and international laws and cyber regulations. This platform must strictly be used for lawful content creation, educational, personal, and professional video editing purposes only.</p>
-
-            <h3 style="color: #ff4757; font-size: 16px; margin-top: 20px;">2. Complete Disclaimer of Ownership & Liability</h3>
-            <p style="background: rgba(255, 71, 87, 0.08); border-left: 3px solid #ff4757; padding: 12px; border-radius: 4px;"><strong>CRITICAL NOTICE:</strong> Sriram Groups Official and S Studio hold <strong>ZERO RESPONSIBILITY OR LIABILITY</strong> for any video, audio, image, or media asset processed, edited, rendered, or exported through this platform. All rendering computations take place directly or via temporary browser/cloud buffers under the sole execution of the active user.</p>
-
-            <h3 style="color: #ffffff; font-size: 16px; margin-top: 20px;">3. Strict Ban on Adult Content & Illegal Activities</h3>
-            <p>Users are strictly prohibited from uploading, processing, generating, or exporting any of the following content categories:</p>
-            <ul style="padding-left: 20px; color: #a4b0be;">
-                <li>Explicit adult content, sexually explicit material, or pornography in any form.</li>
-                <li>Content that promotes violence, hate speech, illegal acts, harassment, or terrorism.</li>
-                <li>Copyright-infringing materials, unauthorized pirated video tracks, or counterfeit media assets.</li>
-                <li>Deceptive media, deepfakes intended to mislead, or defamatory materials targeting individuals or organizations.</li>
-            </ul>
-
-            <h3 style="color: #ffffff; font-size: 16px; margin-top: 20px;">4. Sole User Responsibility & Legal Indemnification</h3>
-            <p>The end-user assumes <strong>100% full legal, financial, and civil liability</strong> for all media uploaded and exported using svideoeditor.com. Should any legal action, copyright notice, law enforcement query, or third-party claim arise from content edited on this platform, the user agrees to fully indemnify and hold harmless Sriram Groups Official, its developers, and affiliates from all consequences.</p>
-
-            <h3 style="color: #ffffff; font-size: 16px; margin-top: 20px;">5. Intellectual Property & Service Availability</h3>
-            <p>Users retain full ownership of their original raw media files and exported videos. S Studio claims no copyright ownership over your creative output. While we strive to maintain 99.9% uptime, S Studio is provided on an "AS IS" and "AS AVAILABLE" basis without warranties of uninterrupted service or guaranteed rendering speed.</p>
-
-            <h3 style="color: #ffffff; font-size: 16px; margin-top: 20px;">6. Modifications to Terms</h3>
-            <p>Sriram Groups Official reserves the right to revise, update, or modify these Terms & Conditions at any time without prior individual notice. Continued use of the website following changes constitutes full acceptance of the updated policy.</p>
-        </div>
-
-        <!-- Accept Button -->
-        <button onclick="toggleTermsModal(false)" style="width: 100%; margin-top: 25px; padding: 12px; background: linear-gradient(135deg, #00f2fe, #4facfe); color: #000; font-weight: bold; font-size: 14px; border: none; border-radius: 6px; cursor: pointer;">
-            I HAVE READ & AGREE TO THE TERMS 👍
-        </button>
-    </div>
-</div>
-<!-- ==========================================================================
-     🔒 PRIVACY POLICY FULL HIDDEN PAGE MODAL (PURE ENGLISH)
-     ========================================================================== -->
-<div id="privacyModal" class="export-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.85); z-index: 999999; justify-content: center; align-items: center;">
-    <div class="modal-content" style="max-width: 800px; width: 90%; max-height: 85vh; overflow-y: auto; background: #0f121d; border: 1px solid #232a3b; border-radius: 12px; padding: 30px; text-align: left; box-shadow: 0 10px 30px rgba(0,0,0,0.8);">
-        
-        <!-- Header -->
-        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #232a3b; padding-bottom: 15px; margin-bottom: 20px;">
-            <h2 style="color: #00f2fe; margin: 0; font-size: 22px;">🔒 Privacy Policy & Data Security Guarantee</h2>
-            <button onclick="togglePrivacyModal(false)" style="background: none; border: none; color: #ff4757; font-size: 24px; cursor: pointer; font-weight: bold;">✕</button>
-        </div>
-
-        <!-- Document Body -->
-        <div style="color: #cbd5e1; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 13.5px; line-height: 1.7;">
-            <p style="color: #94a3b8; font-size: 12px; margin-bottom: 20px;"><strong>Last Updated: July 2026</strong> | Official Privacy Policy for S-Video Editor (svideoeditor.com)</p>
-
-            <h3 style="color: #ffffff; font-size: 16px; margin-top: 20px;">1. Ownership & Data Protection Commitments</h3>
-            <p><strong>S-Video Editor (svideoeditor.com)</strong> is an official digital asset developed, owned, and managed by its parent organization, <strong>Sriram Groups</strong>. We are fully committed to protecting your privacy, login data, and media assets. Your personal information and credentials will strictly remain confidential within Sriram Groups and will <strong>NEVER BE SOLD, LEAKED, OR SHARED WITH THIRD-PARTY AGENCIES OR COMMERCIAL BROKERS</strong> under any circumstances.</p>
-
-            <h3 style="color: #38bdf8; font-size: 16px; margin-top: 20px;">2. User Authentication & Cloud Project Confidentiality</h3>
-            <p>When you create an account or log into S-Video Editor, your authentication credentials (email, mobile details, encrypted password hash) are protected using high-grade security protocols. Any saved project files, timeline configurations, and editing data are linked strictly to your profile and remain safe from unauthorized external access.</p>
-
-            <h3 style="color: #ff4757; font-size: 16px; margin-top: 20px;">3. Sole Content Liability & User Responsibility</h3>
-            <p style="background: rgba(255, 71, 87, 0.08); border-left: 3px solid #ff4757; padding: 12px; border-radius: 4px;"><strong>DISCLAIMER OF LIABILITY:</strong> Users hold <strong>100% EXCLUSIVE RESPONSIBILITY</strong> for all media assets uploaded, processed, modified, or exported using S-Video Editor. S-Video Editor and Sriram Groups do not monitor, endorse, or claim ownership over what specific media you edit. Any consequences arising from the content you produce rest entirely upon you.</p>
-
-            <h3 style="color: #ffffff; font-size: 16px; margin-top: 20px;">4. Prohibition of Illegal Activities & Law Enforcement Actions</h3>
-            <p>S-Video Editor must strictly be used in compliance with cyber security laws. Any attempt to misuse this platform for unlawful activities—including copyright infringement, defamation, deepfakes, harassment, or illegal video production—will lead to <strong>INSTANT ACCOUNT SUSPENSION AND PERMANENT TERMINATION</strong>. S-Video Editor reserves the right to cooperate fully with legal authorities and law enforcement agencies in investigating illegal actions.</p>
-
-            <h3 style="color: #ffffff; font-size: 16px; margin-top: 20px;">5. Local Browser Execution & Asset Processing</h3>
-            <p>S-Video Editor uses advanced client-side processing technology. Your raw videos and rendered outputs are computed directly inside your browser cache. This architecture ensures maximum data privacy, as video content is not permanently stored on our public web servers unless explicitly saved to your cloud profile.</p>
-
-            <h3 style="color: #ffffff; font-size: 16px; margin-top: 20px;">6. Contact & Data Support</h3>
-            <p>For any privacy concerns, data removal requests, or account security queries, please contact the official parent team at <a href="mailto:sriramgropsofficial@gmail.com" style="color: #00f2fe;">sriramgropsofficial@gmail.com</a>.</p>
-        </div>
-
-        <!-- Accept Button -->
-        <button onclick="togglePrivacyModal(false)" style="width: 100%; margin-top: 25px; padding: 12px; background: linear-gradient(135deg, #00f2fe, #4facfe); color: #000; font-weight: bold; font-size: 14px; border: none; border-radius: 6px; cursor: pointer;">
-            I ACKNOWLEDGE & AGREE TO PRIVACY POLICY 👍
-        </button>
-    </div>
-</div>
-
-<!-- ==========================================================================
-     🍪 COOKIES POLICY MODAL
-     ========================================================================== -->
-<div id="cookiesModal" class="export-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.85); z-index: 999999; justify-content: center; align-items: center;">
-    <div class="modal-content" style="max-width: 750px; width: 90%; max-height: 80vh; overflow-y: auto; background: #0f121d; border: 1px solid #232a3b; border-radius: 12px; padding: 25px; text-align: left;">
-        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #232a3b; padding-bottom: 12px; margin-bottom: 15px;">
-            <h3 style="color: #00f2fe; margin: 0; font-size: 20px;">🍪 Cookies Policy</h3>
-            <button onclick="toggleModal('cookiesModal', false)" style="background: none; border: none; color: #ff4757; font-size: 22px; cursor: pointer; font-weight: bold;">✕</button>
-        </div>
-        <div style="color: #cbd5e1; font-family: sans-serif; font-size: 13.5px; line-height: 1.6;">
-            <p><strong>S-Video Editor (svideoeditor.com)</strong> uses cookies and local storage technology to improve user experience, optimize video rendering operations, and deliver relevant advertisements via Google AdSense.</p>
-            <h4 style="color: #fff; margin-top: 15px;">1. What Are Cookies?</h4>
-            <p>Cookies are small text data files saved in your local web browser cache. They allow us to remember your editing preferences, export settings, and active session tokens.</p>
-            <h4 style="color: #fff; margin-top: 15px;">2. Third-Party Advertising Cookies</h4>
-            <p>Third-party vendors, including Google, use cookies to serve ads based on your visit to this website. You may opt out of personalized advertising by visiting Google Ad Settings.</p>
-        </div>
-        <button onclick="toggleModal('cookiesModal', false)" style="width: 100%; margin-top: 20px; padding: 10px; background: #00f2fe; color: #000; font-weight: bold; border: none; border-radius: 6px; cursor: pointer;">I AGREE 👍</button>
-    </div>
-</div>
-
-<!-- ==========================================================================
-     © COPYRIGHT POLICY MODAL
-     ========================================================================== -->
-<div id="copyrightModal" class="export-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.85); z-index: 999999; justify-content: center; align-items: center;">
-    <div class="modal-content" style="max-width: 750px; width: 90%; max-height: 80vh; overflow-y: auto; background: #0f121d; border: 1px solid #232a3b; border-radius: 12px; padding: 25px; text-align: left;">
-        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #232a3b; padding-bottom: 12px; margin-bottom: 15px;">
-            <h3 style="color: #00f2fe; margin: 0; font-size: 20px;">© Intellectual Property & Copyright Policy</h3>
-            <button onclick="toggleModal('copyrightModal', false)" style="background: none; border: none; color: #ff4757; font-size: 22px; cursor: pointer; font-weight: bold;">✕</button>
-        </div>
-        <div style="color: #cbd5e1; font-family: sans-serif; font-size: 13.5px; line-height: 1.6;">
-            <p>All core code frameworks, branding assets, UI designs, and logos associated with S-Video Editor belong exclusively to <strong>Sriram Groups Official</strong>.</p>
-            <h4 style="color: #fff; margin-top: 15px;">1. User Media Ownership</h4>
-            <p>Users retain 100% intellectual property ownership over raw footage and finished video projects processed through S-Video Editor.</p>
-            <h4 style="color: #fff; margin-top: 15px;">2. DMCA & Copyright Infringement</h4>
-            <p>S-Video Editor respects third-party copyright laws. If you believe your copyrighted material is being misused, please send a formal notice to <a href="mailto:sriramgropsofficial@gmail.com" style="color: #00f2fe;">sriramgropsofficial@gmail.com</a>.</p>
-        </div>
-        <button onclick="toggleModal('copyrightModal', false)" style="width: 100%; margin-top: 20px; padding: 10px; background: #00f2fe; color: #000; font-weight: bold; border: none; border-radius: 6px; cursor: pointer;">CLOSE 👍</button>
-    </div>
-</div>
-
-<!-- ==========================================================================
-     👑 FOUNDER & CEO INFORMATION MODAL
-     ========================================================================== -->
-<div id="founderModal" class="export-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.85); z-index: 999999; justify-content: center; align-items: center;">
-    <div class="modal-content" style="max-width: 600px; width: 90%; background: #0f121d; border: 1px solid #6c5ce7; border-radius: 12px; padding: 25px; text-align: center;">
-        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #232a3b; padding-bottom: 12px; margin-bottom: 20px;">
-            <h3 style="color: #00f2fe; margin: 0; font-size: 20px;">👑 Executive Leadership</h3>
-            <button onclick="toggleModal('founderModal', false)" style="background: none; border: none; color: #ff4757; font-size: 22px; cursor: pointer; font-weight: bold;">✕</button>
-        </div>
-        <div style="color: #cbd5e1; font-family: sans-serif; font-size: 14px; line-height: 1.7; text-align: left;">
-            <div style="background: rgba(108, 92, 231, 0.1); border: 1px solid #6c5ce7; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
-                <h2 style="color: #ffffff; margin: 0 0 5px 0; font-size: 20px;">S. Purushotham</h2>
-                <p style="color: #00f2fe; margin: 0; font-weight: bold; font-size: 13px;">Founder & CEO — Sriram Groups Official</p>
-            </div>
-            <p><strong>S-Video Editor (svideoeditor.com)</strong> was conceptualized and launched under the leadership of <strong>S. Purushotham</strong> to democratize high-performance browser editing for digital creators worldwide.</p>
-            <p><strong>Parent Organization:</strong> Sriram Groups Official</p>
-            <p><strong>Official Contact:</strong> <a href="mailto:sriramgropsofficial@gmail.com" style="color: #00f2fe;">sriramgropsofficial@gmail.com</a></p>
-        </div>
-        <button onclick="toggleModal('founderModal', false)" style="width: 100%; margin-top: 15px; padding: 10px; background: linear-gradient(135deg, #6c5ce7, #a8a5ff); color: #fff; font-weight: bold; border: none; border-radius: 6px; cursor: pointer;">CLOSE</button>
-    </div>
-</div>
-<!-- ==========================================================================
-     🕊️ SRI RAM GROUPS EXTENDED FOUNDER'S VISION & MISSION CARD (LARGE)
-     ========================================================================== -->
-<div class="founders-vision-card-large" style="background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(17, 24, 39, 0.98)); border: 2px solid #00f2fe; border-radius: 16px; padding: 35px 30px; margin: 35px auto 25px auto; max-width: 980px; text-align: left; box-sizing: border-box; box-shadow: 0 12px 35px rgba(0, 242, 254, 0.15);">
-    
-    <!-- Title Banner -->
-    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 18px; border-bottom: 1px solid rgba(0, 242, 254, 0.2); padding-bottom: 15px;">
-        <span style="font-size: 32px;">🕊️</span>
-        <div>
-            <h2 style="color: #00f2fe; margin: 0; font-size: 24px; font-weight: 800; letter-spacing: -0.3px;">S Studio (svideoeditor.com) – Technology Belongs to Everyone!</h2>
-            <p style="color: #38bdf8; font-size: 14px; margin: 4px 0 0 0; font-weight: 600;">🌟 Powered by Sriram Groups Official... A 99% Free Digital Revolution & Empowerment Initiative!</p>
-        </div>
-    </div>
-
-    <!-- Core Philosophy Paragraphs -->
-    <div style="color: #e2e8f0; font-size: 14px; line-height: 1.8; font-family: system-ui, -apple-system, sans-serif;">
-        <p style="margin-bottom: 16px;">
-            At <strong>Sriram Groups Official</strong>, our guiding principle is firm and unwavering: <em>Poverty, financial difficulties, or lack of expensive hardware should never restrict a passionate creator's talent, vision, and potential.</em>
-        </p>
-
-        <p style="margin-bottom: 16px;">
-            In today's fast-moving digital economy, high-impact video production is necessary for YouTube success, social media marketing, real estate promotions, and personal branding. However, standard video editing platforms demand recurring monthly subscriptions or top-tier computer specifications. Unable to pay thousands of rupees or access high-end setups, countless ambitious creators, young students, and aspiring filmmakers are forced to abandon their dreams halfway.
-        </p>
-
-        <p style="margin-bottom: 20px; background: rgba(0, 242, 254, 0.05); border-left: 4px solid #00f2fe; padding: 12px 16px; border-radius: 4px;">
-            <strong>S Studio (svideoeditor.com)</strong> was created as a permanent, accessible solution to this gap! We operate this platform not as a profit-driven commercial enterprise, but as a genuine <strong>Philanthropic Digital Initiative</strong>—offering 99% of its robust editing capabilities completely free to everyone worldwide.
-        </p>
-
-        <!-- Feature List -->
-        <h3 style="color: #ffffff; font-size: 16px; margin: 20px 0 10px 0;">💡 Why S Studio Stand Out:</h3>
-        <ul style="padding-left: 20px; color: #cbd5e1; margin-bottom: 25px;">
-            <li style="margin-bottom: 8px;"><strong>Zero Premium Paywalls:</strong> Enjoy unrestricted access without unexpected monthly charges or locked features.</li>
-            <li style="margin-bottom: 8px;"><strong>High-End Studio Suite:</strong> Harness AI Rewind, automated AI Subtitles, multi-track timeline editing, unlimited PiP layering, and 2K HD rendering at no cost.</li>
-            <li style="margin-bottom: 8px;"><strong>Equal Technological Access:</strong> Whether using a basic smartphone or a desktop PC, launch your browser and start editing instantly.</li>
-        </ul>
-
-        <!-- Extended Founder Quote -->
-        <div style="background: rgba(108, 92, 231, 0.1); border: 1px solid rgba(108, 92, 231, 0.4); padding: 22px; border-radius: 12px; margin: 25px 0;">
-            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
-                <span style="font-size: 20px;">💌</span>
-                <h4 style="color: #a8a5ff; margin: 0; font-size: 16px; font-weight: 700;">Official Message from S. Purushotham (Founder & CEO, Sriram Groups):</h4>
-            </div>
-            <p style="color: #f1f5f9; font-style: italic; font-size: 14px; margin: 0; line-height: 1.7;">
-                "All you truly need is a great idea and the courage to execute it. Even if you lack expensive desktop software or financial resources, Sriram Groups stands firmly behind you. We sincerely encourage every creator to fully utilize svideoeditor.com, sharpen your creative craft, build your digital presence, and rise to extraordinary heights in society!"
-            </p>
-        </div>
-    </div>
-
-    <!-- Contact & Tagline Bar -->
-    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-top: 20px; padding-top: 15px; border-top: 1px solid rgba(255, 255, 255, 0.1);">
-        <span style="color: #00f2fe; font-size: 13.5px; font-weight: 700;">✨ The Talent is Yours... The Technological Power is From Sriram Groups!</span>
-        <span style="color: #94a3b8; font-size: 13px;">Official Contact: <a href="mailto:sriramgropsofficial@gmail.com" style="color: #00f2fe; text-decoration: none; font-weight: bold;">sriramgropsofficial@gmail.com</a></span>
-    </div>
-</div>
-
-<!-- ==========================================================================
-     🎨 MASTER CSS STYLES FOR INTRO & GUIDE ENGINE (PURE ENGLISH STYLE)
-     ========================================================================== -->
-<style>
-    .scrollable-guide-box {
-        display: block !important;
-        margin: 35px auto 15px auto;
-        width: 100%;
-        max-width: 900px;
-        height: 300px; /* Enhanced vertical tracking viewport */
-        overflow-y: auto;
-        background: #11141f;
-        border: 1px solid #232a3b;
-        border-radius: 12px;
-        padding: 24px;
-        box-sizing: border-box;
-        text-align: left;
-        box-shadow: inset 0 0 15px rgba(0,0,0,0.6);
-    }
-
-    /* Professional Custom Scrollbar UI Elements */
-    .scrollable-guide-box::-webkit-scrollbar {
-        width: 7px;
-    }
-    .scrollable-guide-box::-webkit-scrollbar-track {
-        background: #0b0d14;
-        border-radius: 4px;
-    }
-    .scrollable-guide-box::-webkit-scrollbar-thumb {
-        background: linear-gradient(180deg, #00f2fe, #6c5ce7);
-        border-radius: 4px;
-    }
-
-    .scrollable-guide-content {
-        color: #cbd5e1;
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-        font-size: 13.5px;
-        line-height: 1.6;
-    }
-
-    .guide-mini-header h2 {
-        font-size: 19px;
-        color: #00f2fe;
-        margin: 0 0 6px 0;
-        font-weight: 700;
-    }
-
-    .guide-mini-header p {
-        font-size: 12.5px;
-        color: #94a3b8;
-        margin-bottom: 16px;
-    }
-
-    .mini-steps-grid {
-        display: flex;
-        flex-direction: column;
-        gap: 14px;
-        margin-bottom: 20px;
-    }
-
-    .mini-step-card {
-        background: #181d2c;
-        border: 1px solid #283146;
-        border-radius: 8px;
-        padding: 16px;
-        transition: border-color 0.2s ease;
-    }
-    
-    .mini-step-card:hover {
-        border-color: #6c5ce7;
-    }
-
-    .mini-step-card .step-num {
-        font-weight: 800;
-        color: #38bdf8;
-        font-size: 13px;
-        background: rgba(56, 189, 248, 0.1);
-        padding: 2px 6px;
-        border-radius: 4px;
-        margin-right: 8px;
-    }
-
-    .mini-step-card h4 {
-        display: inline-block;
-        font-size: 15px;
-        color: #ffffff;
-        margin: 0 0 6px 0;
-        font-weight: 600;
-    }
-
-    .mini-step-card p {
-        font-size: 12.5px;
-        color: #94a3b8;
-        margin: 0;
-    }
-
-    .mini-step-card a {
-        color: #00f2fe;
-        text-decoration: none;
-        font-weight: 500;
-    }
-
-    .guide-seo-article h3 {
-        font-size: 16px;
-        color: #ffffff;
-        margin: 0 0 8px 0;
-        font-weight: 600;
-        letter-spacing: -0.2px;
-    }
-
-    .guide-seo-article p {
-        color: #a4b0be;
-        margin: 0;
-    }
-
-    .future-roadmap h3 {
-        color: #00f2fe !important;
-    }
-    
-    .future-roadmap p {
-        color: #cbd5e1 !important;
-    }
-
-    @media screen and (max-width: 768px) {
-        .scrollable-guide-box {
-            padding: 16px;
-            height: 280px;
-        }
-        .guide-mini-header h2 {
-            font-size: 16px;
-        }
-    }
-
-</style>
-
-<!-- ==========================================================================
-     🌐 ENHANCED LEGAL, FOUNDER & FOOTER SUBSYSTEM (PURE ENGLISH)
-     ========================================================================== -->
-<div class="legal-contact-container">
-    <div class="legal-links-wrapper">
-        <a href="#terms" class="legal-link-item" onclick="showHiddenPage('terms')">Terms & Conditions</a>
-        <span class="legal-divider">|</span>
-        
-        <a href="#privacy" class="legal-link-item" onclick="showHiddenPage('privacy')">Privacy Policy</a>
-        <span class="legal-divider">|</span>
-
-        <a href="#cookies" class="legal-link-item" onclick="showHiddenPage('cookies')">Cookies Policy</a>
-        <span class="legal-divider">|</span>
-
-        <a href="#copyright" class="legal-link-item" onclick="showHiddenPage('copyright')">Copyright Policy</a>
-        <span class="legal-divider">|</span>
-
-        <a href="#founder" class="legal-link-item founder-highlight" onclick="showHiddenPage('founder')">👑 Founder & CEO</a>
-        <span class="legal-divider">|</span>
-        
-        <span class="feedback-label"> Connect /Share Your Feedback:</span>
-        <a href="mailto:sriramgropsofficial@gmail.com" class="feedback-email-link">
-            <svg class="email-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-                <polyline points="22,6 12,13 2,6"></polyline>
-            </svg>
-            sriramgropsofficial@gmail.com
-        </a>
-    </div>
-</div>
-            <footer class="standalone-copyright-footer">
-                <p>© 2026 Sriram Groups Official. All Rights Reserved. Powered by <a href="https://sriramgroupsofficial.com/" target="_blank">sriramgroupsofficial.com</a></p>
-            </footer>
-
-        </div>
-    </div> <!-- Closing introPage -->
-
-<style>
-    .legal-contact-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        padding: 15px 20px;
-        background: #11141f;
-        border: 1px solid #232a3b;
-        border-radius: 8px;
-        margin: 25px auto;
-        width: 100%;
-        max-width: 950px;
-        box-sizing: border-box;
-    }
-
-    .legal-links-wrapper {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-wrap: wrap;
-        gap: 12px;
-    }
-
-    .legal-link-item {
-        color: #94a3b8;
-        font-family: system-ui, -apple-system, sans-serif;
-        font-size: 13px;
-        text-decoration: none;
-        transition: color 0.2s ease;
-    }
-
-    .legal-link-item:hover {
-        color: #00f2fe;
-    }
-
-    .legal-divider {
-        color: #283146;
-        font-size: 13px;
-    }
-
-    .feedback-label {
-        color: #94a3b8;
-        font-family: system-ui, -apple-system, sans-serif;
-        font-size: 13px;
-        margin-left: 5px;
-    }
-
-    .feedback-email-link {
-        color: #00f2fe;
-        font-family: system-ui, -apple-system, sans-serif;
-        font-size: 13px;
-        font-weight: 500;
-        text-decoration: none;
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        transition: color 0.2s ease;
-    }
-
-    .feedback-email-link:hover {
-        color: #6c5ce7;
-        text-decoration: underline;
-    }
-
-    .email-icon {
-        width: 14px;
-        height: 14px;
-        color: #00f2fe;
-    }
-
-    @media screen and (max-width: 768px) {
-        .legal-contact-container {
-            padding: 12px;
-        }
-        .legal-links-wrapper {
-            flex-direction: column;
-            gap: 8px;
-            text-align: center;
-        }
-        .legal-divider {
-            display: none; /* Hides vertical lines on mobile layout for better stacking */
-        }
-    }
-
-</style>
