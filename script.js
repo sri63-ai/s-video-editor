@@ -118,7 +118,11 @@ function executeUndo() {
     currentVideoElement.style.height = prevState.videoHeight;
     currentVideoElement.style.objectFit = prevState.videoObjectFit;
 
-    applyTransformations();
+    if (currentVideoElement.id === 'mainPhotoPlayer') {
+        applyPhotoTransform();
+    } else {
+        applyTransformations();
+    }
 }
 
 function executeRedo() {
@@ -154,56 +158,45 @@ function executeRedo() {
     currentVideoElement.style.height = nextState.videoHeight;
     currentVideoElement.style.objectFit = nextState.videoObjectFit;
 
-    applyTransformations();
+    if (currentVideoElement.id === 'mainPhotoPlayer') {
+        applyPhotoTransform();
+    } else {
+        applyTransformations();
+    }
 }
 
 function undoAction() { executeUndo(); }
 function redoAction() { executeRedo(); }
 
 // ==========================================================================
-// 🧭 STUDIO NAVIGATION & FILE SELECTION LOGIC (STRICT HIDING ENGINE)
+// 🧭 STUDIO NAVIGATION & CENTRAL SWITCHER
 // ==========================================================================
 function enterStudio(studioType) {
     if (studioType === 'video') {
-        requestUploadPermission();
+        const videoInp = document.getElementById('videoInput');
+        if (videoInp) videoInp.click();
     } else if (studioType === 'photo') {
-        alert("Photo Editing Studio is coming soon in the next update!");
-    }
-}
-
-function requestUploadPermission() {
-    const inputNode = document.getElementById('videoInput');
-    if (inputNode) {
-        inputNode.click();
-    } else {
-        const backupInput = document.createElement('input');
-        backupInput.type = 'file'; 
-        backupInput.accept = 'video/*';
-        backupInput.onchange = function(e) { loadVideo(e); };
-        backupInput.click();
+        const photoInp = document.getElementById('photoInput');
+        if (photoInp) photoInp.click();
     }
 }
 
 // ==========================================================================
-// 🎥 MEDIA IMPORT & LOADER ENGINES (HIDE ALL LANDING TEXT ON SUCCESS)
+// 🎥 VIDEO EDITING ENGINE (FIRST PART)
 // ==========================================================================
 function loadVideo(event) {
     const file = event.target.files ? event.target.files[0] : null;
-    
-    // ఒకవేళ యూజర్ ఫైల్ ఎంచుకోకుండా Cancel చేస్తే ల్యాండింగ్ పేజీ అలాగే ఉంటుంది
     if (!file) {
-        console.log("No file selected or user cancelled upload.");
+        console.log("No video selected.");
         return;
     }
 
-    // 1. అన్ని ల్యాండింగ్ కంటెంట్ ఎలిమెంట్‌లను (విజన్ కార్డ్స్, ప్యానెల్స్) ఫోర్స్-హైడ్ చేయడం
     const introPage = document.getElementById('introPage');
     if (introPage) {
         introPage.style.display = 'none';
         introPage.classList.add('hidden');
     }
 
-    // introPage బయట ఏవైనా కార్డ్‌లు ఉంటే వాటిని కూడా సేఫ్‌గా దాచిపెట్టడం
     const extraLandingSelectors = [
         '#sStudioScrollableGuide',
         '.founders-vision-card-large',
@@ -213,14 +206,12 @@ function loadVideo(event) {
         '.innovation-rewards-card',
         '.s-studio-master-footer'
     ];
-
     extraLandingSelectors.forEach(selector => {
         document.querySelectorAll(selector).forEach(el => {
             el.style.display = 'none';
         });
     });
 
-    // 2. కేవలం ఎడిటర్ వర్క్‌స్పేస్‌ను మాత్రమే ఫుల్ స్క్రీన్‌లో చూపుతుంది
     const editorPage = document.getElementById('editorPage');
     if (editorPage) {
         editorPage.style.display = 'flex';
@@ -235,6 +226,10 @@ function loadVideo(event) {
     
     if (!wrapper) return;
     if (placeholder) placeholder.style.display = 'none';
+
+    wrapper.classList.remove('photo-mode-large');
+    wrapper.style.width = "95%";
+    wrapper.style.aspectRatio = "16 / 9";
 
     wrapper.innerHTML = `
         <video id="mainPlayer" style="transform: scale(1) rotate(0deg); transition: transform 0.2s ease; width:100%; height:100%; object-fit:contain;">
@@ -251,6 +246,20 @@ function loadVideo(event) {
     undoStack = []; 
     redoStack = [];
 
+    // Show top Action Group (Undo, Redo, Export Video)
+    const actionGroup = document.querySelector('.action-group');
+    if (actionGroup) {
+        actionGroup.classList.remove('hidden');
+        actionGroup.style.display = 'flex';
+    }
+
+    // Export Button Video Logic
+    const exportBtn = document.querySelector('.export-btn-main');
+    if (exportBtn) {
+        exportBtn.innerText = "Export Video";
+        exportBtn.onclick = function() { toggleExportModal(true); };
+    }
+
     setupVolumeAudioEngine();
 
     currentVideoElement.onloadedmetadata = function() {
@@ -265,79 +274,51 @@ function loadVideo(event) {
         updatePlayheadPosition();
     };
 
-    document.querySelectorAll('.media-dependent').forEach(el => {
-        el.classList.remove('hidden');
-        el.style.display = 'flex';
-    });
-    
+    // Force-show Video Player Controls & Timeline
+    const playerControlsBox = document.getElementById('playerControlsBox');
+    if (playerControlsBox) {
+        playerControlsBox.classList.remove('hidden');
+        playerControlsBox.style.display = 'flex';
+    }
+
+    const timelineTracks = document.querySelector('.timeline-tracks');
+    if (timelineTracks) timelineTracks.style.display = 'flex';
+
     const timelineBox = document.getElementById('timelineAreaBox');
-    if (timelineBox) timelineBox.style.display = 'flex';
-}
-
-function loadPhoto(event) {
-    const file = event.target.files ? event.target.files[0] : null;
-    if (!file) return;
-
-    const introPage = document.getElementById('introPage');
-    if (introPage) {
-        introPage.style.display = 'none';
-        introPage.classList.add('hidden');
+    if (timelineBox) {
+        timelineBox.style.display = 'flex';
+        timelineBox.classList.remove('hidden');
     }
 
-    videoFileBlob = file;
-    const wrapper = document.getElementById('videoWrapper');
-    const placeholder = document.getElementById('placeholderText');
-    
-    if (placeholder) placeholder.style.display = 'none';
-    const imgURL = URL.createObjectURL(file);
-    
-    wrapper.innerHTML = `<img id="mainPhotoPlayer" src="${imgURL}" style="transform: scale(1) rotate(0deg); width:100%; height:100%; object-fit:contain;">`;
-    currentVideoElement = document.getElementById('mainPhotoPlayer');
-    
-    document.querySelectorAll('.media-dependent').forEach(el => {
-        el.classList.remove('hidden');
-        el.style.display = 'flex';
-    });
-    
-    const timelineBox = document.getElementById('timelineAreaBox');
-    if (timelineBox) timelineBox.style.display = 'flex';
+    restoreVideoToolbar();
 }
 
-function resetToHome() {
-    // 1. ఎడిటర్ వర్క్‌స్పేస్‌ను దాచిపెట్టడం
-    const editorPage = document.getElementById('editorPage');
-    if (editorPage) {
-        editorPage.style.display = 'none';
-        editorPage.classList.add('hidden');
-    }
+function restoreVideoToolbar() {
+    const toolsContainer = document.querySelector('.tools-container');
+    if (!toolsContainer) return;
 
-    // 2. ల్యాండింగ్ పేజీ మరియు మిగతా అన్ని కంటెంట్ కార్డ్‌లను తిరిగి రిస్టోర్ చేయడం
-    const introPage = document.getElementById('introPage');
-    if (introPage) {
-        introPage.style.display = 'flex';
-        introPage.classList.remove('hidden');
-    }
+    toolsContainer.innerHTML = `
+        <button class="tool-btn" onclick="executeTool('Split')">✂️ Split</button>
+        <button class="tool-btn" onclick="executeTool('Crop')">⌗ Crop Preset</button>
+        <button class="tool-btn" onclick="executeTool('Speed')">🚅 Video Speed</button> 
+        <button class="tool-btn" onclick="executeTool('Fill')">🗃️ Fill / Fit</button>
+        <button class="tool-btn" onclick="executeTool('Zoom')">➕ Zoom In</button>
+        <button class="tool-btn" onclick="executeTool('Opacity')">🌐 Opacity</button>
+        <button class="tool-btn" onclick="executeTool('Rotate')">🗘 Rotate</button>
+        <button class="tool-btn" onclick="executeTool('Filters')">📊 Filters</button>
+        <button class="tool-btn chroma-btn" onclick="executeTool('Chroma Key')" style="background: rgba(16, 172, 132, 0.2); border: 1px solid #10ac84; color: #10ac84;">🟢 Chroma Key</button>
+        <button class="tool-btn ai-btn" onclick="executeTool('Review AI')">💻 Review AI</button>
+        <button class="tool-btn ai-btn" onclick="executeTool('Ask AI')" style="background: rgba(108, 92, 231, 0.2); border: 1px solid #6c5ce7; color: #a8a5ff;">🤖 Ask AI</button>
+        <button class="tool-btn delete-btn" onclick="executeTool('Delete')">🗑 Delete</button>
+    `;
 
-    const extraLandingSelectors = [
-        '#sStudioScrollableGuide',
-        '.founders-vision-card-large',
-        '.upcoming-updates-card',
-        '.feedback-reward-card',
-        '.support-channels-card',
-        '.innovation-rewards-card',
-        '.s-studio-master-footer'
-    ];
-
-    extraLandingSelectors.forEach(selector => {
-        document.querySelectorAll(selector).forEach(el => {
-            el.style.display = 'block';
-        });
-    });
-
-    const videoInput = document.getElementById('videoInput');
-    if (videoInput) videoInput.value = '';
+    const voiceBtn = document.getElementById('btnVoiceRecord');
+    if (voiceBtn) voiceBtn.style.display = 'inline-block';
 }
 
+// ==========================================================================
+// 🔊 AUDIO ENGINE & FRAME GENERATOR
+// ==========================================================================
 function setupVolumeAudioEngine() {
     if (!currentVideoElement) return;
     try {
@@ -450,7 +431,7 @@ function updatePlayButtonsUI() {
 }
 
 // ==========================================================================
-// 🖼️ UNLIMITED PIP & FLOATING TOOLKIT ENGINE
+// 🖼️ UNLIMITED PIP & HANDS-ON RESIZING WITH CLOSE BUTTON
 // ==========================================================================
 function triggerDirectPIPSelection() {
     const pipInput = document.createElement('input');
@@ -537,13 +518,24 @@ function createFloatingToolkit(pipObject) {
         box-sizing: border-box !important;
     `;
 
+    // ✕ Close Wrong Button
+    const closeBtn = document.createElement('button');
+    closeBtn.innerText = "✕ Close";
+    closeBtn.style.cssText = "background: #ff4757 !important; color: white !important; border: none !important; padding: 6px 12px !important; border-radius: 5px !important; cursor: pointer !important; font-size: 11px !important; font-weight: bold !important; flex-shrink: 0 !important;";
+    closeBtn.onclick = function(e) {
+        e.stopPropagation();
+        pipPanel.remove();
+        if (pipObject) pipObject.style.border = "none";
+    };
+    pipPanel.appendChild(closeBtn);
+
     const btnList = [
         { id: 'replace', label: '🔄 Replace' },
         { id: 'motion', label: '🎬 Motion' },
         { id: 'keyframe', label: '🔑 Keyframe' },
         { id: 'lock', label: '🔒 Lock' },
         { id: 'duplicate', label: '👯 Duplicate' },
-        { id: 'crop', label: '✂️ Crop' },
+        { id: 'crop', label: '⌗ Crop' },
         { id: 'duration', label: '⏱️ Duration' },
         { id: 'cutout', label: '👤 Cutout' },
         { id: 'rotate', label: '🔄 Rotate' },
@@ -589,11 +581,54 @@ function createFloatingToolkit(pipObject) {
     document.body.appendChild(pipPanel);
 }
 
+function makeElementDraggable(element) {
+    element.style.cursor = 'move';
+    let pipScale = 1.0;
+
+    element.onmousedown = function(e) {
+        if (element.dataset && element.dataset.locked === "true") return;
+        e.stopPropagation();
+        let shiftX = e.clientX - element.getBoundingClientRect().left;
+        let shiftY = e.clientY - element.getBoundingClientRect().top;
+        
+        function onMouseMove(ev) {
+            const wrapper = document.getElementById('videoWrapper');
+            if(!wrapper) return;
+            let rect = wrapper.getBoundingClientRect();
+            element.style.left = (ev.clientX - rect.left - shiftX) + 'px';
+            element.style.top = (ev.clientY - rect.top - shiftY) + 'px';
+        }
+        document.addEventListener('mousemove', onMouseMove);
+        window.addEventListener('mouseup', function() {
+            document.removeEventListener('mousemove', onMouseMove);
+        }, { once: true });
+    };
+
+    element.onwheel = function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        if (e.deltaY < 0) {
+            pipScale += 0.05;
+        } else {
+            if (pipScale > 0.2) pipScale -= 0.05;
+        }
+        element.style.transform = `scale(${pipScale})`;
+    };
+}
+
 function executePipToolAction(actionId, targetObject) {
     if (!targetObject) return;
     const mediaEl = targetObject.querySelector('img') || targetObject.querySelector('video');
 
     switch (actionId) {
+        case 'motion':
+            openPipMotionMenu(targetObject);
+            break;
+
+        case 'keyframe':
+            addPipKeyframeMarker(targetObject);
+            break;
+
         case 'replace':
             const picker = document.createElement('input');
             picker.type = 'file';
@@ -708,27 +743,106 @@ function executePipToolAction(actionId, targetObject) {
     }
 }
 
-function makeElementDraggable(element) {
-    element.style.cursor = 'move';
-    element.onmousedown = function(e) {
-        if (element.dataset && element.dataset.locked === "true") return;
-        e.stopPropagation();
-        let shiftX = e.clientX - element.getBoundingClientRect().left;
-        let shiftY = e.clientY - element.getBoundingClientRect().top;
-        
-        function onMouseMove(ev) {
-            const wrapper = document.getElementById('videoWrapper');
-            if(!wrapper) return;
-            let rect = wrapper.getBoundingClientRect();
-            element.style.left = (ev.clientX - rect.left - shiftX) + 'px';
-            element.style.top = (ev.clientY - rect.top - shiftY) + 'px';
-        }
-        document.addEventListener('mousemove', onMouseMove);
-        window.addEventListener('mouseup', function() {
-            document.removeEventListener('mousemove', onMouseMove);
-        }, { once: true });
-    };
+// PIP MOTION ANIMATIONS MENU
+function openPipMotionMenu(targetObject) {
+    const oldMenu = document.getElementById('pipMotionMenuHub');
+    if (oldMenu) oldMenu.remove();
+
+    injectMotionCSSKeyframes();
+
+    const menu = document.createElement('div');
+    menu.id = 'pipMotionMenuHub';
+    menu.style.cssText = "position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); background:#161920; border:2px solid #6c5ce7; padding:18px; border-radius:12px; display:flex; flex-direction:column; gap:8px; z-index:2147483647; width: 280px; color: white; font-family:sans-serif; box-shadow:0 10px 30px rgba(0,0,0,0.8);";
+
+    menu.innerHTML = `
+        <div style="font-size:12px; color:#6c5ce7; font-weight:bold; border-bottom:1px solid #2f3542; padding-bottom:6px; display:flex; justify-content:space-between; align-items:center;">
+            <span>🎬 PIP ENTRANCE ANIMATIONS</span>
+            <span onclick="this.parentElement.parentElement.remove()" style="cursor:pointer; font-size:18px; color:#a4b0be;">&times;</span>
+        </div>
+        <button onclick="applyPipMotion(currentActivePIPLayer, 'fade'); this.parentElement.remove();" style="background:#222733; color:white; border:1px solid #333; padding:8px; border-radius:4px; font-size:11px; cursor:pointer; text-align:left;">✨ Smooth Fade In</button>
+        <button onclick="applyPipMotion(currentActivePIPLayer, 'slideLeft'); this.parentElement.remove();" style="background:#222733; color:white; border:1px solid #333; padding:8px; border-radius:4px; font-size:11px; cursor:pointer; text-align:left;">⬅️ Slide In Left</button>
+        <button onclick="applyPipMotion(currentActivePIPLayer, 'slideUp'); this.parentElement.remove();" style="background:#222733; color:white; border:1px solid #333; padding:8px; border-radius:4px; font-size:11px; cursor:pointer; text-align:left;">⬆️ Slide In Bottom</button>
+        <button onclick="applyPipMotion(currentActivePIPLayer, 'popZoom'); this.parentElement.remove();" style="background:#222733; color:white; border:1px solid #333; padding:8px; border-radius:4px; font-size:11px; cursor:pointer; text-align:left;">➕ Pop Zoom In</button>
+        <button onclick="applyPipMotion(currentActivePIPLayer, 'none'); this.parentElement.remove();" style="background:#ff4757; color:white; border:none; padding:8px; border-radius:4px; font-size:11px; font-weight:bold; cursor:pointer; margin-top:4px;">🔄 Reset Animation</button>
+    `;
+
+    document.body.appendChild(menu);
 }
+
+function applyPipMotion(targetObject, animationType) {
+    if (!targetObject) return;
+    targetObject.style.animation = "none";
+    void targetObject.offsetWidth;
+
+    if (animationType === 'fade') {
+        targetObject.style.animation = "sStudioFadeIn 0.8s ease-out forwards";
+    } else if (animationType === 'slideLeft') {
+        targetObject.style.animation = "sStudioSlideLeft 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards";
+    } else if (animationType === 'slideUp') {
+        targetObject.style.animation = "sStudioSlideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards";
+    } else if (animationType === 'popZoom') {
+        targetObject.style.animation = "sStudioPopZoom 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards";
+    }
+}
+
+function injectMotionCSSKeyframes() {
+    if (document.getElementById('sStudioMotionStyles')) return;
+    const style = document.createElement('style');
+    style.id = 'sStudioMotionStyles';
+    style.innerHTML = `
+        @keyframes sStudioFadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes sStudioSlideLeft { from { transform: translateX(-100px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes sStudioSlideUp { from { transform: translateY(100px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        @keyframes sStudioPopZoom { from { transform: scale(0.2); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    `;
+    document.head.appendChild(style);
+}
+
+// KEYFRAME MARKER ENGINE
+function addPipKeyframeMarker(targetObject) {
+    const mainVideo = document.getElementById('mainPlayer');
+    const currentTime = mainVideo ? mainVideo.currentTime : 0;
+
+    let keyframes = targetObject.dataset.keyframes ? JSON.parse(targetObject.dataset.keyframes) : [];
+
+    const posX = parseFloat(targetObject.style.left) || 0;
+    const posY = parseFloat(targetObject.style.top) || 0;
+
+    keyframes.push({ time: parseFloat(currentTime.toFixed(2)), x: posX, y: posY });
+    keyframes.sort((a, b) => a.time - b.time);
+
+    targetObject.dataset.keyframes = JSON.stringify(keyframes);
+
+    alert(`🔑 Keyframe successfully set at ${currentTime.toFixed(2)}s!\nPosition: X: ${posX.toFixed(0)}px, Y: ${posY.toFixed(0)}px`);
+}
+
+function updatePipKeyframeInterpolation() {
+    const mainVideo = document.getElementById('mainPlayer');
+    if (!mainVideo || mainVideo.paused) return;
+    const curTime = mainVideo.currentTime;
+
+    document.querySelectorAll('.live-pip-object').forEach(pip => {
+        if (!pip.dataset.keyframes) return;
+        const keyframes = JSON.parse(pip.dataset.keyframes);
+        if (keyframes.length < 2) return;
+
+        for (let i = 0; i < keyframes.length - 1; i++) {
+            const k1 = keyframes[i];
+            const k2 = keyframes[i + 1];
+
+            if (curTime >= k1.time && curTime <= k2.time) {
+                const factor = (curTime - k1.time) / (k2.time - k1.time);
+                const interpolatedX = k1.x + (k2.x - k1.x) * factor;
+                const interpolatedY = k1.y + (k2.y - k1.y) * factor;
+
+                pip.style.left = interpolatedX + "px";
+                pip.style.top = interpolatedY + "px";
+            }
+        }
+    });
+}
+
+setInterval(updatePipKeyframeInterpolation, 40);
 
 // ==========================================================================
 // 🎵 AUDIO HUB & VOICE OVER ENGINE
@@ -927,15 +1041,21 @@ function executeTool(tool) {
     switch(tool) {
         case 'Zoom': 
             currentScale += 0.15; 
-            applyTransformations(); 
+            if (currentVideoElement.id === 'mainPhotoPlayer') applyPhotoTransform();
+            else applyTransformations(); 
             break;
         case 'Opacity': 
-            if (currentScale > 0.3) { currentScale -= 0.15; applyTransformations(); } 
+            if (currentScale > 0.3) { 
+                currentScale -= 0.15; 
+                if (currentVideoElement.id === 'mainPhotoPlayer') applyPhotoTransform();
+                else applyTransformations(); 
+            } 
             break;
         case 'Rotate': 
             currentRotation += 90; 
             if (currentRotation >= 360) currentRotation = 0; 
-            applyTransformations(); 
+            if (currentVideoElement.id === 'mainPhotoPlayer') applyPhotoTransform();
+            else applyTransformations(); 
             break;
         case 'Crop':
             const oldCropMenu = document.getElementById('sStudioCropMenu'); 
@@ -1055,8 +1175,34 @@ function executeTool(tool) {
     }
 }
 
+function applyPhotoFilter(filterType) {
+    if (!currentVideoElement) return;
+    saveStateToHistory();
+
+    switch(filterType) {
+        case 'bright':
+            currentVideoElement.style.filter = "brightness(1.3) contrast(1.1)";
+            break;
+        case 'vintage':
+            currentVideoElement.style.filter = "sepia(0.5) contrast(1.2) saturate(1.2)";
+            break;
+        case 'bw':
+            currentVideoElement.style.filter = "grayscale(100%) contrast(1.2)";
+            break;
+        case 'warm':
+            currentVideoElement.style.filter = "sepia(0.3) hue-rotate(-10deg) saturate(1.4)";
+            break;
+        case 'cool':
+            currentVideoElement.style.filter = "hue-rotate(30deg) saturate(1.1)";
+            break;
+        case 'reset':
+            currentVideoElement.style.filter = "none";
+            break;
+    }
+}
+
 // ==========================================================================
-// 📺 REAL-TIME FULL EDITED OUTPUT PRESENTATION ENGINE
+// 📺 PRESENTATION MODE ENGINE
 // ==========================================================================
 function launchPresentationMode() {
     const videoWrapper = document.getElementById('videoWrapper');
@@ -1377,3 +1523,345 @@ document.addEventListener("DOMContentLoaded", function() {
         else toolsContainer.appendChild(recBtn);
     }
 });
+
+// ==========================================================================
+// 👁️ SCROLL REVEAL ANIMATION OBSERVER
+// ==========================================================================
+document.addEventListener("DOMContentLoaded", function() {
+    const revealCards = document.querySelectorAll('.scroll-reveal-card');
+
+    if ('IntersectionObserver' in window) {
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('reveal-active');
+                    observer.unobserve(entry.target); 
+                }
+            });
+        }, {
+            threshold: 0.15 
+        });
+
+        revealCards.forEach(card => observer.observe(card));
+    } else {
+        revealCards.forEach(card => card.classList.add('reveal-active'));
+    }
+});
+
+// ==========================================================================
+// 👁️ MARQUEE PAUSE ON SCROLL FOCUS OBSERVER
+// ==========================================================================
+document.addEventListener("DOMContentLoaded", function() {
+    const scrollPauseCards = document.querySelectorAll('.auto-scroll-pause-card');
+
+    if ('IntersectionObserver' in window) {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('user-view-focused');
+                } else {
+                    entry.target.classList.remove('user-view-focused');
+                }
+            });
+        }, {
+            threshold: 0.3 
+        });
+
+        scrollPauseCards.forEach(card => observer.observe(card));
+    }
+});
+
+// ==========================================================================
+// 🖼️ PHOTO EDITING ENGINE (SECOND PART)
+// ==========================================================================
+
+// 1. Photo Loader
+function loadPhoto(event) {
+    const file = event.target.files ? event.target.files[0] : null;
+    if (!file) {
+        console.log("No photo selected.");
+        return;
+    }
+
+    const introPage = document.getElementById('introPage');
+    if (introPage) {
+        introPage.style.display = 'none';
+        introPage.classList.add('hidden');
+    }
+
+    const extraLandingSelectors = [
+        '#sStudioScrollableGuide',
+        '.founders-vision-card-large',
+        '.upcoming-updates-card',
+        '.feedback-reward-card',
+        '.support-channels-card',
+        '.innovation-rewards-card',
+        '.s-studio-master-footer'
+    ];
+    extraLandingSelectors.forEach(selector => {
+        document.querySelectorAll(selector).forEach(el => {
+            el.style.display = 'none';
+        });
+    });
+
+    const editorPage = document.getElementById('editorPage');
+    if (editorPage) {
+        editorPage.style.display = 'flex';
+        editorPage.classList.remove('hidden');
+    }
+
+    videoFileBlob = file;
+    const wrapper = document.getElementById('videoWrapper');
+    const placeholder = document.getElementById('placeholderText');
+    const imgURL = URL.createObjectURL(file);
+    
+    if (placeholder) placeholder.style.display = 'none';
+    
+    if (wrapper) {
+        wrapper.classList.add('photo-mode-large');
+        wrapper.innerHTML = `
+            <img id="mainPhotoPlayer" src="${imgURL}" style="transform: scale(1) rotate(0deg) translate(0px, 0px); transition: transform 0.1s ease, filter 0.2s ease; width:100%; height:100%; object-fit:contain; cursor:grab; position:relative;">
+        `;
+    }
+    
+    currentVideoElement = document.getElementById('mainPhotoPlayer');
+    currentScale = 1.0;
+    currentRotation = 0;
+    undoStack = [];
+    redoStack = [];
+
+    // Show top Action Group for Photo Mode (Undo, Redo, Download Photo)
+    const actionGroup = document.querySelector('.action-group');
+    if (actionGroup) {
+        actionGroup.classList.remove('hidden');
+        actionGroup.style.display = 'flex';
+    }
+
+    // Change Export Button to Download Photo
+    const exportBtn = document.querySelector('.export-btn-main');
+    if (exportBtn) {
+        exportBtn.innerText = "📥 Download Photo";
+        exportBtn.onclick = downloadPhotoToDevice;
+    }
+
+    // Hide Video Controls & Timeline Tracks
+    const playerControlsBox = document.getElementById('playerControlsBox');
+    if (playerControlsBox) playerControlsBox.style.display = 'none';
+
+    const timelineTracks = document.querySelector('.timeline-tracks');
+    if (timelineTracks) timelineTracks.style.display = 'none';
+
+    const timelineBox = document.getElementById('timelineAreaBox');
+    if (timelineBox) {
+        timelineBox.style.display = 'flex';
+        timelineBox.classList.remove('hidden');
+    }
+
+    setupPhotoToolbar();
+    enablePhotoHandsControl();
+}
+
+// 2. Photo Toolbar Setup
+function setupPhotoToolbar() {
+    const toolsContainer = document.querySelector('.tools-container');
+    if (!toolsContainer) return;
+
+    toolsContainer.innerHTML = `
+        <button class="tool-btn" onclick="addTextOverlay()" style="background:#10ac84; color:#fff; font-weight:bold;">📝 Add Text</button>
+        <button class="tool-btn" onclick="openAdjustComfortableMenu()" style="background:#6c5ce7; color:#fff; font-weight:bold;">📐 Adjust Comfortable</button>
+        <button class="tool-btn" onclick="executeTool('Zoom')">➕ Zoom In</button>
+        <button class="tool-btn" onclick="executeTool('Opacity')">➖ Zoom Out</button>
+        <button class="tool-btn" onclick="executeTool('Rotate')">🔄 Rotate 90°</button>
+        <button class="tool-btn" onclick="openPhotoFiltersMenu()">🎨 Photo Filters</button>
+        <button class="tool-btn" onclick="executeTool('Stickers')">🖼️ Add Overlay/Sticker</button>
+        <button class="tool-btn delete-btn" onclick="executeTool('Delete')">🗑️ Reset Photo</button>
+    `;
+
+    const voiceBtn = document.getElementById('btnVoiceRecord');
+    if (voiceBtn) voiceBtn.style.display = 'none';
+}
+
+// 3. Hands Control Engine for Photo (Drag & Move Freely)
+let photoPanX = 0, photoPanY = 0;
+let isDraggingPhoto = false, startMouseX = 0, startMouseY = 0;
+
+function enablePhotoHandsControl() {
+    const photo = document.getElementById('mainPhotoPlayer');
+    const wrapper = document.getElementById('videoWrapper');
+    if (!photo || !wrapper) return;
+
+    photoPanX = 0;
+    photoPanY = 0;
+
+    photo.onmousedown = function(e) {
+        e.preventDefault();
+        isDraggingPhoto = true;
+        startMouseX = e.clientX - photoPanX;
+        startMouseY = e.clientY - photoPanY;
+        photo.style.cursor = 'grabbing';
+    };
+
+    window.onmousemove = function(e) {
+        if (!isDraggingPhoto) return;
+        photoPanX = e.clientX - startMouseX;
+        photoPanY = e.clientY - startMouseY;
+        applyPhotoTransform();
+    };
+
+    window.onmouseup = function() {
+        isDraggingPhoto = false;
+        if (photo) photo.style.cursor = 'grab';
+    };
+
+    wrapper.onwheel = function(e) {
+        if (!currentVideoElement || currentVideoElement.id !== 'mainPhotoPlayer') return;
+        e.preventDefault();
+        if (e.deltaY < 0) {
+            currentScale += 0.08;
+        } else {
+            if (currentScale > 0.3) currentScale -= 0.08;
+        }
+        applyPhotoTransform();
+    };
+}
+
+function applyPhotoTransform() {
+    if (currentVideoElement && currentVideoElement.id === 'mainPhotoPlayer') {
+        currentVideoElement.style.transform = `scale(${currentScale}) rotate(${currentRotation}deg) translate(${photoPanX}px, ${photoPanY}px)`;
+    }
+}
+
+// 4. Adjust Comfortable Menu
+function openAdjustComfortableMenu() {
+    const oldMenu = document.getElementById('sStudioAdjustMenu');
+    if (oldMenu) { oldMenu.remove(); return; }
+
+    const menu = document.createElement('div');
+    menu.id = 'sStudioAdjustMenu';
+    menu.style.cssText = "position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); background:#161920; border:2px solid #6c5ce7; padding:20px; border-radius:12px; display:flex; flex-direction:column; gap:12px; z-index:10000; width: 300px; color: white; font-family:sans-serif; box-shadow:0 10px 30px rgba(0,0,0,0.8);";
+
+    menu.innerHTML = `
+        <div style="font-size:13px; color:#6c5ce7; font-weight:bold; border-bottom:1px solid #2f3542; padding-bottom:8px; display:flex; justify-content:space-between; align-items:center;">
+            <span>📐 ADJUST COMFORTABLE (HANDS CONTROL)</span>
+            <span id="closeAdjustMenu" style="cursor:pointer; font-size:18px; color:#a4b0be;">&times;</span>
+        </div>
+        <p style="font-size:11px; color:#a4b0be; margin:0;">Drag image with hands / mouse to adjust position. Use slider below to fit/crop comfortable bounds.</p>
+        
+        <label style="font-size:11px;">🔍 Zoom Level:</label>
+        <input type="range" id="adjustZoomRange" min="0.3" max="3" step="0.05" value="${currentScale}" oninput="currentScale=parseFloat(this.value); applyPhotoTransform();">
+        
+        <label style="font-size:11px;">📐 Crop Frame Ratio:</label>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px;">
+            <button class="crop-preset-btn" onclick="setWrapperRatio('16/9')" style="background:#222733; color:white; border:1px solid #333; padding:6px; border-radius:4px; font-size:11px; cursor:pointer;">📺 16:9 YouTube</button>
+            <button class="crop-preset-btn" onclick="setWrapperRatio('9/16')" style="background:#222733; color:white; border:1px solid #333; padding:6px; border-radius:4px; font-size:11px; cursor:pointer;">📱 9:16 Shorts/Reels</button>
+            <button class="crop-preset-btn" onclick="setWrapperRatio('1/1')" style="background:#222733; color:white; border:1px solid #333; padding:6px; border-radius:4px; font-size:11px; cursor:pointer;">🔲 1:1 Square</button>
+            <button class="crop-preset-btn" onclick="setWrapperRatio('free')" style="background:#6c5ce7; color:white; border:none; padding:6px; border-radius:4px; font-size:11px; font-weight:bold; cursor:pointer;">🔄 Free Reset</button>
+        </div>
+        <button id="btnDoneAdjust" style="background:#10ac84; color:white; border:none; padding:8px; border-radius:6px; font-weight:bold; cursor:pointer; font-size:12px; margin-top:5px;">Done Adjusting 👍</button>
+    `;
+
+    menu.querySelector('#closeAdjustMenu').onclick = () => menu.remove();
+    menu.querySelector('#btnDoneAdjust').onclick = () => menu.remove();
+    document.body.appendChild(menu);
+}
+
+function setWrapperRatio(ratio) {
+    const wp = document.getElementById('videoWrapper');
+    if (!wp) return;
+    wp.style.overflow = "hidden";
+    if (ratio === '16/9') { wp.style.width = "80%"; wp.style.aspectRatio = "16/9"; }
+    else if (ratio === '9/16') { wp.style.width = "300px"; wp.style.height = "520px"; }
+    else if (ratio === '1/1') { wp.style.width = "400px"; wp.style.height = "400px"; }
+    else if (ratio === 'free') { wp.style.width = "98%"; wp.style.height = "82vh"; }
+}
+
+// 5. Photo Filters Menu
+function openPhotoFiltersMenu() {
+    const oldMenu = document.getElementById('sStudioFilterMenu');
+    if (oldMenu) { oldMenu.remove(); return; }
+
+    const menu = document.createElement('div');
+    menu.id = 'sStudioFilterMenu';
+    menu.style.cssText = "position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); background:#161920; border:2px solid #10ac84; padding:15px; border-radius:10px; display:flex; flex-direction:column; gap:8px; z-index:10000; width: 250px; color: white; font-family:sans-serif;";
+
+    menu.innerHTML = `
+        <div style="font-size:12px; color:#10ac84; font-weight:bold; border-bottom:1px solid #222733; padding-bottom:6px; display:flex; justify-content:space-between; align-items:center;">
+            <span>🎨 PHOTO FILTERS & TONING</span>
+            <span id="closeFilterMenu" style="cursor:pointer; font-size:18px; color:#a4b0be;">&times;</span>
+        </div>
+        <button onclick="applyPhotoFilter('bright'); this.parentElement.remove();" style="background:#222733; color:white; border:none; padding:8px; border-radius:4px; font-size:11px; cursor:pointer; text-align:left;">☀️ Bright & Sharp</button>
+        <button onclick="applyPhotoFilter('vintage'); this.parentElement.remove();" style="background:#222733; color:white; border:none; padding:8px; border-radius:4px; font-size:11px; cursor:pointer; text-align:left;">📜 Vintage Warm</button>
+        <button onclick="applyPhotoFilter('bw'); this.parentElement.remove();" style="background:#222733; color:white; border:none; padding:8px; border-radius:4px; font-size:11px; cursor:pointer; text-align:left;">🖤 Black & White Pro</button>
+        <button onclick="applyPhotoFilter('cool'); this.parentElement.remove();" style="background:#222733; color:white; border:none; padding:8px; border-radius:4px; font-size:11px; cursor:pointer; text-align:left;">❄️ Cool Cinematic</button>
+        <button onclick="applyPhotoFilter('reset'); this.parentElement.remove();" style="background:#ff4757; color:white; border:none; padding:8px; border-radius:4px; font-size:11px; font-weight:bold; cursor:pointer;">🔄 Reset Original</button>
+    `;
+
+    menu.querySelector('#closeFilterMenu').onclick = () => menu.remove();
+    document.body.appendChild(menu);
+}
+
+// 6. Download Photo Logic
+function downloadPhotoToDevice() {
+    const photo = document.getElementById('mainPhotoPlayer');
+    if (!photo) {
+        alert("Please load a photo first!");
+        return;
+    }
+
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = photo.naturalWidth || photo.width || 1080;
+    canvas.height = photo.naturalHeight || photo.height || 1080;
+
+    ctx.filter = getComputedStyle(photo).filter;
+    ctx.drawImage(photo, 0, 0, canvas.width, canvas.height);
+
+    const anchor = document.createElement('a');
+    anchor.href = canvas.toDataURL('image/png');
+    anchor.download = "S_Studio_Edited_Photo_" + Date.now() + ".png";
+    document.body.appendChild(anchor);
+    anchor.click();
+    document.body.removeChild(anchor);
+}
+
+// 7. Reset to Home
+function resetToHome() {
+    const editorPage = document.getElementById('editorPage');
+    if (editorPage) {
+        editorPage.style.display = 'none';
+        editorPage.classList.add('hidden');
+    }
+
+    const introPage = document.getElementById('introPage');
+    if (introPage) {
+        introPage.style.display = 'flex';
+        introPage.classList.remove('hidden');
+    }
+
+    const extraLandingSelectors = [
+        '#sStudioScrollableGuide',
+        '.founders-vision-card-large',
+        '.upcoming-updates-card',
+        '.feedback-reward-card',
+        '.support-channels-card',
+        '.innovation-rewards-card',
+        '.s-studio-master-footer'
+    ];
+
+    extraLandingSelectors.forEach(selector => {
+        document.querySelectorAll(selector).forEach(el => {
+            el.style.display = 'block';
+        });
+    });
+
+    const wrapper = document.getElementById('videoWrapper');
+    if (wrapper) wrapper.classList.remove('photo-mode-large');
+
+    const timelineTracks = document.querySelector('.timeline-tracks');
+    if (timelineTracks) timelineTracks.style.display = 'flex';
+
+    const videoInput = document.getElementById('videoInput');
+    if (videoInput) videoInput.value = '';
+    const photoInput = document.getElementById('photoInput');
+    if (photoInput) photoInput.value = '';
+}
