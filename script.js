@@ -1,1867 +1,998 @@
-// ==========================================================================
-// 🚀 S STUDIO - GLOBAL STATES & ENGINE VARIABLES
-// ==========================================================================
-let currentVideoElement = null;
-let videoFileBlob = null;
-let currentScale = 1.0;
-let currentRotation = 0;
-let isMuted = false;
-let currentVolumeLevel = 1.0;
-
-let audioContext = null;
-let gainNode = null;
-let sourceNode = null;
-let compressorNode = null;
-
-let videoDurationSeconds = 0;
-let selectedResMultiplier = 1.0;
-let selectedFpsValue = 30;
-let selectedMbpsValue = 12;
-let isManualMode = false;
-let activeTextElement = null;
-let activeAudioNodes = {}; 
-
-let undoStack = [];
-let redoStack = [];
-
-let mediaRecorder = null;
-let audioChunks = [];
-let currentActivePIPLayer = null; 
-
-// Hidden file picker instance for PIP operations
-let sStudioHiddenFilePicker = document.getElementById('sStudioHiddenFilePicker');
-if (!sStudioHiddenFilePicker) {
-    sStudioHiddenFilePicker = document.createElement('input');
-    sStudioHiddenFilePicker.id = 'sStudioHiddenFilePicker';
-    sStudioHiddenFilePicker.type = 'file';
-    sStudioHiddenFilePicker.accept = 'image/*,video/*';
-    sStudioHiddenFilePicker.style.display = 'none';
-    document.body.appendChild(sStudioHiddenFilePicker);
+/* ==========================================================================
+   🌐 GLOBAL VARIABLES & CORE RESETS (PREMIUM DARK THEME)
+   ========================================================================== */
+:root {
+    --bg-main: #0d0e12;
+    --bg-darker: #050608;
+    --bg-panel: #161920;
+    --accent-color: #6c5ce7;
+    --accent-hover: #5b4cd8;
+    --text-primary: #ffffff;
+    --text-secondary: #a4b0be;
+    --border-color: #2f3542;
+    --danger-color: #ff4757;
+    --success-color: #10ac84;
+    --cyan-accent: #00f2fe;
 }
 
-// Local Expert Knowledge Base for AI Assistant
-const studioAiKnowledgeBase = {
-    "split": "To split a video, move the timeline playhead to the exact frame and press the 'S' key on your keyboard or click the '✂️ Split' button in the toolbar.",
-    "music": "To add music or voice-over, click the '🎵 +' button. You can upload local MP3s or choose from preset themes like Cinematic or Lofi loops.",
-    "voice": "Click the '🎙️ Record Voice' button to record live audio from your microphone. Click it again to save it directly to the timeline track.",
-    "photo": "Upload a photo via the gallery button. Once loaded, click directly on the image player to unlock Zoom, Rotate, and premium Color Adjustment Sliders.",
-    "pip": "Picture-in-Picture (PIP) allows you to overlay unlimited images or videos on top of your main video. You can drag them around and adjust properties with the floating toolkit.",
-    "chroma": "The Chroma Key feature removes green or blue screens. Click the '🟢 Chroma Key' button after selecting your media layer.",
-    "shortcut": "Keyboard Shortcuts: [Spacebar] for Play/Pause, [S Key] for splitting clips instantly on the active track line.",
-    "save": "S Studio features Local Auto-Save. Even if you close the browser, your recent timeline modifications are safely stored in localStorage.",
-    "export": "Click the 'Export Video' button at the top right to open export options (Auto/Manual resolutions up to 1440p) and save directly to your gallery."
-};
+*, *::before, *::after {
+    box-sizing: border-box !important;
+}
 
-// ==========================================================================
-// 🛠️ CORE TRANSFORMATION & UNDO/REDO HISTORY ENGINE
-// ==========================================================================
-function applyTransformations() {
-    if (currentVideoElement) {
-        currentVideoElement.style.transform = `scale(${currentScale}) rotate(${currentRotation}deg)`;
+html, body {
+    width: 100% !important;
+    min-height: 100vh !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    display: flex;
+    flex-direction: column;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* ==========================================================================
+   🏠 INTRO LANDING PAGE (FULL WIDTH CONTAINER)
+   ========================================================================== */
+#introPage, .intro-container {
+    width: 100% !important;
+    max-width: 100vw !important;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    background-color: var(--bg-darker);
+    padding: 30px 2% !important;
+}
+
+.brand-header-box {
+    text-align: center;
+    margin-bottom: 30px;
+    width: 100%;
+}
+
+/* Inline horizontal flexbox for logo & S STUDIO text */
+.main-logo-wrapper {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 15px !important;
+    margin-bottom: 12px;
+    flex-wrap: nowrap !important;
+}
+
+.logo-box-container {
+    width: 90px !important;
+    height: 90px !important;
+    margin: 0 !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0, 242, 254, 0.08);
+    border: 2px solid var(--cyan-accent);
+    border-radius: 18px;
+    padding: 8px;
+    box-shadow: 0 0 20px rgba(0, 242, 254, 0.25);
+    flex-shrink: 0;
+}
+
+.s-main-logo {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain !important;
+    filter: drop-shadow(0 0 8px rgba(0, 242, 254, 0.4));
+}
+
+.main-heading-title {
+    margin: 0 !important;
+    font-size: 38px !important;
+    color: var(--cyan-accent);
+    font-weight: 900;
+    letter-spacing: 1.5px;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+.powered-by-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #38bdf8;
+    text-decoration: none;
+    margin-top: 10px;
+    padding: 6px 16px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(56, 189, 248, 0.25);
+    border-radius: 20px;
+    transition: all 0.3s ease;
+}
+
+.powered-by-link:hover {
+    color: var(--cyan-accent);
+    border-color: var(--cyan-accent);
+    box-shadow: 0 0 12px rgba(0, 242, 254, 0.3);
+}
+
+.sriram-sub-logo {
+    width: 28px !important;
+    height: 28px !important;
+    object-fit: contain;
+    vertical-align: middle;
+}
+
+.select-workspace-sub {
+    color: var(--text-secondary);
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+.workspace-choice-container {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    width: 95% !important;
+    max-width: 1400px !important;
+    margin: 0 auto 30px auto;
+}
+
+.choice-card {
+    flex: 1;
+    background-color: var(--bg-panel);
+    border: 1px solid var(--border-color);
+    padding: 30px 20px;
+    border-radius: 16px;
+    cursor: pointer;
+    transition: transform 0.2s, border-color 0.2s;
+    text-align: center;
+}
+
+.choice-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--accent-color);
+}
+
+.choice-icon {
+    font-size: 36px;
+    display: block;
+    margin-bottom: 12px;
+}
+
+.coming-soon {
+    color: var(--danger-color);
+    font-size: 12px;
+    font-weight: bold;
+    margin-top: 5px;
+}
+
+.locked-studio {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* ==========================================================================
+   🖼️ FULL PAGE CARDS & CONTENT BOXES
+   ========================================================================== */
+.scrollable-guide-box,
+.founders-vision-card-large,
+.upcoming-updates-card,
+.feedback-reward-card,
+.support-channels-card,
+.innovation-rewards-card {
+    width: 95% !important;
+    max-width: 1400px !important;
+    margin: 25px auto !important;
+    background: #11141f !important;
+    border: 1px solid #232a3b !important;
+    border-radius: 16px !important;
+    padding: 30px !important;
+    box-sizing: border-box !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4) !important;
+}
+
+.scrollable-guide-content {
+    color: #cbd5e1;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+.guide-section {
+    margin-bottom: 22px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding-bottom: 15px;
+}
+
+.guide-section h3 { 
+    color: var(--cyan-accent); 
+    font-size: 16px; 
+    margin-bottom: 8px; 
+}
+
+.guide-section p, .guide-section li { 
+    color: var(--text-secondary); 
+    font-size: 13px; 
+    line-height: 1.6; 
+}
+
+.pip-highlight {
+    background: rgba(108, 92, 231, 0.05);
+    border: 1px solid rgba(108, 92, 231, 0.2);
+    border-radius: 8px;
+    padding: 15px;
+}
+
+.pip-grid span { 
+    display: block; 
+    font-size: 12.5px; 
+    color: #cbd5e1; 
+    margin-bottom: 6px; 
+}
+
+/* ==========================================================================
+   💻 EDITOR SCREEN NAVBAR & WORKSPACE
+   ========================================================================== */
+.editor-container, #editorPage {
+    width: 100vw !important;
+    height: 100vh !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
+}
+
+.navbar {
+    width: 100% !important;
+    background-color: var(--bg-panel);
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px !important;
+    border-bottom: 1px solid var(--border-color);
+    flex-shrink: 0;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+.logo-s {
+    background: linear-gradient(135deg, #6c5ce7, #a8a5ff);
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 18px;
+    color: white;
+}
+
+.logo-text {
+    font-weight: 600;
+    font-size: 18px;
+}
+
+.menu-items, .action-group {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.nav-btn {
+    background-color: transparent;
+    color: var(--text-secondary);
+    border: 1px solid transparent;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.nav-btn:hover {
+    color: white;
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.upload-trigger {
+    background-color: var(--accent-color) !important;
+    color: white !important;
+    font-weight: bold !important;
+}
+
+.export-btn-main {
+    background-color: var(--danger-color);
+    color: white;
+    border: none;
+    padding: 8px 18px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+/* ==========================================================================
+   🎥 PREVIEW WINDOW & WORKSPACE AREA
+   ========================================================================== */
+.workspace, main.workspace {
+    flex: 1 !important;
+    width: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background-color: var(--bg-darker);
+    padding: 10px !important;
+    overflow: hidden !important;
+}
+
+.preview-window {
+    width: 100% !important;
+    height: 100% !important;
+    max-width: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+.video-wrapper, #videoWrapper {
+    width: 95% !important;
+    height: 100% !important;
+    max-height: 62vh !important;
+    aspect-ratio: 16 / 9 !important;
+    background-color: #000000;
+    border-radius: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+    position: relative;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.7);
+}
+
+.video-wrapper video, .video-wrapper img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.live-text-box {
+    position: absolute;
+    top: 40%;
+    left: 35%;
+    color: #ffffff;
+    background: transparent;
+    padding: 6px 10px;
+    font-size: 24px;
+    font-weight: normal;
+    font-style: normal;
+    cursor: move;
+    outline: none;
+    border: 1px dashed transparent;
+    user-select: none;
+}
+
+.live-text-box.selected-active {
+    border: 1px dashed var(--accent-color);
+    background: rgba(108, 92, 231, 0.1);
+}
+
+#placeholderText {
+    color: var(--text-secondary);
+    font-size: 14px;
+}
+
+.player-controls {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.player-btn {
+    background-color: var(--bg-panel);
+    color: white;
+    border: 1px solid var(--border-color);
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 13px;
+}
+
+.play-main {
+    background-color: var(--accent-color);
+    border: none;
+    padding: 8px 22px;
+    font-weight: bold;
+}
+
+/* ==========================================================================
+   🎞️ TIMELINE STACK ENGINE
+   ========================================================================== */
+.timeline-area, #timelineAreaBox {
+    width: 100% !important;
+    min-height: 220px;
+    display: flex;
+    flex-direction: column;
+    background-color: #11141f;
+    border-top: 1px solid var(--border-color);
+    flex-shrink: 0;
+}
+
+.timeline-tracks {
+    width: 100% !important;
+    min-height: 130px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 10px 16px;
+    background-color: var(--bg-main);
+    overflow-y: auto;
+    position: relative;
+}
+
+.track-row {
+    display: flex;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.02);
+    border-radius: 6px;
+    height: 38px;
+    border: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.track-icon {
+    width: 45px;
+    font-size: 13px;
+    text-align: center;
+    color: var(--text-secondary);
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+}
+
+.track-block {
+    flex: 1;
+    height: 100%;
+    border-left: 1px solid var(--border-color);
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.active-video-track {
+    background: linear-gradient(90deg, rgba(108, 92, 231, 0.2), transparent);
+    border-left: 4px solid var(--accent-color);
+    padding-left: 15px;
+    font-size: 12px;
+    color: #a8a5ff;
+}
+
+#frameTimelineTrack {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background-color: #1b1d26;
+    overflow-x: auto;
+}
+
+#framesContainer {
+    display: flex;
+    height: 100%;
+}
+
+.video-thumb-frame {
+    height: 100%;
+    width: 60px;
+    object-fit: cover;
+    border-right: 1px solid #333333;
+}
+
+#playhead {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 3px;
+    height: 100%;
+    background-color: #ffffff;
+    box-shadow: 0 0 8px var(--accent-color);
+    pointer-events: none;
+    z-index: 100;
+    transition: left 0.1s linear;
+}
+
+/* ==========================================================================
+   🛠️ BOTTOM TOOLBAR MATRIX
+   ========================================================================== */
+.timeline-controls {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 8px 12px;
+    align-items: center;
+    background-color: var(--bg-panel);
+    padding: 10px 16px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.tools-container {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+}
+
+.tool-btn, .control-btn {
+    padding: 6px 14px;
+    font-size: 12px;
+    font-weight: 500;
+    border-radius: 6px;
+    background-color: #222733;
+    color: #fff;
+    cursor: pointer;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.2s ease;
+}
+
+.tool-btn:hover, .control-btn:hover {
+    background-color: var(--accent-color);
+    border-color: var(--accent-color);
+}
+
+.tool-btn:active, .control-btn:active {
+    transform: scale(0.96);
+}
+
+.delete-btn {
+    background-color: rgba(255, 71, 87, 0.15) !important;
+    border-color: rgba(255, 71, 87, 0.3) !important;
+    color: #ff4757 !important;
+}
+
+.delete-btn:hover {
+    background-color: var(--danger-color) !important;
+    color: white !important;
+}
+
+.control-group {
+    display: inline-flex;
+    gap: 6px;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.03);
+    padding: 4px 8px;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.control-group input[type="range"] {
+    width: 75px;
+    accent-color: var(--accent-color);
+}
+
+.control-group label, .control-group span {
+    font-size: 11px;
+    color: var(--text-secondary);
+}
+
+/* ==========================================================================
+   📦 MODAL POPUPS & DIALOGS
+   ========================================================================== */
+.export-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.85);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 999999;
+}
+
+.modal-content {
+    background-color: var(--bg-panel);
+    width: 90%;
+    max-width: 440px;
+    padding: 24px;
+    border-radius: 16px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.close-modal {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 20px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+/* ==========================================================================
+   🏢 SRI RAM GROUPS - 4-COLUMN MASTER FOOTER
+   ========================================================================== */
+.s-studio-master-footer {
+    width: 100% !important;
+    background-color: #0d0e12;
+    border-top: 1px solid #232a3b;
+    padding: 40px 5% 0 5% !important;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    color: #cbd5e1;
+    margin-top: 40px;
+    box-sizing: border-box !important;
+}
+
+.footer-grid-container {
+    width: 100% !important;
+    max-width: 1400px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px;
+    padding-bottom: 30px;
+}
+
+.footer-col-title {
+    color: var(--cyan-accent);
+    font-size: 16px;
+    font-weight: 700;
+    margin-top: 0;
+    margin-bottom: 18px;
+}
+
+.company-desc-text {
+    font-size: 12.5px;
+    line-height: 1.6;
+    color: #94a3b8;
+    margin-bottom: 15px;
+}
+
+.footer-links-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-links-list li {
+    margin-bottom: 10px;
+    font-size: 13px;
+}
+
+.footer-links-list a {
+    color: #94a3b8;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.footer-links-list a:hover {
+    color: var(--cyan-accent);
+    text-decoration: underline;
+}
+
+.contact-list li {
+    color: #cbd5e1;
+    font-size: 12.5px;
+    word-break: break-all;
+}
+
+.contact-list a {
+    color: #38bdf8;
+}
+
+.report-bug-btn {
+    background: rgba(255, 71, 87, 0.12);
+    color: #ff4757;
+    border: 1px dashed #ff4757;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    width: 100%;
+    transition: all 0.2s ease;
+}
+
+.report-bug-btn:hover {
+    background: #ff4757;
+    color: #ffffff;
+    box-shadow: 0 4px 15px rgba(255, 71, 87, 0.4);
+}
+
+.standalone-copyright-footer {
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 20px 0;
+    text-align: center;
+    width: 100%;
+}
+
+.standalone-copyright-footer p {
+    margin: 0;
+    font-size: 12px;
+    color: #64748b;
+}
+
+/* ==========================================================================
+   📱 CLEAN RESPONSIVE MEDIA QUERIES (MOBILE & TABLET)
+   ========================================================================== */
+@media screen and (max-width: 900px) {
+    .footer-grid-container {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 25px;
     }
 }
 
-function saveStateToHistory() {
-    const wrapper = document.getElementById('videoWrapper');
-    if (!currentVideoElement || !wrapper) return;
+@media screen and (max-width: 600px) {
+    .logo-box-container {
+        width: 65px !important;
+        height: 65px !important;
+        border-radius: 12px;
+    }
+    .main-heading-title {
+        font-size: 26px !important;
+    }
+    .workspace-choice-container {
+        flex-direction: column !important;
+        gap: 12px !important;
+    }
+    .scrollable-guide-box,
+    .founders-vision-card-large,
+    .upcoming-updates-card,
+    .feedback-reward-card,
+    .support-channels-card,
+    .innovation-rewards-card {
+        padding: 18px !important;
+        margin: 15px auto !important;
+        width: 98% !important;
+    }
+    .tools-container, .timeline-controls {
+        justify-content: center !important;
+    }
+    .tool-btn, .control-btn {
+        font-size: 11px !important;
+        padding: 6px 8px !important;
+    }
+    .footer-grid-container {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+}
+/* ==========================================================================
+   ✨ ATTENTION-GRABBING ANIMATED SUPPORT CARD (NO EMOJIS & ADS SAFE)
+   ========================================================================== */
 
-    const stateSnapshot = {
-        scale: currentScale,
-        rotation: currentRotation,
-        playbackRate: currentVideoElement.playbackRate || 1.0,
-        filter: currentVideoElement.style.filter || 'none',
-        boxShadow: currentVideoElement.style.boxShadow || 'none',
-        wrapperWidth: wrapper.style.width,
-        wrapperHeight: wrapper.style.height,
-        wrapperOverflow: wrapper.style.overflow,
-        videoWidth: currentVideoElement.style.width,
-        videoHeight: currentVideoElement.style.height,
-        videoObjectFit: currentVideoElement.style.objectFit
-    };
-
-    undoStack.push(stateSnapshot);
-    redoStack = []; 
-    console.log("🔄 Workspace snapshot captured. Undo depth: " + undoStack.length);
+/* Scroll Animation Initial State */
+.scroll-reveal-card {
+    opacity: 0;
+    transform: translateY(40px) scale(0.98);
+    transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: opacity, transform;
 }
 
-function executeUndo() {
-    const wrapper = document.getElementById('videoWrapper');
-    if (undoStack.length === 0 || !currentVideoElement || !wrapper) return;
+/* Active State Triggered On Scroll */
+.scroll-reveal-card.reveal-active {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
 
-    const currentState = {
-        scale: currentScale,
-        rotation: currentRotation,
-        playbackRate: currentVideoElement.playbackRate || 1.0,
-        filter: currentVideoElement.style.filter || 'none',
-        boxShadow: currentVideoElement.style.boxShadow || 'none',
-        wrapperWidth: wrapper.style.width,
-        wrapperHeight: wrapper.style.height,
-        wrapperOverflow: wrapper.style.overflow,
-        videoWidth: currentVideoElement.style.width,
-        videoHeight: currentVideoElement.style.height,
-        videoObjectFit: currentVideoElement.style.objectFit
-    };
-    redoStack.push(currentState);
+.support-channels-card {
+    background: linear-gradient(135deg, rgba(15, 23, 42, 0.98), rgba(17, 24, 39, 0.95)) !important;
+    border: 2px solid #38bdf8 !important;
+    border-radius: 18px !important;
+    padding: 35px 30px !important;
+    margin: 40px auto 30px auto !important;
+    width: 95% !important;
+    max-width: 1400px !important;
+    text-align: left !important;
+    box-sizing: border-box !important;
+    box-shadow: 0 15px 40px rgba(56, 189, 248, 0.25), inset 0 0 15px rgba(56, 189, 248, 0.08) !important;
+    position: relative;
+    overflow: hidden;
+}
 
-    const prevState = undoStack.pop();
-    currentScale = prevState.scale;
-    currentRotation = prevState.rotation;
-    if (currentVideoElement.playbackRate) currentVideoElement.playbackRate = prevState.playbackRate;
-    currentVideoElement.style.filter = prevState.filter;
-    currentVideoElement.style.boxShadow = prevState.boxShadow;
-    
-    wrapper.style.width = prevState.wrapperWidth;
-    wrapper.style.height = prevState.wrapperHeight;
-    wrapper.style.overflow = prevState.wrapperOverflow;
-    
-    currentVideoElement.style.width = prevState.videoWidth;
-    currentVideoElement.style.height = prevState.videoHeight;
-    currentVideoElement.style.objectFit = prevState.videoObjectFit;
+.support-header-box {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    border-bottom: 1px solid rgba(56, 189, 248, 0.25);
+    padding-bottom: 18px;
+}
 
-    if (currentVideoElement.id === 'mainPhotoPlayer') {
-        applyPhotoTransform();
-    } else {
-        applyTransformations();
+.support-title-container {
+    flex: 1;
+}
+
+.support-main-title {
+    color: #38bdf8 !important;
+    margin: 0 !important;
+    font-size: 26px !important;
+    font-weight: 800 !important;
+    letter-spacing: -0.3px !important;
+    line-height: 1.3 !important;
+}
+
+.support-sub-text {
+    color: #cbd5e1 !important;
+    font-size: 14px !important;
+    margin: 6px 0 0 0 !important;
+    font-weight: 400 !important;
+}
+
+.support-body-content {
+    color: #e2e8f0;
+    font-size: 14.5px;
+    line-height: 1.8;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.email-support-panel {
+    background: rgba(56, 189, 248, 0.06) !important;
+    border-left: 5px solid #00f2fe !important;
+    padding: 22px 24px !important;
+    border-radius: 8px !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2) !important;
+}
+
+.email-panel-title {
+    color: #ffffff !important;
+    margin: 0 0 12px 0 !important;
+    font-size: 17px !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.5px !important;
+}
+
+.email-row {
+    margin: 0 0 10px 0 !important;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+}
+
+.email-row:last-child {
+    margin-bottom: 0 !important;
+}
+
+.email-label {
+    color: #e2e8f0;
+    font-weight: 600;
+}
+
+.email-link {
+    color: #00f2fe !important;
+    text-decoration: none !important;
+    font-weight: 700 !important;
+    padding: 2px 8px;
+    background: rgba(0, 242, 254, 0.08);
+    border-radius: 4px;
+    border: 1px solid rgba(0, 242, 254, 0.2);
+    transition: all 0.3s ease;
+}
+
+.email-link:hover {
+    color: #ffffff !important;
+    background: #00f2fe !important;
+    box-shadow: 0 0 12px rgba(0, 242, 254, 0.6) !important;
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 600px) {
+    .support-channels-card {
+        padding: 22px 18px !important;
+    }
+    .support-main-title {
+        font-size: 20px !important;
+    }
+    .email-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
     }
 }
 
-function executeRedo() {
-    const wrapper = document.getElementById('videoWrapper');
-    if (redoStack.length === 0 || !currentVideoElement || !wrapper) return;
+/* ==========================================================================
+   ✨ MARQUEE AUTO-SCROLL WITH HOVER/VIEW PAUSE ENGINE
+   ========================================================================== */
 
-    undoStack.push({
-        scale: currentScale,
-        rotation: currentRotation,
-        playbackRate: currentVideoElement.playbackRate || 1.0,
-        filter: currentVideoElement.style.filter || 'none',
-        boxShadow: currentVideoElement.style.boxShadow || 'none',
-        wrapperWidth: wrapper.style.width,
-        wrapperHeight: wrapper.style.height,
-        wrapperOverflow: wrapper.style.overflow,
-        videoWidth: currentVideoElement.style.width,
-        videoHeight: currentVideoElement.style.height,
-        videoObjectFit: currentVideoElement.style.objectFit
-    });
+.auto-scroll-pause-card {
+    background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(17, 24, 39, 0.98)) !important;
+    border: 2px solid #10ac84 !important;
+    border-radius: 16px !important;
+    padding: 35px 30px !important;
+    margin: 35px auto 25px auto !important;
+    width: 95% !important;
+    max-width: 1400px !important;
+    text-align: left !important;
+    box-sizing: border-box !important;
+    box-shadow: 0 12px 35px rgba(16, 172, 132, 0.15) !important;
+    overflow: hidden !important;
+    position: relative;
+}
 
-    const nextState = redoStack.pop();
-    currentScale = nextState.scale;
-    currentRotation = nextState.rotation;
-    if (currentVideoElement.playbackRate) currentVideoElement.playbackRate = nextState.playbackRate;
-    currentVideoElement.style.filter = nextState.filter;
-    currentVideoElement.style.boxShadow = nextState.boxShadow;
-    
-    wrapper.style.width = nextState.wrapperWidth;
-    wrapper.style.height = nextState.wrapperHeight;
-    wrapper.style.overflow = nextState.wrapperOverflow;
-    
-    currentVideoElement.style.width = nextState.videoWidth;
-    currentVideoElement.style.height = nextState.videoHeight;
-    currentVideoElement.style.objectFit = nextState.videoObjectFit;
+/* Continuous Side-Scroll Animation */
+.auto-scroll-pause-card .marquee-content-wrapper {
+    display: block;
+    animation: scrollHighlight 15s linear infinite;
+    will-change: transform;
+}
 
-    if (currentVideoElement.id === 'mainPhotoPlayer') {
-        applyPhotoTransform();
-    } else {
-        applyTransformations();
+/* 1. Pause Animation when user Hovers Mouse over the Card */
+.auto-scroll-pause-card:hover .marquee-content-wrapper {
+    animation-play-state: paused !important;
+}
+
+/* 2. Pause Animation when user Scrolls directly to this section */
+.auto-scroll-pause-card.user-view-focused .marquee-content-wrapper {
+    animation-play-state: paused !important;
+    transform: translateX(0) !important;
+    transition: transform 0.6s ease-out;
+}
+
+/* Smooth Horizontal Motion Keyframes */
+@keyframes scrollHighlight {
+    0% {
+        transform: translateX(30px);
+    }
+    50% {
+        transform: translateX(-15px);
+    }
+    100% {
+        transform: translateX(30px);
     }
 }
 
-function undoAction() { executeUndo(); }
-function redoAction() { executeRedo(); }
-
-// ==========================================================================
-// 🧭 STUDIO NAVIGATION & CENTRAL SWITCHER
-// ==========================================================================
-function enterStudio(studioType) {
-    if (studioType === 'video') {
-        const videoInp = document.getElementById('videoInput');
-        if (videoInp) videoInp.click();
-    } else if (studioType === 'photo') {
-        const photoInp = document.getElementById('photoInput');
-        if (photoInp) photoInp.click();
+@media screen and (max-width: 600px) {
+    .auto-scroll-pause-card {
+        padding: 20px 15px !important;
     }
 }
 
-// ==========================================================================
-// 🎥 VIDEO EDITING ENGINE (FIRST PART)
-// ==========================================================================
-function loadVideo(event) {
-    const file = event.target.files ? event.target.files[0] : null;
-    if (!file) {
-        console.log("No video selected.");
-        return;
-    }
+/* ==========================================================================
+   🖼️ PHOTO EDITING LARGE CANVAS & HANDS CONTROL STYLES
+   ========================================================================== */
 
-    const introPage = document.getElementById('introPage');
-    if (introPage) {
-        introPage.style.display = 'none';
-        introPage.classList.add('hidden');
-    }
-
-    const extraLandingSelectors = [
-        '#sStudioScrollableGuide',
-        '.founders-vision-card-large',
-        '.upcoming-updates-card',
-        '.feedback-reward-card',
-        '.support-channels-card',
-        '.innovation-rewards-card',
-        '.s-studio-master-footer'
-    ];
-    extraLandingSelectors.forEach(selector => {
-        document.querySelectorAll(selector).forEach(el => {
-            el.style.display = 'none';
-        });
-    });
-
-    const editorPage = document.getElementById('editorPage');
-    if (editorPage) {
-        editorPage.style.display = 'flex';
-        editorPage.classList.remove('hidden');
-    }
-
-    videoFileBlob = file; 
-    const wrapper = document.getElementById('videoWrapper');
-    const placeholder = document.getElementById('placeholderText');
-    const videoURL = URL.createObjectURL(file);
-    window.currentVideoURL = videoURL;
-    
-    if (!wrapper) return;
-    if (placeholder) placeholder.style.display = 'none';
-
-    wrapper.classList.remove('photo-mode-large');
-    wrapper.style.width = "95%";
-    wrapper.style.aspectRatio = "16 / 9";
-
-    wrapper.innerHTML = `
-        <video id="mainPlayer" style="transform: scale(1) rotate(0deg); transition: transform 0.2s ease; width:100%; height:100%; object-fit:contain;">
-            <source src="${videoURL}" type="${file.type}">
-        </video>
-        <div id="videoTimerDisplay" style="position: absolute; bottom: 10px; right: 15px; background: rgba(0,0,0,0.7); padding: 4px 10px; border-radius: 4px; font-family: monospace; font-size: 13px; color: #fff; z-index: 10; border: 1px solid #333;">00:00 / 00:00</div>
-    `;
-    
-    currentVideoElement = document.getElementById('mainPlayer');
-    currentScale = 1.0; 
-    currentRotation = 0; 
-    isMuted = false; 
-    currentVolumeLevel = 1.0;
-    undoStack = []; 
-    redoStack = [];
-
-    // Show top Action Group (Undo, Redo, Export Video)
-    const actionGroup = document.querySelector('.action-group');
-    if (actionGroup) {
-        actionGroup.classList.remove('hidden');
-        actionGroup.style.display = 'flex';
-    }
-
-    // Export Button Video Logic
-    const exportBtn = document.querySelector('.export-btn-main');
-    if (exportBtn) {
-        exportBtn.innerText = "Export Video";
-        exportBtn.onclick = function() { toggleExportModal(true); };
-    }
-
-    setupVolumeAudioEngine();
-
-    currentVideoElement.onloadedmetadata = function() {
-        videoDurationSeconds = currentVideoElement.duration;
-        if (typeof calculateEstimatedSize === 'function') calculateEstimatedSize();
-        updateTimerUI();
-        generateVideoFrames(videoURL);
-    };
-
-    currentVideoElement.ontimeupdate = function() {
-        updateTimerUI();
-        updatePlayheadPosition();
-    };
-
-    // Force-show Video Player Controls & Timeline
-    const playerControlsBox = document.getElementById('playerControlsBox');
-    if (playerControlsBox) {
-        playerControlsBox.classList.remove('hidden');
-        playerControlsBox.style.display = 'flex';
-    }
-
-    const timelineTracks = document.querySelector('.timeline-tracks');
-    if (timelineTracks) timelineTracks.style.display = 'flex';
-
-    const timelineBox = document.getElementById('timelineAreaBox');
-    if (timelineBox) {
-        timelineBox.style.display = 'flex';
-        timelineBox.classList.remove('hidden');
-    }
-
-    restoreVideoToolbar();
+.video-wrapper.photo-mode-large {
+    width: 98% !important;
+    height: 80vh !important;
+    max-height: 80vh !important;
+    border: 2px solid var(--accent-color) !important;
+    box-shadow: 0 0 35px rgba(108, 92, 231, 0.3) !important;
+    margin: 10px auto !important;
+    overflow: hidden !important;
+    position: relative;
+    background: #000000;
 }
 
-function restoreVideoToolbar() {
-    const toolsContainer = document.querySelector('.tools-container');
-    if (!toolsContainer) return;
-
-    toolsContainer.innerHTML = `
-        <button class="tool-btn" onclick="executeTool('Split')">✂️ Split</button>
-        <button class="tool-btn" onclick="executeTool('Crop')">⌗ Crop Preset</button>
-        <button class="tool-btn" onclick="executeTool('Speed')">🚅 Video Speed</button> 
-        <button class="tool-btn" onclick="executeTool('Fill')">🗃️ Fill / Fit</button>
-        <button class="tool-btn" onclick="executeTool('Zoom')">➕ Zoom In</button>
-        <button class="tool-btn" onclick="executeTool('Opacity')">🌐 Opacity</button>
-        <button class="tool-btn" onclick="executeTool('Rotate')">🗘 Rotate</button>
-        <button class="tool-btn" onclick="executeTool('Filters')">📊 Filters</button>
-        <button class="tool-btn chroma-btn" onclick="executeTool('Chroma Key')" style="background: rgba(16, 172, 132, 0.2); border: 1px solid #10ac84; color: #10ac84;">🟢 Chroma Key</button>
-        <button class="tool-btn ai-btn" onclick="executeTool('Review AI')">💻 Review AI</button>
-        <button class="tool-btn ai-btn" onclick="executeTool('Ask AI')" style="background: rgba(108, 92, 231, 0.2); border: 1px solid #6c5ce7; color: #a8a5ff;">🤖 Ask AI</button>
-        <button class="tool-btn delete-btn" onclick="executeTool('Delete')">🗑 Delete</button>
-    `;
-
-    const voiceBtn = document.getElementById('btnVoiceRecord');
-    if (voiceBtn) voiceBtn.style.display = 'inline-block';
+#mainPhotoPlayer {
+    user-select: none;
+    -webkit-user-drag: none;
 }
 
-// ==========================================================================
-// 🔊 AUDIO ENGINE & FRAME GENERATOR
-// ==========================================================================
-function setupVolumeAudioEngine() {
-    if (!currentVideoElement) return;
-    try {
-        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-        audioContext = new AudioContextClass();
-        sourceNode = audioContext.createMediaElementSource(currentVideoElement);
-        gainNode = audioContext.createGain();
-        compressorNode = audioContext.createDynamicsCompressor();
-        
-        sourceNode.connect(gainNode);
-        gainNode.connect(compressorNode);
-        compressorNode.connect(audioContext.destination);
-        gainNode.gain.setValueAtTime(currentVolumeLevel, audioContext.currentTime);
-    } catch(e) { console.log("Audio node bypass initialized."); }
-}
-
-function generateVideoFrames(videoUrl) {
-    const hiddenVideo = document.createElement('video');
-    hiddenVideo.src = videoUrl; 
-    hiddenVideo.muted = true;
-    hiddenVideo.onloadedmetadata = function() {
-        const container = document.getElementById('framesContainer');
-        if(!container) return;
-        container.innerHTML = ''; 
-        let duration = hiddenVideo.duration; 
-        let currentTime = 0;
-        
-        function captureNextFrame() {
-            if (currentTime < duration) hiddenVideo.currentTime = currentTime;
-        }
-        hiddenVideo.onseeked = function() {
-            const canvas = document.createElement('canvas');
-            canvas.width = 160; 
-            canvas.height = 90;
-            canvas.getContext('2d').drawImage(hiddenVideo, 0, 0, canvas.width, canvas.height);
-            const img = document.createElement('img');
-            img.src = canvas.toDataURL(); 
-            img.classList.add('video-thumb-frame');
-            container.appendChild(img);
-            currentTime += Math.max(3, duration / 10);
-            captureNextFrame();
-        };
-        captureNextFrame();
-    };
-}
-
-// ==========================================================================
-// ⏱️ TIMELINE & PLAYBACK CONTROLLERS
-// ==========================================================================
-function updateTimerUI() {
-    const timerDisplay = document.getElementById('videoTimerDisplay');
-    if (currentVideoElement && timerDisplay) {
-        const currentMin = Math.floor(currentVideoElement.currentTime / 60).toString().padStart(2, '0');
-        const currentSec = Math.floor(currentVideoElement.currentTime % 60).toString().padStart(2, '0');
-        const totalMin = Math.floor(videoDurationSeconds / 60).toString().padStart(2, '0');
-        const totalSec = Math.floor(videoDurationSeconds % 60).toString().padStart(2, '0');
-        timerDisplay.innerText = `${currentMin}:${currentSec} / ${totalMin}:${totalSec}`;
-    }
-}
-
-function updatePlayheadPosition() {
-    const playhead = document.getElementById('playhead');
-    const track = document.getElementById('frameTimelineTrack');
-    const timelineTracks = document.querySelector('.timeline-tracks');
-    
-    if (currentVideoElement && playhead && track && videoDurationSeconds > 0) {
-        const percentage = (currentVideoElement.currentTime / videoDurationSeconds) * 100;
-        playhead.style.left = percentage + "%";
-        
-        if (!currentVideoElement.paused && timelineTracks) {
-            const scrollAmount = (track.offsetWidth * (percentage / 100)) - (timelineTracks.offsetWidth / 2);
-            timelineTracks.scrollTo({ left: scrollAmount, behavior: 'auto' });
-        }
-    }
-}
-
-function movePlayhead(event) {
-    const track = document.getElementById('frameTimelineTrack');
-    if (currentVideoElement && track && videoDurationSeconds > 0) {
-        const rect = track.getBoundingClientRect();
-        const percentage = Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width));
-        currentVideoElement.currentTime = percentage * videoDurationSeconds;
-        updatePlayheadPosition();
-    }
-}
-
-function togglePlay() {
-    if (currentVideoElement && currentVideoElement.tagName === 'VIDEO') {
-        if (audioContext && audioContext.state === 'suspended') audioContext.resume();
-        
-        if (currentVideoElement.paused) {
-            currentVideoElement.play();
-            Object.values(activeAudioNodes).forEach(node => { if(node.audio) node.audio.play(); });
-        } else {
-            currentVideoElement.pause();
-            Object.values(activeAudioNodes).forEach(node => { if(node.audio) node.audio.pause(); });
-        }
-    }
-}
-
-function videoBack() { if (currentVideoElement) currentVideoElement.currentTime -= 5; }
-function videoForward() { if (currentVideoElement) currentVideoElement.currentTime += 5; }
-
-function updatePlayButtonsUI() {
-    if (!currentVideoElement) return;
-    const allPlayButtons = document.querySelectorAll('.play-main');
-    allPlayButtons.forEach(btn => {
-        btn.innerText = currentVideoElement.paused ? "▶️" : "⏸️";
-    });
-}
-
-// ==========================================================================
-// 🖼️ UNLIMITED PIP & HANDS-ON RESIZING WITH CLOSE BUTTON
-// ==========================================================================
-function triggerDirectPIPSelection() {
-    const pipInput = document.createElement('input');
-    pipInput.type = 'file'; 
-    pipInput.accept = 'image/*, video/*'; 
-    pipInput.multiple = true; 
-    pipInput.onchange = function(e) {
-        if (e.target.files) {
-            for (let i = 0; i < e.target.files.length; i++) appendPIPToTimeline(e.target.files[i], '🖼️'); 
-        }
-    };
-    pipInput.click();
-}
-
-function appendPIPToTimeline(file, icon) {
-    const pipTrack = document.getElementById('pipTrackBlock');
-    const videoWrapper = document.getElementById('videoWrapper');
-    if (!videoWrapper) return;
-
-    const overlayId = 'pip_' + Date.now() + '_' + Math.floor(Math.random() * 100);
-    const isString = typeof file === 'string';
-    const objectURL = isString ? '' : URL.createObjectURL(file); 
-    const fileName = isString ? file : file.name;
-
-    const mediaContainer = document.createElement('div');
-    mediaContainer.id = overlayId; 
-    mediaContainer.className = 'live-pip-object';
-    mediaContainer.style.cssText = "position:absolute; top:25%; left:25%; width:130px; height:auto; cursor:move; z-index:100; border:2px dashed #ff9f43; background:rgba(0,0,0,0.2); border-radius:4px;";
-
-    let realMedia = document.createElement( (!isString && file.type && file.type.startsWith('video/')) ? 'video' : 'img' );
-    realMedia.src = isString ? 'placeholder.png' : objectURL;
-    realMedia.style.width = "100%"; 
-    realMedia.style.borderRadius = "4px";
-    if(realMedia.tagName === 'VIDEO') { realMedia.autoplay = true; realMedia.loop = true; realMedia.muted = true; }
-    mediaContainer.appendChild(realMedia);
-
-    makeElementDraggable(mediaContainer);
-
-    mediaContainer.onclick = function(e) {
-        e.stopPropagation();
-        currentActivePIPLayer = mediaContainer;
-        currentVideoElement = realMedia;
-        document.querySelectorAll('.live-pip-object').forEach(el => el.style.border = "2px dashed #ff9f43");
-        mediaContainer.style.border = "2px solid #10ac84";
-        createFloatingToolkit(mediaContainer);
-    };
-
-    videoWrapper.appendChild(mediaContainer);
-    if (pipTrack) {
-        const block = document.createElement('div');
-        block.style.cssText = "background:#ff9f43; color:white; padding:4px 10px; border-radius:4px; font-size:11px; margin-right:8px; display:inline-flex; align-items:center; min-width:120px; height:80%; line-height:24px; cursor:pointer;";
-        block.innerHTML = `<span>${icon}</span> <span style="margin-left:5px;">${fileName}</span>`;
-        block.onclick = function(e) { e.stopPropagation(); mediaContainer.click(); };
-        block.ondblclick = function() { if(confirm(`Remove ${fileName}?`)) { mediaContainer.remove(); block.remove(); const p = document.getElementById('sStudioPipDynamicPanel'); if (p) p.remove(); } };
-        pipTrack.appendChild(block);
-    }
-}
-
-function createFloatingToolkit(pipObject) {
-    const oldPanel = document.getElementById('sStudioPipDynamicPanel');
-    if (oldPanel) oldPanel.remove();
-
-    const pipPanel = document.createElement('div');
-    pipPanel.id = 'sStudioPipDynamicPanel';
-    pipPanel.style.cssText = `
-        position: fixed !important; 
-        bottom: 25px !important; 
-        left: 50% !important; 
-        transform: translateX(-50%) !important; 
-        background: #14171f !important; 
-        border: 2px solid #10ac84 !important; 
-        padding: 8px 12px !important; 
-        border-radius: 10px !important; 
-        box-shadow: 0 10px 30px rgba(0,0,0,0.8) !important; 
-        z-index: 2147483647 !important; 
-        display: flex !important; 
-        flex-wrap: nowrap !important; 
-        gap: 6px !important; 
-        align-items: center !important; 
-        justify-content: flex-start !important; 
-        width: 95% !important; 
-        max-width: 1100px !important; 
-        overflow-x: auto !important; 
-        box-sizing: border-box !important;
-    `;
-
-    // ✕ Close Wrong Button
-    const closeBtn = document.createElement('button');
-    closeBtn.innerText = "✕ Close";
-    closeBtn.style.cssText = "background: #ff4757 !important; color: white !important; border: none !important; padding: 6px 12px !important; border-radius: 5px !important; cursor: pointer !important; font-size: 11px !important; font-weight: bold !important; flex-shrink: 0 !important;";
-    closeBtn.onclick = function(e) {
-        e.stopPropagation();
-        pipPanel.remove();
-        if (pipObject) pipObject.style.border = "none";
-    };
-    pipPanel.appendChild(closeBtn);
-
-    const btnList = [
-        { id: 'replace', label: '🔄 Replace' },
-        { id: 'motion', label: '🎬 Motion' },
-        { id: 'keyframe', label: '🔑 Keyframe' },
-        { id: 'lock', label: '🔒 Lock' },
-        { id: 'duplicate', label: '👯 Duplicate' },
-        { id: 'crop', label: '⌗ Crop' },
-        { id: 'duration', label: '⏱️ Duration' },
-        { id: 'cutout', label: '👤 Cutout' },
-        { id: 'rotate', label: '🔄 Rotate' },
-        { id: 'mirror', label: '🪞 Mirror' },
-        { id: 'flip', label: '🔀 Flip' },
-        { id: 'fit', label: '📐 Auto Fit' },
-        { id: 'blur', label: '💧 Blur' },
-        { id: 'opacity', label: '👻 Opacity' },
-        { id: 'position', label: '📍 Position' },
-        { id: 'mask', label: '🎭 Mask' },
-        { id: 'chroma', label: '🟢 Chroma' },
-        { id: 'cut', label: '✂️ Split Cut' },
-        { id: 'delete', label: '🗑️ Delete' }
-    ];
-
-    btnList.forEach(btnInfo => {
-        const btn = document.createElement('button');
-        btn.className = 'sStudioPipBtn';
-        btn.id = 'pip_btn_' + btnInfo.id;
-        btn.innerText = btnInfo.label;
-        btn.style.cssText = `
-            background: ${btnInfo.id === 'delete' ? '#ff4757' : '#222733'} !important; 
-            color: #fff !important; 
-            border: 1px solid #333 !important; 
-            padding: 6px 10px !important; 
-            border-radius: 5px !important; 
-            cursor: pointer !important; 
-            font-size: 11px !important; 
-            font-weight: bold !important; 
-            flex-shrink: 0 !important; 
-            white-space: nowrap !important;
-            font-family: sans-serif !important;
-        `;
-
-        btn.onclick = function(e) {
-            e.stopPropagation();
-            executePipToolAction(btnInfo.id, pipObject);
-        };
-
-        pipPanel.appendChild(btn);
-    });
-
-    document.body.appendChild(pipPanel);
-}
-
-function makeElementDraggable(element) {
-    element.style.cursor = 'move';
-    let pipScale = 1.0;
-
-    element.onmousedown = function(e) {
-        if (element.dataset && element.dataset.locked === "true") return;
-        e.stopPropagation();
-        let shiftX = e.clientX - element.getBoundingClientRect().left;
-        let shiftY = e.clientY - element.getBoundingClientRect().top;
-        
-        function onMouseMove(ev) {
-            const wrapper = document.getElementById('videoWrapper');
-            if(!wrapper) return;
-            let rect = wrapper.getBoundingClientRect();
-            element.style.left = (ev.clientX - rect.left - shiftX) + 'px';
-            element.style.top = (ev.clientY - rect.top - shiftY) + 'px';
-        }
-        document.addEventListener('mousemove', onMouseMove);
-        window.addEventListener('mouseup', function() {
-            document.removeEventListener('mousemove', onMouseMove);
-        }, { once: true });
-    };
-
-    element.onwheel = function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        if (e.deltaY < 0) {
-            pipScale += 0.05;
-        } else {
-            if (pipScale > 0.2) pipScale -= 0.05;
-        }
-        element.style.transform = `scale(${pipScale})`;
-    };
-}
-
-function executePipToolAction(actionId, targetObject) {
-    if (!targetObject) return;
-    const mediaEl = targetObject.querySelector('img') || targetObject.querySelector('video');
-
-    switch (actionId) {
-        case 'motion':
-            openPipMotionMenu(targetObject);
-            break;
-
-        case 'keyframe':
-            addPipKeyframeMarker(targetObject);
-            break;
-
-        case 'replace':
-            const picker = document.createElement('input');
-            picker.type = 'file';
-            picker.accept = 'image/*,video/*';
-            picker.onchange = function(e) {
-                const file = e.target.files[0];
-                if (file && mediaEl) mediaEl.src = URL.createObjectURL(file);
-            };
-            picker.click();
-            break;
-
-        case 'crop':
-            let cL = prompt("Enter Crop percentage from Left (0-100):", "10");
-            let cR = prompt("Enter Crop percentage from Right (0-100):", "10");
-            let cT = prompt("Enter Crop percentage from Top (0-100):", "10");
-            let cB = prompt("Enter Crop percentage from Bottom (0-100):", "10");
-            if (cL && cR && cT && cB && mediaEl) {
-                mediaEl.style.clipPath = `inset(${cT}% ${cR}% ${cB}% ${cL}%)`;
-            }
-            break;
-
-        case 'duration':
-            let sec = prompt("Enter Visibility Duration (in seconds):", "5");
-            if (sec) alert(`Layer visibility set to ${sec} seconds.`);
-            break;
-
-        case 'lock':
-            let isLocked = targetObject.dataset.locked === "true";
-            targetObject.dataset.locked = isLocked ? "false" : "true";
-            targetObject.style.border = isLocked ? "2px dashed #ff9f43" : "2px solid #ff4757";
-            alert(isLocked ? "Layer Unlocked successfully." : "Layer Locked successfully.");
-            break;
-
-        case 'duplicate':
-            const parent = targetObject.parentElement || document.getElementById('videoWrapper');
-            const clone = targetObject.cloneNode(true);
-            clone.id = 'pip_clone_' + Date.now();
-            clone.style.left = (parseInt(targetObject.style.left || 50) + 20) + "px";
-            clone.style.top = (parseInt(targetObject.style.top || 50) + 20) + "px";
-            makeElementDraggable(clone);
-            clone.onclick = function(e) {
-                e.stopPropagation();
-                currentActivePIPLayer = clone;
-                currentVideoElement = clone.querySelector('img') || clone.querySelector('video');
-                createFloatingToolkit(clone);
-            };
-            parent.appendChild(clone);
-            break;
-
-        case 'rotate':
-            let r = parseInt(targetObject.dataset.rot || "0") + 90;
-            targetObject.dataset.rot = r;
-            targetObject.style.transform = `rotate(${r}deg)`;
-            break;
-
-        case 'flip':
-        case 'mirror':
-            let f = targetObject.dataset.flip === "true";
-            targetObject.style.transform = f ? "scaleX(1)" : "scaleX(-1)";
-            targetObject.dataset.flip = f ? "false" : "true";
-            break;
-
-        case 'fit':
-            targetObject.style.top = "0px";
-            targetObject.style.left = "0px";
-            targetObject.style.width = "100%";
-            targetObject.style.height = "100%";
-            if (mediaEl) mediaEl.style.objectFit = "contain";
-            break;
-
-        case 'blur':
-            let bVal = prompt("Enter Blur Amount in pixels (px):", "8");
-            if (bVal && mediaEl) mediaEl.style.filter = `blur(${bVal}px)`;
-            break;
-
-        case 'opacity':
-            let op = mediaEl.style.opacity === "0.5" ? "1" : "0.5";
-            if (mediaEl) mediaEl.style.opacity = op;
-            break;
-
-        case 'mask':
-            let hasMask = mediaEl.style.clipPath && mediaEl.style.clipPath.includes('circle');
-            if (mediaEl) mediaEl.style.clipPath = hasMask ? 'none' : 'circle(40% at 50% 50%)';
-            break;
-
-        case 'chroma':
-            let hex = prompt("Enter Target Color Hex Code to Remove:", "#00ff00");
-            if (hex && mediaEl) mediaEl.style.filter = "contrast(140%) saturate(120%)";
-            break;
-
-        case 'cutout':
-            if (mediaEl) mediaEl.style.borderRadius = mediaEl.style.borderRadius === "50%" ? "0px" : "50%";
-            break;
-
-        case 'cut':
-            if (mediaEl && mediaEl.tagName === 'VIDEO') {
-                alert(`Split point created at ${mediaEl.currentTime.toFixed(2)}s.`);
-            } else {
-                alert("Cut operates on video layers.");
-            }
-            break;
-
-        case 'delete':
-            targetObject.remove();
-            const p = document.getElementById('sStudioPipDynamicPanel');
-            if (p) p.remove();
-            break;
-
-        default:
-            console.log("Action Triggered: " + actionId);
-            break;
-    }
-}
-
-// PIP MOTION ANIMATIONS MENU
-function openPipMotionMenu(targetObject) {
-    const oldMenu = document.getElementById('pipMotionMenuHub');
-    if (oldMenu) oldMenu.remove();
-
-    injectMotionCSSKeyframes();
-
-    const menu = document.createElement('div');
-    menu.id = 'pipMotionMenuHub';
-    menu.style.cssText = "position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); background:#161920; border:2px solid #6c5ce7; padding:18px; border-radius:12px; display:flex; flex-direction:column; gap:8px; z-index:2147483647; width: 280px; color: white; font-family:sans-serif; box-shadow:0 10px 30px rgba(0,0,0,0.8);";
-
-    menu.innerHTML = `
-        <div style="font-size:12px; color:#6c5ce7; font-weight:bold; border-bottom:1px solid #2f3542; padding-bottom:6px; display:flex; justify-content:space-between; align-items:center;">
-            <span>🎬 PIP ENTRANCE ANIMATIONS</span>
-            <span onclick="this.parentElement.parentElement.remove()" style="cursor:pointer; font-size:18px; color:#a4b0be;">&times;</span>
-        </div>
-        <button onclick="applyPipMotion(currentActivePIPLayer, 'fade'); this.parentElement.remove();" style="background:#222733; color:white; border:1px solid #333; padding:8px; border-radius:4px; font-size:11px; cursor:pointer; text-align:left;">✨ Smooth Fade In</button>
-        <button onclick="applyPipMotion(currentActivePIPLayer, 'slideLeft'); this.parentElement.remove();" style="background:#222733; color:white; border:1px solid #333; padding:8px; border-radius:4px; font-size:11px; cursor:pointer; text-align:left;">⬅️ Slide In Left</button>
-        <button onclick="applyPipMotion(currentActivePIPLayer, 'slideUp'); this.parentElement.remove();" style="background:#222733; color:white; border:1px solid #333; padding:8px; border-radius:4px; font-size:11px; cursor:pointer; text-align:left;">⬆️ Slide In Bottom</button>
-        <button onclick="applyPipMotion(currentActivePIPLayer, 'popZoom'); this.parentElement.remove();" style="background:#222733; color:white; border:1px solid #333; padding:8px; border-radius:4px; font-size:11px; cursor:pointer; text-align:left;">➕ Pop Zoom In</button>
-        <button onclick="applyPipMotion(currentActivePIPLayer, 'none'); this.parentElement.remove();" style="background:#ff4757; color:white; border:none; padding:8px; border-radius:4px; font-size:11px; font-weight:bold; cursor:pointer; margin-top:4px;">🔄 Reset Animation</button>
-    `;
-
-    document.body.appendChild(menu);
-}
-
-function applyPipMotion(targetObject, animationType) {
-    if (!targetObject) return;
-    targetObject.style.animation = "none";
-    void targetObject.offsetWidth;
-
-    if (animationType === 'fade') {
-        targetObject.style.animation = "sStudioFadeIn 0.8s ease-out forwards";
-    } else if (animationType === 'slideLeft') {
-        targetObject.style.animation = "sStudioSlideLeft 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards";
-    } else if (animationType === 'slideUp') {
-        targetObject.style.animation = "sStudioSlideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards";
-    } else if (animationType === 'popZoom') {
-        targetObject.style.animation = "sStudioPopZoom 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards";
-    }
-}
-
-function injectMotionCSSKeyframes() {
-    if (document.getElementById('sStudioMotionStyles')) return;
-    const style = document.createElement('style');
-    style.id = 'sStudioMotionStyles';
-    style.innerHTML = `
-        @keyframes sStudioFadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes sStudioSlideLeft { from { transform: translateX(-100px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-        @keyframes sStudioSlideUp { from { transform: translateY(100px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        @keyframes sStudioPopZoom { from { transform: scale(0.2); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-    `;
-    document.head.appendChild(style);
-}
-
-// KEYFRAME MARKER ENGINE
-function addPipKeyframeMarker(targetObject) {
-    const mainVideo = document.getElementById('mainPlayer');
-    const currentTime = mainVideo ? mainVideo.currentTime : 0;
-
-    let keyframes = targetObject.dataset.keyframes ? JSON.parse(targetObject.dataset.keyframes) : [];
-
-    const posX = parseFloat(targetObject.style.left) || 0;
-    const posY = parseFloat(targetObject.style.top) || 0;
-
-    keyframes.push({ time: parseFloat(currentTime.toFixed(2)), x: posX, y: posY });
-    keyframes.sort((a, b) => a.time - b.time);
-
-    targetObject.dataset.keyframes = JSON.stringify(keyframes);
-
-    alert(`🔑 Keyframe successfully set at ${currentTime.toFixed(2)}s!\nPosition: X: ${posX.toFixed(0)}px, Y: ${posY.toFixed(0)}px`);
-}
-
-function updatePipKeyframeInterpolation() {
-    const mainVideo = document.getElementById('mainPlayer');
-    if (!mainVideo || mainVideo.paused) return;
-    const curTime = mainVideo.currentTime;
-
-    document.querySelectorAll('.live-pip-object').forEach(pip => {
-        if (!pip.dataset.keyframes) return;
-        const keyframes = JSON.parse(pip.dataset.keyframes);
-        if (keyframes.length < 2) return;
-
-        for (let i = 0; i < keyframes.length - 1; i++) {
-            const k1 = keyframes[i];
-            const k2 = keyframes[i + 1];
-
-            if (curTime >= k1.time && curTime <= k2.time) {
-                const factor = (curTime - k1.time) / (k2.time - k1.time);
-                const interpolatedX = k1.x + (k2.x - k1.x) * factor;
-                const interpolatedY = k1.y + (k2.y - k1.y) * factor;
-
-                pip.style.left = interpolatedX + "px";
-                pip.style.top = interpolatedY + "px";
-            }
-        }
-    });
-}
-
-setInterval(updatePipKeyframeInterpolation, 40);
-
-// ==========================================================================
-// 🎵 AUDIO HUB & VOICE OVER ENGINE
-// ==========================================================================
-function addMusicOverlay() {
-    const oldMenu = document.getElementById('sStudioMusicMenuHub');
-    if (oldMenu) { oldMenu.remove(); return; }
-
-    const menu = document.createElement('div');
-    menu.id = 'sStudioMusicMenuHub';
-    menu.style.cssText = "position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); background:#161920; border:2px solid #10ac84; padding:15px; border-radius:10px; display:flex; flex-direction:column; gap:8px; z-index:100000; width: 260px; color: white; font-family: sans-serif;";
-
-    menu.innerHTML = `
-        <div style="font-size:12px; color:#10ac84; font-weight:bold; border-bottom:1px solid #222733; padding-bottom:6px; display:flex; justify-content:space-between; align-items:center;">
-            <span>🎵 AUDIO HUB OPTIONS</span>
-            <span id="closeMusicMenuHub" style="cursor:pointer; font-size:18px; color:#a4b0be;">&times;</span>
-        </div>
-        <button class="music-hub-btn" id="uploadLocalTrackOpt" style="background:#222733; color:white; border:none; padding:8px; border-radius:4px; font-size:11px; text-align:left; cursor:pointer; font-weight:bold;">📁 Upload Local Track</button>
-        <button class="music-hub-btn" data-url="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" style="background:#222733; color:white; border:none; padding:8px; border-radius:4px; font-size:11px; text-align:left; cursor:pointer;">🎬 Cinematic Beats BGM</button>
-        <button class="music-hub-btn" data-url="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" style="background:#222733; color:white; border:none; padding:8px; border-radius:4px; font-size:11px; text-align:left; cursor:pointer;">💼 Corporate Info Music</button>
-        <button class="music-hub-btn" data-url="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3" style="background:#222733; color:white; border:none; padding:8px; border-radius:4px; font-size:11px; text-align:left; cursor:pointer;">✨ Upbeat Vlog Sound</button>
-        <button class="music-hub-btn" data-url="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3" style="background:#222733; color:white; border:none; padding:8px; border-radius:4px; font-size:11px; text-align:left; cursor:pointer;">🎧 Chill Lofi Loop</button>
-    `;
-
-    menu.querySelector('#closeMusicMenuHub').onclick = function() { menu.remove(); };
-
-    const processAudioTrackInjection = (trackName, customSrc = null) => {
-        const audio = customSrc ? new Audio(customSrc) : new Audio();
-        audio.loop = true;
-        activeAudioNodes[Date.now()] = { audio: audio, name: trackName };
-
-        const block = document.createElement('div');
-        block.style.cssText = "background: rgba(16, 172, 132, 0.2); border: 1px solid #10ac84; color: white; padding: 6px 12px; border-radius: 6px; display: inline-flex; align-items: center; gap: 10px; margin-top: 4px; position: relative; overflow: hidden; min-width: 280px; height: 35px; font-family: sans-serif;";
-        
-        let waveHTML = `<div style="display: flex; align-items: center; gap: 2px; height: 100%; opacity: 0.7; margin-right: 8px;">`;
-        const barHeights = [30, 50, 80, 40, 20, 60, 90, 40, 70, 50, 30, 80, 60, 40, 90, 30, 50, 70, 40, 20, 60, 80, 50, 30, 40];
-        barHeights.forEach(h => { waveHTML += `<div style="width: 2px; height: ${h}%; background: #10ac84; border-radius: 1px;"></div>`; });
-        waveHTML += `</div>`;
-
-        block.innerHTML = `<span style="font-size:11px; font-weight:bold; z-index:2;">🎵 ${trackName}</span>${waveHTML}`;
-        
-        const container = document.getElementById('audioTrackBlock');
-        if (container) container.appendChild(block); 
-        menu.remove();
-    };
-
-    menu.querySelector('#uploadLocalTrackOpt').onclick = function() {
-        const inp = document.createElement('input'); 
-        inp.type = 'file'; 
-        inp.accept = 'audio/*';
-        inp.onchange = function(e) {
-            const file = e.target.files[0]; 
-            if(!file) return;
-            processAudioTrackInjection(file.name, URL.createObjectURL(file));
-        };
-        inp.click();
-    };
-
-    menu.querySelectorAll('.music-hub-btn[data-url]').forEach(btn => {
-        btn.onclick = function() {
-            processAudioTrackInjection(btn.innerText, btn.getAttribute('data-url'));
-        };
-    });
-
-    document.body.appendChild(menu);
-}
-
-function toggleVoiceRecording() {
-    const recBtn = document.getElementById('btnVoiceRecord');
-    if (!recBtn) return;
-
-    if (!mediaRecorder || mediaRecorder.state === "inactive") {
-        navigator.mediaDevices.getUserMedia({ audio: true })
-            .then(stream => {
-                mediaRecorder = new MediaRecorder(stream);
-                audioChunks = [];
-
-                mediaRecorder.ondataavailable = e => { audioChunks.push(e.data); };
-
-                mediaRecorder.onstop = () => {
-                    const audioBlob = new Blob(audioChunks, { type: 'audio/mp3' });
-                    const audioURL = URL.createObjectURL(audioBlob);
-                    const audio = new Audio(audioURL);
-                    audio.loop = false;
-
-                    const trackId = Date.now();
-                    activeAudioNodes[trackId] = { audio: audio, name: "Voice_Over_" + trackId + ".mp3" };
-
-                    const block = document.createElement('div');
-                    block.style.cssText = "background: rgba(255, 71, 87, 0.2); border: 1px solid #ff4757; color: white; padding: 6px 12px; border-radius: 6px; display: inline-flex; align-items: center; gap: 10px; margin-top: 4px; position: relative; overflow: hidden; min-width: 250px; height: 35px; font-family: sans-serif;";
-                    
-                    let waveHTML = `<div style="display: flex; align-items: center; gap: 2px; height: 100%; opacity: 0.7; margin-right: 8px;">`;
-                    const barHeights = [40, 70, 30, 90, 50, 80, 40, 60, 20, 70, 50, 90, 30];
-                    barHeights.forEach(h => {
-                        waveHTML += `<div style="width: 2px; height: ${h}%; background: #ff4757; border-radius: 1px;"></div>`;
-                    });
-                    waveHTML += `</div>`;
-
-                    block.innerHTML = `<span style="font-size: 11px; font-weight: bold; z-index: 2;">🎙️ Voice Over</span> ${waveHTML}`;
-                    
-                    const audioTrackContainer = document.getElementById('audioTrackBlock');
-                    if (audioTrackContainer) audioTrackContainer.appendChild(block);
-                    
-                    stream.getTracks().forEach(track => track.stop());
-                };
-
-                mediaRecorder.start();
-                recBtn.innerText = "🛑 Stop Recording";
-                recBtn.style.background = "#ff4757";
-                recBtn.style.borderColor = "#ff6b81";
-            })
-            .catch(err => { alert("Microphone access denied!"); });
-    } 
-    else if (mediaRecorder && mediaRecorder.state === "recording") {
-        mediaRecorder.stop();
-        recBtn.innerText = "🎙️ Record Voice";
-        recBtn.style.background = "rgba(255, 159, 67, 0.2)";
-        recBtn.style.borderColor = "#ff9f43";
-    }
-}
-
-// ==========================================================================
-// 📝 TEXT OVERLAY ENGINE
-// ==========================================================================
-function addTextOverlay() {
-    const oldMenu = document.getElementById('sStudioTextMenu'); 
-    if (oldMenu) { oldMenu.remove(); return; }
-    
-    const textMenu = document.createElement('div'); 
-    textMenu.id = 'sStudioTextMenu';
-    textMenu.style.cssText = "position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); background:#161920; border:2px solid #10ac84; padding:15px; border-radius:10px; display:flex; flex-direction:column; gap:8px; z-index:10000; width: 280px; font-family:sans-serif; color: white;";
-
-    textMenu.innerHTML = `
-        <div style="font-size:12px; color:#10ac84; font-weight:bold; margin-bottom:2px; border-bottom:1px solid #222733; padding-bottom:6px; display:flex; justify-content:space-between; align-items:center;">
-            <span>📝 S STUDIO TEXT EDITOR</span>
-            <span id="closeTextMenu" style="cursor:pointer; font-size:18px; color:#a4b0be; font-weight:bold;">&times;</span>
-        </div>
-        <input type="text" id="txtContent" placeholder="Enter your text here..." style="background:#222733; color:#fff; border:1px solid #353b48; padding:8px; border-radius:4px; font-size:12px; outline:none;">
-        <div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap; background:#1e222b; padding:6px; border-radius:4px;">
-            <button id="btnBold" style="background:#2d3436; color:#fff; border:none; padding:4px 8px; border-radius:3px; font-size:11px; font-weight:bold; cursor:pointer;">B</button>
-            <button id="btnItalic" style="background:#2d3436; color:#fff; border:none; padding:4px 8px; border-radius:3px; font-size:11px; font-style:italic; cursor:pointer;">I</button>
-            <input type="color" id="txtColor" value="#ffffff" style="background:none; border:none; width:24px; height:24px; cursor:pointer;">
-            <select id="txtSize" style="background:#2d3436; color:#fff; border:none; padding:4px; border-radius:3px; font-size:11px; cursor:pointer;">
-                <option value="16px">Small</option> 
-                <option value="24px" selected>Medium</option> 
-                <option value="36px">Large</option>
-            </select>
-        </div>
-        <div style="display:flex; gap:6px; margin-top:6px;">
-            <button id="btnCancel" style="flex:1; background:#2d3436; color:#fff; border:none; padding:6px; border-radius:4px; font-size:11px; cursor:pointer;">Cancel</button>
-            <button id="btnDone" style="flex:1; background:#10ac84; color:#fff; border:none; padding:6px; border-radius:4px; font-size:11px; font-weight:bold; cursor:pointer;">Done (Add) &raquo;</button>
-        </div>
-    `;
-
-    let isBold = false; 
-    let isItalic = false;
-    textMenu.querySelector('#closeTextMenu').onclick = function() { textMenu.remove(); };
-    const bBtn = textMenu.querySelector('#btnBold'); 
-    bBtn.onclick = function() { isBold = !isBold; bBtn.style.background = isBold ? '#10ac84' : '#2d3436'; };
-    const iBtn = textMenu.querySelector('#btnItalic'); 
-    iBtn.onclick = function() { isItalic = !isItalic; iBtn.style.background = isItalic ? '#10ac84' : '#2d3436'; };
-    textMenu.querySelector('#btnCancel').onclick = function() { textMenu.remove(); };
-    textMenu.querySelector('#btnDone').onclick = function() {
-        const textVal = textMenu.querySelector('#txtContent').value.trim(); 
-        if (!textVal) return;
-        appendTextToTimeline(textVal, isBold, isItalic, textMenu.querySelector('#txtColor').value, textMenu.querySelector('#txtSize').value);
-        textMenu.remove();
-    };
-    document.body.appendChild(textMenu);
-}
-
-function appendTextToTimeline(textVal, isBold, isItalic, selectedColor, selectedSize) {
-    const wrapper = document.getElementById('videoWrapper'); 
-    if (!wrapper) return;
-    const textNode = document.createElement('div'); 
-    textNode.className = 'live-text-box selected-active';
-    textNode.innerText = textVal; 
-    textNode.contentEditable = true; 
-    textNode.style.cssText = `position:absolute; top:40%; left:30%; color:${selectedColor}; font-size:${selectedSize}; font-weight:${isBold?'bold':'normal'}; font-style:${isItalic?'italic':'normal'}; cursor:move; z-index:50; padding:4px; border:1px dashed #6c5ce7; transition:all 0.1s; font-family:sans-serif;`;
-
-    makeElementDraggable(textNode);
-    wrapper.appendChild(textNode);
-}
-
-// ==========================================================================
-// 🛠️ CENTRAL STUDIO TOOLKIT MATRIX
-// ==========================================================================
-function executeTool(tool) {
-    if (!currentVideoElement) {
-        currentVideoElement = document.getElementById('mainPhotoPlayer') || document.getElementById('mainPlayer');
-    }
-    if (!currentVideoElement) return;
-
-    saveStateToHistory(); 
-
-    switch(tool) {
-        case 'Zoom': 
-            currentScale += 0.15; 
-            if (currentVideoElement.id === 'mainPhotoPlayer') applyPhotoTransform();
-            else applyTransformations(); 
-            break;
-        case 'Opacity': 
-            if (currentScale > 0.3) { 
-                currentScale -= 0.15; 
-                if (currentVideoElement.id === 'mainPhotoPlayer') applyPhotoTransform();
-                else applyTransformations(); 
-            } 
-            break;
-        case 'Rotate': 
-            currentRotation += 90; 
-            if (currentRotation >= 360) currentRotation = 0; 
-            if (currentVideoElement.id === 'mainPhotoPlayer') applyPhotoTransform();
-            else applyTransformations(); 
-            break;
-        case 'Crop':
-            const oldCropMenu = document.getElementById('sStudioCropMenu'); 
-            if (oldCropMenu) { oldCropMenu.remove(); break; }
-            const cropMenu = document.createElement('div'); 
-            cropMenu.id = 'sStudioCropMenu';
-            cropMenu.style.cssText = "position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); background:#161920; border:2px solid #6c5ce7; padding:15px; border-radius:10px; display:flex; flex-direction:column; gap:8px; z-index:10000; width: 260px; font-family:sans-serif; color: white;";
-            cropMenu.innerHTML = `
-                <div style="font-size:12px; color:#6c5ce7; font-weight:bold; margin-bottom:2px; border-bottom:1px solid #222733; padding-bottom:6px; display:flex; justify-content:space-between; align-items:center;">
-                    <span>📐 S STUDIO CROP PRESETS</span><span id="closeCropMenu" style="cursor:pointer; font-size:18px; color:#a4b0be; font-weight:bold;">&times;</span>
-                </div>
-                <button class="crop-opt" data-ratio="16-9" style="background:#222733; color:#fff; border:none; padding:8px; border-radius:4px; cursor:pointer; text-align:left; font-size:11px;">📺 16:9 (YouTube)</button>
-                <button class="crop-opt" data-ratio="9-16" style="background:#222733; color:#fff; border:none; padding:8px; border-radius:4px; cursor:pointer; text-align:left; font-size:11px;">📱 9:16 (Reels / Shorts)</button>
-                <button class="crop-opt" data-ratio="1-1" style="background:#222733; color:#fff; border:none; padding:8px; border-radius:4px; cursor:pointer; text-align:left; font-size:11px;">🔲 1:1 (Insta Square)</button>
-                <button class="crop-opt" data-ratio="free" style="background:#6c5ce7; color:#fff; border:none; padding:8px; border-radius:4px; font-weight:bold; cursor:pointer; text-align:left; font-size:11px;">🔄 Reset Original Size</button>
-            `;
-            cropMenu.querySelector('#closeCropMenu').onclick = function() { cropMenu.remove(); };
-            cropMenu.querySelectorAll('.crop-opt').forEach(b => {
-                b.onclick = function() {
-                    const ratio = b.getAttribute('data-ratio'); 
-                    const wp = document.getElementById('videoWrapper');
-                    if (wp) {
-                        wp.style.overflow = "hidden"; 
-                        wp.style.display = "block";
-                        if (ratio === '16-9') { wp.style.width = "640px"; wp.style.height = "360px"; }
-                        else if (ratio === '9-16') { wp.style.width = "270px"; wp.style.height = "480px"; }
-                        else if (ratio === '1-1') { wp.style.width = "400px"; wp.style.height = "400px"; }
-                        else if (ratio === 'free') { wp.style.width = "100%"; wp.style.height = "360px"; }
-                        if (currentVideoElement) { currentVideoElement.style.width = "100%"; currentVideoElement.style.height = "100%"; currentVideoElement.style.objectFit = "cover"; }
-                    }
-                    cropMenu.remove();
-                };
-            });
-            document.body.appendChild(cropMenu);
-            break;
-
-        case 'Speed':
-            const oldSpeedMenu = document.getElementById('sStudioSpeedMenu'); 
-            if (oldSpeedMenu) { oldSpeedMenu.remove(); break; }
-            const speedMenu = document.createElement('div'); 
-            speedMenu.id = 'sStudioSpeedMenu';
-            speedMenu.style.cssText = "position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); background:#161920; border:2px solid #ff9f43; padding:15px; border-radius:10px; display:flex; flex-direction:column; gap:8px; z-index:10000; width: 240px; font-family:sans-serif; color: white;";
-            speedMenu.innerHTML = `
-                <div style="font-size:12px; color:#ff9f43; font-weight:bold; margin-bottom:2px; border-bottom:1px solid #222733; padding-bottom:6px; display:flex; justify-content:space-between; align-items:center;">
-                    <span>⚡ VIDEO PLAYBACK SPEED</span><span id="closeSpeedMenu" style="cursor:pointer; font-size:18px; color:#a4b0be; font-weight:bold;">&times;</span>
-                </div>
-                <button class="spd-opt" data-speed="0.5" style="background:#222733; color:#fff; border:none; padding:8px; cursor:pointer; text-align:left; font-size:11px;">🐢 0.5x (Slow Motion)</button>
-                <button class="spd-opt" data-speed="1.0" style="background:#222733; color:#fff; border:none; padding:8px; cursor:pointer; text-align:left; font-size:11px;">▶️ 1.0x (Normal)</button>
-                <button class="spd-opt" data-speed="2.0" style="background:#ff9f43; color:#fff; border:none; padding:8px; font-weight:bold; cursor:pointer; text-align:left; font-size:11px;">⚡ 2.0x (Hyperlapse)</button>
-            `;
-            speedMenu.querySelector('#closeSpeedMenu').onclick = function() { speedMenu.remove(); };
-            speedMenu.querySelectorAll('.spd-opt').forEach(b => {
-                b.onclick = function() {
-                    const sv = parseFloat(b.getAttribute('data-speed'));
-                    if (currentVideoElement && currentVideoElement.tagName === 'VIDEO') currentVideoElement.playbackRate = sv;
-                    speedMenu.remove();
-                };
-            });
-            document.body.appendChild(speedMenu);
-            break;
-
-        case 'Fill':
-            if (currentVideoElement) { currentVideoElement.style.width = "100%"; currentVideoElement.style.height = "100%"; currentVideoElement.style.objectFit = "contain"; }
-            break;
-
-        case 'Chroma Key':
-            const oldChromaMenu = document.getElementById('sStudioChromaMenu');
-            if (oldChromaMenu) { oldChromaMenu.remove(); break; }
-
-            const chromaMenu = document.createElement('div');
-            chromaMenu.id = 'sStudioChromaMenu';
-            chromaMenu.style.cssText = "position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); background:#161920; border:2px solid #10ac84; padding:15px; border-radius:10px; display:flex; flex-direction:column; gap:8px; z-index:10000; box-shadow:0 10px 30px rgba(0,0,0,0.7); width: 260px; font-family:sans-serif; color: white;";
-
-            chromaMenu.innerHTML = `
-                <div style="font-size:12px; color:#10ac84; font-weight:bold; margin-bottom:2px; border-bottom:1px solid #222733; padding-bottom:6px; display:flex; justify-content:space-between; align-items:center;">
-                    <span>🟢 ADVANCED CHROMA KEY</span>
-                    <span id="closeChromaMenu" style="cursor:pointer; font-size:18px; color:#a4b0be; font-weight:bold;">&times;</span>
-                </div>
-                <button class="chroma-opt" data-color="green" style="background:#222733; color:#10ac84; border:none; padding:8px; border-radius:4px; font-size:11px; text-align:left; font-weight:bold; cursor:pointer;">🟢 Remove Green Screen</button>
-                <button class="chroma-opt" data-color="blue" style="background:#222733; color:#54a0ff; border:none; padding:8px; border-radius:4px; font-size:11px; text-align:left; font-weight:bold; cursor:pointer;">🔵 Remove Blue Screen</button>
-                <button class="chroma-opt" data-color="reset" style="background:#ff4757; color:#fff; border:none; padding:8px; border-radius:4px; font-size:11px; font-weight:bold; cursor:pointer; text-align:center; margin-top:4px;">🔄 Reset / Show Original</button>
-            `;
-
-            chromaMenu.querySelector('#closeChromaMenu').onclick = function() { chromaMenu.remove(); };
-
-            chromaMenu.querySelectorAll('.chroma-opt').forEach(btn => {
-                btn.onclick = function() {
-                    const colorType = btn.getAttribute('data-color');
-                    if (colorType === 'green') {
-                        currentVideoElement.style.filter = "contrast(1.4) saturate(1.2) hue-rotate(-35deg) sepia(0.2) brightness(1.15)";
-                    } else if (colorType === 'blue') {
-                        currentVideoElement.style.filter = "contrast(1.3) saturate(1.1) hue-rotate(90deg) brightness(1.1)";
-                    } else if (colorType === 'reset') {
-                        currentVideoElement.style.filter = "none";
-                    }
-                    chromaMenu.remove();
-                };
-            });
-            document.body.appendChild(chromaMenu);
-            break;
-
-        case 'Filters': 
-            currentVideoElement.style.filter = "contrast(1.2) saturate(1.3) hue-rotate(8deg)"; 
-            break;
-            
-        case 'Stickers': 
-            triggerDirectPIPSelection(); 
-            break;
-
-        case 'Ask AI':
-            askAiAssistant();
-            break;
-
-        case 'Delete': 
-            if(confirm("Reset current workspace?")) location.reload(); 
-            break;
-    }
-}
-
-function applyPhotoFilter(filterType) {
-    if (!currentVideoElement) return;
-    saveStateToHistory();
-
-    switch(filterType) {
-        case 'bright':
-            currentVideoElement.style.filter = "brightness(1.3) contrast(1.1)";
-            break;
-        case 'vintage':
-            currentVideoElement.style.filter = "sepia(0.5) contrast(1.2) saturate(1.2)";
-            break;
-        case 'bw':
-            currentVideoElement.style.filter = "grayscale(100%) contrast(1.2)";
-            break;
-        case 'warm':
-            currentVideoElement.style.filter = "sepia(0.3) hue-rotate(-10deg) saturate(1.4)";
-            break;
-        case 'cool':
-            currentVideoElement.style.filter = "hue-rotate(30deg) saturate(1.1)";
-            break;
-        case 'reset':
-            currentVideoElement.style.filter = "none";
-            break;
-    }
-}
-
-// ==========================================================================
-// 📺 PRESENTATION MODE ENGINE
-// ==========================================================================
-function launchPresentationMode() {
-    const videoWrapper = document.getElementById('videoWrapper');
-    const presentationContainer = document.getElementById('presentationVideoContainer');
-    const overlay = document.getElementById('presentationOverlay');
-    const mainVideo = document.getElementById('mainPlayer') || currentVideoElement;
-
-    if (!mainVideo || !videoWrapper) {
-        alert("Please upload a video and perform editing first!");
-        return;
-    }
-
-    if (presentationContainer && overlay) {
-        const wasPlaying = (mainVideo.tagName === 'VIDEO' && !mainVideo.paused);
-
-        presentationContainer.innerHTML = '';
-        
-        const wrapperClone = videoWrapper.cloneNode(true);
-        wrapperClone.id = "presentationWrapperClone";
-        wrapperClone.style.width = "100%";
-        wrapperClone.style.height = "100%";
-        wrapperClone.style.maxWidth = "100%";
-        wrapperClone.style.maxHeight = "100%";
-        wrapperClone.style.position = "relative";
-        wrapperClone.style.aspectRatio = "16 / 9";
-
-        presentationContainer.appendChild(wrapperClone);
-        overlay.style.display = 'flex';
-
-        const clonedVideo = wrapperClone.querySelector('video') || wrapperClone.querySelector('#mainPlayer');
-        if (clonedVideo) {
-            clonedVideo.currentTime = mainVideo.currentTime;
-            if (wasPlaying) {
-                mainVideo.play();
-                clonedVideo.play().catch(e => console.log("Presentation clone sync play."));
-            } else {
-                mainVideo.pause();
-                clonedVideo.pause();
-            }
-        }
-        updatePlayButtonsUI();
-    }
-}
-
-function closePresentationMode() {
-    const presentationContainer = document.getElementById('presentationVideoContainer');
-    const overlay = document.getElementById('presentationOverlay');
-    const mainVideo = document.getElementById('mainPlayer') || currentVideoElement;
-
-    if (overlay) overlay.style.display = 'none';
-    if (presentationContainer) presentationContainer.innerHTML = ''; 
-
-    if (mainVideo && mainVideo.tagName === 'VIDEO') {
-        updatePlayButtonsUI();
-    }
-}
-
-// ==========================================================================
-// 📥 EXPORT & DOWNLOAD MODAL ENGINE
-// ==========================================================================
-function toggleExportModal(show) { 
-    const modal = document.getElementById('exportModal');
-    if (modal) {
-        modal.style.display = show ? 'flex' : 'none'; 
-        if(show && typeof calculateEstimatedSize === 'function') calculateEstimatedSize();
-    }
-}
-
-function setExportMode(mode) {
-    const btnAuto = document.getElementById('btnAuto');
-    const btnManual = document.getElementById('btnManual');
-    const panel = document.getElementById('manualSettingsPanel');
-    const msg = document.getElementById('autoInfoMsg');
-    
-    if (mode === 'auto') {
-        if(btnAuto) btnAuto.classList.add('active'); 
-        if(btnManual) btnManual.classList.remove('active');
-        if(panel) panel.classList.add('dimmed'); 
-        if(msg) msg.style.display = 'block';
-        isManualMode = false;
-    } else {
-        if(btnManual) btnManual.classList.add('active'); 
-        if(btnAuto) btnAuto.classList.remove('active');
-        if(panel) panel.classList.remove('dimmed'); 
-        if(msg) msg.style.display = 'none';
-        isManualMode = true;
-    }
-    calculateEstimatedSize();
-}
-
-function selectOption(element, type, numericValue) {
-    const siblings = element.parentElement.children;
-    for (let btn of siblings) btn.classList.remove('active');
-    element.classList.add('active');
-    if (type === 'res') selectedResMultiplier = numericValue;
-    if (type === 'fps') selectedFpsValue = numericValue;
-    calculateEstimatedSize();
-}
-
-function updateMbps(val) { 
-    const display = document.getElementById('mbpsValue');
-    if(display) display.innerText = val + " Mbps"; 
-    selectedMbpsValue = parseInt(val);
-    calculateEstimatedSize(); 
-}
-
-function calculateEstimatedSize() {
-    const sizeDisplay = document.getElementById('estimatedSizeValue');
-    if (!videoFileBlob || !sizeDisplay) return;
-
-    if (!isManualMode) {
-        sizeDisplay.innerText = (videoFileBlob.size / (1024 * 1024)).toFixed(2) + " MB";
-    } else {
-        let estimatedMbps = selectedMbpsValue;
-        if (selectedResMultiplier === 240) estimatedMbps = selectedMbpsValue * 0.25;
-        else if (selectedResMultiplier === 360) estimatedMbps = selectedMbpsValue * 0.4;
-        else if (selectedResMultiplier === 520) estimatedMbps = selectedMbpsValue * 0.7;
-        else if (selectedResMultiplier === 1080) estimatedMbps = selectedMbpsValue * 1.5;
-
-        const fpsModifier = selectedFpsValue / 30;
-        const totalBitsCalculated = (estimatedMbps * videoDurationSeconds * fpsModifier) / 8;
-        sizeDisplay.innerText = (totalBitsCalculated > 0 ? totalBitsCalculated.toFixed(2) : "14.50") + " MB";
-    }
-}
-
-function downloadToGallery() {
-    if (!videoFileBlob) return;
-    const downloadAnchor = document.createElement('a');
-    downloadAnchor.href = URL.createObjectURL(videoFileBlob);
-    downloadAnchor.download = "S_Studio_Output_" + Date.now() + ".mp4";
-    document.body.appendChild(downloadAnchor);
-    downloadAnchor.click();
-    document.body.removeChild(downloadAnchor);
-    toggleExportModal(false);
-}
-
-// ==========================================================================
-// 👤 USER AUTHENTICATION & LOGIN ENGINE
-// ==========================================================================
-function toggleAuthModal(show) {
-    const authModal = document.getElementById('authModal');
-    if (authModal) {
-        authModal.style.display = show ? 'flex' : 'none';
-        if(show) switchAuthView('login');
-    }
-}
-
-function switchAuthView(view) {
-    const loginForm = document.getElementById('loginForm');
-    const registerForm = document.getElementById('registerForm');
-    const forgotForm = document.getElementById('forgotForm');
-    const title = document.getElementById('authModalTitle');
-
-    if (loginForm) loginForm.classList.add('hidden');
-    if (registerForm) registerForm.classList.add('hidden');
-    if (forgotForm) forgotForm.classList.add('hidden');
-
-    if (view === 'login') {
-        if(loginForm) loginForm.classList.remove('hidden');
-        if(title) title.innerText = "Login to S Studio";
-    } else if (view === 'register') {
-        if(registerForm) registerForm.classList.remove('hidden');
-        if(title) title.innerText = "Create S Studio Account";
-    } else if (view === 'forgot') {
-        if(forgotForm) forgotForm.classList.remove('hidden');
-        if(title) title.innerText = "Reset Password";
-    }
-}
-
-function handleAuthSubmit(event, mode) {
-    event.preventDefault();
-    const authBtn = document.getElementById('authNavBtn');
-    
-    if (mode === 'login') {
-        const userVal = document.getElementById('loginUser').value;
-        alert(`🎉 Welcome back, ${userVal}! Login Successful.`);
-        if (authBtn) authBtn.innerHTML = `👤 Profile`;
-    } else if (mode === 'register') {
-        alert("✨ Registration Complete! Please Login now.");
-        switchAuthView('login');
-        return;
-    } else if (mode === 'forgot') {
-        alert("📩 Password reset link dispatched successfully to your source!");
-    }
-    toggleAuthModal(false);
-}
-
-// ==========================================================================
-// 🤖 AI ASSISTANT HUB
-// ==========================================================================
-function askAiAssistant() {
-    let aiBox = document.getElementById('sStudioAiHelpHub');
-    if (aiBox) { aiBox.remove(); return; }
-
-    aiBox = document.createElement('div');
-    aiBox.id = 'sStudioAiHelpHub';
-    aiBox.style.cssText = "position:fixed; bottom:80px; right:20px; background:#161920; border:2px solid #6c5ce7; width:320px; border-radius:10px; padding:15px; color:white; font-family:sans-serif; z-index:150000; box-shadow:0 10px 30px rgba(0,0,0,0.6); display:flex; flex-direction:column; gap:10px;";
-
-    aiBox.innerHTML = `
-        <div style="font-size:12px; font-weight:bold; color:#6c5ce7; border-bottom:1px solid #222733; padding-bottom:6px; display:flex; justify-content:space-between; align-items:center;">
-            <span>🤖 S STUDIO AI ASSISTANT</span>
-            <span id="closeAiHelpHub" style="cursor:pointer; font-size:18px; color:#a4b0be;">&times;</span>
-        </div>
-        <div id="aiChatLog" style="height:150px; overflow-y:auto; font-size:11px; color:#c1c8d2; background:#0f1115; padding:8px; border-radius:6px; line-height:1.5;">
-            Hello! I am your S Studio AI guide. Ask me anything about Splitting, Music, Voice-overs, Photo Editing, or Shortcuts!
-        </div>
-        <input type="text" id="aiQueryInput" placeholder="Type your editing doubt here..." style="width:100%; background:#222733; border:1px solid #333; color:white; padding:6px; border-radius:4px; font-size:11px; box-sizing:border-box;">
-        <button id="btnSubmitAiQuery" style="background:#6c5ce7; color:white; border:none; padding:8px; border-radius:4px; font-size:11px; font-weight:bold; cursor:pointer;">Ask Editor AI</button>
-        <div style="border-top:1px solid #222733; padding-top:8px; display:flex; justify-content:space-between; align-items:center;">
-            <span style="font-size:10px; color:#a4b0be;">Facing a critical bug?</span>
-            <a href="mailto:sriramgroupsofficial@gmail.com?subject=S Studio Bug Report" style="color:#ff4757; font-size:10px; font-weight:bold; text-decoration:none; background:rgba(255,71,87,0.1); padding:4px 8px; border-radius:4px; border:1px solid #ff4757;">📧 Email Support</a>
-        </div>
-    `;
-
-    document.body.appendChild(aiBox);
-
-    aiBox.querySelector('#closeAiHelpHub').onclick = () => aiBox.remove();
-    
-    const handleAiSearch = () => {
-        const queryInput = document.getElementById('aiQueryInput');
-        const chatLog = document.getElementById('aiChatLog');
-        if (!queryInput || !chatLog || !queryInput.value.trim()) return;
-
-        const userText = queryInput.value.toLowerCase();
-        let aiResponse = "I'm specialized in S Studio video editing! Try asking about 'how to split', 'how to add music', 'shortcuts', or 'photo color sliders'.";
-
-        Object.keys(studioAiKnowledgeBase).forEach(key => {
-            if (userText.includes(key)) {
-                aiResponse = studioAiKnowledgeBase[key];
-            }
-        });
-
-        chatLog.innerHTML = `
-            <div style="margin-bottom:8px; color:#ffff55;"><b>🤔 You:</b> ${queryInput.value}</div>
-            <div style="color:#6c5ce7;"><b>🤖 AI:</b> ${aiResponse}</div>
-        `;
-        queryInput.value = "";
-    };
-
-    aiBox.querySelector('#btnSubmitAiQuery').onclick = handleAiSearch;
-    aiBox.querySelector('#aiQueryInput').addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') handleAiSearch();
-    });
-}
-
-// ==========================================================================
-// 📜 SYSTEM MODALS & LEGAL DIALOG CONTROLLERS
-// ==========================================================================
-function toggleModal(modalId, show) {
-    const modal = document.getElementById(modalId);
-    if (modal) {
-        modal.style.display = show ? 'flex' : 'none';
-    }
-}
-
-// ==========================================================================
-// ⌨️ SHORTCUTS & EVENT LISTENERS
-// ==========================================================================
-document.addEventListener('keydown', function(e) {
-    if (e.target.contentEditable === "true" || e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-
-    const key = e.key.toLowerCase();
-    if (e.key === " " || e.key === "Spacebar") {
-        e.preventDefault();
-        togglePlay();
-    } else if (key === 's') {
-        e.preventDefault();
-        executeTool('Split');
-    }
-});
-
-// Target Selection Focus Resolver
-document.addEventListener('mousedown', function(e) {
-    const pipTarget = e.target.closest('.live-pip-object');
-    if (pipTarget) {
-        const pipImg = pipTarget.querySelector('img') || pipTarget.querySelector('video');
-        if (pipImg) {
-            currentVideoElement = pipImg;
-            currentActivePIPLayer = pipTarget;
-            return;
-        }
-    }
-    const mainPhoto = document.getElementById('mainPhotoPlayer');
-    if (mainPhoto && (e.target === mainPhoto || mainPhoto.contains(e.target))) {
-        currentVideoElement = mainPhoto;
-        return;
-    }
-    const mainVideo = document.getElementById('mainPlayer');
-    if (mainVideo && (e.target === mainVideo || mainVideo.contains(e.target))) {
-        currentVideoElement = mainVideo;
-        return;
-    }
-});
-
-// UI Dynamic Sync Loop Engine
-setInterval(function() {
-    if (currentVideoElement && currentVideoElement.tagName === 'VIDEO') {
-        updatePlayButtonsUI();
-        updatePlayheadPosition();
-    }
-}, 300);
-
-document.addEventListener("DOMContentLoaded", function() {
-    console.log("⚡ S Studio Workspace Core Engine fully initialized.");
-    
-    const toolsContainer = document.querySelector('.tools-container');
-    if (toolsContainer && !document.getElementById('btnVoiceRecord')) {
-        const recBtn = document.createElement('button');
-        recBtn.id = "btnVoiceRecord";
-        recBtn.type = "button";
-        recBtn.className = "tool-btn";
-        recBtn.style.cssText = "background: rgba(255, 159, 67, 0.2); border: 1px solid #ff9f43; color: #ff9f43; font-weight: bold;";
-        recBtn.innerText = "🎙️ Record Voice";
-        recBtn.onclick = toggleVoiceRecording;
-        
-        const aiBtn = document.querySelector('.ai-btn');
-        if (aiBtn) toolsContainer.insertBefore(recBtn, aiBtn);
-        else toolsContainer.appendChild(recBtn);
-    }
-});
-
-// ==========================================================================
-// 👁️ SCROLL REVEAL ANIMATION OBSERVER
-// ==========================================================================
-document.addEventListener("DOMContentLoaded", function() {
-    const revealCards = document.querySelectorAll('.scroll-reveal-card');
-
-    if ('IntersectionObserver' in window) {
-        const observer = new IntersectionObserver((entries, observer) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('reveal-active');
-                    observer.unobserve(entry.target); 
-                }
-            });
-        }, {
-            threshold: 0.15 
-        });
-
-        revealCards.forEach(card => observer.observe(card));
-    } else {
-        revealCards.forEach(card => card.classList.add('reveal-active'));
-    }
-});
-
-// ==========================================================================
-// 👁️ MARQUEE PAUSE ON SCROLL FOCUS OBSERVER
-// ==========================================================================
-document.addEventListener("DOMContentLoaded", function() {
-    const scrollPauseCards = document.querySelectorAll('.auto-scroll-pause-card');
-
-    if ('IntersectionObserver' in window) {
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('user-view-focused');
-                } else {
-                    entry.target.classList.remove('user-view-focused');
-                }
-            });
-        }, {
-            threshold: 0.3 
-        });
-
-        scrollPauseCards.forEach(card => observer.observe(card));
-    }
-});
-
-// ==========================================================================
-// 🖼️ PHOTO EDITING ENGINE (SECOND PART)
-// ==========================================================================
-
-// 1. Photo Loader
-function loadPhoto(event) {
-    const file = event.target.files ? event.target.files[0] : null;
-    if (!file) {
-        console.log("No photo selected.");
-        return;
-    }
-
-    const introPage = document.getElementById('introPage');
-    if (introPage) {
-        introPage.style.display = 'none';
-        introPage.classList.add('hidden');
-    }
-
-    const extraLandingSelectors = [
-        '#sStudioScrollableGuide',
-        '.founders-vision-card-large',
-        '.upcoming-updates-card',
-        '.feedback-reward-card',
-        '.support-channels-card',
-        '.innovation-rewards-card',
-        '.s-studio-master-footer'
-    ];
-    extraLandingSelectors.forEach(selector => {
-        document.querySelectorAll(selector).forEach(el => {
-            el.style.display = 'none';
-        });
-    });
-
-    const editorPage = document.getElementById('editorPage');
-    if (editorPage) {
-        editorPage.style.display = 'flex';
-        editorPage.classList.remove('hidden');
-    }
-
-    videoFileBlob = file;
-    const wrapper = document.getElementById('videoWrapper');
-    const placeholder = document.getElementById('placeholderText');
-    const imgURL = URL.createObjectURL(file);
-    
-    if (placeholder) placeholder.style.display = 'none';
-    
-    if (wrapper) {
-        wrapper.classList.add('photo-mode-large');
-        wrapper.innerHTML = `
-            <img id="mainPhotoPlayer" src="${imgURL}" style="transform: scale(1) rotate(0deg) translate(0px, 0px); transition: transform 0.1s ease, filter 0.2s ease; width:100%; height:100%; object-fit:contain; cursor:grab; position:relative;">
-        `;
-    }
-    
-    currentVideoElement = document.getElementById('mainPhotoPlayer');
-    currentScale = 1.0;
-    currentRotation = 0;
-    undoStack = [];
-    redoStack = [];
-
-    // Show top Action Group for Photo Mode (Undo, Redo, Download Photo)
-    const actionGroup = document.querySelector('.action-group');
-    if (actionGroup) {
-        actionGroup.classList.remove('hidden');
-        actionGroup.style.display = 'flex';
-    }
-
-    // Change Export Button to Download Photo
-    const exportBtn = document.querySelector('.export-btn-main');
-    if (exportBtn) {
-        exportBtn.innerText = "📥 Download Photo";
-        exportBtn.onclick = downloadPhotoToDevice;
-    }
-
-    // Hide Video Controls & Timeline Tracks
-    const playerControlsBox = document.getElementById('playerControlsBox');
-    if (playerControlsBox) playerControlsBox.style.display = 'none';
-
-    const timelineTracks = document.querySelector('.timeline-tracks');
-    if (timelineTracks) timelineTracks.style.display = 'none';
-
-    const timelineBox = document.getElementById('timelineAreaBox');
-    if (timelineBox) {
-        timelineBox.style.display = 'flex';
-        timelineBox.classList.remove('hidden');
-    }
-
-    setupPhotoToolbar();
-    enablePhotoHandsControl();
-}
-
-// 2. Photo Toolbar Setup
-function setupPhotoToolbar() {
-    const toolsContainer = document.querySelector('.tools-container');
-    if (!toolsContainer) return;
-
-    toolsContainer.innerHTML = `
-        <button class="tool-btn" onclick="addTextOverlay()" style="background:#10ac84; color:#fff; font-weight:bold;">📝 Add Text</button>
-        <button class="tool-btn" onclick="openAdjustComfortableMenu()" style="background:#6c5ce7; color:#fff; font-weight:bold;">📐 Adjust Comfortable</button>
-        <button class="tool-btn" onclick="executeTool('Zoom')">➕ Zoom In</button>
-        <button class="tool-btn" onclick="executeTool('Opacity')">➖ Zoom Out</button>
-        <button class="tool-btn" onclick="executeTool('Rotate')">🔄 Rotate 90°</button>
-        <button class="tool-btn" onclick="openPhotoFiltersMenu()">🎨 Photo Filters</button>
-        <button class="tool-btn" onclick="executeTool('Stickers')">🖼️ Add Overlay/Sticker</button>
-        <button class="tool-btn delete-btn" onclick="executeTool('Delete')">🗑️ Reset Photo</button>
-    `;
-
-    const voiceBtn = document.getElementById('btnVoiceRecord');
-    if (voiceBtn) voiceBtn.style.display = 'none';
-}
-
-// 3. Hands Control Engine for Photo (Drag & Move Freely)
-let photoPanX = 0, photoPanY = 0;
-let isDraggingPhoto = false, startMouseX = 0, startMouseY = 0;
-
-function enablePhotoHandsControl() {
-    const photo = document.getElementById('mainPhotoPlayer');
-    const wrapper = document.getElementById('videoWrapper');
-    if (!photo || !wrapper) return;
-
-    photoPanX = 0;
-    photoPanY = 0;
-
-    photo.onmousedown = function(e) {
-        e.preventDefault();
-        isDraggingPhoto = true;
-        startMouseX = e.clientX - photoPanX;
-        startMouseY = e.clientY - photoPanY;
-        photo.style.cursor = 'grabbing';
-    };
-
-    window.onmousemove = function(e) {
-        if (!isDraggingPhoto) return;
-        photoPanX = e.clientX - startMouseX;
-        photoPanY = e.clientY - startMouseY;
-        applyPhotoTransform();
-    };
-
-    window.onmouseup = function() {
-        isDraggingPhoto = false;
-        if (photo) photo.style.cursor = 'grab';
-    };
-
-    wrapper.onwheel = function(e) {
-        if (!currentVideoElement || currentVideoElement.id !== 'mainPhotoPlayer') return;
-        e.preventDefault();
-        if (e.deltaY < 0) {
-            currentScale += 0.08;
-        } else {
-            if (currentScale > 0.3) currentScale -= 0.08;
-        }
-        applyPhotoTransform();
-    };
-}
-
-function applyPhotoTransform() {
-    if (currentVideoElement && currentVideoElement.id === 'mainPhotoPlayer') {
-        currentVideoElement.style.transform = `scale(${currentScale}) rotate(${currentRotation}deg) translate(${photoPanX}px, ${photoPanY}px)`;
-    }
-}
-
-// 4. Adjust Comfortable Menu
-function openAdjustComfortableMenu() {
-    const oldMenu = document.getElementById('sStudioAdjustMenu');
-    if (oldMenu) { oldMenu.remove(); return; }
-
-    const menu = document.createElement('div');
-    menu.id = 'sStudioAdjustMenu';
-    menu.style.cssText = "position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); background:#161920; border:2px solid #6c5ce7; padding:20px; border-radius:12px; display:flex; flex-direction:column; gap:12px; z-index:10000; width: 300px; color: white; font-family:sans-serif; box-shadow:0 10px 30px rgba(0,0,0,0.8);";
-
-    menu.innerHTML = `
-        <div style="font-size:13px; color:#6c5ce7; font-weight:bold; border-bottom:1px solid #2f3542; padding-bottom:8px; display:flex; justify-content:space-between; align-items:center;">
-            <span>📐 ADJUST COMFORTABLE (HANDS CONTROL)</span>
-            <span id="closeAdjustMenu" style="cursor:pointer; font-size:18px; color:#a4b0be;">&times;</span>
-        </div>
-        <p style="font-size:11px; color:#a4b0be; margin:0;">Drag image with hands / mouse to adjust position. Use slider below to fit/crop comfortable bounds.</p>
-        
-        <label style="font-size:11px;">🔍 Zoom Level:</label>
-        <input type="range" id="adjustZoomRange" min="0.3" max="3" step="0.05" value="${currentScale}" oninput="currentScale=parseFloat(this.value); applyPhotoTransform();">
-        
-        <label style="font-size:11px;">📐 Crop Frame Ratio:</label>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px;">
-            <button class="crop-preset-btn" onclick="setWrapperRatio('16/9')" style="background:#222733; color:white; border:1px solid #333; padding:6px; border-radius:4px; font-size:11px; cursor:pointer;">📺 16:9 YouTube</button>
-            <button class="crop-preset-btn" onclick="setWrapperRatio('9/16')" style="background:#222733; color:white; border:1px solid #333; padding:6px; border-radius:4px; font-size:11px; cursor:pointer;">📱 9:16 Shorts/Reels</button>
-            <button class="crop-preset-btn" onclick="setWrapperRatio('1/1')" style="background:#222733; color:white; border:1px solid #333; padding:6px; border-radius:4px; font-size:11px; cursor:pointer;">🔲 1:1 Square</button>
-            <button class="crop-preset-btn" onclick="setWrapperRatio('free')" style="background:#6c5ce7; color:white; border:none; padding:6px; border-radius:4px; font-size:11px; font-weight:bold; cursor:pointer;">🔄 Free Reset</button>
-        </div>
-        <button id="btnDoneAdjust" style="background:#10ac84; color:white; border:none; padding:8px; border-radius:6px; font-weight:bold; cursor:pointer; font-size:12px; margin-top:5px;">Done Adjusting 👍</button>
-    `;
-
-    menu.querySelector('#closeAdjustMenu').onclick = () => menu.remove();
-    menu.querySelector('#btnDoneAdjust').onclick = () => menu.remove();
-    document.body.appendChild(menu);
-}
-
-function setWrapperRatio(ratio) {
-    const wp = document.getElementById('videoWrapper');
-    if (!wp) return;
-    wp.style.overflow = "hidden";
-    if (ratio === '16/9') { wp.style.width = "80%"; wp.style.aspectRatio = "16/9"; }
-    else if (ratio === '9/16') { wp.style.width = "300px"; wp.style.height = "520px"; }
-    else if (ratio === '1/1') { wp.style.width = "400px"; wp.style.height = "400px"; }
-    else if (ratio === 'free') { wp.style.width = "98%"; wp.style.height = "82vh"; }
-}
-
-// 5. Photo Filters Menu
-function openPhotoFiltersMenu() {
-    const oldMenu = document.getElementById('sStudioFilterMenu');
-    if (oldMenu) { oldMenu.remove(); return; }
-
-    const menu = document.createElement('div');
-    menu.id = 'sStudioFilterMenu';
-    menu.style.cssText = "position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); background:#161920; border:2px solid #10ac84; padding:15px; border-radius:10px; display:flex; flex-direction:column; gap:8px; z-index:10000; width: 250px; color: white; font-family:sans-serif;";
-
-    menu.innerHTML = `
-        <div style="font-size:12px; color:#10ac84; font-weight:bold; border-bottom:1px solid #222733; padding-bottom:6px; display:flex; justify-content:space-between; align-items:center;">
-            <span>🎨 PHOTO FILTERS & TONING</span>
-            <span id="closeFilterMenu" style="cursor:pointer; font-size:18px; color:#a4b0be;">&times;</span>
-        </div>
-        <button onclick="applyPhotoFilter('bright'); this.parentElement.remove();" style="background:#222733; color:white; border:none; padding:8px; border-radius:4px; font-size:11px; cursor:pointer; text-align:left;">☀️ Bright & Sharp</button>
-        <button onclick="applyPhotoFilter('vintage'); this.parentElement.remove();" style="background:#222733; color:white; border:none; padding:8px; border-radius:4px; font-size:11px; cursor:pointer; text-align:left;">📜 Vintage Warm</button>
-        <button onclick="applyPhotoFilter('bw'); this.parentElement.remove();" style="background:#222733; color:white; border:none; padding:8px; border-radius:4px; font-size:11px; cursor:pointer; text-align:left;">🖤 Black & White Pro</button>
-        <button onclick="applyPhotoFilter('cool'); this.parentElement.remove();" style="background:#222733; color:white; border:none; padding:8px; border-radius:4px; font-size:11px; cursor:pointer; text-align:left;">❄️ Cool Cinematic</button>
-        <button onclick="applyPhotoFilter('reset'); this.parentElement.remove();" style="background:#ff4757; color:white; border:none; padding:8px; border-radius:4px; font-size:11px; font-weight:bold; cursor:pointer;">🔄 Reset Original</button>
-    `;
-
-    menu.querySelector('#closeFilterMenu').onclick = () => menu.remove();
-    document.body.appendChild(menu);
-}
-
-// 6. Download Photo Logic
-function downloadPhotoToDevice() {
-    const photo = document.getElementById('mainPhotoPlayer');
-    if (!photo) {
-        alert("Please load a photo first!");
-        return;
-    }
-
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-    canvas.width = photo.naturalWidth || photo.width || 1080;
-    canvas.height = photo.naturalHeight || photo.height || 1080;
-
-    ctx.filter = getComputedStyle(photo).filter;
-    ctx.drawImage(photo, 0, 0, canvas.width, canvas.height);
-
-    const anchor = document.createElement('a');
-    anchor.href = canvas.toDataURL('image/png');
-    anchor.download = "S_Studio_Edited_Photo_" + Date.now() + ".png";
-    document.body.appendChild(anchor);
-    anchor.click();
-    document.body.removeChild(anchor);
-}
-
-// 7. Reset to Home
-function resetToHome() {
-    const editorPage = document.getElementById('editorPage');
-    if (editorPage) {
-        editorPage.style.display = 'none';
-        editorPage.classList.add('hidden');
-    }
-
-    const introPage = document.getElementById('introPage');
-    if (introPage) {
-        introPage.style.display = 'flex';
-        introPage.classList.remove('hidden');
-    }
-
-    const extraLandingSelectors = [
-        '#sStudioScrollableGuide',
-        '.founders-vision-card-large',
-        '.upcoming-updates-card',
-        '.feedback-reward-card',
-        '.support-channels-card',
-        '.innovation-rewards-card',
-        '.s-studio-master-footer'
-    ];
-
-    extraLandingSelectors.forEach(selector => {
-        document.querySelectorAll(selector).forEach(el => {
-            el.style.display = 'block';
-        });
-    });
-
-    const wrapper = document.getElementById('videoWrapper');
-    if (wrapper) wrapper.classList.remove('photo-mode-large');
-
-    const timelineTracks = document.querySelector('.timeline-tracks');
-    if (timelineTracks) timelineTracks.style.display = 'flex';
-
-    const videoInput = document.getElementById('videoInput');
-    if (videoInput) videoInput.value = '';
-    const photoInput = document.getElementById('photoInput');
-    if (photoInput) photoInput.value = '';
+/* Photo Adjustment Range Styling */
+#sStudioAdjustMenu input[type="range"] {
+    accent-color: #6c5ce7;
+    width: 100%;
 }
