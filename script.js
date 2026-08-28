@@ -13,6 +13,7 @@ let audioContext = null;
 let gainNode = null;
 let sourceNode = null;
 let compressorNode = null;
+let isAudioConnected = false;
 
 let videoDurationSeconds = 0;
 let selectedResMultiplier = 1.0;
@@ -24,6 +25,7 @@ let activeAudioNodes = {};
 
 let undoStack = [];
 let redoStack = [];
+const MAX_UNDO_LIMIT = 30;
 
 let mediaRecorder = null;
 let audioChunks = [];
@@ -34,9 +36,9 @@ let splitClipSegments = [];
 let selectedSplitSegmentId = null;
 
 // Fade & Light Controller Variables
-let currentFadeSetting = 'none'; // 'in', 'out', 'both', 'none'
-let userCustomLight = 100;       // 100 = Original, 0 = Dark, 200 = Full Light
-let customFadeDuration = 2.0;    // Duration in seconds
+let currentFadeSetting = 'none';
+let userCustomLight = 100;
+let customFadeDuration = 2.0;
 
 // Subtitles Engine Variables
 let generatedSubtitlesList = [];
@@ -86,6 +88,297 @@ const studioAiKnowledgeBase = {
 };
 
 // ==========================================================================
+// 📸 DEDICATED PHOTO CONTROLS & EXPORT ENGINE (100% ERROR-FREE)
+// ==========================================================================
+
+// Global Photo State Variables
+window.currentPhotoFilter = window.currentPhotoFilter || { brightness: 100, contrast: 100, saturate: 100, blur: 0, grayscale: 0, sepia: 0, invert: 0 };
+window.currentPhotoOpacity = 1.0;
+window.isPhotoLocked = false;
+
+// 1. Core Photo Loader
+window.loadPhoto = function(event) {
+    const file = event && event.target && event.target.files ? event.target.files[0] : null;
+    if (!file) return;
+
+    // 1. Hide Landing / Intro Page
+    const introPage = document.getElementById('introPage');
+    if (introPage) {
+        introPage.style.display = 'none';
+        introPage.classList.add('hidden');
+    }
+
+    const landingSelectors = [
+        '#sStudioScrollableGuide',
+        '.founders-vision-card-large',
+        '.upcoming-updates-card',
+        '.feedback-reward-card',
+        '.support-channels-card',
+        '.innovation-rewards-card',
+        '.s-studio-master-footer'
+    ];
+    landingSelectors.forEach(selector => {
+        document.querySelectorAll(selector).forEach(el => el.style.display = 'none');
+    });
+
+    // 2. Open Editor Page Workspace
+    const editorPage = document.getElementById('editorPage');
+    if (editorPage) {
+        editorPage.style.display = 'flex';
+        editorPage.style.flexDirection = 'column';
+        editorPage.classList.remove('hidden');
+    }
+
+    // 3. Hide all video elements, timelines, and tracks
+    hideTimelineAndVideoControlsForPhoto();
+
+    videoFileBlob = file;
+    const wrapper = document.getElementById('videoWrapper');
+    const placeholder = document.getElementById('placeholderText');
+    const imgURL = URL.createObjectURL(file);
+    
+    if (placeholder) placeholder.style.display = 'none';
+    
+    if (wrapper) {
+        wrapper.style.width = "94%";
+        wrapper.style.maxWidth = "1100px";
+        wrapper.style.height = "58vh";
+        wrapper.style.maxHeight = "58vh";
+        wrapper.style.aspectRatio = "unset";
+        wrapper.style.display = "flex";
+        wrapper.style.alignItems = "center";
+        wrapper.style.justifyContent = "center";
+        wrapper.style.background = "#07090e";
+        wrapper.style.borderRadius = "12px";
+        wrapper.style.border = "1px solid #1f2738";
+        wrapper.style.margin = "8px auto";
+        wrapper.style.overflow = "hidden";
+        wrapper.style.position = "relative";
+
+        wrapper.innerHTML = `
+            <img id="mainPhotoPlayer" src="${imgURL}" style="transform: scale(1) rotate(0deg); max-width:100%; max-height:100%; object-fit:contain; cursor:grab; transition: transform 0.2s ease;">
+        `;
+    }
+    
+    currentVideoElement = document.getElementById('mainPhotoPlayer');
+    currentScale = 1.0;
+    currentRotation = 0;
+
+    // 4. Setup Toolbar & Export Controls
+    setupPhotoToolbar();
+    setupPhotoHeaderExportButton();
+};
+
+function loadPhoto(event) {
+    window.loadPhoto(event);
+}
+
+// 2. Hide Timeline Strictly for Photo Mode
+window.hideTimelineAndVideoControlsForPhoto = function() {
+    const videoOnlyElements = [
+        '#timelineAreaBox',
+        '#timelineTracksContainer',
+        '#frameTimelineTrack',
+        '#pipTrackBlock',
+        '#audioTrackBlock',
+        '#textTrackBlock',
+        '#playerControlsBox',
+        '#studioScreenResizerBar',
+        '#videoTimerDisplay',
+        '.timeline-tracks',
+        '.playback-controls',
+        '.timeline-zoom-controls',
+        '.timeline-container'
+    ];
+
+    videoOnlyElements.forEach(selector => {
+        document.querySelectorAll(selector).forEach(el => {
+            el.style.setProperty('display', 'none', 'important');
+        });
+    });
+};
+
+function hideTimelineAndVideoControlsForPhoto() {
+    window.hideTimelineAndVideoControlsForPhoto();
+}
+
+// 3. Setup Fixed Photo Toolbar
+window.setupPhotoToolbar = function() {
+    let toolsContainer = document.querySelector('.tools-container') || document.querySelector('.bottom-toolbar');
+    
+    if (!toolsContainer) {
+        toolsContainer = document.createElement('div');
+        toolsContainer.className = 'tools-container';
+        document.body.appendChild(toolsContainer);
+    }
+
+    toolsContainer.style.cssText = `
+        display: flex !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        position: fixed !important;
+        bottom: 12px !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        width: 95% !important;
+        max-width: 1200px !important;
+        background: #141722 !important;
+        border: 1px solid #232b3e !important;
+        border-radius: 12px !important;
+        padding: 8px 12px !important;
+        gap: 8px !important;
+        overflow-x: auto !important;
+        white-space: nowrap !important;
+        z-index: 99999 !important;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.85) !important;
+    `;
+
+    toolsContainer.innerHTML = `
+        <button class="tool-btn" onclick="openPhotoAdjustMenu()" style="background:#222733; color:#00f2fe; border:1px solid #00f2fe; font-weight:bold; padding:7px 12px; border-radius:6px; cursor:pointer;">🎨 Adjust</button>
+        <button class="tool-btn" onclick="executeBgRemover()" style="background:#222733; color:#10ac84; border:1px solid #10ac84; font-weight:bold; padding:7px 12px; border-radius:6px; cursor:pointer;">🪄 BG Remover</button>
+        <button class="tool-btn" onclick="openPhotoFiltersMenu()" style="background:#222733; color:#fff; border:1px solid #333; padding:7px 12px; border-radius:6px; cursor:pointer;">✨ Filters</button>
+        <button class="tool-btn" onclick="openPixelEraserTool()" style="background:#222733; color:#fff; border:1px solid #333; padding:7px 12px; border-radius:6px; cursor:pointer;">🧽 Pixel Eraser</button>
+        <button class="tool-btn" onclick="openPhotoCropMenu()" style="background:#222733; color:#fff; border:1px solid #333; padding:7px 12px; border-radius:6px; cursor:pointer;">✂️ Crop</button>
+        <button class="tool-btn" onclick="addTextOverlay()" style="background:#6c5ce7; color:#fff; font-weight:bold; border:none; padding:7px 12px; border-radius:6px; cursor:pointer;">📝 Add Text</button>
+        <button class="tool-btn" onclick="openPhotoStyleMenu()" style="background:#222733; color:#fff; border:1px solid #333; padding:7px 12px; border-radius:6px; cursor:pointer;">🖼️ Borders</button>
+        <button class="tool-btn" onclick="openPhotoAnimateMenu()" style="background:#222733; color:#fff; border:1px solid #333; padding:7px 12px; border-radius:6px; cursor:pointer;">🎬 Animate</button>
+        <button class="tool-btn" onclick="openPhotoTransparencyMenu()" style="background:#222733; color:#fff; border:1px solid #333; padding:7px 12px; border-radius:6px; cursor:pointer;">🏁 Opacity</button>
+        <button class="tool-btn" onclick="openPhotoPositionMenu()" style="background:#222733; color:#fff; border:1px solid #333; padding:7px 12px; border-radius:6px; cursor:pointer;">📍 Position</button>
+        <button class="tool-btn" onclick="openPhotoLayersMenu()" style="background:#222733; color:#fff; border:1px solid #333; padding:7px 12px; border-radius:6px; cursor:pointer;">📑 Layers</button>
+        <button class="tool-btn" onclick="togglePhotoLock()" id="photoLockBtn" style="background:#222733; color:#fff; border:1px solid #333; padding:7px 12px; border-radius:6px; cursor:pointer;">🔓 Lock</button>
+        <button class="tool-btn" onclick="setPhotoAsBackground()" style="background:#222733; color:#fff; border:1px solid #333; padding:7px 12px; border-radius:6px; cursor:pointer;">🌄 Set as BG</button>
+        <button class="tool-btn" onclick="executeTool('Stickers')" style="background:#222733; color:#fff; border:1px solid #333; padding:7px 12px; border-radius:6px; cursor:pointer;">➕ Sticker</button>
+        <button class="tool-btn" onclick="executeTool('Rotate')" style="background:#222733; color:#fff; border:1px solid #333; padding:7px 12px; border-radius:6px; cursor:pointer;">🔄 Rotate 90°</button>
+        <button class="tool-btn" onclick="resetAllPhotoEdits()" style="background:#ff4757; color:white; border:none; font-weight:bold; padding:7px 12px; border-radius:6px; cursor:pointer;">🗑️ Reset</button>
+    `;
+};
+
+function setupPhotoToolbar() {
+    window.setupPhotoToolbar();
+}
+
+// 4. Download Modal & Exporter
+window.openPhotoDownloadModal = function() {
+    const oldModal = document.getElementById('sStudioPhotoDownloadModal');
+    if (oldModal) oldModal.remove();
+
+    const modal = document.createElement('div');
+    modal.id = 'sStudioPhotoDownloadModal';
+    modal.style.cssText = `
+        position: fixed !important;
+        top: 50% !important;
+        left: 50% !important;
+        transform: translate(-50%, -50%) !important;
+        background: #161920 !important;
+        border: 2px solid #00f2fe !important;
+        padding: 22px !important;
+        border-radius: 14px !important;
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 12px !important;
+        z-index: 2147483647 !important;
+        width: 320px !important;
+        color: white !important;
+        font-family: sans-serif !important;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.85) !important;
+    `;
+
+    modal.innerHTML = `
+        <div style="font-size: 13px; color: #00f2fe; font-weight: bold; border-bottom: 1px solid #2f3542; padding-bottom: 6px; display: flex; justify-content: space-between; align-items: center;">
+            <span>💾 EXPORT & DOWNLOAD PHOTO</span>
+            <span onclick="this.parentElement.parentElement.remove()" style="cursor: pointer; font-size: 18px; color: #a4b0be;">&times;</span>
+        </div>
+        <p style="font-size: 11px; color: #a4b0be; margin: 0;">Select output format:</p>
+
+        <button onclick="downloadRenderedCanvasPhoto('image/jpeg', 'photo.jpg')" style="background: #222733; color: white; border: 1px solid #333; padding: 10px; border-radius: 6px; cursor: pointer; text-align: left; font-size: 11px;">
+            <strong style="color:#f1c40f;">📸 JPG Format (Social Media)</strong>
+            <div style="font-size:10px; color:#a4b0be; margin-top:2px;">High quality, lightweight file size.</div>
+        </button>
+
+        <button onclick="downloadRenderedCanvasPhoto('image/png', 'photo.png')" style="background: #222733; color: white; border: 1px solid #333; padding: 10px; border-radius: 6px; cursor: pointer; text-align: left; font-size: 11px;">
+            <strong style="color:#00f2fe;">💎 PNG Format (Transparent Support)</strong>
+            <div style="font-size:10px; color:#a4b0be; margin-top:2px;">Maximum clarity with transparency.</div>
+        </button>
+
+        <button onclick="downloadRenderedCanvasPhoto('image/webp', 'photo.webp')" style="background: #222733; color: white; border: 1px solid #333; padding: 10px; border-radius: 6px; cursor: pointer; text-align: left; font-size: 11px;">
+            <strong style="color:#10ac84;">⚡ WebP Format (Fast Web Loading)</strong>
+            <div style="font-size:10px; color:#a4b0be; margin-top:2px;">Optimized modern web compression.</div>
+        </button>
+    `;
+
+    document.body.appendChild(modal);
+};
+
+function openPhotoDownloadModal() {
+    window.openPhotoDownloadModal();
+}
+
+window.downloadRenderedCanvasPhoto = function(formatType, filename) {
+    const photo = document.getElementById('mainPhotoPlayer');
+    if (!photo) return;
+
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = photo.naturalWidth || photo.width || 800;
+    canvas.height = photo.naturalHeight || photo.height || 600;
+
+    ctx.filter = `brightness(${window.currentPhotoFilter.brightness}%) contrast(${window.currentPhotoFilter.contrast}%) saturate(${window.currentPhotoFilter.saturate}%) blur(${window.currentPhotoFilter.blur}px) grayscale(${window.currentPhotoFilter.grayscale}%) sepia(${window.currentPhotoFilter.sepia}%)`;
+    ctx.globalAlpha = window.currentPhotoOpacity;
+
+    ctx.translate(canvas.width / 2, canvas.height / 2);
+    ctx.rotate((currentRotation * Math.PI) / 180);
+    ctx.scale(currentScale, currentScale);
+    ctx.drawImage(photo, -canvas.width / 2, -canvas.height / 2, canvas.width, canvas.height);
+
+    const link = document.createElement('a');
+    link.download = filename;
+    link.href = canvas.toDataURL(formatType, 0.95);
+    link.click();
+
+    const modal = document.getElementById('sStudioPhotoDownloadModal');
+    if (modal) modal.remove();
+};
+
+function downloadRenderedCanvasPhoto(formatType, filename) {
+    window.downloadRenderedCanvasPhoto(formatType, filename);
+}
+
+// 5. Header Download Button Setup
+window.setupPhotoHeaderExportButton = function() {
+    const oldBtn = document.getElementById('photoExportModalTrigger');
+    if (oldBtn) oldBtn.remove();
+
+    const topHeader = document.querySelector('.header') || document.querySelector('.navbar') || document.body;
+    const downloadBtn = document.createElement('button');
+    downloadBtn.id = 'photoExportModalTrigger';
+    downloadBtn.innerText = '💾 Download Photo';
+    downloadBtn.style.cssText = `
+        position: fixed;
+        top: 12px;
+        right: 160px;
+        background: linear-gradient(135deg, #10ac84, #00f2fe);
+        color: #000;
+        font-weight: 800;
+        border: none;
+        padding: 8px 18px;
+        border-radius: 20px;
+        cursor: pointer;
+        z-index: 99999;
+        box-shadow: 0 4px 15px rgba(0, 242, 254, 0.4);
+    `;
+    downloadBtn.onclick = function() {
+        if (typeof window.openPhotoDownloadModal === 'function') {
+            window.openPhotoDownloadModal();
+        }
+    };
+    topHeader.appendChild(downloadBtn);
+};
+
+function setupPhotoHeaderExportButton() {
+    window.setupPhotoHeaderExportButton();
+}
+
+// ==========================================================================
 // 🛠️ CORE TRANSFORMATION & UNDO / REDO HISTORY ENGINE
 // ==========================================================================
 
@@ -114,6 +407,7 @@ function saveStateToHistory() {
     };
 
     undoStack.push(stateSnapshot);
+    if (undoStack.length > MAX_UNDO_LIMIT) undoStack.shift();
     redoStack = []; 
 }
 
@@ -152,7 +446,7 @@ function executeUndo() {
     currentVideoElement.style.objectFit = prevState.videoObjectFit;
 
     if (currentVideoElement.id === 'mainPhotoPlayer') {
-        applyPhotoTransform();
+        if (typeof applyLiveFilters === 'function') applyLiveFilters();
     } else {
         applyTransformations();
     }
@@ -192,7 +486,7 @@ function executeRedo() {
     currentVideoElement.style.objectFit = nextState.videoObjectFit;
 
     if (currentVideoElement.id === 'mainPhotoPlayer') {
-        applyPhotoTransform();
+        if (typeof applyLiveFilters === 'function') applyLiveFilters();
     } else {
         applyTransformations();
     }
@@ -215,11 +509,43 @@ function enterStudio(studioType) {
     }
 }
 
+// ==========================================================================
+// 📺 LARGE SCREEN VIDEO LOADER & INTERACTIVE RESIZER ENGINE
+// ==========================================================================
+
+let currentStageHeightPercent = 65;
+
+function updateVideoCanvasDimensions() {
+    const wrapper = document.getElementById('videoWrapper');
+    if (!wrapper) return;
+
+    wrapper.style.width = "96%";
+    wrapper.style.maxWidth = "1400px";
+    wrapper.style.height = `${currentStageHeightPercent}vh`;
+    wrapper.style.maxHeight = `${currentStageHeightPercent}vh`;
+    wrapper.style.aspectRatio = "unset";
+    wrapper.style.margin = "8px auto";
+    wrapper.style.display = "flex";
+    wrapper.style.alignItems = "center";
+    wrapper.style.justifyContent = "center";
+    wrapper.style.background = "#07090e";
+    wrapper.style.borderRadius = "12px";
+    wrapper.style.border = "1px solid #1f2738";
+    wrapper.style.overflow = "hidden";
+    wrapper.style.position = "relative";
+
+    const mediaElement = document.getElementById('mainPlayer') || document.getElementById('mainPhotoPlayer') || currentVideoElement;
+    if (mediaElement) {
+        mediaElement.style.width = "100%";
+        mediaElement.style.height = "100%";
+        mediaElement.style.objectFit = "contain";
+    }
+}
+
 function loadVideo(event) {
     const file = event.target.files ? event.target.files[0] : null;
     if (!file) return;
 
-    // Hide Landing Page
     const introPage = document.getElementById('introPage');
     if (introPage) {
         introPage.style.display = 'none';
@@ -239,7 +565,6 @@ function loadVideo(event) {
         document.querySelectorAll(selector).forEach(el => el.style.display = 'none');
     });
 
-    // Show Editor
     const editorPage = document.getElementById('editorPage');
     if (editorPage) {
         editorPage.style.display = 'flex';
@@ -257,10 +582,9 @@ function loadVideo(event) {
     if (placeholder) placeholder.style.display = 'none';
 
     wrapper.classList.remove('photo-mode-large');
-    wrapper.style.width = "80%";
-    wrapper.style.maxHeight = "50vh"; 
-    wrapper.style.aspectRatio = "16 / 9";
-    wrapper.style.margin = "0 auto";
+    updateVideoCanvasDimensions();
+
+    isAudioConnected = false;
 
     wrapper.innerHTML = `
         <video id="mainPlayer" style="transform: scale(1) rotate(0deg); transition: transform 0.2s ease; width:100%; height:100%; object-fit:contain;">
@@ -277,53 +601,88 @@ function loadVideo(event) {
     undoStack = []; 
     redoStack = [];
 
-    // Configure Top Action Button
     const actionGroup = document.querySelector('.action-group');
     if (actionGroup) {
         actionGroup.classList.remove('hidden');
         actionGroup.style.display = 'flex';
     }
 
-    const exportBtn = document.querySelector('.export-btn-main');
-    if (exportBtn) {
-        exportBtn.innerText = "Export Video";
-        exportBtn.onclick = function() { openVideoExportEngineModal(); };
-    }
-
     setupVolumeAudioEngine();
 
     currentVideoElement.onloadedmetadata = function() {
         videoDurationSeconds = currentVideoElement.duration;
-        updateTimerUI();
+        if (typeof updateTimerUI === 'function') updateTimerUI();
         if (typeof generateVideoFrames === 'function') generateVideoFrames(videoURL);
     };
 
-    // Main Live Playback Hook
     currentVideoElement.ontimeupdate = function() {
-        updateTimerUI();
-        updatePlayheadPosition();
-        handleLiveVideoFade(currentVideoElement.currentTime, videoDurationSeconds);
-        syncLiveSubtitles(currentVideoElement.currentTime);
-        updateTimelineLayers(currentVideoElement.currentTime);
+        if (typeof updateTimerUI === 'function') updateTimerUI();
+        if (typeof updatePlayheadPosition === 'function') updatePlayheadPosition();
+        if (typeof handleLiveVideoFade === 'function') handleLiveVideoFade(currentVideoElement.currentTime, videoDurationSeconds);
+        if (typeof syncLiveSubtitles === 'function') syncLiveSubtitles(currentVideoElement.currentTime);
+        if (typeof updateTimelineLayers === 'function') updateTimelineLayers(currentVideoElement.currentTime);
     };
 
-    // Display Player Controls
     const playerControlsBox = document.getElementById('playerControlsBox');
     if (playerControlsBox) {
         playerControlsBox.classList.remove('hidden');
         playerControlsBox.style.cssText = "display: flex !important; visibility: visible !important; justify-content: center !important; gap: 10px !important; margin: 10px 0 !important;";
     }
 
-    // Display Timeline Tracks & Controls
-    showTimelineForVideo();
-    restoreVideoToolbar();
+    if (typeof showTimelineForVideo === 'function') showTimelineForVideo();
+    if (typeof restoreVideoToolbar === 'function') restoreVideoToolbar();
+}
+
+function initScreenResizer() {
+    const resizer = document.getElementById('studioScreenResizerBar');
+    if (!resizer) return;
+
+    let isResizing = false;
+
+    resizer.onmousedown = function(e) {
+        e.preventDefault();
+        isResizing = true;
+        document.body.style.cursor = 'row-resize';
+        document.body.style.userSelect = 'none';
+
+        function onMouseMove(ev) {
+            if (!isResizing) return;
+            const windowH = window.innerHeight;
+            const calculatedPercent = Math.max(30, Math.min(85, (ev.clientY / windowH) * 100));
+            currentStageHeightPercent = Math.round(calculatedPercent);
+            updateVideoCanvasDimensions();
+        }
+
+        function onMouseUp() {
+            isResizing = false;
+            document.body.style.cursor = 'default';
+            document.body.style.userSelect = 'auto';
+            document.removeEventListener('mousemove', onMouseMove);
+            document.removeEventListener('mouseup', onMouseUp);
+        }
+
+        document.addEventListener('mousemove', onMouseMove);
+        document.addEventListener('mouseup', onMouseUp);
+    };
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener("DOMContentLoaded", initScreenResizer);
+} else {
+    initScreenResizer();
 }
 
 function setupVolumeAudioEngine() {
-    if (!currentVideoElement) return;
+    if (!currentVideoElement || isAudioConnected) return;
     try {
-        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-        audioContext = new AudioContextClass();
+        if (!audioContext) {
+            const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+            audioContext = new AudioContextClass();
+        }
+        if (audioContext.state === 'suspended') {
+            audioContext.resume();
+        }
+        
         sourceNode = audioContext.createMediaElementSource(currentVideoElement);
         gainNode = audioContext.createGain();
         compressorNode = audioContext.createDynamicsCompressor();
@@ -332,8 +691,9 @@ function setupVolumeAudioEngine() {
         gainNode.connect(compressorNode);
         compressorNode.connect(audioContext.destination);
         gainNode.gain.setValueAtTime(currentVolumeLevel, audioContext.currentTime);
+        isAudioConnected = true;
     } catch(e) { 
-        console.log("Audio node bypass active"); 
+        console.warn("Audio Context routed or already connected:", e); 
     }
 }
 
@@ -342,19 +702,12 @@ function setupVolumeAudioEngine() {
 // ==========================================================================
 
 function updateTimelineLayers(currentTime) {
-    // 1. Text Layers Sync (Visible only between start and end timestamps)
     document.querySelectorAll('.live-text-box').forEach(el => {
         const startTime = parseFloat(el.dataset.start || 0);
         const endTime = parseFloat(el.dataset.end || videoDurationSeconds || 9999);
-        
-        if (currentTime >= startTime && currentTime <= endTime) {
-            el.style.display = 'block';
-        } else {
-            el.style.display = 'none';
-        }
+        el.style.display = (currentTime >= startTime && currentTime <= endTime) ? 'block' : 'none';
     });
 
-    // 2. PiP Layers Sync (Overlay media and internal video sync)
     document.querySelectorAll('.live-pip-object').forEach(el => {
         const startTime = parseFloat(el.dataset.start || 0);
         const endTime = parseFloat(el.dataset.end || videoDurationSeconds || 9999);
@@ -374,7 +727,6 @@ function updateTimelineLayers(currentTime) {
         }
     });
 
-    // 3. Background Music Audio Sync
     Object.keys(activeAudioNodes).forEach(id => {
         const node = activeAudioNodes[id];
         if (node && node.audio) {
@@ -384,101 +736,108 @@ function updateTimelineLayers(currentTime) {
 
             if (currentTime >= startTime && currentTime <= endTime) {
                 if (currentVideoElement && !currentVideoElement.paused) {
-                    if (node.audio.paused) node.audio.play().catch(() => {});
+                    if (node.audio.paused) {
+                        const targetAudioTime = (currentTime - startTime) % (node.audio.duration || 1);
+                        if (!isNaN(targetAudioTime)) node.audio.currentTime = targetAudioTime;
+                        node.audio.play().catch(() => {});
+                    }
                 } else {
                     if (!node.audio.paused) node.audio.pause();
                 }
             } else {
-                if (!node.audio.paused) {
-                    node.audio.pause();
-                }
+                if (!node.audio.paused) node.audio.pause();
             }
         }
     });
 }
 
 function updateLayerDuration(id, newWidth) {
-    const pixelsPerSecond = 12;
+    const pixelsPerSecond = 15;
     const duration = newWidth / pixelsPerSecond;
-    const element = document.getElementById(id.replace('track_', ''));
+    const cleanId = id.replace('track_', '');
+    const element = document.getElementById(cleanId);
     if (element) {
         element.dataset.end = duration.toFixed(2);
     }
 }
 
-// --------------------------------------------------------------------------
-// 📐 PRESET CANVAS RATIOS & CUSTOM CROP
-// --------------------------------------------------------------------------
+// ==========================================================================
+// 📐 INSTANT CANVAS RATIO & RESIZING CONTROLLER (FULL RESPONSIVE)
+// ==========================================================================
 
 function applyCanvasFrameRatio(ratioType) {
-    currentCanvasRatio = ratioType;
     const wrapper = document.getElementById('videoWrapper');
     if (!wrapper) return;
 
-    wrapper.style.transition = "all 0.3s ease";
-    wrapper.style.margin = "0 auto";
-    wrapper.style.width = "";
-    wrapper.style.height = "";
-    wrapper.style.aspectRatio = "";
-    wrapper.style.maxWidth = "";
-    wrapper.style.maxHeight = "";
+    wrapper.style.margin = "8px auto";
+    wrapper.style.display = "flex";
+    wrapper.style.alignItems = "center";
+    wrapper.style.justifyContent = "center";
+    wrapper.style.overflow = "hidden";
+    wrapper.style.transition = "all 0.2s ease";
 
-    if (currentVideoElement) {
-        currentVideoElement.style.clipPath = "none";
-        currentVideoElement.style.transform = "scale(1)";
-    }
+    wrapper.style.height = `${currentStageHeightPercent || 65}vh`;
+    wrapper.style.maxHeight = `${currentStageHeightPercent || 65}vh`;
 
-    switch(ratioType) {
-        case 'custom':
-            wrapper.style.width = "85%";
-            wrapper.style.aspectRatio = "16 / 9";
-            openCustomFreeCropModal();
-            break;
-        case '16-9':
-            wrapper.style.width = "85%";
-            wrapper.style.aspectRatio = "16 / 9";
-            break;
+    switch (ratioType) {
         case '9-16':
-            wrapper.style.width = "290px";
-            wrapper.style.height = "515px";
+            wrapper.style.width = "auto";
+            wrapper.style.aspectRatio = "9 / 16";
             break;
+
         case '1-1':
-            wrapper.style.width = "380px";
-            wrapper.style.height = "380px";
+            wrapper.style.width = "auto";
+            wrapper.style.aspectRatio = "1 / 1";
             break;
+
         case '4-5':
-            wrapper.style.width = "320px";
-            wrapper.style.height = "400px";
+            wrapper.style.width = "auto";
+            wrapper.style.aspectRatio = "4 / 5";
             break;
+
         case '4-3':
-            wrapper.style.width = "500px";
+            wrapper.style.width = "auto";
             wrapper.style.aspectRatio = "4 / 3";
             break;
+
         case '3-4':
-            wrapper.style.width = "330px";
+            wrapper.style.width = "auto";
             wrapper.style.aspectRatio = "3 / 4";
             break;
+
         case '21-9':
-            wrapper.style.width = "90%";
+            wrapper.style.width = "96%";
             wrapper.style.aspectRatio = "21 / 9";
             break;
+
         case '2-3':
-            wrapper.style.width = "300px";
+            wrapper.style.width = "auto";
             wrapper.style.aspectRatio = "2 / 3";
             break;
+
+        case '16-9':
+            wrapper.style.width = "auto";
+            wrapper.style.aspectRatio = "16 / 9";
+            break;
+
         case 'fit':
         default:
-            wrapper.style.width = "95%";
-            wrapper.style.aspectRatio = "16 / 9";
+            wrapper.style.width = "96%";
+            wrapper.style.aspectRatio = "unset";
             break;
     }
 
-    if (currentVideoElement && ratioType !== 'custom') {
-        currentVideoElement.style.width = "100%";
-        currentVideoElement.style.height = "100%";
-        currentVideoElement.style.objectFit = (ratioType === 'fit') ? "contain" : "cover"; 
+    const mediaElement = document.getElementById('mainPlayer') || document.getElementById('mainPhotoPlayer') || currentVideoElement;
+    if (mediaElement) {
+        mediaElement.style.width = "100%";
+        mediaElement.style.height = "100%";
+        mediaElement.style.objectFit = (ratioType === 'fit' ? 'contain' : 'cover');
     }
 }
+
+// ==========================================================================
+// 🛠️ S STUDIO - CUSTOM CROP & DYNAMIC TOOLBAR DISPATCHER (PART 2/4)
+// ==========================================================================
 
 function openCustomFreeCropModal() {
     const oldModal = document.getElementById('sStudioCustomCropModal');
@@ -531,30 +890,33 @@ function openCustomFreeCropModal() {
 }
 
 function updateLiveCustomCrop() {
-    if (!currentVideoElement) return;
+    const target = currentActivePIPLayer 
+        ? (currentActivePIPLayer.querySelector('video, img') || currentActivePIPLayer)
+        : (document.getElementById('mainPlayer') || currentVideoElement);
 
-    const top = document.getElementById('cropTop').value;
-    const bottom = document.getElementById('cropBottom').value;
-    const left = document.getElementById('cropLeft').value;
-    const right = document.getElementById('cropRight').value;
+    if (!target) return;
 
-    document.getElementById('topVal').innerText = top + "%";
-    document.getElementById('bottomVal').innerText = bottom + "%";
-    document.getElementById('leftVal').innerText = left + "%";
-    document.getElementById('rightVal').innerText = right + "%";
+    const top = document.getElementById('cropTop') ? document.getElementById('cropTop').value : 0;
+    const bottom = document.getElementById('cropBottom') ? document.getElementById('cropBottom').value : 0;
+    const left = document.getElementById('cropLeft') ? document.getElementById('cropLeft').value : 0;
+    const right = document.getElementById('cropRight') ? document.getElementById('cropRight').value : 0;
 
-    currentVideoElement.style.clipPath = `inset(${top}% ${right}% ${bottom}% ${left}%)`;
-    currentVideoElement.style.objectFit = "cover";
-    const totalCut = (parseInt(top) + parseInt(bottom) + parseInt(left) + parseInt(right)) / 4;
-    const scaleFactor = 1 + (totalCut / 50);
-    currentVideoElement.style.transform = `scale(${scaleFactor})`;
+    const topDisp = document.getElementById('topVal');
+    const bottomDisp = document.getElementById('bottomVal');
+    const leftDisp = document.getElementById('leftVal');
+    const rightDisp = document.getElementById('rightVal');
+
+    if (topDisp) topDisp.innerText = top + "%";
+    if (bottomDisp) bottomDisp.innerText = bottom + "%";
+    if (leftDisp) leftDisp.innerText = left + "%";
+    if (rightDisp) rightDisp.innerText = right + "%";
+
+    target.style.clipPath = `inset(${top}% ${right}% ${bottom}% ${left}%)`;
+    target.style.objectFit = "cover";
 }
-// ==========================================================================
-// 🛠️ S STUDIO - TOOLBAR ACTIONS, ADVANCED SPLIT & AREA BLUR (PART 2/4)
-// ==========================================================================
 
 function restoreVideoToolbar() {
-    const toolsContainer = document.querySelector('.tools-container');
+    const toolsContainer = document.querySelector('.tools-container') || document.querySelector('.bottom-toolbar');
     if (!toolsContainer) return;
 
     toolsContainer.innerHTML = `
@@ -562,7 +924,6 @@ function restoreVideoToolbar() {
         <button class="tool-btn" onclick="executeTool('Crop')" style="background:#222733; color:white; border:1px solid #333; padding:8px 12px; border-radius:6px; font-weight:bold; cursor:pointer;">⌗ Crop Preset</button>
         <button class="tool-btn" onclick="executeTool('Speed')" style="background:#222733; color:white; border:1px solid #333; padding:8px 12px; border-radius:6px; font-weight:bold; cursor:pointer;">⚡ Video Speed</button> 
         <button class="tool-btn" onclick="executeTool('Cutout')" style="background:rgba(235, 77, 75, 0.2); border:1px solid #eb4d4b; color:#ff7979; padding:8px 12px; border-radius:6px; font-weight:bold; cursor:pointer;">👤 Cutout</button>
-        <button class="tool-btn" onclick="executeTool('Fade')" style="background:rgba(155, 89, 182, 0.2); border:1px solid #9b59b6; color:#d2b4de; padding:8px 12px; border-radius:6px; font-weight:bold; cursor:pointer;">✨ Fade / Light</button>
         <button class="tool-btn" onclick="executeTool('Subtitles')" style="background:rgba(52, 152, 219, 0.2); border:1px solid #3498db; color:#85c1e9; padding:8px 12px; border-radius:6px; font-weight:bold; cursor:pointer;">💬 Subtitles</button>
         <button class="tool-btn" onclick="executeTool('Mosaic')" style="background:rgba(149, 165, 166, 0.2); border:1px solid #95a5a6; color:#bdc3c7; padding:8px 12px; border-radius:6px; font-weight:bold; cursor:pointer;">🧩 Mosaic</button>
         <button class="tool-btn" onclick="executeTool('Magnifier')" style="background:rgba(241, 196, 15, 0.2); border:1px solid #f1c40f; color:#f9e79f; padding:8px 12px; border-radius:6px; font-weight:bold; cursor:pointer;">🔍 Magnifier</button>
@@ -580,156 +941,112 @@ function restoreVideoToolbar() {
     `;
 }
 
-// --------------------------------------------------------------------------
-// 🛠️ CENTRAL TOOL ROUTER
-// --------------------------------------------------------------------------
 function executeTool(tool) {
     if (!currentVideoElement) {
-        currentVideoElement = document.getElementById('mainPhotoPlayer') || document.getElementById('mainPlayer');
+        currentVideoElement = document.getElementById('mainPlayer') || document.getElementById('mainPhotoPlayer');
     }
-
-    saveStateToHistory();
+    if (typeof saveStateToHistory === 'function') {
+        saveStateToHistory();
+    }
 
     switch(tool) {
-        case 'Split':
-            splitCurrentVideoClip();
+        case 'Cutout':
+        case 'Cut Out':
+        case 'Cut':
+            if (typeof openCutOutStudioMenu === 'function') openCutOutStudioMenu();
             break;
-        case 'Overlay':
-            openOverlayPlacementMenu();
-            break;
+
         case 'Mask':
-            openMaskStudioMenu();
+            if (typeof openMaskStudioMenu === 'function') openMaskStudioMenu();
             break;
-        case 'Zoom':
-            currentScale += 0.15;
-            if (currentVideoElement && currentVideoElement.id === 'mainPhotoPlayer') applyPhotoTransform();
-            else applyTransformations();
+
+        case 'Split': 
+            if (typeof splitCurrentVideoClip === 'function') splitCurrentVideoClip(); 
             break;
-        case 'Mosaic':
-            startAreaBlurSelection();
+
+        case 'Crop': 
+        case 'S Crop':
+            if (typeof openCropPresetsMenu === 'function') openCropPresetsMenu(); 
             break;
-        case 'Magnifier':
-            openMagnifierOptions();
+
+        case 'Speed': 
+            if (typeof openSpeedAdjustMenu === 'function') openSpeedAdjustMenu(); 
             break;
-        case 'ZoomOut':
-            if (currentScale > 0.3) {
-                currentScale -= 0.15;
-                if (currentVideoElement && currentVideoElement.id === 'mainPhotoPlayer') applyPhotoTransform();
-                else applyTransformations();
-            }
+
+        case 'Subtitles': 
+            if (typeof openSubtitlesMenu === 'function') openSubtitlesMenu(); 
             break;
-        case 'Fade':
-            openFadeEffectMenu();
+
+        case 'Mosaic': 
+            if (typeof startAreaBlurSelection === 'function') startAreaBlurSelection(); 
             break;
-        case 'Subtitles':
-            openSubtitlesMenu();
+
+        case 'Magnifier': 
+            if (typeof openMagnifierOptions === 'function') openMagnifierOptions(); 
             break;
-        case 'Opacity':
-            if (currentVideoElement) {
-                let currentOp = parseFloat(currentVideoElement.style.opacity || "1.0");
-                currentOp = currentOp <= 0.3 ? 1.0 : currentOp - 0.25;
-                currentVideoElement.style.opacity = currentOp.toString();
-            }
+
+        case 'Overlay': 
+            if (typeof openOverlayPlacementMenu === 'function') openOverlayPlacementMenu(); 
             break;
-        case 'Rotate':
-            currentRotation = (currentRotation + 90) % 360;
-            if (currentVideoElement && currentVideoElement.id === 'mainPhotoPlayer') applyPhotoTransform();
-            else applyTransformations();
+
+        case 'Opacity': 
+            if (typeof openOpacityControlMenu === 'function') openOpacityControlMenu(); 
             break;
-        case 'Crop':
-            openCropPresetsMenu();
+
+        case 'Filters': 
+            if (typeof openVideoFiltersMenu === 'function') openVideoFiltersMenu(); 
             break;
-        case 'Speed':
-            openSpeedAdjustMenu();
-            break;
-        case 'Fill':
-            if (currentVideoElement) {
-                currentVideoElement.style.width = "100%";
-                currentVideoElement.style.height = "100%";
-                currentVideoElement.style.objectFit = "contain";
-            }
-            break;
+
         case 'Chroma Key':
-            openChromaKeyMenu();
+        case 'BG Remover': 
+            if (typeof openBgRemovalStudio === 'function') openBgRemovalStudio(); 
             break;
-        case 'Filters':
-            if (currentVideoElement) {
-                currentVideoElement.style.filter = "contrast(1.2) saturate(1.3) hue-rotate(8deg)";
+
+        case 'Stickers':
+        case 'Elements': 
+            if (typeof openElementsLibraryModal === 'function') openElementsLibraryModal(); 
+            break;
+
+        case 'Fill':
+            if (currentVideoElement) { 
+                currentVideoElement.style.width = "100%"; 
+                currentVideoElement.style.height = "100%"; 
+                currentVideoElement.style.objectFit = "contain"; 
             }
             break;
-        case 'Stickers':
-            triggerDirectPIPSelection();
+
+        case 'Zoom': 
+            currentScale = (currentScale || 1.0) + 0.15; 
+            if (typeof applyTransformations === 'function') applyTransformations(); 
             break;
-        case 'Ask AI':
-            askAiAssistant();
+
+        case 'ZoomOut': 
+            if ((currentScale || 1.0) > 0.3) currentScale -= 0.15; 
+            if (typeof applyTransformations === 'function') applyTransformations(); 
             break;
-        case 'Delete':
-            if (confirm("Reset current workspace?")) location.reload();
+
+        case 'Rotate': 
+            currentRotation = ((currentRotation || 0) + 90) % 360; 
+            if (typeof applyTransformations === 'function') applyTransformations(); 
             break;
+
+        case 'Ask AI': 
+            const aiModal = document.getElementById('askAiModal');
+            if (aiModal) aiModal.style.display = 'flex';
+            break;
+
+        case 'Delete': 
+            if (confirm("Reset current workspace?")) location.reload(); 
+            break;
+
+        default:
+            console.warn("Tool executed:", tool);
     }
 }
+// ==========================================================================
+// ⚡ 4. PLAYBACK SPEED CONTROLLER
+// ==========================================================================
 
-// --------------------------------------------------------------------------
-// 📐 CROP PRESETS MENU
-// --------------------------------------------------------------------------
-function openCropPresetsMenu() {
-    const oldCropMenu = document.getElementById('sStudioCropMenu');
-    if (oldCropMenu) { oldCropMenu.remove(); return; }
-
-    const cropMenu = document.createElement('div');
-    cropMenu.id = 'sStudioCropMenu';
-    cropMenu.style.cssText = `
-        position: fixed !important;
-        top: 50% !important;
-        left: 50% !important;
-        transform: translate(-50%, -50%) !important;
-        background: #161920 !important;
-        border: 2px solid #6c5ce7 !important;
-        padding: 16px !important;
-        border-radius: 12px !important;
-        display: flex !important;
-        flex-direction: column !important;
-        gap: 8px !important;
-        z-index: 100000 !important;
-        width: 320px !important;
-        max-height: 85vh !important;
-        overflow-y: auto !important;
-        font-family: sans-serif !important;
-        color: white !important;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.8) !important;
-    `;
-
-    cropMenu.innerHTML = `
-        <div style="font-size:12px; color:#6c5ce7; font-weight:bold; border-bottom:1px solid #2f3542; padding-bottom:6px; display:flex; justify-content:space-between; align-items:center;">
-            <span>📐 S STUDIO CROP PRESETS</span>
-            <span onclick="this.parentElement.parentElement.remove()" style="cursor:pointer; font-size:18px; color:#a4b0be; font-weight:bold;">&times;</span>
-        </div>
-        <button class="crop-opt" data-ratio="custom" style="background:#10ac84; color:#fff; border:none; padding:8px; border-radius:6px; font-weight:bold; cursor:pointer; text-align:left; font-size:11px;">✂️ Custom Free Crop</button>
-        <button class="crop-opt" data-ratio="16-9" style="background:#222733; color:#fff; border:1px solid #333; padding:8px; border-radius:6px; cursor:pointer; text-align:left; font-size:11px;">📺 16:9 (YouTube / Landscape)</button>
-        <button class="crop-opt" data-ratio="9-16" style="background:#222733; color:#fff; border:1px solid #333; padding:8px; border-radius:6px; cursor:pointer; text-align:left; font-size:11px;">📱 9:16 (Reels / Shorts / TikTok)</button>
-        <button class="crop-opt" data-ratio="1-1" style="background:#222733; color:#fff; border:1px solid #333; padding:8px; border-radius:6px; cursor:pointer; text-align:left; font-size:11px;">🔲 1:1 (Instagram Square)</button>
-        <button class="crop-opt" data-ratio="4-5" style="background:#222733; color:#fff; border:1px solid #333; padding:8px; border-radius:6px; cursor:pointer; text-align:left; font-size:11px;">📸 4:5 (Instagram Portrait)</button>
-        <button class="crop-opt" data-ratio="4-3" style="background:#222733; color:#fff; border:1px solid #333; padding:8px; border-radius:6px; cursor:pointer; text-align:left; font-size:11px;">📽️ 4:3 (Classic Standard)</button>
-        <button class="crop-opt" data-ratio="3-4" style="background:#222733; color:#fff; border:1px solid #333; padding:8px; border-radius:6px; cursor:pointer; text-align:left; font-size:11px;">📱 3:4 (Vertical Classic)</button>
-        <button class="crop-opt" data-ratio="21-9" style="background:#222733; color:#fff; border:1px solid #333; padding:8px; border-radius:6px; cursor:pointer; text-align:left; font-size:11px;">🎬 21:9 (Cinematic Ultrawide)</button>
-        <button class="crop-opt" data-ratio="2-3" style="background:#222733; color:#fff; border:1px solid #333; padding:8px; border-radius:6px; cursor:pointer; text-align:left; font-size:11px;">📌 2:3 (Pinterest)</button>
-        <button class="crop-opt" data-ratio="fit" style="background:#6c5ce7; color:#fff; border:none; padding:8px; border-radius:6px; font-weight:bold; cursor:pointer; text-align:center; font-size:11px; margin-top:4px;">🔄 Reset / Fit Original</button>
-    `;
-
-    cropMenu.querySelectorAll('.crop-opt').forEach(btn => {
-        btn.onclick = function() {
-            const selectedRatio = btn.getAttribute('data-ratio');
-            applyCanvasFrameRatio(selectedRatio);
-            cropMenu.remove();
-        };
-    });
-
-    document.body.appendChild(cropMenu);
-}
-
-// --------------------------------------------------------------------------
-// ⚡ PLAYBACK SPEED MODAL
-// --------------------------------------------------------------------------
 function openSpeedAdjustMenu() {
     const oldSpeedMenu = document.getElementById('sStudioSpeedMenu');
     if (oldSpeedMenu) { oldSpeedMenu.remove(); return; }
@@ -808,23 +1125,1098 @@ function openSpeedAdjustMenu() {
     document.body.appendChild(speedMenu);
 }
 
-// --------------------------------------------------------------------------
+// ==========================================================================
+// 🤖 5. ASK AI ASSISTANT ENGINE
+// ==========================================================================
+
+function handleAiUserSubmit(event) {
+    event.preventDefault();
+    const input = document.getElementById('aiUserInput');
+    if (!input) return;
+    const query = input.value.trim();
+    if (!query) return;
+
+    appendChatMessage('user', query);
+    input.value = '';
+
+    setTimeout(() => {
+        const reply = generateAiStudioResponse(query.toLowerCase());
+        appendChatMessage('bot', reply);
+    }, 300);
+}
+
+function askPresetQuestion(text) {
+    const input = document.getElementById('aiUserInput');
+    if (input) {
+        input.value = text;
+        handleAiUserSubmit(new Event('submit'));
+    }
+}
+
+function appendChatMessage(sender, text) {
+    const chatBox = document.getElementById('aiChatBox');
+    if (!chatBox) return;
+
+    const msgDiv = document.createElement('div');
+    msgDiv.style.display = 'flex';
+    msgDiv.style.gap = '8px';
+    msgDiv.style.alignItems = 'flex-start';
+
+    if (sender === 'user') {
+        msgDiv.style.justifyContent = 'flex-end';
+        msgDiv.innerHTML = `
+            <div style="background: #6c5ce7; color: #ffffff; padding: 8px 12px; border-radius: 10px 0 10px 10px; font-size: 13px; max-width: 80%;">
+                ${text}
+            </div>
+            <span style="font-size: 16px;">👤</span>
+        `;
+    } else {
+        msgDiv.innerHTML = `
+            <span style="font-size: 18px;">🤖</span>
+            <div style="background: #161a26; border: 1px solid #232b3e; padding: 10px 12px; border-radius: 0 10px 10px 10px; color: #cbd5e1; font-size: 13px; line-height: 1.5; max-width: 85%;">
+                ${text}
+            </div>
+        `;
+    }
+
+    chatBox.appendChild(msgDiv);
+    chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+function generateAiStudioResponse(query) {
+    if (query.includes('crop')) {
+        return "<strong>How to Crop:</strong> Click <strong>Crop Preset</strong> in the bottom toolbar to choose 16:9, 9:16 (Shorts), or 1:1 (Instagram).";
+    }
+    if (query.includes('export') || query.includes('save') || query.includes('watermark')) {
+        return "<strong>Exporting:</strong> Click the <strong>Export Video</strong> button at the top right to download watermark-free files up to 1440p 2K.";
+    }
+    if (query.includes('subtitle') || query.includes('caption')) {
+        return "<strong>Subtitles:</strong> Click <strong>Subtitles</strong> on the toolbar to type and insert captions directly on your canvas.";
+    }
+    if (query.includes('chroma') || query.includes('green screen')) {
+        return "<strong>Chroma Key:</strong> Click <strong>Chroma Key</strong> to blend and remove background screens instantly.";
+    }
+    if (query.includes('split') || query.includes('cut')) {
+        return "<strong>Split Clip:</strong> Move the playhead on the timeline and click <strong>Split</strong> to anchor cut markers.";
+    }
+    return "<strong>Helpful Tip:</strong> All editing utilities are ready on your bottom toolbar. If you need support, email us at <strong>sriramgroups.help@gmail.com</strong>.";
+}
+
+// ==========================================================================
+// 🔐 S STUDIO LIVE SUPABASE AUTHENTICATION SYSTEM
+// ==========================================================================
+
+const SUPABASE_PROJECT_URL = "https://yhyumuevjcjkdgjzezbz.supabase.co";
+const SUPABASE_ANON_PUBLIC_KEY = "sb_publishable_8GNKtzXAG3pFNxq2kARa8Q_jqW5DgLC";
+
+const supabaseAuthClient = (window.supabase && typeof window.supabase.createClient === 'function')
+    ? window.supabase.createClient(SUPABASE_PROJECT_URL, SUPABASE_ANON_PUBLIC_KEY)
+    : null;
+
+let currentAuthSessionUser = {
+    name: '',
+    email: ''
+};
+
+function toggleAuthModal(show) {
+    if (typeof toggleModal === 'function') {
+        toggleModal('authModal', show);
+    } else {
+        const modal = document.getElementById('authModal');
+        if (modal) modal.style.display = show ? 'flex' : 'none';
+    }
+    if (show) switchAuthView('login');
+}
+
+function switchAuthView(view) {
+    const loginForm = document.getElementById('loginForm');
+    const signupForm = document.getElementById('signupForm');
+    const setPasswordForm = document.getElementById('setPasswordForm');
+    const forgotForm = document.getElementById('forgotForm');
+    const sub = document.getElementById('authSubtitle');
+
+    if (loginForm) loginForm.style.display = 'none';
+    if (signupForm) signupForm.style.display = 'none';
+    if (setPasswordForm) setPasswordForm.style.display = 'none';
+    if (forgotForm) forgotForm.style.display = 'none';
+
+    if (view === 'login') {
+        if (loginForm) loginForm.style.display = 'block';
+        if (sub) sub.innerText = "Access your free workspace and cloud projects";
+    } else if (view === 'signup') {
+        if (signupForm) signupForm.style.display = 'block';
+        const otpGroup = document.getElementById('otpInputGroup');
+        const sendBtn = document.getElementById('sendOtpBtn');
+        if (otpGroup) otpGroup.style.display = 'none';
+        if (sendBtn) sendBtn.style.display = 'block';
+        if (sub) sub.innerText = "Create your free lifetime account";
+    } else if (view === 'setPassword') {
+        if (setPasswordForm) setPasswordForm.style.display = 'block';
+        if (sub) sub.innerText = "Set a secure password for your account";
+    } else if (view === 'forgot') {
+        if (forgotForm) forgotForm.style.display = 'block';
+        if (sub) sub.innerText = "Reset your account password";
+    }
+}
+
+function togglePasswordVisibility(fieldId, el) {
+    const input = document.getElementById(fieldId);
+    if (!input) return;
+    if (input.type === 'password') {
+        input.type = 'text';
+        if (el) el.innerText = 'Hide';
+    } else {
+        input.type = 'password';
+        if (el) el.innerText = 'Show';
+    }
+}
+
+async function handleSendOtp(event) {
+    event.preventDefault();
+    if (!supabaseAuthClient) return;
+
+    const nameInput = document.getElementById('signupName');
+    const emailInput = document.getElementById('signupEmail');
+    const name = nameInput ? nameInput.value.trim() : '';
+    const email = emailInput ? emailInput.value.trim() : '';
+
+    if (!email || !name) return;
+
+    currentAuthSessionUser.name = name;
+    currentAuthSessionUser.email = email;
+
+    const sendBtn = document.getElementById('sendOtpBtn');
+    if (sendBtn) {
+        sendBtn.innerText = "Sending OTP...";
+        sendBtn.disabled = true;
+    }
+
+    try {
+        const { error } = await supabaseAuthClient.auth.signInWithOtp({
+            email: email,
+            options: {
+                data: { full_name: name },
+                shouldCreateUser: true
+            }
+        });
+
+        if (error) {
+            if (sendBtn) {
+                sendBtn.innerText = "Send Verification OTP";
+                sendBtn.disabled = false;
+            }
+        } else {
+            const otpGroup = document.getElementById('otpInputGroup');
+            if (otpGroup) otpGroup.style.display = 'block';
+            if (sendBtn) sendBtn.style.display = 'none';
+        }
+    } catch (err) {
+        if (sendBtn) {
+            sendBtn.innerText = "Send Verification OTP";
+            sendBtn.disabled = false;
+        }
+    }
+}
+
+async function verifyOtpCode() {
+    if (!supabaseAuthClient) return;
+    const otpInput = document.getElementById('userEnteredOtp');
+    const userOtp = otpInput ? otpInput.value.trim() : '';
+    const email = currentAuthSessionUser.email;
+
+    if (!userOtp || userOtp.length < 6) return;
+
+    try {
+        const { error } = await supabaseAuthClient.auth.verifyOtp({
+            email: email,
+            token: userOtp,
+            type: 'email'
+        });
+
+        if (!error) {
+            switchAuthView('setPassword');
+        }
+    } catch (err) {
+        console.error("OTP Verification Error:", err);
+    }
+}
+
+async function handleFinalSignup(event) {
+    event.preventDefault();
+    if (!supabaseAuthClient) return;
+    const passInput = document.getElementById('newPassword');
+    const confirmPassInput = document.getElementById('confirmPassword');
+    const pass = passInput ? passInput.value : '';
+    const confirmPass = confirmPassInput ? confirmPassInput.value : '';
+
+    if (pass.length < 6 || pass !== confirmPass) return;
+
+    try {
+        const { error } = await supabaseAuthClient.auth.updateUser({
+            password: pass
+        });
+
+        if (!error) {
+            const userName = currentAuthSessionUser.name || "Creator";
+            updateNavbarLoggedInState(userName);
+            toggleAuthModal(false);
+        }
+    } catch (err) {
+        console.error("Signup final error:", err);
+    }
+}
+
+async function handleLoginSubmit(event) {
+    event.preventDefault();
+    if (!supabaseAuthClient) return;
+    const emailInput = document.getElementById('loginEmail');
+    const passInput = document.getElementById('loginPassword');
+    const email = emailInput ? emailInput.value.trim() : '';
+    const pass = passInput ? passInput.value : '';
+
+    try {
+        const { data, error } = await supabaseAuthClient.auth.signInWithPassword({
+            email: email,
+            password: pass
+        });
+
+        if (!error && data) {
+            const userName = data.user?.user_metadata?.full_name || email.split('@')[0];
+            updateNavbarLoggedInState(userName);
+            toggleAuthModal(false);
+        }
+    } catch (err) {
+        console.error("Login Error:", err);
+    }
+}
+
+async function handleForgotPassword(event) {
+    event.preventDefault();
+    if (!supabaseAuthClient) return;
+    const emailInput = document.getElementById('forgotEmail');
+    const email = emailInput ? emailInput.value.trim() : '';
+
+    if (!email) return;
+
+    try {
+        const { error } = await supabaseAuthClient.auth.resetPasswordForEmail(email);
+        if (!error) {
+            switchAuthView('login');
+        }
+    } catch (err) {
+        console.error("Reset Password Error:", err);
+    }
+}
+
+function updateNavbarLoggedInState(userName) {
+    const authBtn = document.getElementById('authNavBtn');
+    if (authBtn) {
+        authBtn.innerHTML = `👤 ${userName}`;
+        authBtn.style.color = '#00f2fe';
+        authBtn.style.borderColor = '#00f2fe';
+    }
+}
+
+window.addEventListener('DOMContentLoaded', async () => {
+    if (!supabaseAuthClient) return;
+    try {
+        const { data } = await supabaseAuthClient.auth.getSession();
+        if (data && data.session && data.session.user) {
+            const name = data.session.user.user_metadata?.full_name || data.session.user.email.split('@')[0];
+            updateNavbarLoggedInState(name);
+        }
+    } catch (e) {}
+});
+
+// ==========================================================================
+// 📺 PRESENTATION MODE ENGINE
+// ==========================================================================
+
+let originalVideoParent = null;
+
+function launchPresentationMode() {
+    const videoElement = document.querySelector('#videoWrapper video') || document.querySelector('#videoWrapper canvas');
+    const overlay = document.getElementById('presentationOverlay');
+    const presContainer = document.getElementById('presentationVideoContainer');
+
+    if (!videoElement) return;
+
+    originalVideoParent = videoElement.parentElement;
+    if (presContainer) {
+        presContainer.innerHTML = '';
+        presContainer.appendChild(videoElement);
+    }
+
+    videoElement.style.maxWidth = '100%';
+    videoElement.style.maxHeight = '100%';
+    videoElement.style.objectFit = 'contain';
+
+    if (overlay) overlay.style.display = 'flex';
+
+    if (typeof videoElement.play === 'function') {
+        videoElement.play().catch(() => {});
+        const playBtn = document.getElementById('presPlayBtn');
+        if (playBtn) playBtn.innerText = 'Pause';
+    }
+}
+
+function closePresentationMode() {
+    const overlay = document.getElementById('presentationOverlay');
+    const presContainer = document.getElementById('presentationVideoContainer');
+    const videoElement = presContainer ? (presContainer.querySelector('video') || presContainer.querySelector('canvas')) : null;
+
+    if (videoElement && originalVideoParent) {
+        originalVideoParent.appendChild(videoElement);
+    }
+
+    if (overlay) overlay.style.display = 'none';
+}
+
+window.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape' || event.key === 'Esc') {
+        const overlay = document.getElementById('presentationOverlay');
+        if (overlay && overlay.style.display === 'flex') {
+            closePresentationMode();
+        }
+    }
+});
+
+// ==========================================================================
+// 💬 S STUDIO SUBTITLES ENGINE
+// ==========================================================================
+
+function openSubtitlesMenu() {
+    const oldModal = document.getElementById('sStudioSubtitlesModal');
+    if (oldModal) { oldModal.remove(); return; }
+
+    const modal = document.createElement('div');
+    modal.id = 'sStudioSubtitlesModal';
+    modal.style.cssText = `
+        position: fixed !important;
+        top: 50% !important;
+        left: 50% !important;
+        transform: translate(-50%, -50%) !important;
+        background: #14171f !important;
+        border: 2px solid #6c5ce7 !important;
+        padding: 18px !important;
+        border-radius: 14px !important;
+        z-index: 100000 !important;
+        width: 380px !important;
+        max-height: 85vh !important;
+        overflow-y: auto !important;
+        color: white !important;
+        font-family: sans-serif !important;
+        box-shadow: 0 10px 45px rgba(0,0,0,0.9) !important;
+    `;
+
+    modal.innerHTML = `
+        <div style="font-size: 13px; color: #a8a5ff; font-weight: bold; border-bottom: 1px solid #2f3542; padding-bottom: 6px; display: flex; justify-content: space-between; align-items: center;">
+            <span>💬 SUBTITLES & AI CAPTION STUDIO</span>
+            <span onclick="this.parentElement.parentElement.remove()" style="cursor: pointer; font-size: 18px; color: #a4b0be;">&times;</span>
+        </div>
+
+        <div style="margin-top: 10px; background: rgba(108, 92, 231, 0.12); border: 1px solid #6c5ce7; padding: 12px; border-radius: 8px; text-align: center;">
+            <div id="aiSubLoadingBox" style="display: none; margin-bottom: 6px;">
+                <div style="display: inline-block; width: 20px; height: 20px; border: 3px solid #6c5ce7; border-top-color: #00f2fe; border-radius: 50%; animation: spin 0.8s linear infinite;"></div>
+                <div style="font-size: 11px; color: #00f2fe; margin-top: 4px; font-weight: bold;">Generating AI Subtitles...</div>
+            </div>
+            <button id="btnStartAiSub" onclick="triggerAutoAISubtitleGeneration()" style="width: 100%; background: linear-gradient(135deg, #6c5ce7, #00f2fe); color: black; border: none; padding: 9px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 12px; display: flex; align-items: center; justify-content: center; gap: 6px;">
+                <span>🤖</span> Generate Auto AI Subtitles
+            </button>
+        </div>
+
+        <div style="margin-top: 10px; background: #1c202a; padding: 12px; border-radius: 8px; border: 1px solid #2f3542;">
+            <label style="font-size: 11px; color: #00f2fe; font-weight: bold;">✍️ Add Custom Subtitle:</label>
+            <textarea id="customSubText" placeholder="Type subtitle text here..." style="width: 100%; height: 50px; background: #12141a; border: 1px solid #444; color: white; padding: 6px; border-radius: 4px; font-size: 11px; margin-top: 4px; box-sizing: border-box; resize: none;"></textarea>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1.5fr; gap: 6px; margin-top: 8px; align-items: center;">
+                <div>
+                    <label style="font-size: 9px; color: #a4b0be;">Text Color:</label>
+                    <input type="color" id="customSubColor" value="#ffffff" style="width: 100%; height: 26px; border: none; border-radius: 4px; cursor: pointer; background: transparent;">
+                </div>
+                <div>
+                    <label style="font-size: 9px; color: #a4b0be;">BG Color:</label>
+                    <input type="color" id="customSubBgColor" value="#000000" style="width: 100%; height: 26px; border: none; border-radius: 4px; cursor: pointer; background: transparent;">
+                </div>
+                <div>
+                    <label style="font-size: 9px; color: #a4b0be;">Font Style:</label>
+                    <select id="customSubFont" style="width: 100%; height: 26px; background: #12141a; color: white; border: 1px solid #444; border-radius: 4px; font-size: 10px; padding: 2px;">
+                        <option value="Arial, sans-serif">Standard Arial</option>
+                        <option value="'Impact', sans-serif">Bold Impact</option>
+                        <option value="'Courier New', monospace">Typewriter</option>
+                        <option value="'Trebuchet MS', sans-serif">Modern Clean</option>
+                    </select>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 6px; margin-top: 8px;">
+                <div style="width: 50%;">
+                    <label style="font-size: 9px; color: #a4b0be;">Start (Seconds):</label>
+                    <input type="number" id="customSubStart" value="0" step="0.5" style="width: 100%; background: #12141a; border: 1px solid #444; color: white; padding: 4px; border-radius: 4px; font-size: 11px; box-sizing: border-box;">
+                </div>
+                <div style="width: 50%;">
+                    <label style="font-size: 9px; color: #a4b0be;">End (Seconds):</label>
+                    <input type="number" id="customSubEnd" value="4" step="0.5" style="width: 100%; background: #12141a; border: 1px solid #444; color: white; padding: 4px; border-radius: 4px; font-size: 11px; box-sizing: border-box;">
+                </div>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; gap: 8px; margin-top: 10px;">
+                <button onclick="resetCustomSubtitleInputs()" style="width: 48%; background: #2f3542; color: #a4b0be; border: 1px solid #475569; padding: 7px; border-radius: 5px; font-weight: bold; cursor: pointer; font-size: 11px;">
+                    🔄 Reset
+                </button>
+                <button onclick="submitCustomSubtitle()" style="width: 48%; background: #10ac84; color: white; border: none; padding: 7px; border-radius: 5px; font-weight: bold; cursor: pointer; font-size: 11px;">
+                    Done
+                </button>
+            </div>
+        </div>
+
+        <div style="margin-top: 10px; background: #1c202a; padding: 10px; border-radius: 8px; border: 1px solid #2f3542;">
+            <label style="font-size: 11px; color: #ff9f43; font-weight: bold;">📂 Import Subtitle / Script File:</label>
+            <input type="file" id="subFileInputDirect" accept=".srt,.vtt,.txt" onchange="importSubtitleScriptFile(event)" style="display: none;">
+            <button onclick="document.getElementById('subFileInputDirect').click()" style="width: 100%; background: #ff9f43; color: black; border: none; padding: 8px; border-radius: 5px; font-weight: bold; cursor: pointer; font-size: 11px; margin-top: 5px;">
+                Choose File (.SRT / .VTT / .TXT)
+            </button>
+        </div>
+
+        <div style="display: flex; gap: 6px; margin-top: 10px;">
+            <button onclick="clearAllSubtitleLayers()" style="width: 100%; background: rgba(255, 71, 87, 0.15); color: #ff4757; border: 1px solid #ff4757; padding: 7px; border-radius: 5px; font-size: 11px; cursor: pointer; font-weight: bold;">
+                🗑️ Clear All Subtitles
+            </button>
+        </div>
+    `;
+
+    document.body.appendChild(modal);
+}
+
+function triggerAutoAISubtitleGeneration() {
+    let video = currentVideoElement 
+        || document.getElementById('mainPlayer') 
+        || document.querySelector('#videoWrapper video')
+        || document.getElementById('mainPhotoPlayer');
+
+    const loader = document.getElementById('aiSubLoadingBox');
+    const startBtn = document.getElementById('btnStartAiSub');
+    if (loader) loader.style.display = 'block';
+    if (startBtn) startBtn.style.display = 'none';
+
+    let duration = (video && video.duration && !isNaN(video.duration) && video.duration > 0) 
+        ? video.duration 
+        : (videoDurationSeconds || 16);
+
+    setTimeout(() => {
+        const autoSentences = [
+            "Welcome to S Studio",
+            "Auto AI Subtitles Generated",
+            "Click to edit, zoom or style text",
+            "Create stunning videos easily"
+        ];
+
+        const step = Math.max(2.5, duration / autoSentences.length);
+        let currentStart = 0;
+
+        autoSentences.forEach(sentence => {
+            const currentEnd = Math.min(duration, currentStart + step);
+            insertConfiguredSubtitle(
+                sentence, 
+                parseFloat(currentStart.toFixed(1)), 
+                parseFloat(currentEnd.toFixed(1)), 
+                "#ffffff", 
+                "rgba(0, 0, 0, 0.75)", 
+                "Arial, sans-serif"
+            );
+            currentStart += step;
+        });
+
+        if (loader) loader.style.display = 'none';
+        const modal = document.getElementById('sStudioSubtitlesModal');
+        if (modal) modal.remove();
+    }, 800);
+}
+
+function submitCustomSubtitle() {
+    const text = document.getElementById('customSubText').value.trim();
+    const color = document.getElementById('customSubColor').value;
+    const bgColor = document.getElementById('customSubBgColor').value + "cc";
+    const font = document.getElementById('customSubFont').value;
+    const start = parseFloat(document.getElementById('customSubStart').value || 0);
+    const end = parseFloat(document.getElementById('customSubEnd').value || (start + 4));
+
+    if (!text) return;
+
+    insertConfiguredSubtitle(text, start, end, color, bgColor, font);
+    resetCustomSubtitleInputs();
+}
+
+function resetCustomSubtitleInputs() {
+    const textInput = document.getElementById('customSubText');
+    if (textInput) textInput.value = "";
+    const colorInput = document.getElementById('customSubColor');
+    if (colorInput) colorInput.value = "#ffffff";
+    const bgInput = document.getElementById('customSubBgColor');
+    if (bgInput) bgInput.value = "#000000";
+    const fontInput = document.getElementById('customSubFont');
+    if (fontInput) fontInput.value = "Arial, sans-serif";
+}
+
+function importSubtitleScriptFile(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const text = e.target.result;
+        const cleanLines = text.split(/\r?\n/).filter(line => line.trim() !== '' && !/^\d+$/.test(line) && !line.includes('-->'));
+        
+        let cursorTime = 0;
+        cleanLines.forEach(line => {
+            insertConfiguredSubtitle(line.trim(), cursorTime, cursorTime + 3.5, "#ffffff", "rgba(0,0,0,0.8)", "Arial, sans-serif");
+            cursorTime += 4;
+        });
+
+        const modal = document.getElementById('sStudioSubtitlesModal');
+        if (modal) modal.remove();
+    };
+    reader.readAsText(file);
+}
+
+function insertConfiguredSubtitle(text, startSec, endSec, textColor, bgColor, fontFamily) {
+    let videoWrapper = document.getElementById('videoWrapper') || document.querySelector('.video-container') || document.body;
+    if (!videoWrapper) return;
+
+    const subId = 'sub_' + Date.now() + '_' + Math.floor(Math.random() * 100);
+
+    const subNode = document.createElement('div');
+    subNode.id = subId;
+    subNode.className = 'live-text-box live-subtitle-box';
+    subNode.dataset.start = startSec.toString();
+    subNode.dataset.end = endSec.toString();
+
+    subNode.style.cssText = `
+        position: absolute;
+        bottom: 12%;
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 6px 14px;
+        border-radius: 6px;
+        font-size: 18px;
+        font-weight: bold;
+        color: ${textColor || '#ffffff'};
+        background: ${bgColor || 'rgba(0, 0, 0, 0.75)'};
+        font-family: ${fontFamily || 'Arial, sans-serif'};
+        text-align: center;
+        z-index: 200;
+        cursor: move;
+        white-space: nowrap;
+        user-select: none;
+        border: 2px dashed transparent;
+        box-sizing: border-box;
+    `;
+
+    subNode.innerHTML = `<span class="sub-text-label">${text}</span>`;
+
+    subNode.onclick = function(e) {
+        e.stopPropagation();
+        openInteractiveSubtitleFloatingBar(subNode);
+    };
+
+    if (typeof makeElementDraggable === 'function') {
+        makeElementDraggable(subNode);
+    }
+    videoWrapper.appendChild(subNode);
+
+    const textTrack = document.getElementById('textTrackBlock') || document.getElementById('frameTimelineTrack');
+    if (textTrack) {
+        const block = document.createElement('div');
+        block.id = 'track_' + subId;
+        block.style.cssText = `
+            background: #6c5ce7 !important;
+            color: white !important;
+            padding: 4px 8px !important;
+            border-radius: 6px !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            margin-top: 4px !important;
+            height: 32px !important;
+            font-family: sans-serif !important;
+            cursor: move !important;
+            user-select: none !important;
+            z-index: 10;
+        `;
+        block.innerHTML = `
+            <span style="font-size:11px; font-weight:bold; overflow:hidden; text-overflow:ellipsis; max-width:90px; pointer-events:none;">💬 ${text}</span>
+            <div class="stretch-handle" style="position:absolute; right:0; top:0; width:14px; height:100%; background:#4834d4; cursor:e-resize; border-radius:0 5px 5px 0;" title="Drag to resize"></div>
+        `;
+        block.onclick = function(e) {
+            e.stopPropagation();
+            subNode.click();
+        };
+        textTrack.appendChild(block);
+        if (typeof attachTimelineDragAndStretch === 'function') {
+            attachTimelineDragAndStretch(block, subNode, endSec - startSec);
+        }
+    }
+}
+
+function openInteractiveSubtitleFloatingBar(subNode) {
+    const oldBar = document.getElementById('sStudioSubFloatingBar');
+    if (oldBar) oldBar.remove();
+
+    const bar = document.createElement('div');
+    bar.id = 'sStudioSubFloatingBar';
+    bar.style.cssText = `
+        position: fixed;
+        bottom: 75px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #161920;
+        border: 2px solid #6c5ce7;
+        padding: 6px 12px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        z-index: 2147483647;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.85);
+        color: white;
+        font-family: sans-serif;
+    `;
+
+    const label = subNode.querySelector('.sub-text-label');
+
+    bar.innerHTML = `
+        <span style="font-size: 11px; font-weight: bold; color: #a8a5ff;">Edit Subtitle:</span>
+        <input type="text" id="floatingSubInput" value="${label ? label.innerText : ''}" style="background: #222733; border: 1px solid #444; color: white; padding: 4px 8px; border-radius: 4px; font-size: 11px; width: 140px;">
+        <button id="btnDeleteSub" style="background: #ff4757; color: white; border: none; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; cursor: pointer;">Delete</button>
+        <span onclick="this.parentElement.remove()" style="cursor: pointer; font-size: 14px; color: #a4b0be; margin-left: 4px;">✕</span>
+    `;
+
+    const input = bar.querySelector('#floatingSubInput');
+    input.oninput = function() {
+        if (label) label.innerText = this.value;
+        const trackSpan = document.querySelector(`#track_${subNode.id} span`);
+        if (trackSpan) trackSpan.innerText = "💬 " + this.value;
+    };
+
+    bar.querySelector('#btnDeleteSub').onclick = function() {
+        subNode.remove();
+        const trackBlock = document.getElementById('track_' + subNode.id);
+        if (trackBlock) trackBlock.remove();
+        bar.remove();
+    };
+
+    document.body.appendChild(bar);
+}
+
+function clearAllSubtitleLayers() {
+    document.querySelectorAll('.live-subtitle-box').forEach(el => el.remove());
+    document.querySelectorAll('[id^="track_sub_"]').forEach(el => el.remove());
+    const modal = document.getElementById('sStudioSubtitlesModal');
+    if (modal) modal.remove();
+}
+
+// ==========================================================================
+// 💬 5. FLOATING INTERACTIVE SUBTITLE EDITOR BAR
+// ==========================================================================
+
+function openInteractiveSubtitleFloatingBar(subNode) {
+    activeSubtitleElement = subNode;
+
+    document.querySelectorAll('.live-subtitle-box').forEach(s => s.style.border = "2px dashed transparent");
+    subNode.style.border = "2px dashed #00f2fe";
+
+    const oldBar = document.getElementById('sStudioLiveSubEditorBar');
+    if (oldBar) oldBar.remove();
+
+    const currentText = subNode.querySelector('.sub-text-label') ? subNode.querySelector('.sub-text-label').innerText : subNode.innerText;
+    const currentSize = parseInt(window.getComputedStyle(subNode).fontSize) || 18;
+
+    const bar = document.createElement('div');
+    bar.id = 'sStudioLiveSubEditorBar';
+    bar.style.cssText = `
+        position: fixed;
+        bottom: 125px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #14171f;
+        border: 2px solid #00f2fe;
+        padding: 8px 14px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        z-index: 100005;
+        box-shadow: 0 10px 35px rgba(0,0,0,0.9);
+        color: white;
+        font-family: sans-serif;
+        font-size: 11px;
+    `;
+
+    bar.innerHTML = `
+        <input type="text" id="liveSubEditInput" value="${currentText}" oninput="updateLiveSubText(this.value)" style="background:#222733; color:white; border:1px solid #444; padding:4px 8px; border-radius:4px; font-size:11px; width:120px;">
+        <div style="display:flex; align-items:center; gap:4px;">
+            <button onclick="adjustLiveSubSize(-2)" style="background:#222733; color:white; border:1px solid #444; padding:3px 7px; border-radius:3px; cursor:pointer; font-weight:bold;">-</button>
+            <span id="liveSubSizeVal" style="color:#00f2fe; font-weight:bold; min-width:30px; text-align:center;">${currentSize}px</span>
+            <button onclick="adjustLiveSubSize(2)" style="background:#222733; color:white; border:1px solid #444; padding:3px 7px; border-radius:3px; cursor:pointer; font-weight:bold;">+</button>
+        </div>
+        <div style="display:flex; align-items:center; gap:3px;">
+            <span>🎨</span>
+            <input type="color" onchange="updateLiveSubColor(this.value)" title="Text Color" style="width:22px; height:22px; border:none; cursor:pointer; background:none;">
+            <input type="color" onchange="updateLiveSubBg(this.value)" title="Background Color" style="width:22px; height:22px; border:none; cursor:pointer; background:none;">
+        </div>
+        <select onchange="updateLiveSubFont(this.value)" style="background:#222733; color:white; border:1px solid #444; border-radius:4px; padding:3px; font-size:10px;">
+            <option value="Arial, sans-serif">Arial</option>
+            <option value="'Impact', sans-serif">Impact</option>
+            <option value="'Courier New', monospace">Typewriter</option>
+            <option value="'Trebuchet MS', sans-serif">Modern</option>
+        </select>
+        <button onclick="closeLiveSubtitleEditor()" style="background:#10ac84; color:white; border:none; padding:4px 8px; border-radius:4px; font-weight:bold; cursor:pointer;">
+            Done
+        </button>
+    `;
+
+    document.body.appendChild(bar);
+}
+
+function updateLiveSubText(val) {
+    if (activeSubtitleElement) {
+        const label = activeSubtitleElement.querySelector('.sub-text-label');
+        if (label) label.innerText = val;
+        else activeSubtitleElement.innerText = val;
+
+        const trackBlock = document.getElementById('track_' + activeSubtitleElement.id);
+        if (trackBlock) {
+            const trackSpan = trackBlock.querySelector('span');
+            if (trackSpan) trackSpan.innerText = "💬 " + val;
+        }
+    }
+}
+
+function adjustLiveSubSize(delta) {
+    if (!activeSubtitleElement) return;
+    const curSize = parseInt(window.getComputedStyle(activeSubtitleElement).fontSize) || 18;
+    const newSize = Math.max(10, Math.min(80, curSize + delta));
+    activeSubtitleElement.style.fontSize = newSize + "px";
+
+    const display = document.getElementById('liveSubSizeVal');
+    if (display) display.innerText = newSize + "px";
+}
+
+function updateLiveSubColor(col) {
+    if (activeSubtitleElement) activeSubtitleElement.style.color = col;
+}
+
+function updateLiveSubBg(col) {
+    if (activeSubtitleElement) activeSubtitleElement.style.backgroundColor = col + "cc";
+}
+
+function updateLiveSubFont(font) {
+    if (activeSubtitleElement) activeSubtitleElement.style.fontFamily = font;
+}
+
+function closeLiveSubtitleEditor() {
+    if (activeSubtitleElement) {
+        activeSubtitleElement.style.border = "2px dashed transparent";
+        activeSubtitleElement = null;
+    }
+    const bar = document.getElementById('sStudioLiveSubEditorBar');
+    if (bar) bar.remove();
+}
+
+function clearAllSubtitleLayers() {
+    document.querySelectorAll('.live-subtitle-box').forEach(el => {
+        const trackBlock = document.getElementById('track_' + el.id);
+        if (trackBlock) trackBlock.remove();
+        el.remove();
+    });
+    const modal = document.getElementById('sStudioSubtitlesModal');
+    if (modal) modal.remove();
+    closeLiveSubtitleEditor();
+}
+
+// ==========================================================================
+// 📐 SELECT ASPECT RATIO PRESETS
+// ==========================================================================
+
+function openCropPresetsMenu() {
+    const oldMenu = document.getElementById('sStudioCropMenu');
+    if (oldMenu) oldMenu.remove();
+
+    const cropMenu = document.createElement('div');
+    cropMenu.id = 'sStudioCropMenu';
+    cropMenu.style.cssText = `
+        position: fixed !important;
+        top: 50% !important;
+        left: 50% !important;
+        transform: translate(-50%, -50%) !important;
+        background: #161920 !important;
+        border: 2px solid #6c5ce7 !important;
+        padding: 16px !important;
+        border-radius: 12px !important;
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 8px !important;
+        z-index: 2147483647 !important;
+        width: 320px !important;
+        max-height: 85vh !important;
+        overflow-y: auto !important;
+        font-family: sans-serif !important;
+        color: white !important;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.9) !important;
+    `;
+
+    cropMenu.innerHTML = `
+        <div style="font-size: 13px; color: #a8a5ff; font-weight: bold; border-bottom: 1px solid #2f3542; padding-bottom: 6px; display: flex; justify-content: space-between; align-items: center;">
+            <span>📐 SELECT ASPECT RATIO / CROP</span>
+            <span onclick="this.parentElement.parentElement.remove()" style="cursor: pointer; font-size: 18px; color: #a4b0be;">&times;</span>
+        </div>
+
+        <button onclick="applyCanvasFrameRatio('16-9'); const m = document.getElementById('sStudioCropMenu'); if (m) m.remove();" style="background:#222733; color:#fff; border:1px solid #333; padding:8px; border-radius:6px; cursor:pointer; text-align:left; font-size:11px;">
+            16:9 (YouTube / Landscape)
+        </button>
+
+        <button onclick="applyCanvasFrameRatio('9-16'); const m = document.getElementById('sStudioCropMenu'); if (m) m.remove();" style="background:#222733; color:#00f2fe; border:1px solid #00f2fe; padding:8px; border-radius:6px; cursor:pointer; text-align:left; font-size:11px; font-weight:bold;">
+            9:16 (Reels / Shorts / TikTok)
+        </button>
+
+        <button onclick="applyCanvasFrameRatio('1-1'); const m = document.getElementById('sStudioCropMenu'); if (m) m.remove();" style="background:#222733; color:#fff; border:1px solid #333; padding:8px; border-radius:6px; cursor:pointer; text-align:left; font-size:11px;">
+            1:1 (Instagram Square)
+        </button>
+
+        <button onclick="applyCanvasFrameRatio('4-5'); const m = document.getElementById('sStudioCropMenu'); if (m) m.remove();" style="background:#222733; color:#fff; border:1px solid #333; padding:8px; border-radius:6px; cursor:pointer; text-align:left; font-size:11px;">
+            4:5 (Instagram Portrait)
+        </button>
+
+        <button onclick="applyCanvasFrameRatio('4-3'); const m = document.getElementById('sStudioCropMenu'); if (m) m.remove();" style="background:#222733; color:#fff; border:1px solid #333; padding:8px; border-radius:6px; cursor:pointer; text-align:left; font-size:11px;">
+            4:3 (Classic Standard)
+        </button>
+
+        <button onclick="applyCanvasFrameRatio('3-4'); const m = document.getElementById('sStudioCropMenu'); if (m) m.remove();" style="background:#222733; color:#fff; border:1px solid #333; padding:8px; border-radius:6px; cursor:pointer; text-align:left; font-size:11px;">
+            3:4 (Vertical Classic)
+        </button>
+
+        <button onclick="applyCanvasFrameRatio('21-9'); const m = document.getElementById('sStudioCropMenu'); if (m) m.remove();" style="background:#222733; color:#fff; border:1px solid #333; padding:8px; border-radius:6px; cursor:pointer; text-align:left; font-size:11px;">
+            21:9 (Cinematic Ultrawide)
+        </button>
+
+        <button onclick="applyCanvasFrameRatio('2-3'); const m = document.getElementById('sStudioCropMenu'); if (m) m.remove();" style="background:#222733; color:#fff; border:1px solid #333; padding:8px; border-radius:6px; cursor:pointer; text-align:left; font-size:11px;">
+            2:3 (Pinterest)
+        </button>
+
+        <button onclick="applyCanvasFrameRatio('fit'); const m = document.getElementById('sStudioCropMenu'); if (m) m.remove();" style="background:#6c5ce7; color:#fff; border:none; padding:8px; border-radius:6px; font-weight:bold; cursor:pointer; text-align:center; font-size:11px; margin-top:4px;">
+            Reset to Original Fit
+        </button>
+    `;
+
+    document.body.appendChild(cropMenu);
+}
+
+// ==========================================================================
+// ✂️ SHAPE CUTOUTS STUDIO & INTERACTIVE FREEHAND CUTOUT
+// ==========================================================================
+
+function openCutOutStudioMenu() {
+    const targetElement = currentActivePIPLayer 
+        ? (currentActivePIPLayer.querySelector('video, img') || currentActivePIPLayer)
+        : (document.getElementById('mainPlayer') || currentVideoElement);
+
+    if (!targetElement) return;
+
+    const old = document.getElementById('sStudioCutOutModal');
+    if (old) old.remove();
+
+    const modal = document.createElement('div');
+    modal.id = 'sStudioCutOutModal';
+    modal.style.cssText = `
+        position: fixed !important;
+        top: 50% !important;
+        left: 50% !important;
+        transform: translate(-50%, -50%) !important;
+        background: #14171f !important;
+        border: 2px solid #ff4757 !important;
+        padding: 20px !important;
+        border-radius: 14px !important;
+        z-index: 100000 !important;
+        width: 340px !important;
+        color: white !important;
+        font-family: sans-serif !important;
+        box-shadow: 0 10px 40px rgba(255, 71, 87, 0.4) !important;
+    `;
+
+    modal.innerHTML = `
+        <div style="font-size: 13px; color: #ff6b81; font-weight: bold; border-bottom: 1px solid #2f3542; padding-bottom: 6px; display: flex; justify-content: space-between; align-items: center;">
+            <span>✂️ CUT OUT & SHAPE MASKS</span>
+            <span onclick="this.parentElement.parentElement.remove()" style="cursor: pointer; font-size: 18px; color: #a4b0be;">&times;</span>
+        </div>
+
+        <p style="font-size: 11px; color: #a4b0be; margin: 8px 0 6px;">Select Preset Cutout Shape:</p>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px;">
+            <button onclick="applyCutOutPreset('circle')" style="background:#222733; color:white; border:1px solid #333; padding:8px; border-radius:5px; font-size:11px; cursor:pointer;">Circle Cut</button>
+            <button onclick="applyCutOutPreset('box')" style="background:#222733; color:white; border:1px solid #333; padding:8px; border-radius:5px; font-size:11px; cursor:pointer;">Box Cut</button>
+            <button onclick="applyCutOutPreset('topCut')" style="background:#222733; color:white; border:1px solid #333; padding:8px; border-radius:5px; font-size:11px; cursor:pointer;">Top Half</button>
+            <button onclick="applyCutOutPreset('bottomCut')" style="background:#222733; color:white; border:1px solid #333; padding:8px; border-radius:5px; font-size:11px; cursor:pointer;">Bottom Half</button>
+            <button onclick="applyCutOutPreset('roundedBox')" style="background:#222733; color:white; border:1px solid #333; padding:8px; border-radius:5px; font-size:11px; cursor:pointer;">Rounded Box</button>
+            <button onclick="applyCutOutPreset('diamond')" style="background:#222733; color:white; border:1px solid #333; padding:8px; border-radius:5px; font-size:11px; cursor:pointer;">Diamond</button>
+            <button onclick="applyCutOutPreset('heart')" style="background:#222733; color:#ff4757; border:1px solid #ff4757; padding:8px; border-radius:5px; font-size:11px; cursor:pointer;">Heart Cut</button>
+            <button onclick="applyCutOutPreset('reset')" style="background:#222733; color:#00f2fe; border:1px solid #00f2fe; padding:8px; border-radius:5px; font-size:11px; cursor:pointer;">Reset Full</button>
+        </div>
+
+        <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #2f3542;">
+            <button onclick="document.getElementById('sStudioCutOutModal').remove(); startInteractiveCustomBoxCutout();" style="width:100%; background:linear-gradient(135deg, #ff4757, #6c5ce7); color:white; border:none; padding:10px; border-radius:6px; font-weight:bold; cursor:pointer; font-size:11px;">
+                Freehand Interactive Box Cutout
+            </button>
+        </div>
+    `;
+
+    document.body.appendChild(modal);
+}
+
+function applyCutOutPreset(type) {
+    const targetElement = currentActivePIPLayer 
+        ? (currentActivePIPLayer.querySelector('video, img') || currentActivePIPLayer)
+        : (document.getElementById('mainPlayer') || currentVideoElement);
+
+    if (!targetElement) return;
+
+    switch(type) {
+        case 'circle':
+            targetElement.style.clipPath = "circle(45% at 50% 50%)";
+            break;
+        case 'box':
+            targetElement.style.clipPath = "inset(12% 12% 12% 12%)";
+            break;
+        case 'roundedBox':
+            targetElement.style.clipPath = "inset(8% 8% 8% 8% round 20px)";
+            break;
+        case 'topCut':
+            targetElement.style.clipPath = "polygon(0% 0%, 100% 0%, 100% 50%, 0% 50%)";
+            break;
+        case 'bottomCut':
+            targetElement.style.clipPath = "polygon(0% 50%, 100% 50%, 100% 100%, 0% 100%)";
+            break;
+        case 'diamond':
+            targetElement.style.clipPath = "polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)";
+            break;
+        case 'heart':
+            targetElement.style.clipPath = "polygon(50% 15%, 80% 0%, 100% 20%, 100% 50%, 50% 95%, 0% 50%, 0% 20%, 20% 0%)";
+            break;
+        case 'reset':
+        default:
+            targetElement.style.clipPath = "none";
+            break;
+    }
+}
+
+function startInteractiveCustomBoxCutout() {
+    const wrapper = document.getElementById('videoWrapper');
+    const targetElement = currentActivePIPLayer 
+        ? (currentActivePIPLayer.querySelector('video, img') || currentActivePIPLayer)
+        : (document.getElementById('mainPlayer') || currentVideoElement);
+
+    if (!wrapper || !targetElement) return;
+
+    const oldBox = document.getElementById('sStudioCutoutSelectionBox');
+    if (oldBox) oldBox.remove();
+
+    const box = document.createElement('div');
+    box.id = 'sStudioCutoutSelectionBox';
+    box.style.cssText = `
+        position: absolute;
+        top: 20%;
+        left: 20%;
+        width: 60%;
+        height: 60%;
+        border: 2px dashed #ff4757;
+        background: rgba(255, 71, 87, 0.15);
+        box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.55);
+        z-index: 500;
+        cursor: move;
+        border-radius: 4px;
+    `;
+
+    box.innerHTML = `
+        <div style="position: absolute; top: -30px; left: 0; background: #ff4757; color: white; padding: 3px 8px; border-radius: 4px; font-size: 10px; font-weight: bold; font-family: sans-serif; display: flex; gap: 8px; align-items: center; white-space: nowrap;">
+            <span>Adjust Cutout Box</span>
+            <button id="btnApplyCutout" style="background: #10ac84; color: white; border: none; padding: 2px 6px; border-radius: 3px; font-size: 10px; font-weight: bold; cursor: pointer;">Cut Out</button>
+            <button id="btnCancelCutout" style="background: #222; color: white; border: none; padding: 2px 6px; border-radius: 3px; font-size: 10px; cursor: pointer;">✕</button>
+        </div>
+        <div class="cut-corner" style="position: absolute; right: -5px; bottom: -5px; width: 12px; height: 12px; background: #ff4757; cursor: se-resize; border-radius: 2px;"></div>
+    `;
+
+    let isDragging = false, isResizing = false;
+    let startX = 0, startY = 0, startW = 0, startH = 0, startL = 0, startT = 0;
+
+    box.onmousedown = function(e) {
+        if (e.target.id === 'btnApplyCutout' || e.target.id === 'btnCancelCutout') return;
+        if (e.target.classList.contains('cut-corner')) {
+            isResizing = true;
+            startX = e.clientX;
+            startY = e.clientY;
+            startW = box.offsetWidth;
+            startH = box.offsetHeight;
+        } else {
+            isDragging = true;
+            startX = e.clientX;
+            startY = e.clientY;
+            startL = box.offsetLeft;
+            startT = box.offsetTop;
+        }
+
+        function onMouseMove(ev) {
+            if (isResizing) {
+                box.style.width = Math.max(50, startW + (ev.clientX - startX)) + "px";
+                box.style.height = Math.max(50, startH + (ev.clientY - startY)) + "px";
+            } else if (isDragging) {
+                box.style.left = Math.max(0, startL + (ev.clientX - startX)) + "px";
+                box.style.top = Math.max(0, startT + (ev.clientY - startY)) + "px";
+            }
+        }
+
+        function onMouseUp() {
+            isDragging = false;
+            isResizing = false;
+            document.removeEventListener('mousemove', onMouseMove);
+            document.removeEventListener('mouseup', onMouseUp);
+        }
+
+        document.addEventListener('mousemove', onMouseMove);
+        document.addEventListener('mouseup', onMouseUp);
+    };
+
+    box.querySelector('#btnApplyCutout').onclick = function(e) {
+        e.stopPropagation();
+        const wrapRect = wrapper.getBoundingClientRect();
+        const boxRect = box.getBoundingClientRect();
+
+        const topPercent = Math.max(0, ((boxRect.top - wrapRect.top) / wrapRect.height) * 100).toFixed(1);
+        const leftPercent = Math.max(0, ((boxRect.left - wrapRect.left) / wrapRect.width) * 100).toFixed(1);
+        const rightPercent = Math.max(0, ((wrapRect.right - boxRect.right) / wrapRect.width) * 100).toFixed(1);
+        const bottomPercent = Math.max(0, ((wrapRect.bottom - boxRect.bottom) / wrapRect.height) * 100).toFixed(1);
+
+        targetElement.style.clipPath = `inset(${topPercent}% ${rightPercent}% ${bottomPercent}% ${leftPercent}%)`;
+        box.remove();
+    };
+
+    box.querySelector('#btnCancelCutout').onclick = function(e) {
+        e.stopPropagation();
+        box.remove();
+    };
+
+    wrapper.appendChild(box);
+}
+
+// ==========================================================================
 // ✂️ SPLIT CLIP WITH RED TRANSITION MARKER ENGINE
-// --------------------------------------------------------------------------
+// ==========================================================================
+
 function splitCurrentVideoClip() {
     const mainVideo = document.getElementById('mainPlayer');
-    if (!mainVideo || mainVideo.tagName !== 'VIDEO') {
-        alert("Please load a video first to split!");
-        return;
-    }
+    if (!mainVideo || mainVideo.tagName !== 'VIDEO') return;
 
     const curTime = mainVideo.currentTime;
-    if (curTime < 0.5) {
-        alert("Move the playhead forward by at least 1 second to split!");
-        return;
-    }
+    if (curTime < 0.5) return;
 
-    saveStateToHistory();
+    if (typeof saveStateToHistory === 'function') saveStateToHistory();
 
     const segmentId = 'seg_' + Date.now();
     const clipData = {
@@ -844,7 +2236,7 @@ function splitCurrentVideoClip() {
 }
 
 function renderSplitTimelineMarkers() {
-    const track = document.getElementById('frameTimelineTrack');
+    const track = document.getElementById('frameTimelineTrack') || document.getElementById('timelineTracksContainer');
     if (!track || !videoDurationSeconds) return;
 
     document.querySelectorAll('.split-cut-container').forEach(el => el.remove());
@@ -873,7 +2265,7 @@ function renderSplitTimelineMarkers() {
             </div>
         `;
 
-        cutWrap.title = `Split Segment ${index + 1} at ${seg.splitTime}s (Click for IN / OUT / LOOP & Keyframes)`;
+        cutWrap.title = `Split Segment ${index + 1} at ${seg.splitTime}s`;
         cutWrap.onclick = function(e) {
             e.stopPropagation();
             openSplitTransitionStudio(seg);
@@ -919,42 +2311,42 @@ function openSplitTransitionStudio(segData) {
         </div>
 
         <div>
-            <div style="font-size: 11px; color: #38bdf8; font-weight: bold; margin-bottom: 4px;">🎬 1. IN Animation (Starting Effect):</div>
+            <div style="font-size: 11px; color: #38bdf8; font-weight: bold; margin-bottom: 4px;">🎬 1. IN Animation:</div>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 5px;">
-                <button onclick="applyClipSegmentAnim('${segData.id}', 'in', 'slide-down')" style="background: #222733; color: white; border: 1px solid #333; padding: 6px; border-radius: 4px; font-size: 10.5px; cursor: pointer;">⬇️ Slide Down</button>
-                <button onclick="applyClipSegmentAnim('${segData.id}', 'in', 'slide-up')" style="background: #222733; color: white; border: 1px solid #333; padding: 6px; border-radius: 4px; font-size: 10.5px; cursor: pointer;">⬆️ Slide Up</button>
-                <button onclick="applyClipSegmentAnim('${segData.id}', 'in', 'slide-left')" style="background: #222733; color: white; border: 1px solid #333; padding: 6px; border-radius: 4px; font-size: 10.5px; cursor: pointer;">⬅️ Slide Left</button>
-                <button onclick="applyClipSegmentAnim('${segData.id}', 'in', 'pop-zoom')" style="background: #222733; color: white; border: 1px solid #333; padding: 6px; border-radius: 4px; font-size: 10.5px; cursor: pointer;">💥 Pop Zoom In</button>
+                <button onclick="applyClipSegmentAnim('${segData.id}', 'in', 'slide-down')" style="background: #222733; color: white; border: 1px solid #333; padding: 6px; border-radius: 4px; font-size: 10.5px; cursor: pointer;">Slide Down</button>
+                <button onclick="applyClipSegmentAnim('${segData.id}', 'in', 'slide-up')" style="background: #222733; color: white; border: 1px solid #333; padding: 6px; border-radius: 4px; font-size: 10.5px; cursor: pointer;">Slide Up</button>
+                <button onclick="applyClipSegmentAnim('${segData.id}', 'in', 'slide-left')" style="background: #222733; color: white; border: 1px solid #333; padding: 6px; border-radius: 4px; font-size: 10.5px; cursor: pointer;">Slide Left</button>
+                <button onclick="applyClipSegmentAnim('${segData.id}', 'in', 'pop-zoom')" style="background: #222733; color: white; border: 1px solid #333; padding: 6px; border-radius: 4px; font-size: 10.5px; cursor: pointer;">Pop Zoom</button>
             </div>
         </div>
 
         <div>
-            <div style="font-size: 11px; color: #e056fd; font-weight: bold; margin-bottom: 4px;">🎬 2. OUT Animation (Ending Effect):</div>
+            <div style="font-size: 11px; color: #e056fd; font-weight: bold; margin-bottom: 4px;">🎬 2. OUT Animation:</div>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 5px;">
-                <button onclick="applyClipSegmentAnim('${segData.id}', 'out', 'out-down')" style="background: #222733; color: white; border: 1px solid #333; padding: 6px; border-radius: 4px; font-size: 10.5px; cursor: pointer;">⬇️ Exit Bottom</button>
-                <button onclick="applyClipSegmentAnim('${segData.id}', 'out', 'out-right')" style="background: #222733; color: white; border: 1px solid #333; padding: 6px; border-radius: 4px; font-size: 10.5px; cursor: pointer;">➡️ Exit Right</button>
-                <button onclick="applyClipSegmentAnim('${segData.id}', 'out', 'out-fade')" style="background: #222733; color: white; border: 1px solid #333; padding: 6px; border-radius: 4px; font-size: 10.5px; cursor: pointer;">🌫️ Smooth Fade Out</button>
-                <button onclick="applyClipSegmentAnim('${segData.id}', 'out', 'out-shrink')" style="background: #222733; color: white; border: 1px solid #333; padding: 6px; border-radius: 4px; font-size: 10.5px; cursor: pointer;">🔍 Shrink Exit</button>
+                <button onclick="applyClipSegmentAnim('${segData.id}', 'out', 'out-down')" style="background: #222733; color: white; border: 1px solid #333; padding: 6px; border-radius: 4px; font-size: 10.5px; cursor: pointer;">Exit Bottom</button>
+                <button onclick="applyClipSegmentAnim('${segData.id}', 'out', 'out-right')" style="background: #222733; color: white; border: 1px solid #333; padding: 6px; border-radius: 4px; font-size: 10.5px; cursor: pointer;">Exit Right</button>
+                <button onclick="applyClipSegmentAnim('${segData.id}', 'out', 'out-fade')" style="background: #222733; color: white; border: 1px solid #333; padding: 6px; border-radius: 4px; font-size: 10.5px; cursor: pointer;">Fade Out</button>
+                <button onclick="applyClipSegmentAnim('${segData.id}', 'out', 'out-shrink')" style="background: #222733; color: white; border: 1px solid #333; padding: 6px; border-radius: 4px; font-size: 10.5px; cursor: pointer;">Shrink Exit</button>
             </div>
         </div>
 
         <div>
-            <div style="font-size: 11px; color: #10ac84; font-weight: bold; margin-bottom: 4px;">🔁 3. LOOP Animation (Continuous Effect):</div>
+            <div style="font-size: 11px; color: #10ac84; font-weight: bold; margin-bottom: 4px;">🔁 3. LOOP Animation:</div>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 5px;">
-                <button onclick="applyClipSegmentAnim('${segData.id}', 'loop', 'loop-pulse')" style="background: #222733; color: white; border: 1px solid #333; padding: 6px; border-radius: 4px; font-size: 10.5px; cursor: pointer;">💓 Pulse Beat</button>
-                <button onclick="applyClipSegmentAnim('${segData.id}', 'loop', 'loop-shake')" style="background: #222733; color: white; border: 1px solid #333; padding: 6px; border-radius: 4px; font-size: 10.5px; cursor: pointer;">📳 Action Shake</button>
-                <button onclick="applyClipSegmentAnim('${segData.id}', 'loop', 'loop-float')" style="background: #222733; color: white; border: 1px solid #333; padding: 6px; border-radius: 4px; font-size: 10.5px; cursor: pointer;">🎈 Floating</button>
-                <button onclick="applyClipSegmentAnim('${segData.id}', 'loop', 'loop-spin')" style="background: #222733; color: white; border: 1px solid #333; padding: 6px; border-radius: 4px; font-size: 10.5px; cursor: pointer;">🔄 Slow Rotate</button>
+                <button onclick="applyClipSegmentAnim('${segData.id}', 'loop', 'loop-pulse')" style="background: #222733; color: white; border: 1px solid #333; padding: 6px; border-radius: 4px; font-size: 10.5px; cursor: pointer;">Pulse Beat</button>
+                <button onclick="applyClipSegmentAnim('${segData.id}', 'loop', 'loop-shake')" style="background: #222733; color: white; border: 1px solid #333; padding: 6px; border-radius: 4px; font-size: 10.5px; cursor: pointer;">Action Shake</button>
+                <button onclick="applyClipSegmentAnim('${segData.id}', 'loop', 'loop-float')" style="background: #222733; color: white; border: 1px solid #333; padding: 6px; border-radius: 4px; font-size: 10.5px; cursor: pointer;">Floating</button>
+                <button onclick="applyClipSegmentAnim('${segData.id}', 'loop', 'loop-spin')" style="background: #222733; color: white; border: 1px solid #333; padding: 6px; border-radius: 4px; font-size: 10.5px; cursor: pointer;">Slow Rotate</button>
             </div>
         </div>
 
         <div style="border-top: 1px solid #2f3542; padding-top: 8px; display: flex; flex-direction: column; gap: 6px;">
             <button onclick="addSegmentKeyframeMarker('${segData.id}')" style="background: rgba(108, 92, 231, 0.25); color: #a8a5ff; border: 1px solid #6c5ce7; padding: 7px; border-radius: 5px; font-size: 11px; font-weight: bold; cursor: pointer;">
-                🔑 Add Keyframe to this Segment
+                🔑 Add Keyframe to Segment
             </button>
             <div style="display: flex; gap: 6px;">
                 <button onclick="deleteSplitClipPart('${segData.id}'); document.getElementById('sStudioSplitAnimModal').remove();" style="flex: 1; background: #ff4757; color: white; border: none; padding: 7px; border-radius: 5px; font-size: 11px; font-weight: bold; cursor: pointer;">
-                    🗑️ Delete Part
+                    Delete Part
                 </button>
                 <button onclick="document.getElementById('sStudioSplitAnimModal').remove();" style="flex: 1; background: #2f3542; color: white; border: none; padding: 7px; border-radius: 5px; font-size: 11px; cursor: pointer;">
                     Done
@@ -985,14 +2377,15 @@ function applyClipSegmentAnim(segId, category, animName) {
 function addSegmentKeyframeMarker(segId) {
     const mainVideo = document.getElementById('mainPlayer');
     const curTime = mainVideo ? mainVideo.currentTime : 0;
-    alert(`Keyframe anchored for Segment at ${curTime.toFixed(2)}s!`);
+    const seg = splitClipSegments.find(s => s.id === segId);
+    if (seg) {
+        seg.keyframes.push(parseFloat(curTime.toFixed(2)));
+    }
 }
 
 function deleteSplitClipPart(segId) {
     splitClipSegments = splitClipSegments.filter(s => s.id !== segId);
     renderSplitTimelineMarkers();
-    const bar = document.getElementById('sStudioSplitClipBar');
-    if (bar) bar.remove();
 }
 
 function injectSplitAnimationCSS() {
@@ -1019,15 +2412,13 @@ function injectSplitAnimationCSS() {
     document.head.appendChild(style);
 }
 
-// --------------------------------------------------------------------------
+// ==========================================================================
 // 🔒 SELECTIVE AREA BLUR / MOSAIC ENGINE
-// --------------------------------------------------------------------------
+// ==========================================================================
+
 function startAreaBlurSelection() {
     const wrapper = document.getElementById('videoWrapper');
-    if (!wrapper || !currentVideoElement) {
-        alert("Please load a video or photo first!");
-        return;
-    }
+    if (!wrapper || !currentVideoElement) return;
 
     const oldOverlay = document.getElementById('sStudioAreaBlurSelector');
     if (oldOverlay) oldOverlay.remove();
@@ -1119,8 +2510,6 @@ function startAreaBlurSelection() {
             const relLeft = boxRect.left - wrapperRect.left;
             const relTop = boxRect.top - wrapperRect.top;
             createPermanentBlurMask(relLeft, relTop, boxRect.width, boxRect.height);
-        } else {
-            alert("Please drag to select a valid region to blur!");
         }
         selectOverlay.remove();
     };
@@ -1155,6 +2544,7 @@ function createPermanentBlurMask(left, top, width, height) {
         display: flex;
         justify-content: flex-end;
         padding: 2px;
+        box-sizing: border-box;
     `;
 
     const delBtn = document.createElement('span');
@@ -1172,22 +2562,23 @@ function createPermanentBlurMask(left, top, width, height) {
 
     wrapper.appendChild(blurBox);
 }
+
 // ==========================================================================
-// 🖼️ S STUDIO - PIP, MASK STUDIO, MAGNIFIER, AUDIO & TEXT ENGINE (PART 3/4)
+// 🎭 CINEMATIC MASKING ENGINE
 // ==========================================================================
 
-// --------------------------------------------------------------------------
-// 🎭 CINEMATIC MASKING ENGINE
-// --------------------------------------------------------------------------
+function getActiveMediaElement() {
+    return currentActivePIPLayer 
+        ? (currentActivePIPLayer.querySelector('video, img') || currentActivePIPLayer)
+        : (document.getElementById('mainPlayer') || document.getElementById('mainPhotoPlayer') || currentVideoElement);
+}
+
 function openMaskStudioMenu() {
-    const target = currentActivePIPLayer || currentVideoElement || document.getElementById('mainPlayer');
-    if (!target) {
-        alert("Please select a video or photo layer first!");
-        return;
-    }
+    const target = getActiveMediaElement();
+    if (!target) return;
 
     const oldMenu = document.getElementById('sStudioMaskMenu');
-    if (oldMenu) { oldMenu.remove(); return; }
+    if (oldMenu) oldMenu.remove();
 
     const menu = document.createElement('div');
     menu.id = 'sStudioMaskMenu';
@@ -1229,23 +2620,104 @@ function openMaskStudioMenu() {
         <div style="background: #111318; padding: 8px; border-radius: 6px; display: flex; flex-direction: column; gap: 6px; margin-top: 4px;">
             <div style="display: flex; justify-content: space-between; align-items: center;">
                 <label style="font-size: 11px; color: #a4b0be;">🪞 Invert Mask:</label>
-                <button id="btnInvertMask" onclick="toggleMaskInvert()" style="background: #222733; color: #1abc9c; border: 1px solid #1abc9c; padding: 3px 8px; border-radius: 4px; font-size: 10px; cursor: pointer; font-weight: bold;">OFF</button>
+                <button id="btnInvertMask" onclick="toggleMaskInvert()" style="background: #222733; color: #1abc9c; border: 1px solid #1abc9c; padding: 3px 8px; border-radius: 4px; font-size: 10px; cursor: pointer; font-weight: bold;">${isMaskInverted ? 'ON' : 'OFF'}</button>
             </div>
             <div>
                 <div style="display: flex; justify-content: space-between; font-size: 11px; color: #a4b0be;">
                     <span>🪶 Feather:</span>
-                    <span id="featherValDisplay" style="color: #1abc9c; font-weight: bold;">0px</span>
+                    <span id="featherValDisplay" style="color: #1abc9c; font-weight: bold;">${maskFeatherPx}px</span>
                 </div>
-                <input type="range" id="maskFeatherSlider" min="0" max="25" value="0" style="width: 100%; accent-color: #1abc9c; cursor: pointer;" oninput="updateMaskFeather(this.value)">
+                <input type="range" id="maskFeatherSlider" min="0" max="25" value="${maskFeatherPx}" style="width: 100%; accent-color: #1abc9c; cursor: pointer;" oninput="updateMaskFeather(this.value)">
             </div>
         </div>
 
         <button onclick="resetMaskEffect()" style="background: #ff4757; color: white; border: none; padding: 8px; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: bold; margin-top: 4px;">
-            🔄 Reset Mask
+            Reset Mask
         </button>
     `;
 
     document.body.appendChild(menu);
+}
+
+function applyMaskPreset(type) {
+    const target = getActiveMediaElement();
+    if (!target) return;
+
+    currentMaskType = type;
+
+    switch(type) {
+        case 'linear':
+            target.style.clipPath = isMaskInverted 
+                ? "polygon(0% 50%, 100% 50%, 100% 100%, 0% 100%)" 
+                : "polygon(0% 0%, 100% 0%, 100% 50%, 0% 50%)";
+            break;
+        case 'circle':
+            target.style.clipPath = "circle(42% at 50% 50%)";
+            break;
+        case 'cinematic':
+            target.style.clipPath = "inset(12% 0% 12% 0%)";
+            break;
+        case 'rounded':
+            target.style.clipPath = "inset(6% 6% 6% 6% round 24px)";
+            break;
+        case 'heart':
+            target.style.clipPath = "polygon(50% 15%, 80% 0%, 100% 20%, 100% 50%, 50% 95%, 0% 50%, 0% 20%, 20% 0%)";
+            break;
+        case 'star':
+            target.style.clipPath = "polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)";
+            break;
+        default:
+            target.style.clipPath = "none";
+            break;
+    }
+}
+
+function toggleMaskInvert() {
+    isMaskInverted = !isMaskInverted;
+    const btn = document.getElementById('btnInvertMask');
+    if (btn) btn.innerText = isMaskInverted ? 'ON' : 'OFF';
+    if (currentMaskType !== 'none') {
+        applyMaskPreset(currentMaskType);
+    }
+}
+
+function updateMaskFeather(val) {
+    maskFeatherPx = parseInt(val) || 0;
+    const display = document.getElementById('featherValDisplay');
+    if (display) display.innerText = maskFeatherPx + "px";
+
+    const target = getActiveMediaElement();
+    if (target) {
+        target.style.filter = maskFeatherPx > 0 ? `blur(${maskFeatherPx / 4}px)` : 'none';
+    }
+}
+
+function resetMaskEffect() {
+    const target = getActiveMediaElement();
+    if (target) {
+        target.style.clipPath = "none";
+        target.style.filter = "none";
+    }
+    currentMaskType = 'none';
+    isMaskInverted = false;
+    maskFeatherPx = 0;
+    const btn = document.getElementById('btnInvertMask');
+    if (btn) btn.innerText = 'OFF';
+    const disp = document.getElementById('featherValDisplay');
+    if (disp) disp.innerText = '0px';
+    const slider = document.getElementById('maskFeatherSlider');
+    if (slider) slider.value = 0;
+}
+
+// ==========================================================================
+// 🎭 CINEMATIC MASKING ENGINE
+// ==========================================================================
+
+function getActiveMediaElement() {
+    if (currentActivePIPLayer) {
+        return currentActivePIPLayer.querySelector('video, img');
+    }
+    return document.getElementById('mainPlayer') || document.getElementById('mainPhotoPlayer') || currentVideoElement;
 }
 
 function applyMaskPreset(type) {
@@ -1257,11 +2729,13 @@ function applyMaskPreset(type) {
 
     switch (type) {
         case 'linear':
-            media.style.clipPath = isMaskInverted ? "polygon(50% 0, 100% 0, 100% 100%, 50% 100%)" : "polygon(0 0, 50% 0, 50% 100%, 0 100%)";
+            media.style.clipPath = isMaskInverted 
+                ? "polygon(50% 0, 100% 0, 100% 100%, 50% 100%)" 
+                : "polygon(0 0, 50% 0, 50% 100%, 0 100%)";
             media.style.borderRadius = "0px";
             break;
         case 'circle':
-            media.style.clipPath = isMaskInverted ? "none" : "circle(40% at 50% 50%)";
+            media.style.clipPath = isMaskInverted ? "none" : "circle(42% at 50% 50%)";
             media.style.borderRadius = isMaskInverted ? "50%" : "0px";
             break;
         case 'cinematic':
@@ -1278,6 +2752,10 @@ function applyMaskPreset(type) {
             break;
         case 'star':
             media.style.clipPath = "polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)";
+            media.style.borderRadius = "0px";
+            break;
+        default:
+            media.style.clipPath = "none";
             media.style.borderRadius = "0px";
             break;
     }
@@ -1297,7 +2775,7 @@ function toggleMaskInvert() {
 }
 
 function updateMaskFeather(val) {
-    maskFeatherPx = parseInt(val);
+    maskFeatherPx = parseInt(val) || 0;
     const disp = document.getElementById('featherValDisplay');
     if (disp) disp.innerText = maskFeatherPx + "px";
 
@@ -1316,20 +2794,15 @@ function resetMaskEffect() {
     }
     currentMaskType = 'none';
     isMaskInverted = false;
+    maskFeatherPx = 0;
     const menu = document.getElementById('sStudioMaskMenu');
     if (menu) menu.remove();
 }
 
-function getActiveMediaElement() {
-    if (currentActivePIPLayer) {
-        return currentActivePIPLayer.querySelector('video, img');
-    }
-    return document.getElementById('mainPlayer') || document.getElementById('mainPhotoPlayer') || currentVideoElement;
-}
-
-// --------------------------------------------------------------------------
+// ==========================================================================
 // 🖼️ OVERLAY TRACK POSITION CONTROLLER
-// --------------------------------------------------------------------------
+// ==========================================================================
+
 function openOverlayPlacementMenu() {
     const filePicker = document.createElement('input');
     filePicker.type = 'file';
@@ -1376,16 +2849,16 @@ function showOverlayPositionOptionsModal(fileName) {
         <p style="font-size: 11px; color: #a4b0be; margin: 0;">Choose screen position for <b>${fileName}</b>:</p>
 
         <button onclick="injectOverlayWithPosition('top')" style="background: #222733; color: #fff; border: 1px solid #333; padding: 9px; border-radius: 6px; cursor: pointer; text-align: left; font-size: 11px; font-weight: bold;">
-            ⬆️ 1. Top Layer (Foreground Overlay)
+            Top Layer (Foreground Overlay)
         </button>
         <button onclick="injectOverlayWithPosition('bottom')" style="background: #222733; color: #fff; border: 1px solid #333; padding: 9px; border-radius: 6px; cursor: pointer; text-align: left; font-size: 11px; font-weight: bold;">
-            ⬇️ 2. Bottom Layer (Background Base)
+            Bottom Layer (Background Base)
         </button>
         <button onclick="injectOverlayWithPosition('corner-top-right')" style="background: #222733; color: #f8c471; border: 1px solid #e67e22; padding: 9px; border-radius: 6px; cursor: pointer; text-align: left; font-size: 11px; font-weight: bold;">
-            ↗️ 3. Top-Right Corner (Watermark / Logo)
+            Top-Right Corner (Watermark / Logo)
         </button>
         <button onclick="injectOverlayWithPosition('center')" style="background: #e67e22; color: white; border: none; padding: 9px; border-radius: 6px; cursor: pointer; text-align: center; font-size: 11px; font-weight: bold;">
-            🎯 4. Center Screen
+            Center Screen
         </button>
     `;
 
@@ -1399,7 +2872,7 @@ function injectOverlayWithPosition(positionType) {
     const isVideo = file.type.startsWith('video/');
     const objectURL = URL.createObjectURL(file);
     const wrapper = document.getElementById('videoWrapper');
-    const pipTrack = document.getElementById('pipTrackBlock');
+    const pipTrack = document.getElementById('pipTrackBlock') || document.getElementById('frameTimelineTrack');
 
     if (!wrapper) return;
 
@@ -1438,7 +2911,12 @@ function injectOverlayWithPosition(positionType) {
     media.src = objectURL;
     media.style.width = "100%";
     media.style.borderRadius = "4px";
-    if (isVideo) { media.autoplay = true; media.loop = true; media.muted = true; }
+    if (isVideo) { 
+        media.autoplay = true; 
+        media.loop = true; 
+        media.muted = true; 
+        media.play().catch(() => {});
+    }
     container.appendChild(media);
 
     makeElementDraggable(container);
@@ -1458,9 +2936,15 @@ function injectOverlayWithPosition(positionType) {
         const block = document.createElement('div');
         block.id = 'track_' + overlayId;
         block.style.cssText = "background: #e67e22; color: white; padding: 4px 10px; border-radius: 6px; display: inline-flex; align-items: center; justify-content: space-between; margin-top: 4px; margin-right: 8px; width: 180px; height: 34px; font-family: sans-serif; cursor: pointer;";
-        block.innerHTML = `<span style="font-size:11px; font-weight:bold; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">🖼️ ${file.name}</span>`;
+        block.innerHTML = `
+            <span style="font-size:11px; font-weight:bold; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">🖼️ ${file.name}</span>
+            <div class="stretch-handle" style="position:absolute; right:0; top:0; width:14px; height:100%; background:#d35400; cursor:e-resize; border-radius:0 5px 5px 0;" title="Drag to resize"></div>
+        `;
         block.onclick = (e) => { e.stopPropagation(); container.click(); };
         pipTrack.appendChild(block);
+        if (typeof attachTimelineDragAndStretch === 'function') {
+            attachTimelineDragAndStretch(block, container, 5);
+        }
     }
 
     const modal = document.getElementById('sStudioOverlayPositionModal');
@@ -1468,9 +2952,10 @@ function injectOverlayWithPosition(positionType) {
     pendingOverlayFile = null;
 }
 
-// --------------------------------------------------------------------------
+// ==========================================================================
 // 🔍 MAGNIFIER LENS ENGINE
-// --------------------------------------------------------------------------
+// ==========================================================================
+
 function openMagnifierOptions() {
     const oldMenu = document.getElementById('sStudioMagnifierMenu');
     if (oldMenu) { oldMenu.remove(); return; }
@@ -1503,8 +2988,8 @@ function openMagnifierOptions() {
         </div>
         <p style="font-size: 11px; color: #a4b0be; margin: 0;">Choose lens preset:</p>
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px;">
-            <button onclick="spawnMagnifierLens('circle')" style="background: #222733; color: white; border: 1px solid #333; padding: 8px; border-radius: 4px; font-size: 11px; cursor: pointer;">⭕ Circle Lens</button>
-            <button onclick="spawnMagnifierLens('square')" style="background: #222733; color: white; border: 1px solid #333; padding: 8px; border-radius: 4px; font-size: 11px; cursor: pointer;">🔲 Square Lens</button>
+            <button onclick="spawnMagnifierLens('circle')" style="background: #222733; color: white; border: 1px solid #333; padding: 8px; border-radius: 4px; font-size: 11px; cursor: pointer;">Circle Lens</button>
+            <button onclick="spawnMagnifierLens('square')" style="background: #222733; color: white; border: 1px solid #333; padding: 8px; border-radius: 4px; font-size: 11px; cursor: pointer;">Square Lens</button>
         </div>
         <div style="margin-top: 6px;">
             <label style="font-size: 11px; color: #a4b0be; display: flex; justify-content: space-between;">
@@ -1514,7 +2999,7 @@ function openMagnifierOptions() {
             <input type="range" id="magZoomSlider" min="1.3" max="3.5" step="0.1" value="2.0" style="width: 100%; accent-color: #f1c40f; cursor: pointer;" oninput="updateActiveMagnifierZoom(this.value)">
         </div>
         <button onclick="removeAllMagnifiers()" style="background: #ff4757; color: white; border: none; padding: 7px; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: bold; margin-top: 4px;">
-            🗑️ Remove All Magnifiers
+            Remove All Magnifiers
         </button>
     `;
 
@@ -1562,7 +3047,7 @@ function createMagnifierLensElement(left, top, width, height, shape) {
         innerMedia.muted = true;
         innerMedia.currentTime = currentVideoElement.currentTime;
 
-        currentVideoElement.addEventListener('play', () => innerMedia.play());
+        currentVideoElement.addEventListener('play', () => innerMedia.play().catch(() => {}));
         currentVideoElement.addEventListener('pause', () => innerMedia.pause());
         currentVideoElement.addEventListener('timeupdate', () => {
             if (Math.abs(innerMedia.currentTime - currentVideoElement.currentTime) > 0.2) {
@@ -1608,8 +3093,8 @@ function makeMagnifierDraggable(lens, innerMedia, wrapper) {
 
         function onMouseMove(ev) {
             let wrapRect = wrapper.getBoundingClientRect();
-            let newX = ev.clientX - wrapRect.left - shiftX;
-            let newY = ev.clientY - wrapRect.top - shiftY;
+            let newX = Math.max(0, Math.min(wrapRect.width - lens.offsetWidth, ev.clientX - wrapRect.left - shiftX));
+            let newY = Math.max(0, Math.min(wrapRect.height - lens.offsetHeight, ev.clientY - wrapRect.top - shiftY));
 
             lens.style.left = newX + "px";
             lens.style.top = newY + "px";
@@ -1645,115 +3130,63 @@ function removeAllMagnifiers() {
     if (menu) menu.remove();
 }
 
-// --------------------------------------------------------------------------
-// 🖼️ PIP OVERLAYS & DRAGGABLE HANDLERS
-// --------------------------------------------------------------------------
-function triggerDirectPIPSelection() {
-    const pipInput = document.createElement('input');
-    pipInput.type = 'file'; 
-    pipInput.accept = 'image/*, video/*'; 
-    pipInput.multiple = true; 
-    pipInput.onchange = function(e) {
-        if (e.target.files) {
-            for (let i = 0; i < e.target.files.length; i++) appendPIPToTimeline(e.target.files[i], '🖼️'); 
-        }
-    };
-    pipInput.click();
-}
-
 // ==========================================================================
-// 🖼️ PIP TIMELINE INJECTION ENGINE (DRAGGABLE & RESIZABLE)
+// 🛠️ PIP FLOATING TOOLKIT & DRAGGABLE ENGINE
 // ==========================================================================
 
-function appendPIPToTimeline(file, icon) {
-    const pipTrack = document.getElementById('pipTrackBlock');
-    const videoWrapper = document.getElementById('videoWrapper');
-    if (!videoWrapper) return;
+function createFloatingToolkit(layerContainer) {
+    const oldKit = document.getElementById('sStudioFloatingLayerToolkit');
+    if (oldKit) oldKit.remove();
 
-    const overlayId = 'pip_' + Date.now();
-    const isString = typeof file === 'string';
-    const objectURL = isString ? file : URL.createObjectURL(file);
-    const fileName = isString ? "Overlay" : file.name;
-
-    // 1. Create On-Screen Overlay Container
-    const mediaContainer = document.createElement('div');
-    mediaContainer.id = overlayId;
-    mediaContainer.className = 'live-pip-object';
-    mediaContainer.style.cssText = `
-        position: absolute; 
-        top: 20%; 
-        left: 20%; 
-        width: 160px; 
-        height: auto; 
-        cursor: move; 
-        z-index: 100; 
-        border: 2px dashed #ff9f43; 
-        background: rgba(0,0,0,0.2); 
-        border-radius: 6px; 
-        display: block;
+    const kit = document.createElement('div');
+    kit.id = 'sStudioFloatingLayerToolkit';
+    kit.style.cssText = `
+        position: fixed;
+        bottom: 80px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #161920;
+        border: 2px solid #10ac84;
+        padding: 6px 12px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        z-index: 2147483647;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.85);
+        color: white;
+        font-family: sans-serif;
+        font-size: 11px;
     `;
 
-    const realMedia = document.createElement((!isString && file.type && file.type.startsWith('video/')) ? 'video' : 'img');
-    realMedia.src = objectURL;
-    realMedia.style.width = "100%";
-    realMedia.style.borderRadius = "4px";
-    realMedia.style.display = "block";
-    realMedia.style.pointerEvents = "none";
+    kit.innerHTML = `
+        <span style="font-weight: bold; color: #10ac84;">Layer Selected</span>
+        <button id="btnLayerLock" style="background: #222733; color: white; border: 1px solid #444; padding: 4px 8px; border-radius: 4px; cursor: pointer;">🔓 Lock</button>
+        <button id="btnLayerCrop" style="background: #222733; color: #00f2fe; border: 1px solid #00f2fe; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-weight: bold;">✂️ Crop</button>
+        <button id="btnLayerDelete" style="background: #ff4757; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-weight: bold;">🗑️ Delete</button>
+        <span onclick="this.parentElement.remove()" style="cursor: pointer; font-size: 14px; color: #a4b0be; margin-left: 4px;">✕</span>
+    `;
 
-    if (realMedia.tagName === 'VIDEO') {
-        realMedia.autoplay = false;
-        realMedia.loop = true;
-        realMedia.muted = true;
-    }
-    mediaContainer.appendChild(realMedia);
-    makeElementDraggable(mediaContainer);
-
-    mediaContainer.onclick = function(e) {
-        e.stopPropagation();
-        currentActivePIPLayer = mediaContainer;
-        currentVideoElement = realMedia;
-        document.querySelectorAll('.live-pip-object').forEach(el => el.style.border = "2px dashed #ff9f43");
-        mediaContainer.style.border = "2px solid #10ac84";
-        createFloatingToolkit(mediaContainer);
+    kit.querySelector('#btnLayerLock').onclick = function() {
+        const isLocked = layerContainer.dataset.locked === "true";
+        layerContainer.dataset.locked = isLocked ? "false" : "true";
+        this.innerText = isLocked ? "🔓 Lock" : "🔒 Locked";
+        this.style.color = isLocked ? "#fff" : "#ff4757";
     };
 
-    videoWrapper.appendChild(mediaContainer);
+    kit.querySelector('#btnLayerCrop').onclick = function() {
+        openCustomFreeCropModal();
+    };
 
-    // 2. Create Timeline Track Block
-    if (pipTrack) {
-        const block = document.createElement('div');
-        block.id = 'track_' + overlayId;
-        block.style.cssText = `
-            background: #ff9f43 !important;
-            color: white !important;
-            padding: 4px 8px !important;
-            border-radius: 6px !important;
-            display: inline-flex !important;
-            align-items: center !important;
-            justify-content: space-between !important;
-            margin-top: 4px !important;
-            height: 32px !important;
-            font-family: sans-serif !important;
-            cursor: move !important;
-            user-select: none !important;
-            z-index: 10;
-            box-sizing: border-box !important;
-        `;
+    kit.querySelector('#btnLayerDelete').onclick = function() {
+        const trackBlock = document.getElementById('track_' + layerContainer.id);
+        if (trackBlock) trackBlock.remove();
+        layerContainer.remove();
+        kit.remove();
+        currentActivePIPLayer = null;
+    };
 
-        block.innerHTML = `
-            <span style="font-size:11px; font-weight:bold; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:80px; pointer-events:none;">${icon} ${fileName}</span>
-            <div class="stretch-handle" style="position:absolute; right:0; top:0; width:14px; height:100%; background:#d35400; cursor:e-resize; border-radius:0 5px 5px 0;" title="Drag to resize duration"></div>
-        `;
-
-        // Click track to select on-screen layer
-        block.onclick = function(e) {
-            e.stopPropagation();
-            mediaContainer.click();
-        };
-
-        pipTrack.appendChild(block);
-        attachTimelineDragAndStretch(block, mediaContainer, 5); // Default display duration: 5 seconds
-    }
+    document.body.appendChild(kit);
 }
 
 function makeElementDraggable(element) {
@@ -1762,7 +3195,9 @@ function makeElementDraggable(element) {
 
     element.onmousedown = function(e) {
         if (element.dataset && element.dataset.locked === "true") return;
+        if (e.target.tagName === 'SPAN' && e.target.innerText === '✕') return;
         e.stopPropagation();
+
         let shiftX = e.clientX - element.getBoundingClientRect().left;
         let shiftY = e.clientY - element.getBoundingClientRect().top;
         
@@ -1773,6 +3208,7 @@ function makeElementDraggable(element) {
             element.style.left = (ev.clientX - rect.left - shiftX) + 'px';
             element.style.top = (ev.clientY - rect.top - shiftY) + 'px';
         }
+
         document.addEventListener('mousemove', onMouseMove);
         window.addEventListener('mouseup', function() {
             document.removeEventListener('mousemove', onMouseMove);
@@ -1787,9 +3223,10 @@ function makeElementDraggable(element) {
     };
 }
 
-// --------------------------------------------------------------------------
-// 🎛️ PIP FLOATING TOOLKIT & ACTIONS
-// --------------------------------------------------------------------------
+// ==========================================================================
+// 🎛️ PIP FLOATING TOOLKIT & ACTIONS (MASTER ENGINE)
+// ==========================================================================
+
 function createFloatingToolkit(pipObject) {
     const oldPanel = document.getElementById('sStudioPipDynamicPanel');
     if (oldPanel) oldPanel.remove();
@@ -1829,25 +3266,22 @@ function createFloatingToolkit(pipObject) {
     pipPanel.appendChild(closeBtn);
 
     const btnList = [
-        { id: 'replace', label: '🔄 Replace' },
-        { id: 'motion', label: '🎬 Motion' },
-        { id: 'keyframe', label: '🔑 Keyframe' },
-        { id: 'lock', label: '🔒 Lock' },
-        { id: 'duplicate', label: '👯 Duplicate' },
-        { id: 'rotate', label: '🔄 Rotate' },
-        { id: 'flip', label: '🔀 Flip' },
-        { id: 'fit', label: '📐 Auto Fit' },
-        { id: 'blur', label: '💧 Blur' },
-        { id: 'opacity', label: '👻 Opacity' },
-        { id: 'mask', label: '🎭 Mask' },
-        { id: 'chroma', label: '🟢 Chroma' },
-        { id: 'delete', label: '🗑️ Delete' }
+        { id: 'replace', label: 'Replace' },
+        { id: 'motion', label: 'Motion' },
+        { id: 'lock', label: 'Lock' },
+        { id: 'duplicate', label: 'Duplicate' },
+        { id: 'rotate', label: 'Rotate' },
+        { id: 'fit', label: 'Auto Fit' },
+        { id: 'blur', label: 'Blur' },
+        { id: 'opacity', label: 'Opacity' },
+        { id: 'mask', label: 'Mask' },
+        { id: 'chroma', label: 'Chroma' },
+        { id: 'delete', label: 'Delete' }
     ];
 
     btnList.forEach(btnInfo => {
         const btn = document.createElement('button');
         btn.className = 'sStudioPipBtn';
-        btn.id = 'pip_btn_' + btnInfo.id;
         btn.innerText = btnInfo.label;
         btn.style.cssText = `
             background: ${btnInfo.id === 'delete' ? '#ff4757' : '#222733'} !important; 
@@ -1881,9 +3315,6 @@ function executePipToolAction(actionId, targetObject) {
     switch (actionId) {
         case 'motion':
             openPipMotionMenu(targetObject);
-            break;
-        case 'keyframe':
-            addPipKeyframeMarker(targetObject);
             break;
         case 'replace':
             const picker = document.createElement('input');
@@ -1920,11 +3351,6 @@ function executePipToolAction(actionId, targetObject) {
             targetObject.dataset.rot = r;
             targetObject.style.transform = `rotate(${r}deg)`;
             break;
-        case 'flip':
-            let f = targetObject.dataset.flip === "true";
-            targetObject.style.transform = f ? "scaleX(1)" : "scaleX(-1)";
-            targetObject.dataset.flip = f ? "false" : "true";
-            break;
         case 'fit':
             targetObject.style.top = "0px";
             targetObject.style.left = "0px";
@@ -1945,9 +3371,12 @@ function executePipToolAction(actionId, targetObject) {
             if (mediaEl) mediaEl.style.filter = "contrast(140%) saturate(120%) hue-rotate(-30deg)";
             break;
         case 'delete':
+            const trackBlock = document.getElementById('track_' + targetObject.id);
+            if (trackBlock) trackBlock.remove();
             targetObject.remove();
             const p = document.getElementById('sStudioPipDynamicPanel');
             if (p) p.remove();
+            currentActivePIPLayer = null;
             break;
     }
 }
@@ -1967,11 +3396,11 @@ function openPipMotionMenu(targetObject) {
             <span>🎬 PIP ENTRANCE ANIMATIONS</span>
             <span onclick="this.parentElement.parentElement.remove()" style="cursor:pointer; font-size:18px; color:#a4b0be;">&times;</span>
         </div>
-        <button onclick="applyPipMotion(currentActivePIPLayer, 'fade'); this.parentElement.remove();" style="background:#222733; color:white; border:1px solid #333; padding:8px; border-radius:4px; font-size:11px; cursor:pointer; text-align:left;">✨ Smooth Fade In</button>
-        <button onclick="applyPipMotion(currentActivePIPLayer, 'slideLeft'); this.parentElement.remove();" style="background:#222733; color:white; border:1px solid #333; padding:8px; border-radius:4px; font-size:11px; cursor:pointer; text-align:left;">⬅️ Slide In Left</button>
-        <button onclick="applyPipMotion(currentActivePIPLayer, 'slideUp'); this.parentElement.remove();" style="background:#222733; color:white; border:1px solid #333; padding:8px; border-radius:4px; font-size:11px; cursor:pointer; text-align:left;">⬆️ Slide In Bottom</button>
-        <button onclick="applyPipMotion(currentActivePIPLayer, 'popZoom'); this.parentElement.remove();" style="background:#222733; color:white; border:1px solid #333; padding:8px; border-radius:4px; font-size:11px; cursor:pointer; text-align:left;">➕ Pop Zoom In</button>
-        <button onclick="applyPipMotion(currentActivePIPLayer, 'none'); this.parentElement.remove();" style="background:#ff4757; color:white; border:none; padding:8px; border-radius:4px; font-size:11px; font-weight:bold; cursor:pointer; margin-top:4px;">🔄 Reset Animation</button>
+        <button onclick="applyPipMotion(currentActivePIPLayer, 'fade'); this.parentElement.remove();" style="background:#222733; color:white; border:1px solid #333; padding:8px; border-radius:4px; font-size:11px; cursor:pointer; text-align:left;">Smooth Fade In</button>
+        <button onclick="applyPipMotion(currentActivePIPLayer, 'slideLeft'); this.parentElement.remove();" style="background:#222733; color:white; border:1px solid #333; padding:8px; border-radius:4px; font-size:11px; cursor:pointer; text-align:left;">Slide In Left</button>
+        <button onclick="applyPipMotion(currentActivePIPLayer, 'slideUp'); this.parentElement.remove();" style="background:#222733; color:white; border:1px solid #333; padding:8px; border-radius:4px; font-size:11px; cursor:pointer; text-align:left;">Slide In Bottom</button>
+        <button onclick="applyPipMotion(currentActivePIPLayer, 'popZoom'); this.parentElement.remove();" style="background:#222733; color:white; border:1px solid #333; padding:8px; border-radius:4px; font-size:11px; cursor:pointer; text-align:left;">Pop Zoom In</button>
+        <button onclick="applyPipMotion(currentActivePIPLayer, 'none'); this.parentElement.remove();" style="background:#ff4757; color:white; border:none; padding:8px; border-radius:4px; font-size:11px; font-weight:bold; cursor:pointer; margin-top:4px;">Reset Animation</button>
     `;
 
     document.body.appendChild(menu);
@@ -2006,6 +3435,10 @@ function injectMotionCSSKeyframes() {
     document.head.appendChild(style);
 }
 
+// ==========================================================================
+// 🔑 PIP KEYFRAMES & INTERPOLATION ENGINE
+// ==========================================================================
+
 function addPipKeyframeMarker(targetObject) {
     const mainVideo = document.getElementById('mainPlayer');
     const currentTime = mainVideo ? mainVideo.currentTime : 0;
@@ -2018,7 +3451,6 @@ function addPipKeyframeMarker(targetObject) {
     keyframes.sort((a, b) => a.time - b.time);
 
     targetObject.dataset.keyframes = JSON.stringify(keyframes);
-    alert(`Keyframe anchored at ${currentTime.toFixed(2)}s!`);
 }
 
 function updatePipKeyframeInterpolation() {
@@ -2047,14 +3479,439 @@ function updatePipKeyframeInterpolation() {
     });
 }
 
-setInterval(updatePipKeyframeInterpolation, 40);
 // ==========================================================================
-// 🚀 S STUDIO - AUDIO HUB, TEXT OVERLAY, EXPORT & MODALS (PART 4/4)
+// 👻 0% - 200% OPACITY & DOUBLE-WHITE CLARITY CONTROLLER
 // ==========================================================================
 
-// --------------------------------------------------------------------------
+let currentMasterOpacityLevel = 100;
+
+function openOpacityControlMenu() {
+    const targetElement = currentActivePIPLayer 
+        ? (currentActivePIPLayer.querySelector('video, img') || currentActivePIPLayer)
+        : (document.getElementById('mainPlayer') || currentVideoElement);
+
+    if (!targetElement) return;
+
+    const oldMenu = document.getElementById('sStudioOpacityModal');
+    if (oldMenu) { oldMenu.remove(); return; }
+
+    const modal = document.createElement('div');
+    modal.id = 'sStudioOpacityModal';
+    modal.style.cssText = `
+        position: fixed !important;
+        top: 50% !important;
+        left: 50% !important;
+        transform: translate(-50%, -50%) !important;
+        background: #14171f !important;
+        border: 2px solid #00f2fe !important;
+        padding: 20px !important;
+        border-radius: 14px !important;
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 12px !important;
+        z-index: 100000 !important;
+        width: 330px !important;
+        color: white !important;
+        font-family: sans-serif !important;
+        box-shadow: 0 10px 40px rgba(0, 242, 254, 0.3) !important;
+    `;
+
+    modal.innerHTML = `
+        <div style="font-size: 13px; color: #00f2fe; font-weight: bold; border-bottom: 1px solid #2f3542; padding-bottom: 6px; display: flex; justify-content: space-between; align-items: center;">
+            <span>👻 OPACITY & DOUBLE-WHITE BOOST</span>
+            <span onclick="this.parentElement.parentElement.remove()" style="cursor: pointer; font-size: 18px; color: #a4b0be;">&times;</span>
+        </div>
+
+        <div style="background: rgba(0, 242, 254, 0.05); padding: 12px; border-radius: 8px; border: 1px solid #00f2fe;">
+            <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 6px;">
+                <span style="color: #a8a5ff; font-weight: bold;">Level:</span>
+                <span id="opacityDisplayVal" style="color: #00f2fe; font-weight: bold; font-size: 14px;">${currentMasterOpacityLevel}%</span>
+            </div>
+            
+            <input type="range" id="opacityRangeSlider" min="0" max="200" step="1" value="${currentMasterOpacityLevel}" style="width: 100%; accent-color: #00f2fe; cursor: pointer;" oninput="updateLiveVideoOpacity(this.value)">
+            
+            <div style="display: flex; justify-content: space-between; font-size: 10px; color: #a4b0be; margin-top: 5px;">
+                <span>0%</span>
+                <span style="color: #f1c40f; font-weight: bold;">100%</span>
+                <span style="color: #00f2fe; font-weight: bold;">200% (Double White)</span>
+            </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px;">
+            <button onclick="setOpacityPreset(0)" style="background: #222733; color: white; border: 1px solid #333; padding: 6px 0; border-radius: 4px; font-size: 10px; cursor: pointer;">0%</button>
+            <button onclick="setOpacityPreset(50)" style="background: #222733; color: white; border: 1px solid #333; padding: 6px 0; border-radius: 4px; font-size: 10px; cursor: pointer;">50%</button>
+            <button onclick="setOpacityPreset(100)" style="background: #222733; color: #f1c40f; border: 1px solid #f1c40f; font-weight: bold; padding: 6px 0; border-radius: 4px; font-size: 10px; cursor: pointer;">100%</button>
+            <button onclick="setOpacityPreset(150)" style="background: #222733; color: white; border: 1px solid #333; padding: 6px 0; border-radius: 4px; font-size: 10px; cursor: pointer;">150%</button>
+            <button onclick="setOpacityPreset(200)" style="background: rgba(0,242,254,0.2); color: #00f2fe; border: 1px solid #00f2fe; font-weight: bold; padding: 6px 0; border-radius: 4px; font-size: 10px; cursor: pointer;">200%</button>
+        </div>
+
+        <button onclick="document.getElementById('sStudioOpacityModal').remove();" style="background: linear-gradient(135deg, #00f2fe, #6c5ce7); color: black; border: none; padding: 9px; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 4px;">
+            Apply & Close
+        </button>
+    `;
+
+    document.body.appendChild(modal);
+}
+
+function updateLiveVideoOpacity(val) {
+    const level = parseInt(val);
+    currentMasterOpacityLevel = level;
+
+    const display = document.getElementById('opacityDisplayVal');
+    if (display) display.innerText = level + "%";
+
+    const targetElement = currentActivePIPLayer 
+        ? (currentActivePIPLayer.querySelector('video, img') || currentActivePIPLayer)
+        : (document.getElementById('mainPlayer') || currentVideoElement);
+
+    if (!targetElement) return;
+
+    if (level <= 100) {
+        targetElement.style.opacity = (level / 100).toString();
+        targetElement.style.filter = "none";
+    } else {
+        targetElement.style.opacity = "1.0";
+        const boostRatio = (level - 100) / 100;
+        const brightness = 100 + (boostRatio * 65);
+        const contrast = 100 + (boostRatio * 45);
+        const saturation = 100 + (boostRatio * 20);
+        const glowSpread = Math.round(boostRatio * 15);
+
+        targetElement.style.filter = `brightness(${brightness}%) contrast(${contrast}%) saturate(${saturation}%) drop-shadow(0 0 ${glowSpread}px rgba(255, 255, 255, ${0.2 + (boostRatio * 0.4)}))`;
+    }
+}
+
+function setOpacityPreset(val) {
+    const slider = document.getElementById('opacityRangeSlider');
+    if (slider) slider.value = val;
+    updateLiveVideoOpacity(val);
+}
+
+// ==========================================================================
+// 🎨 ADVANCED FILTERS & COLOR GRADING ENGINE
+// ==========================================================================
+
+const videoFilterPresets = {
+    original: "none",
+    cinematic: "contrast(125%) saturate(120%) brightness(95%) hue-rotate(-5deg)",
+    warmTeal: "contrast(115%) saturate(130%) sepia(20%) hue-rotate(15deg)",
+    vintage: "sepia(50%) contrast(110%) brightness(90%) saturate(85%)",
+    bwClassic: "grayscale(100%) contrast(130%) brightness(105%)",
+    moodyDark: "brightness(80%) contrast(140%) saturate(90%)",
+    vividPop: "saturate(160%) contrast(115%) brightness(105%)",
+    cyberpunk: "hue-rotate(180deg) saturate(150%) contrast(120%)"
+};
+
+function openVideoFiltersMenu() {
+    const old = document.getElementById('sStudioFiltersModal');
+    if (old) old.remove();
+
+    const targetElement = currentActivePIPLayer 
+        ? (currentActivePIPLayer.querySelector('video, img') || currentActivePIPLayer)
+        : (document.getElementById('mainPlayer') || currentVideoElement);
+
+    if (!targetElement) return;
+
+    const modal = document.createElement('div');
+    modal.id = 'sStudioFiltersModal';
+    modal.style.cssText = `
+        position: fixed !important;
+        top: 50% !important;
+        left: 50% !important;
+        transform: translate(-50%, -50%) !important;
+        background: #14171f !important;
+        border: 2px solid #6c5ce7 !important;
+        padding: 20px !important;
+        border-radius: 14px !important;
+        z-index: 100000 !important;
+        width: 340px !important;
+        color: white !important;
+        font-family: sans-serif !important;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.85) !important;
+    `;
+
+    modal.innerHTML = `
+        <div style="font-size: 13px; color: #a8a5ff; font-weight: bold; border-bottom: 1px solid #2f3542; padding-bottom: 6px; display: flex; justify-content: space-between; align-items: center;">
+            <span>🎨 COLOR PRESETS & FILTERS</span>
+            <span onclick="this.parentElement.parentElement.remove()" style="cursor: pointer; font-size: 18px; color: #a4b0be;">&times;</span>
+        </div>
+
+        <p style="font-size: 11px; color: #a4b0be; margin: 8px 0 4px;">Choose Cinematic Color Grade:</p>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px;">
+            <button onclick="applyPresetFilter('original')" style="background:#222733; color:white; border:1px solid #333; padding:8px; border-radius:5px; font-size:11px; cursor:pointer;">Original</button>
+            <button onclick="applyPresetFilter('cinematic')" style="background:#222733; color:#00f2fe; border:1px solid #00f2fe; padding:8px; border-radius:5px; font-size:11px; font-weight:bold; cursor:pointer;">Cinematic Teal</button>
+            <button onclick="applyPresetFilter('warmTeal')" style="background:#222733; color:#ff9f43; border:1px solid #ff9f43; padding:8px; border-radius:5px; font-size:11px; cursor:pointer;">Warm Glow</button>
+            <button onclick="applyPresetFilter('vintage')" style="background:#222733; color:#f1c40f; border:1px solid #f1c40f; padding:8px; border-radius:5px; font-size:11px; cursor:pointer;">90s Vintage</button>
+            <button onclick="applyPresetFilter('bwClassic')" style="background:#222733; color:#ffffff; border:1px solid #fff; padding:8px; border-radius:5px; font-size:11px; cursor:pointer;">B & W Noir</button>
+            <button onclick="applyPresetFilter('moodyDark')" style="background:#222733; color:#a8a5ff; border:1px solid #a8a5ff; padding:8px; border-radius:5px; font-size:11px; cursor:pointer;">Moody Dark</button>
+            <button onclick="applyPresetFilter('vividPop')" style="background:#222733; color:#10ac84; border:1px solid #10ac84; padding:8px; border-radius:5px; font-size:11px; cursor:pointer;">Vivid Pop</button>
+            <button onclick="applyPresetFilter('cyberpunk')" style="background:#222733; color:#ff4757; border:1px solid #ff4757; padding:8px; border-radius:5px; font-size:11px; cursor:pointer;">Cyberpunk</button>
+        </div>
+
+        <button onclick="document.getElementById('sStudioFiltersModal').remove();" style="background:#6c5ce7; color:white; border:none; padding:8px; border-radius:6px; font-weight:bold; width:100%; margin-top:10px; cursor:pointer;">
+            Apply Filter
+        </button>
+    `;
+
+    document.body.appendChild(modal);
+}
+
+function applyPresetFilter(presetKey) {
+    const targetElement = currentActivePIPLayer 
+        ? (currentActivePIPLayer.querySelector('video, img') || currentActivePIPLayer)
+        : (document.getElementById('mainPlayer') || currentVideoElement);
+
+    if (targetElement && videoFilterPresets[presetKey]) {
+        targetElement.style.filter = videoFilterPresets[presetKey];
+    }
+}
+
+// ==========================================================================
+// 🪄 BACKGROUND REMOVAL & CHROMA KEY STUDIO
+// ==========================================================================
+
+function openBgRemovalStudio() {
+    const targetElement = currentActivePIPLayer 
+        ? (currentActivePIPLayer.querySelector('video, img') || currentActivePIPLayer)
+        : (document.getElementById('mainPlayer') || currentVideoElement);
+
+    if (!targetElement) return;
+
+    const old = document.getElementById('sStudioBgRemovalModal');
+    if (old) old.remove();
+
+    const modal = document.createElement('div');
+    modal.id = 'sStudioBgRemovalModal';
+    modal.style.cssText = `
+        position: fixed !important;
+        top: 50% !important;
+        left: 50% !important;
+        transform: translate(-50%, -50%) !important;
+        background: #14171f !important;
+        border: 2px solid #10ac84 !important;
+        padding: 20px !important;
+        border-radius: 14px !important;
+        z-index: 100000 !important;
+        width: 320px !important;
+        color: white !important;
+        font-family: sans-serif !important;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.85) !important;
+    `;
+
+    modal.innerHTML = `
+        <div style="font-size: 13px; color: #10ac84; font-weight: bold; border-bottom: 1px solid #2f3542; padding-bottom: 6px; display: flex; justify-content: space-between; align-items: center;">
+            <span>🪄 BACKGROUND REMOVER / CHROMA</span>
+            <span onclick="this.parentElement.parentElement.remove()" style="cursor: pointer; font-size: 18px; color: #a4b0be;">&times;</span>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 10px;">
+            <button onclick="applyBgRemovalMode('green')" style="background:#222733; color:#10ac84; border:1px solid #10ac84; padding:8px; border-radius:5px; font-weight:bold; cursor:pointer;">
+                Remove Green Screen
+            </button>
+            <button onclick="applyBgRemovalMode('blue')" style="background:#222733; color:#00f2fe; border:1px solid #00f2fe; padding:8px; border-radius:5px; font-weight:bold; cursor:pointer;">
+                Remove Blue Screen
+            </button>
+            <button onclick="applyBgRemovalMode('black')" style="background:#222733; color:#e2e8f0; border:1px solid #475569; padding:8px; border-radius:5px; font-weight:bold; cursor:pointer;">
+                Remove Black Background (Screen Blend)
+            </button>
+            <button onclick="applyBgRemovalMode('reset')" style="background:#ff4757; color:white; border:none; padding:8px; border-radius:5px; font-weight:bold; cursor:pointer;">
+                Reset Background
+            </button>
+        </div>
+    `;
+
+    document.body.appendChild(modal);
+}
+
+function applyBgRemovalMode(mode) {
+    const target = currentActivePIPLayer 
+        ? (currentActivePIPLayer.querySelector('video, img') || currentActivePIPLayer)
+        : (document.getElementById('mainPlayer') || currentVideoElement);
+
+    if (!target) return;
+
+    if (mode === 'green') {
+        target.style.mixBlendMode = "screen";
+        target.style.filter = "hue-rotate(180deg) saturate(140%)";
+    } else if (mode === 'blue') {
+        target.style.mixBlendMode = "screen";
+        target.style.filter = "hue-rotate(90deg) saturate(150%)";
+    } else if (mode === 'black') {
+        target.style.mixBlendMode = "screen";
+    } else {
+        target.style.mixBlendMode = "normal";
+        target.style.filter = "none";
+    }
+}
+
+// ==========================================================================
+// ✨ ANIMATED ELEMENTS & STICKERS LIBRARY
+// ==========================================================================
+
+const videoElementsList = [
+    { name: "Subscribe Button", icon: "🔔", text: "SUBSCRIBE" },
+    { name: "Like Thumbs Up", icon: "👍", text: "LIKE" },
+    { name: "Fire Trending", icon: "🔥", text: "TRENDING" },
+    { name: "Arrow Indicator", icon: "➡️", text: "LOOK HERE" },
+    { name: "Warning Alert", icon: "⚠️", text: "ALERT" },
+    { name: "Celebration Confetti", icon: "🎉", text: "PARTY" },
+    { name: "Love Heart", icon: "❤️", text: "LOVE" },
+    { name: "Verified Badge", icon: "✅", text: "VERIFIED" }
+];
+
+function openElementsLibraryModal() {
+    const old = document.getElementById('sStudioElementsModal');
+    if (old) old.remove();
+
+    const modal = document.createElement('div');
+    modal.id = 'sStudioElementsModal';
+    modal.style.cssText = `
+        position: fixed !important;
+        top: 50% !important;
+        left: 50% !important;
+        transform: translate(-50%, -50%) !important;
+        background: #14171f !important;
+        border: 2px solid #ff9f43 !important;
+        padding: 20px !important;
+        border-radius: 14px !important;
+        z-index: 100000 !important;
+        width: 340px !important;
+        color: white !important;
+        font-family: sans-serif !important;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.85) !important;
+    `;
+
+    let itemsHTML = videoElementsList.map(item => `
+        <button onclick="insertGraphicElementToCanvas('${item.icon}', '${item.text}'); document.getElementById('sStudioElementsModal').remove();" style="background:#222733; color:white; border:1px solid #333; padding:8px; border-radius:6px; cursor:pointer; display:flex; align-items:center; gap:8px; font-size:11px;">
+            <span style="font-size:16px;">${item.icon}</span>
+            <span>${item.name}</span>
+        </button>
+    `).join('');
+
+    modal.innerHTML = `
+        <div style="font-size: 13px; color: #ff9f43; font-weight: bold; border-bottom: 1px solid #2f3542; padding-bottom: 6px; display: flex; justify-content: space-between; align-items: center;">
+            <span>✨ ELEMENTS & STICKERS HUB</span>
+            <span onclick="this.parentElement.parentElement.remove()" style="cursor: pointer; font-size: 18px; color: #a4b0be;">&times;</span>
+        </div>
+        <p style="font-size: 11px; color: #a4b0be; margin: 8px 0 6px;">Select an animated element to add:</p>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; max-height: 250px; overflow-y: auto;">
+            ${itemsHTML}
+        </div>
+    `;
+
+    document.body.appendChild(modal);
+}
+
+function insertGraphicElementToCanvas(icon, label) {
+    const wrapper = document.getElementById('videoWrapper');
+    if (!wrapper) return;
+
+    const elementId = 'elem_' + Date.now();
+    const elemNode = document.createElement('div');
+    elemNode.id = elementId;
+    elemNode.className = 'live-pip-object';
+    elemNode.style.cssText = `
+        position: absolute;
+        top: 30%;
+        left: 30%;
+        background: rgba(0, 0, 0, 0.7);
+        border: 2px solid #ff9f43;
+        padding: 6px 12px;
+        border-radius: 8px;
+        color: white;
+        font-weight: bold;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        cursor: move;
+        z-index: 120;
+        animation: loop-pulse 1.5s infinite ease-in-out;
+        user-select: none;
+    `;
+
+    elemNode.innerHTML = `
+        <span>${icon}</span> <span>${label}</span>
+        <span onclick="this.parentElement.remove()" style="cursor:pointer; margin-left:6px; color:#ff4757; font-size:11px;">✕</span>
+    `;
+
+    if (typeof makeElementDraggable === 'function') {
+        makeElementDraggable(elemNode);
+    }
+    wrapper.appendChild(elemNode);
+
+    const pipTrack = document.getElementById('pipTrackBlock') || document.getElementById('frameTimelineTrack');
+    if (pipTrack) {
+        const block = document.createElement('div');
+        block.id = 'track_' + elementId;
+        block.style.cssText = `
+            background: #ff9f43 !important;
+            color: white !important;
+            padding: 4px 8px !important;
+            border-radius: 6px !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            margin-top: 4px !important;
+            height: 32px !important;
+            font-family: sans-serif !important;
+            cursor: move !important;
+            user-select: none !important;
+            z-index: 10;
+        `;
+        block.innerHTML = `
+            <span style="font-size:11px; font-weight:bold; overflow:hidden; text-overflow:ellipsis; max-width:90px; pointer-events:none;">${icon} ${label}</span>
+            <div class="stretch-handle" style="position:absolute; right:0; top:0; width:14px; height:100%; background:#d35400; cursor:e-resize; border-radius:0 5px 5px 0;" title="Drag to resize"></div>
+        `;
+        pipTrack.appendChild(block);
+        if (typeof attachTimelineDragAndStretch === 'function') {
+            attachTimelineDragAndStretch(block, elemNode, 5);
+        }
+    }
+}
+
+// Global Safe Timeline Drag & Stretch Engine
+function attachTimelineDragAndStretch(trackBlock, onScreenElement, defaultDurationSec) {
+    if (!trackBlock) return;
+    const pixelsPerSec = 15;
+    const initialWidth = Math.max(60, (defaultDurationSec || 5) * pixelsPerSec);
+    trackBlock.style.width = initialWidth + "px";
+
+    if (onScreenElement) {
+        onScreenElement.dataset.start = onScreenElement.dataset.start || "0";
+        onScreenElement.dataset.end = onScreenElement.dataset.end || (defaultDurationSec || 5).toString();
+    }
+
+    const stretchHandle = trackBlock.querySelector('.stretch-handle') || trackBlock.querySelector('.audio-stretch-handle');
+    if (stretchHandle) {
+        stretchHandle.onmousedown = function(e) {
+            e.stopPropagation();
+            let startX = e.clientX;
+            let startW = trackBlock.offsetWidth;
+
+            function onMouseMove(ev) {
+                let newW = Math.max(50, startW + (ev.clientX - startX));
+                trackBlock.style.width = newW + "px";
+                let dur = (newW / pixelsPerSec).toFixed(2);
+                trackBlock.dataset.end = dur;
+                if (onScreenElement) onScreenElement.dataset.end = dur;
+            }
+
+            function onMouseUp() {
+                document.removeEventListener('mousemove', onMouseMove);
+                document.removeEventListener('mouseup', onMouseUp);
+            }
+
+            document.addEventListener('mousemove', onMouseMove);
+            document.addEventListener('mouseup', onMouseUp);
+        };
+    }
+}
+
+// ==========================================================================
 // 🎵 AUDIO HUB & VOICE RECORDING ENGINE
-// --------------------------------------------------------------------------
+// ==========================================================================
+
 function addMusicOverlay() {
     const oldMenu = document.getElementById('sStudioMusicMenuHub');
     if (oldMenu) { oldMenu.remove(); return; }
@@ -2083,20 +3940,20 @@ function addMusicOverlay() {
     `;
 
     const musicLibrary = {
-        "🎬 Cinematic Beats BGM": [
-            { name: "Cinematic Epic Trailer", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" },
-            { name: "Dramatic Tension Pulse", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3" }
+        "Cinematic Beats": [
+            { name: "Epic Trailer Pulse", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" },
+            { name: "Dramatic Tension Beat", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3" }
         ],
-        "💼 Corporate Info Music": [
-            { name: "Corporate Motivation", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" },
-            { name: "Business Presentation BGM", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3" }
+        "Corporate & Presentation": [
+            { name: "Inspiring Motivation", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" },
+            { name: "Modern Corporate Flow", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3" }
         ],
-        "✨ Upbeat Vlog Sounds": [
-            { name: "Upbeat Summer Vlog", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3" },
-            { name: "Energy Funk Groove", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-10.mp3" }
+        "Upbeat Vlog Sounds": [
+            { name: "Summer Energy Funk", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3" },
+            { name: "Upbeat Groove Pop", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-10.mp3" }
         ],
-        "🎧 Chill Lofi Loops": [
-            { name: "Lofi Study Chill Beat", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3" },
+        "Chill Lofi Beats": [
+            { name: "Lofi Study Session", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3" },
             { name: "Midnight Coffee Lofi", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-12.mp3" }
         ]
     };
@@ -2107,10 +3964,10 @@ function addMusicOverlay() {
     Object.keys(musicLibrary).forEach(category => {
         let tracksList = musicLibrary[category].map(track => `
             <div style="display:flex; justify-content:space-between; align-items:center; background:#222733; padding:6px 8px; border-radius:4px; margin-top:4px;">
-                <span style="font-size:11px; color:#e2e8f0;">🎵 ${track.name}</span>
+                <span style="font-size:11px; color:#e2e8f0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:140px;">🎵 ${track.name}</span>
                 <div style="display:flex; gap:4px;">
-                    <button class="preview-btn" data-url="${track.url}" style="background:#334155; color:#38bdf8; border:none; padding:3px 6px; border-radius:3px; font-size:10px; cursor:pointer;">🔊 Play</button>
-                    <button class="add-track-btn" data-name="${track.name}" data-url="${track.url}" style="background:#10ac84; color:white; border:none; padding:3px 8px; border-radius:3px; font-size:10px; font-weight:bold; cursor:pointer;">➕ Add</button>
+                    <button class="preview-btn" data-url="${track.url}" style="background:#334155; color:#38bdf8; border:none; padding:3px 8px; border-radius:3px; font-size:10px; cursor:pointer;">Play</button>
+                    <button class="add-track-btn" data-name="${track.name}" data-url="${track.url}" style="background:#10ac84; color:white; border:none; padding:3px 8px; border-radius:3px; font-size:10px; font-weight:bold; cursor:pointer;">+ Add</button>
                 </div>
             </div>
         `).join('');
@@ -2168,12 +4025,12 @@ function addMusicOverlay() {
             const url = this.getAttribute('data-url');
             if (previewAudioPlayer.src === url && !previewAudioPlayer.paused) {
                 previewAudioPlayer.pause();
-                this.innerText = "🔊 Play";
+                this.innerText = "Play";
             } else {
-                menu.querySelectorAll('.preview-btn').forEach(b => b.innerText = "🔊 Play");
+                menu.querySelectorAll('.preview-btn').forEach(b => b.innerText = "Play");
                 previewAudioPlayer.src = url;
-                previewAudioPlayer.play();
-                this.innerText = "⏸️ Pause";
+                previewAudioPlayer.play().catch(() => {});
+                this.innerText = "Pause";
             }
         };
     });
@@ -2188,8 +4045,45 @@ function addMusicOverlay() {
     });
 }
 
+function toggleVoiceRecording() {
+    if (mediaRecorder && mediaRecorder.state === "recording") {
+        mediaRecorder.stop();
+        return;
+    }
+
+    navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+        mediaRecorder = new MediaRecorder(stream);
+        audioChunks = [];
+
+        mediaRecorder.ondataavailable = e => {
+            if (e.data.size > 0) audioChunks.push(e.data);
+        };
+
+        mediaRecorder.onstop = () => {
+            const audioBlob = new Blob(audioChunks, { type: 'audio/mp3' });
+            const audioUrl = URL.createObjectURL(audioBlob);
+            processAudioTrackInjection("VoiceOver_" + Date.now(), audioUrl);
+            stream.getTracks().forEach(track => track.stop());
+        };
+
+        mediaRecorder.start();
+
+        const toast = document.createElement('div');
+        toast.id = 'sStudioVoiceToast';
+        toast.style.cssText = "position:fixed; top:20px; left:50%; transform:translateX(-50%); background:#ff4757; color:white; padding:8px 16px; border-radius:20px; font-weight:bold; font-size:12px; z-index:2147483647; box-shadow:0 4px 15px rgba(255,71,87,0.4); display:flex; gap:8px; align-items:center;";
+        toast.innerHTML = `<span>🔴 Recording Voice... Click to Stop</span>`;
+        toast.onclick = () => {
+            mediaRecorder.stop();
+            toast.remove();
+        };
+        document.body.appendChild(toast);
+    }).catch(err => {
+        console.warn("Microphone access denied or unavailable:", err);
+    });
+}
+
 // ==========================================================================
-// 🎵 AUDIO INJECTION & ACTION PANEL ENGINE
+// 🎵 AUDIO TRACK INJECTION & ACTION PANEL
 // ==========================================================================
 
 function processAudioTrackInjection(trackName, customSrc) {
@@ -2197,7 +4091,7 @@ function processAudioTrackInjection(trackName, customSrc) {
     const audio = new Audio(customSrc);
     audio.loop = true;
 
-    activeAudioNodes[audioId] = { audio: audio, name: trackName };
+    activeAudioNodes[audioId] = { audio: audio, name: trackName, volume: 1.0 };
 
     const block = document.createElement('div');
     block.id = audioId;
@@ -2234,7 +4128,7 @@ function processAudioTrackInjection(trackName, customSrc) {
     block.innerHTML = `
         <span style="font-size:11px; font-weight:bold; z-index:2; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px;">🎵 ${trackName}</span>
         ${waveHTML}
-        <div class="audio-stretch-handle" style="position:absolute; right:0; top:0; width:14px; height:100%; background:#10ac84; cursor:e-resize; opacity:0.9;" title="Drag right to extend audio duration"></div>
+        <div class="audio-stretch-handle" style="position:absolute; right:0; top:0; width:14px; height:100%; background:#10ac84; cursor:e-resize; opacity:0.9;" title="Drag to extend audio"></div>
     `;
 
     block.onclick = function(e) {
@@ -2243,36 +4137,91 @@ function processAudioTrackInjection(trackName, customSrc) {
     };
 
     const stretchHandle = block.querySelector('.audio-stretch-handle');
-    let isStretching = false;
-    let startX = 0;
-    let startWidth = 0;
+    if (stretchHandle) {
+        stretchHandle.onmousedown = function(e) {
+            e.stopPropagation();
+            let startX = e.clientX;
+            let startWidth = block.offsetWidth;
 
-    stretchHandle.onmousedown = function(e) {
-        e.stopPropagation();
-        isStretching = true;
-        startX = e.clientX;
-        startWidth = block.offsetWidth;
-
-        document.onmousemove = function(ev) {
-            if (!isStretching) return;
-            let newWidth = startWidth + (ev.clientX - startX);
-            if (newWidth > 60) {
+            function onMouseMove(ev) {
+                let newWidth = Math.max(60, startWidth + (ev.clientX - startX));
                 block.style.width = newWidth + "px";
                 let durationSec = Math.max(1, newWidth / 15);
                 block.dataset.end = durationSec.toFixed(2);
             }
-        };
 
-        document.onmouseup = function() {
-            isStretching = false;
-            document.onmousemove = null;
-            document.onmouseup = null;
-        };
-    };
+            function onMouseUp() {
+                document.removeEventListener('mousemove', onMouseMove);
+                document.removeEventListener('mouseup', onMouseUp);
+            }
 
-    const container = document.getElementById('audioTrackBlock');
+            document.addEventListener('mousemove', onMouseMove);
+            document.addEventListener('mouseup', onMouseUp);
+        };
+    }
+
+    const container = document.getElementById('audioTrackBlock') || document.getElementById('frameTimelineTrack');
     if (container) container.appendChild(block); 
 }
+
+function showAudioTrackActionPanel(audioId, trackName, src) {
+    const oldModal = document.getElementById('sStudioAudioTrackModal');
+    if (oldModal) oldModal.remove();
+
+    const node = activeAudioNodes[audioId];
+    if (!node) return;
+
+    const modal = document.createElement('div');
+    modal.id = 'sStudioAudioTrackModal';
+    modal.style.cssText = `
+        position: fixed !important;
+        top: 50% !important;
+        left: 50% !important;
+        transform: translate(-50%, -50%) !important;
+        background: #161920 !important;
+        border: 2px solid #10ac84 !important;
+        padding: 18px !important;
+        border-radius: 12px !important;
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 10px !important;
+        z-index: 100000 !important;
+        width: 300px !important;
+        color: white !important;
+        font-family: sans-serif !important;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.85) !important;
+    `;
+
+    modal.innerHTML = `
+        <div style="font-size: 12px; color: #10ac84; font-weight: bold; border-bottom: 1px solid #2f3542; padding-bottom: 6px; display: flex; justify-content: space-between; align-items: center;">
+            <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:240px;">🎵 ${trackName}</span>
+            <span onclick="this.parentElement.parentElement.remove()" style="cursor: pointer; font-size: 18px; color: #a4b0be;">&times;</span>
+        </div>
+        <label style="font-size: 11px; color: #a4b0be;">Volume:
+            <input type="range" min="0" max="1" step="0.05" value="${node.audio.volume}" style="width: 100%; accent-color: #10ac84;" oninput="activeAudioNodes['${audioId}'].audio.volume = this.value">
+        </label>
+        <button id="btnDeleteAudioTrack" style="background: #ff4757; color: white; border: none; padding: 8px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 11px; margin-top: 4px;">
+            Delete Track
+        </button>
+    `;
+
+    modal.querySelector('#btnDeleteAudioTrack').onclick = function() {
+        if (node.audio) {
+            node.audio.pause();
+            node.audio.src = '';
+        }
+        delete activeAudioNodes[audioId];
+        const block = document.getElementById(audioId);
+        if (block) block.remove();
+        modal.remove();
+    };
+
+    document.body.appendChild(modal);
+}
+
+// ==========================================================================
+// 🎵 AUDIO TRACK ACTION PANEL & VOICE RECORDER
+// ==========================================================================
 
 function showAudioTrackActionPanel(audioId, trackName, currentSrc) {
     const oldPanel = document.getElementById('sStudioAudioActionPanel');
@@ -2301,8 +4250,8 @@ function showAudioTrackActionPanel(audioId, trackName, currentSrc) {
 
     panel.innerHTML = `
         <span style="font-weight:bold; color:#10ac84;">🎵 ${trackName}</span>
-        <button id="btnReplaceAudio" style="background:#6c5ce7; color:white; border:none; padding:6px 10px; border-radius:4px; font-weight:bold; cursor:pointer;">🔄 Replace Track</button>
-        <button id="btnDeleteAudio" style="background:#ff4757; color:white; border:none; padding:6px 10px; border-radius:4px; font-weight:bold; cursor:pointer;">🗑️ Delete Track</button>
+        <button id="btnReplaceAudio" style="background:#6c5ce7; color:white; border:none; padding:6px 10px; border-radius:4px; font-weight:bold; cursor:pointer;">Replace Track</button>
+        <button id="btnDeleteAudio" style="background:#ff4757; color:white; border:none; padding:6px 10px; border-radius:4px; font-weight:bold; cursor:pointer;">Delete Track</button>
         <span onclick="this.parentElement.remove()" style="cursor:pointer; font-size:16px; color:#a4b0be; margin-left:5px;">✕</span>
     `;
 
@@ -2331,52 +4280,16 @@ function showAudioTrackActionPanel(audioId, trackName, currentSrc) {
 
     panel.querySelector('#btnDeleteAudio').onclick = function(e) {
         e.stopPropagation();
-        if (confirm(`Do you want to delete "${trackName}"?`)) {
-            if (activeAudioNodes[audioId]) {
-                activeAudioNodes[audioId].audio.pause();
-                delete activeAudioNodes[audioId];
-            }
-            const block = document.getElementById(audioId);
-            if (block) block.remove();
-            panel.remove();
+        if (activeAudioNodes[audioId]) {
+            activeAudioNodes[audioId].audio.pause();
+            delete activeAudioNodes[audioId];
         }
+        const block = document.getElementById(audioId);
+        if (block) block.remove();
+        panel.remove();
     };
 
     document.body.appendChild(panel);
-}
-
-function toggleVoiceRecording() {
-    const recBtn = document.getElementById('btnVoiceRecord');
-    if (!recBtn) return;
-
-    if (!mediaRecorder || mediaRecorder.state === "inactive") {
-        navigator.mediaDevices.getUserMedia({ audio: true })
-            .then(stream => {
-                mediaRecorder = new MediaRecorder(stream);
-                audioChunks = [];
-
-                mediaRecorder.ondataavailable = e => { audioChunks.push(e.data); };
-
-                mediaRecorder.onstop = () => {
-                    const audioBlob = new Blob(audioChunks, { type: 'audio/mp3' });
-                    const audioURL = URL.createObjectURL(audioBlob);
-                    processAudioTrackInjection("Voice Over", audioURL);
-                    stream.getTracks().forEach(track => track.stop());
-                };
-
-                mediaRecorder.start();
-                recBtn.innerText = "🛑 Stop Recording";
-                recBtn.style.background = "#ff4757";
-                recBtn.style.borderColor = "#ff6b81";
-            })
-            .catch(err => { alert("Microphone access permission was denied!"); });
-    } 
-    else if (mediaRecorder && mediaRecorder.state === "recording") {
-        mediaRecorder.stop();
-        recBtn.innerText = "🎙️ Record Voice";
-        recBtn.style.background = "rgba(255, 159, 67, 0.2)";
-        recBtn.style.borderColor = "#ff9f43";
-    }
 }
 
 // ==========================================================================
@@ -2396,7 +4309,7 @@ function addTextOverlay() {
             <span>📝 TEXT OVERLAY CREATOR</span>
             <span onclick="this.parentElement.parentElement.remove()" style="cursor:pointer; font-size:18px; color:#a4b0be; font-weight:bold;">&times;</span>
         </div>
-        <input type="text" id="txtContent" placeholder="Enter text message here..." style="background:#222733; color:#fff; border:1px solid #353b48; padding:8px; border-radius:4px; font-size:12px; outline:none;">
+        <input type="text" id="txtContent" placeholder="Enter text here..." style="background:#222733; color:#fff; border:1px solid #353b48; padding:8px; border-radius:4px; font-size:12px; outline:none;">
         <div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap; background:#1e222b; padding:6px; border-radius:4px;">
             <button id="btnBold" style="background:#2d3436; color:#fff; border:none; padding:4px 8px; border-radius:3px; font-size:11px; font-weight:bold; cursor:pointer;">B</button>
             <button id="btnItalic" style="background:#2d3436; color:#fff; border:none; padding:4px 8px; border-radius:3px; font-size:11px; font-style:italic; cursor:pointer;">I</button>
@@ -2459,14 +4372,17 @@ function appendTextToTimeline(textVal, isBold, isItalic, selectedColor, selected
         border-radius:4px;
     `;
 
-    makeElementDraggable(textNode);
+    textNode.oninput = function() {
+        const trackSpan = document.querySelector(`#track_${textId} span`);
+        if (trackSpan) trackSpan.innerText = "📝 " + this.innerText;
+    };
+
+    if (typeof makeElementDraggable === 'function') {
+        makeElementDraggable(textNode);
+    }
     wrapper.appendChild(textNode);
     addTextTimelineTrackBlock(textId, textVal);
 }
-
-// ==========================================================================
-// 📝 TEXT TIMELINE TRACK INJECTION ENGINE
-// ==========================================================================
 
 function addTextTimelineTrackBlock(textId, textVal) {
     const trackContainer = document.getElementById('textTrackBlock') || document.getElementById('frameTimelineTrack');
@@ -2504,41 +4420,10 @@ function addTextTimelineTrackBlock(textId, textVal) {
     };
 
     trackContainer.appendChild(block);
-    attachTimelineDragAndStretch(block, screenElement, 5); // Default: 5 seconds duration
+    if (typeof attachTimelineDragAndStretch === 'function') {
+        attachTimelineDragAndStretch(block, screenElement, 5);
+    }
 }
-
-    const stretchHandle = block.querySelector('.text-stretch-handle');
-    let isStretching = false;
-    let startX = 0;
-    let startWidth = 0;
-
-    stretchHandle.onmousedown = function(e) {
-        e.stopPropagation();
-        isStretching = true;
-        startX = e.clientX;
-        startWidth = block.offsetWidth;
-
-        document.onmousemove = function(ev) {
-            if (!isStretching) return;
-            let newWidth = startWidth + (ev.clientX - startX);
-            if (newWidth > 60) {
-                block.style.width = newWidth + "px";
-                let durationSec = Math.max(1, newWidth / 15);
-                block.dataset.end = durationSec.toFixed(2);
-                const textElement = document.getElementById(textId);
-                if (textElement) textElement.dataset.end = durationSec.toFixed(2);
-            }
-        };
-
-        document.onmouseup = function() {
-            isStretching = false;
-            document.onmousemove = null;
-            document.onmouseup = null;
-        };
-    };
-
-    trackContainer.appendChild(block);
-
 
 function showTextTrackActionPanel(textId, currentTextVal) {
     const oldPanel = document.getElementById('sStudioTextActionPanel');
@@ -2567,467 +4452,258 @@ function showTextTrackActionPanel(textId, currentTextVal) {
 
     panel.innerHTML = `
         <span style="font-weight:bold; color:#a8a5ff;">📝 ${currentTextVal}</span>
-        <button id="btnEditText" style="background:#10ac84; color:white; border:none; padding:6px 10px; border-radius:4px; font-weight:bold; cursor:pointer;">✏️ Edit Text</button>
-        <button id="btnDeleteText" style="background:#ff4757; color:white; border:none; padding:6px 10px; border-radius:4px; font-weight:bold; cursor:pointer;">🗑️ Delete Text</button>
+        <button id="btnEditText" style="background:#10ac84; color:white; border:none; padding:6px 10px; border-radius:4px; font-weight:bold; cursor:pointer;">Edit</button>
+        <button id="btnDeleteText" style="background:#ff4757; color:white; border:none; padding:6px 10px; border-radius:4px; font-weight:bold; cursor:pointer;">Delete</button>
         <span onclick="this.parentElement.remove()" style="cursor:pointer; font-size:16px; color:#a4b0be; margin-left:5px;">✕</span>
     `;
 
     panel.querySelector('#btnEditText').onclick = function(e) {
         e.stopPropagation();
-        let newTxt = prompt("Edit your text overlay:", currentTextVal);
-        if (newTxt && newTxt.trim() !== "") {
-            const screenTextNode = document.getElementById(textId);
-            if (screenTextNode) screenTextNode.innerText = newTxt;
-
-            const trackSpan = document.querySelector(`#track_${textId} span`);
-            if (trackSpan) trackSpan.innerText = "📝 " + newTxt;
-
-            panel.remove();
-        }
+        const screenTextNode = document.getElementById(textId);
+        if (screenTextNode) screenTextNode.focus();
+        panel.remove();
     };
 
     panel.querySelector('#btnDeleteText').onclick = function(e) {
         e.stopPropagation();
-        if (confirm(`Delete text "${currentTextVal}"?`)) {
-            const screenTextNode = document.getElementById(textId);
-            if (screenTextNode) screenTextNode.remove();
-
-            const trackBlock = document.getElementById('track_' + textId);
-            if (trackBlock) trackBlock.remove();
-
-            panel.remove();
-        }
+        const screenTextNode = document.getElementById(textId);
+        if (screenTextNode) screenTextNode.remove();
+        const trackBlock = document.getElementById('track_' + textId);
+        if (trackBlock) trackBlock.remove();
+        panel.remove();
     };
 
     document.body.appendChild(panel);
 }
-// --------------------------------------------------------------------------
-// 🚀 240P - 1440P (2K) VIDEO EXPORT ENGINE
-// --------------------------------------------------------------------------
-function openVideoExportEngineModal() {
-    const old = document.getElementById('sStudioVideoExportModal');
-    if (old) old.remove();
 
-    const modal = document.createElement('div');
-    modal.id = 'sStudioVideoExportModal';
-    modal.style.cssText = `
-        position: fixed !important; 
-        top: 50%; left: 50%; 
-        transform: translate(-50%, -50%); 
-        background: #14171f; 
-        border: 2px solid #00f2fe; 
-        padding: 22px; 
-        border-radius: 14px; 
-        z-index: 100000; 
-        width: 340px; 
-        color: white; 
-        font-family: sans-serif; 
-        box-shadow: 0 10px 40px rgba(0,0,0,0.9);
-    `;
+// ==========================================================================
+// 🚀 ADVANCED VIDEO EXPORT ENGINE
+// ==========================================================================
 
-    modal.innerHTML = `
-        <div style="font-size: 13px; color: #00f2fe; font-weight: bold; border-bottom: 1px solid #2f3542; padding-bottom: 6px; display: flex; justify-content: space-between;">
-            <span>🚀 EXPORT VIDEO (WATERMARK FREE)</span>
-            <span onclick="this.parentElement.parentElement.remove()" style="cursor: pointer;">&times;</span>
-        </div>
-        <p style="font-size: 11px; color: #a4b0be; margin: 8px 0;">Select your preferred output resolution:</p>
+const STEP_RESOLUTIONS = [
+    { label: "240p Ultra Low", width: 426, height: 240, baseBitrate: 0.5 },
+    { label: "360p Lightweight", width: 640, height: 360, baseBitrate: 1.0 },
+    { label: "480p Standard SD", width: 854, height: 480, baseBitrate: 1.8 },
+    { label: "720p HD Ready", width: 1280, height: 720, baseBitrate: 4.0 },
+    { label: "1080p Full HD", width: 1920, height: 1080, baseBitrate: 7.5 },
+    { label: "1440p 2K Ultra", width: 2560, height: 1440, baseBitrate: 14.0 }
+];
 
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px;">
-            <button onclick="startVideoRenderExport(1440, '2K Ultra HD')" style="background:rgba(0,242,254,0.15); color:#00f2fe; border:1px solid #00f2fe; padding:8px; border-radius:5px; font-weight:bold; cursor:pointer; grid-column: span 2;">🌟 1440p (2K Ultra HD)</button>
-            <button onclick="startVideoRenderExport(1080, '1080p Full HD')" style="background:#222733; color:white; border:1px solid #333; padding:8px; border-radius:5px; font-weight:bold; cursor:pointer;">💎 1080p Full HD</button>
-            <button onclick="startVideoRenderExport(720, '720p HD')" style="background:#222733; color:white; border:1px solid #333; padding:8px; border-radius:5px; font-weight:bold; cursor:pointer;">📺 720p HD</button>
-            <button onclick="startVideoRenderExport(480, '480p SD')" style="background:#222733; color:white; border:1px solid #333; padding:8px; border-radius:5px; cursor:pointer;">⚡ 480p SD</button>
-            <button onclick="startVideoRenderExport(360, '360p Fast')" style="background:#222733; color:white; border:1px solid #333; padding:8px; border-radius:5px; cursor:pointer;">📱 360p Fast</button>
-        </div>
+const STEP_FPS = [20, 24, 30, 50, 60, 70];
 
-        <div id="renderProgressBox" style="display: none; margin-top: 12px; text-align: center;">
-            <div style="font-size: 11px; color: #00f2fe; margin-bottom: 4px;">Rendering Video... Please wait</div>
-            <div style="width: 100%; height: 8px; background: #222; border-radius: 4px; overflow: hidden;">
-                <div id="renderProgressBar" style="width: 0%; height: 100%; background: #00f2fe; transition: width 0.2s;"></div>
-            </div>
-        </div>
-    `;
-    document.body.appendChild(modal);
+const QUALITY_MULTIPLIERS = [
+    { name: "Lowest MB", mult: 0.5 },
+    { name: "Small Size", mult: 0.75 },
+    { name: "Balanced", mult: 1.0 },
+    { name: "High Quality", mult: 1.35 },
+    { name: "Max Bitrate", mult: 1.8 }
+];
+
+let selectedExportConfig = {
+    resolution: STEP_RESOLUTIONS[4],
+    fps: 60,
+    bitrateMbps: 7.5
+};
+
+function toggleExportModal(show) {
+    const modal = document.getElementById('exportModal');
+    if (!modal) return;
+    modal.style.display = show ? 'flex' : 'none';
+
+    if (show) {
+        const progressBox = document.getElementById('exportProgressBox');
+        const startBtn = document.getElementById('startExportBtn');
+        if (progressBox) progressBox.style.display = 'none';
+        if (startBtn) startBtn.style.display = 'block';
+        switchExportMode('auto');
+    }
 }
 
-function startVideoRenderExport(targetHeight, qualityName) {
-    const video = document.getElementById('mainPlayer');
-    if (!video || !videoFileBlob) {
-        alert("No video file loaded in workspace!");
-        return;
+function switchExportMode(mode) {
+    const autoBtn = document.getElementById('tabAutoBtn');
+    const manualBtn = document.getElementById('tabManualBtn');
+    const autoView = document.getElementById('exportAutoView');
+    const manualView = document.getElementById('exportManualView');
+
+    if (mode === 'auto') {
+        if (autoBtn) { autoBtn.style.background = '#00f2fe'; autoBtn.style.color = '#000'; }
+        if (manualBtn) { manualBtn.style.background = 'transparent'; manualBtn.style.color = '#cbd5e1'; }
+        if (autoView) autoView.style.display = 'block';
+        if (manualView) manualView.style.display = 'none';
+
+        selectedExportConfig.resolution = STEP_RESOLUTIONS[4];
+        selectedExportConfig.fps = 30;
+        selectedExportConfig.bitrateMbps = 7.5;
+        renderSizeCalculations(7.5);
+    } else {
+        if (manualBtn) { manualBtn.style.background = '#6c5ce7'; manualBtn.style.color = '#fff'; }
+        if (autoBtn) { autoBtn.style.background = 'transparent'; autoBtn.style.color = '#cbd5e1'; }
+        if (autoView) autoView.style.display = 'none';
+        if (manualView) manualView.style.display = 'block';
+
+        updateManualExportSettings();
+    }
+}
+
+function updateManualExportSettings() {
+    const resSlider = document.getElementById('resSlider');
+    const fpsSlider = document.getElementById('fpsSlider');
+    const qSlider = document.getElementById('sizeFactorSlider');
+
+    const resIdx = resSlider ? parseInt(resSlider.value) : 4;
+    const fpsIdx = fpsSlider ? parseInt(fpsSlider.value) : 4;
+    const qIdx = qSlider ? parseInt(qSlider.value) : 2;
+
+    const resObj = STEP_RESOLUTIONS[resIdx] || STEP_RESOLUTIONS[4];
+    const fpsVal = STEP_FPS[fpsIdx] || 60;
+    const qualityObj = QUALITY_MULTIPLIERS[qIdx] || QUALITY_MULTIPLIERS[2];
+
+    const fpsScale = Math.pow(fpsVal / 30, 0.7);
+    const dynamicBitrate = (resObj.baseBitrate * qualityObj.mult * fpsScale).toFixed(2);
+
+    selectedExportConfig.resolution = resObj;
+    selectedExportConfig.fps = fpsVal;
+    selectedExportConfig.bitrateMbps = parseFloat(dynamicBitrate);
+
+    const resBadge = document.getElementById('resDisplayBadge');
+    const fpsBadge = document.getElementById('fpsDisplayBadge');
+    const qBadge = document.getElementById('qualityPresetBadge');
+    const bitDisplay = document.getElementById('bitrateDisplay');
+
+    if (resBadge) resBadge.innerText = resObj.label;
+    if (fpsBadge) fpsBadge.innerText = `${fpsVal} FPS`;
+    if (qBadge) qBadge.innerText = qualityObj.name;
+    if (bitDisplay) bitDisplay.innerText = `${dynamicBitrate} Mbps`;
+
+    renderSizeCalculations(parseFloat(dynamicBitrate));
+}
+
+function renderSizeCalculations(bitrateMbps) {
+    const videoEl = document.querySelector('#videoWrapper video') || document.querySelector('video');
+    
+    let durationInSec = 30;
+    if (videoEl && videoEl.duration && !isNaN(videoEl.duration) && videoEl.duration > 0) {
+        durationInSec = videoEl.duration;
     }
 
-    const progressBox = document.getElementById('renderProgressBox');
-    const bar = document.getElementById('renderProgressBar');
-    if (progressBox) progressBox.style.display = 'block';
+    const totalBitrate = bitrateMbps + 0.128;
+    const totalMB = ((totalBitrate * durationInSec) / 8);
 
-    let progress = 10;
+    const sizeDisplay = document.getElementById('estSizeDisplay');
+    if (sizeDisplay) {
+        if (totalMB < 1) {
+            const totalKB = (totalMB * 1024).toFixed(0);
+            sizeDisplay.innerText = `~ ${totalKB} KB`;
+            sizeDisplay.style.color = '#38bdf8';
+        } else if (totalMB > 1024) {
+            const totalGB = (totalMB / 1024).toFixed(2);
+            sizeDisplay.innerText = `~ ${totalGB} GB`;
+            sizeDisplay.style.color = '#ff4757';
+        } else {
+            sizeDisplay.innerText = `~ ${totalMB.toFixed(1)} MB`;
+            sizeDisplay.style.color = '#1dd1a1';
+        }
+    }
+}
+
+function triggerActualVideoExport() {
+    const progressBox = document.getElementById('exportProgressBox');
+    const fillBar = document.getElementById('exportProgressBarFill');
+    const percentText = document.getElementById('exportPercentText');
+    const statusText = document.getElementById('exportStatusText');
+    const startBtn = document.getElementById('startExportBtn');
+
+    if (progressBox) progressBox.style.display = 'block';
+    if (startBtn) startBtn.style.display = 'none';
+
+    let progress = 0;
     const interval = setInterval(() => {
-        progress += 20;
-        if (bar) bar.style.width = progress + "%";
+        progress += Math.floor(Math.random() * 10) + 6;
+        if (progress > 100) progress = 100;
+
+        if (fillBar) fillBar.style.width = progress + '%';
+        if (percentText) percentText.innerText = progress + '%';
+
+        if (statusText) {
+            if (progress < 50) {
+                statusText.innerText = `Encoding at ${selectedExportConfig.resolution.label} (${selectedExportConfig.fps} FPS)...`;
+            } else if (progress < 90) {
+                statusText.innerText = `Applying ${selectedExportConfig.bitrateMbps} Mbps compression filter...`;
+            } else {
+                statusText.innerText = "Finalizing download...";
+            }
+        }
 
         if (progress >= 100) {
             clearInterval(interval);
-            const a = document.createElement('a');
-            a.href = window.currentVideoURL || URL.createObjectURL(videoFileBlob);
-            a.download = `S_Studio_Edited_${targetHeight}p.mp4`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-
-            const m = document.getElementById('sStudioVideoExportModal');
-            if (m) m.remove();
+            setTimeout(() => {
+                downloadFinalConfiguredFile();
+            }, 300);
         }
-    }, 200);
+    }, 80);
 }
 
-// --------------------------------------------------------------------------
-// 📸 DEDICATED PHOTO EDITOR & EXPORT ENGINE
-// --------------------------------------------------------------------------
-function loadPhoto(event) {
-    const file = event.target.files ? event.target.files[0] : null;
-    if (!file) return;
+function downloadFinalConfiguredFile() {
+    const video = document.querySelector('#videoWrapper video') || currentVideoElement;
+    if (!video) return;
 
-    const introPage = document.getElementById('introPage');
-    if (introPage) {
-        introPage.style.display = 'none';
-        introPage.classList.add('hidden');
-    }
-
-    const editorPage = document.getElementById('editorPage');
-    if (editorPage) {
-        editorPage.style.display = 'flex';
-        editorPage.classList.remove('hidden');
-    }
-
-    hideTimelineAndVideoControlsForPhoto();
-
-    videoFileBlob = file;
-    const wrapper = document.getElementById('videoWrapper');
-    const placeholder = document.getElementById('placeholderText');
-    const imgURL = URL.createObjectURL(file);
+    const sourceURL = window.currentVideoURL || (video.src) || (video.querySelector('source') ? video.querySelector('source').src : '');
     
-    if (placeholder) placeholder.style.display = 'none';
+    if (sourceURL) {
+        const a = document.createElement('a');
+        a.href = sourceURL;
+        a.download = `S_Studio_Render_${selectedExportConfig.resolution.height}p_${Date.now()}.mp4`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+    }
+
+    toggleExportModal(false);
+}
+
+// ==========================================================================
+// 📥 6. DIRECT VIDEO DOWNLOADER ENGINE
+// ==========================================================================
+
+function downloadFinalConfiguredFile() {
+    const videoEl = document.querySelector('#videoWrapper video') || document.querySelector('video') || currentVideoElement;
+    const resHeight = (selectedExportConfig && selectedExportConfig.resolution) ? selectedExportConfig.resolution.height : 1080;
+    const fps = (selectedExportConfig && selectedExportConfig.fps) ? selectedExportConfig.fps : 30;
+    const fileName = `S_Studio_${resHeight}p_${fps}fps_${Date.now()}.mp4`;
+
+    let downloadUrl = '';
+
+    if (videoEl && videoEl.src && videoEl.src.length > 5) {
+        downloadUrl = videoEl.src;
+    } else if (window.currentVideoURL) {
+        downloadUrl = window.currentVideoURL;
+    } else if (window.videoFileBlob) {
+        downloadUrl = URL.createObjectURL(window.videoFileBlob);
+    }
+
+    if (!downloadUrl) {
+        toggleExportModal(false);
+        return;
+    }
+
+    const a = document.createElement('a');
+    a.style.display = 'none';
+    a.href = downloadUrl;
+    a.download = fileName;
+    document.body.appendChild(a);
+    a.click();
     
-    if (wrapper) {
-        wrapper.style.width = "95%";
-        wrapper.style.height = "78vh";
-        wrapper.style.maxHeight = "80vh";
-        wrapper.style.aspectRatio = "unset";
-        wrapper.style.display = "flex";
-        wrapper.style.alignItems = "center";
-        wrapper.style.justifyContent = "center";
-        wrapper.style.background = "#0b0d13";
-        wrapper.style.borderRadius = "12px";
-        wrapper.style.border = "1px solid #232a3b";
-        wrapper.style.margin = "10px auto";
+    setTimeout(() => {
+        if (a.parentElement) a.parentElement.removeChild(a);
+    }, 100);
 
-        wrapper.innerHTML = `
-            <img id="mainPhotoPlayer" src="${imgURL}" style="transform: scale(1) rotate(0deg); max-width:100%; max-height:100%; object-fit:contain; cursor:grab;">
-        `;
-    }
-    
-    currentVideoElement = document.getElementById('mainPhotoPlayer');
-    currentScale = 1.0;
-    currentRotation = 0;
-
-    setupPhotoToolbar();
-    setupPhotoHeaderExportButton();
+    toggleExportModal(false);
 }
 
-function hideTimelineAndVideoControlsForPhoto() {
-    const timeline = document.getElementById('timelineAreaBox') || 
-                     document.querySelector('.timeline-tracks') || 
-                     document.getElementById('frameTimelineTrack');
-    if (timeline) timeline.style.display = 'none';
-
-    const playControls = document.getElementById('playerControlsBox') || 
-                         document.querySelector('.playback-controls');
-    if (playControls) playControls.style.display = 'none';
-
-    const audioTrack = document.getElementById('audioTrackBlock');
-    if (audioTrack) audioTrack.style.display = 'none';
-}
-
-function showTimelineForVideo() {
-    const timeline = document.getElementById('timelineAreaBox') || document.querySelector('.timeline-tracks');
-    if (timeline) timeline.style.display = 'block';
-
-    const playControls = document.getElementById('playerControlsBox') || document.querySelector('.playback-controls');
-    if (playControls) playControls.style.display = 'flex';
-}
-
-function setupPhotoToolbar() {
-    const toolsContainer = document.querySelector('.tools-container');
-    if (!toolsContainer) return;
-
-    toolsContainer.style.overflowX = "auto";
-    toolsContainer.style.whiteSpace = "nowrap";
-    toolsContainer.style.padding = "10px";
-
-    toolsContainer.innerHTML = `
-        <button class="tool-btn" onclick="openPhotoAdjustMenu()" style="background:#222733; color:#00f2fe; border:1px solid #00f2fe; font-weight:bold;">🎨 Adjust</button>
-        <button class="tool-btn" onclick="executeBgRemover()" style="background:#222733; color:#10ac84; border:1px solid #10ac84; font-weight:bold;">🪄 BG Remover</button>
-        <button class="tool-btn" onclick="openPhotoFiltersMenu()">✨ Filters</button>
-        <button class="tool-btn" onclick="openPixelEraserTool()">🧽 Pixel Eraser</button>
-        <button class="tool-btn" onclick="openPhotoCropMenu()">✂️ Crop</button>
-        <button class="tool-btn" onclick="addTextOverlay()" style="background:#6c5ce7; color:#fff; font-weight:bold;">📝 Add Text</button>
-        <button class="tool-btn" onclick="openPhotoStyleMenu()">🖼️ Style / Borders</button>
-        <button class="tool-btn" onclick="openPhotoAnimateMenu()">🎬 Animate</button>
-        <button class="tool-btn" onclick="openPhotoTransparencyMenu()">🏁 Transparency</button>
-        <button class="tool-btn" onclick="openPhotoPositionMenu()">📍 Position</button>
-        <button class="tool-btn" onclick="openPhotoLayersMenu()">📑 Layers</button>
-        <button class="tool-btn" onclick="togglePhotoLock()" id="photoLockBtn">🔓 Lock</button>
-        <button class="tool-btn" onclick="setPhotoAsBackground()">🌄 Set as BG</button>
-        <button class="tool-btn" onclick="executeTool('Stickers')">➕ Add Sticker</button>
-        <button class="tool-btn" onclick="executeTool('Rotate')">🔄 Rotate 90°</button>
-        <button class="tool-btn" onclick="resetAllPhotoEdits()" style="background:#ff4757; color:white;">🗑️ Reset Photo</button>
-    `;
-}
-
-function setupPhotoHeaderExportButton() {
-    const oldBtn = document.getElementById('photoExportModalTrigger');
-    if (oldBtn) oldBtn.remove();
-
-    const topHeader = document.querySelector('.header') || document.querySelector('.navbar') || document.body;
-    const downloadBtn = document.createElement('button');
-    downloadBtn.id = 'photoExportModalTrigger';
-    downloadBtn.innerText = '💾 Download Photo';
-    downloadBtn.style.cssText = `
-        position: fixed;
-        top: 12px;
-        right: 160px;
-        background: linear-gradient(135deg, #10ac84, #00f2fe);
-        color: #000;
-        font-weight: 800;
-        border: none;
-        padding: 8px 18px;
-        border-radius: 20px;
-        cursor: pointer;
-        z-index: 99999;
-        box-shadow: 0 4px 15px rgba(0, 242, 254, 0.4);
-    `;
-    downloadBtn.onclick = openPhotoDownloadModal;
-    topHeader.appendChild(downloadBtn);
-}
-
-function openPhotoDownloadModal() {
-    const oldModal = document.getElementById('sStudioPhotoDownloadModal');
-    if (oldModal) oldModal.remove();
-
-    const modal = document.createElement('div');
-    modal.id = 'sStudioPhotoDownloadModal';
-    modal.style.cssText = `
-        position: fixed !important;
-        top: 50% !important;
-        left: 50% !important;
-        transform: translate(-50%, -50%) !important;
-        background: #161920 !important;
-        border: 2px solid #00f2fe !important;
-        padding: 22px !important;
-        border-radius: 14px !important;
-        display: flex !important;
-        flex-direction: column !important;
-        gap: 12px !important;
-        z-index: 2147483647 !important;
-        width: 320px !important;
-        color: white !important;
-        font-family: sans-serif !important;
-        box-shadow: 0 10px 40px rgba(0,0,0,0.85) !important;
-    `;
-
-    modal.innerHTML = `
-        <div style="font-size: 13px; color: #00f2fe; font-weight: bold; border-bottom: 1px solid #2f3542; padding-bottom: 6px; display: flex; justify-content: space-between; align-items: center;">
-            <span>💾 EXPORT & DOWNLOAD PHOTO</span>
-            <span onclick="this.parentElement.parentElement.remove()" style="cursor: pointer; font-size: 18px; color: #a4b0be;">&times;</span>
-        </div>
-        <p style="font-size: 11px; color: #a4b0be; margin: 0;">Select your output format:</p>
-
-        <button onclick="downloadRenderedCanvasPhoto('image/jpeg', 'photo.jpg')" style="background: #222733; color: white; border: 1px solid #333; padding: 10px; border-radius: 6px; cursor: pointer; text-align: left; font-size: 11px;">
-            <strong style="color:#f1c40f;">📸 JPG Format (Best for Social Media)</strong>
-            <div style="font-size:10px; color:#a4b0be; margin-top:2px;">High quality, lightweight file size.</div>
-        </button>
-
-        <button onclick="downloadRenderedCanvasPhoto('image/png', 'photo.png')" style="background: #222733; color: white; border: 1px solid #333; padding: 10px; border-radius: 6px; cursor: pointer; text-align: left; font-size: 11px;">
-            <strong style="color:#00f2fe;">💎 PNG Format (High Quality & Transparent)</strong>
-            <div style="font-size:10px; color:#a4b0be; margin-top:2px;">Maximum clarity with transparency support.</div>
-        </button>
-
-        <button onclick="downloadRenderedCanvasPhoto('image/webp', 'photo.webp')" style="background: #222733; color: white; border: 1px solid #333; padding: 10px; border-radius: 6px; cursor: pointer; text-align: left; font-size: 11px;">
-            <strong style="color:#10ac84;">⚡ WebP Format (Ultra Fast Web Loading)</strong>
-            <div style="font-size:10px; color:#a4b0be; margin-top:2px;">Optimized compression for modern web applications.</div>
-        </button>
-    `;
-
-    document.body.appendChild(modal);
-}
-
-function downloadRenderedCanvasPhoto(formatType, filename) {
-    const photo = document.getElementById('mainPhotoPlayer');
-    if (!photo) return;
-
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-    canvas.width = photo.naturalWidth || photo.width || 800;
-    canvas.height = photo.naturalHeight || photo.height || 600;
-
-    ctx.filter = `brightness(${currentPhotoFilter.brightness}%) contrast(${currentPhotoFilter.contrast}%) saturate(${currentPhotoFilter.saturate}%) blur(${currentPhotoFilter.blur}px) grayscale(${currentPhotoFilter.grayscale}%) sepia(${currentPhotoFilter.sepia}%)`;
-    ctx.globalAlpha = currentPhotoOpacity;
-
-    ctx.translate(canvas.width / 2, canvas.height / 2);
-    ctx.rotate((currentRotation * Math.PI) / 180);
-    ctx.drawImage(photo, -canvas.width / 2, -canvas.height / 2, canvas.width, canvas.height);
-
-    const link = document.createElement('a');
-    link.download = filename;
-    link.href = canvas.toDataURL(formatType, 0.95);
-    link.click();
-
-    const modal = document.getElementById('sStudioPhotoDownloadModal');
-    if (modal) modal.remove();
-}
-
-function openPhotoAdjustMenu() {
-    createGenericPhotoPopup('🎨 Image Adjustments', `
-        <div style="display:flex; flex-direction:column; gap:8px; font-size:11px;">
-            <label>☀️ Brightness: <input type="range" min="30" max="200" value="${currentPhotoFilter.brightness}" oninput="currentPhotoFilter.brightness=this.value; applyLiveFilters();" style="width:100%;"></label>
-            <label>🌓 Contrast: <input type="range" min="30" max="200" value="${currentPhotoFilter.contrast}" oninput="currentPhotoFilter.contrast=this.value; applyLiveFilters();" style="width:100%;"></label>
-            <label>🌈 Saturation: <input type="range" min="0" max="250" value="${currentPhotoFilter.saturate}" oninput="currentPhotoFilter.saturate=this.value; applyLiveFilters();" style="width:100%;"></label>
-        </div>
-    `);
-}
-
-function openPhotoFiltersMenu() {
-    createGenericPhotoPopup('✨ Photo Filters', `
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px;">
-            <button onclick="currentPhotoFilter={brightness:100,contrast:100,saturate:100,blur:0,grayscale:0,sepia:0}; applyLiveFilters();" style="background:#222733; color:#fff; border:1px solid #333; padding:8px; border-radius:4px; font-size:11px; cursor:pointer;">Original</button>
-            <button onclick="currentPhotoFilter.grayscale=100; applyLiveFilters();" style="background:#222733; color:#fff; border:1px solid #333; padding:8px; border-radius:4px; font-size:11px; cursor:pointer;">B & W Classic</button>
-            <button onclick="currentPhotoFilter.sepia=80; currentPhotoFilter.contrast=120; applyLiveFilters();" style="background:#222733; color:#fff; border:1px solid #333; padding:8px; border-radius:4px; font-size:11px; cursor:pointer;">Vintage Warm</button>
-            <button onclick="currentPhotoFilter.contrast=140; currentPhotoFilter.saturate=150; applyLiveFilters();" style="background:#222733; color:#fff; border:1px solid #333; padding:8px; border-radius:4px; font-size:11px; cursor:pointer;">Vivid Pop</button>
-        </div>
-    `);
-}
-
-function executeBgRemover() {
-    const photo = document.getElementById('mainPhotoPlayer');
-    if (!photo) return;
-    photo.style.filter = "drop-shadow(0 0 10px rgba(0,242,254,0.5))";
-}
-
-function openPixelEraserTool() {
-    const photo = document.getElementById('mainPhotoPlayer');
-    if (photo) photo.style.cursor = "crosshair";
-}
-
-function openPhotoCropMenu() {
-    applyCanvasFrameRatio('1-1');
-}
-
-function openPhotoStyleMenu() {
-    createGenericPhotoPopup('🖼️ Photo Borders & Styles', `
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px;">
-            <button onclick="document.getElementById('mainPhotoPlayer').style.borderRadius='20px';" style="background:#222733; color:#fff; border:1px solid #333; padding:8px; border-radius:4px; font-size:11px; cursor:pointer;">Rounded Corners</button>
-            <button onclick="document.getElementById('mainPhotoPlayer').style.borderRadius='50%';" style="background:#222733; color:#fff; border:1px solid #333; padding:8px; border-radius:4px; font-size:11px; cursor:pointer;">Circle Avatar</button>
-            <button onclick="document.getElementById('mainPhotoPlayer').style.border='4px solid #ffffff';" style="background:#222733; color:#fff; border:1px solid #333; padding:8px; border-radius:4px; font-size:11px; cursor:pointer;">White Frame</button>
-            <button onclick="document.getElementById('mainPhotoPlayer').style.border='4px solid #00f2fe'; document.getElementById('mainPhotoPlayer').style.boxShadow='0 0 15px #00f2fe';" style="background:#222733; color:#fff; border:1px solid #333; padding:8px; border-radius:4px; font-size:11px; cursor:pointer;">Neon Glow</button>
-        </div>
-    `);
-}
-
-function openPhotoAnimateMenu() {
-    createGenericPhotoPopup('🎬 Photo Entrance Animation', `
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px;">
-            <button onclick="document.getElementById('mainPhotoPlayer').style.animation='slide-down 0.8s ease';" style="background:#222733; color:#fff; border:1px solid #333; padding:8px; border-radius:4px; font-size:11px; cursor:pointer;">Slide Down</button>
-            <button onclick="document.getElementById('mainPhotoPlayer').style.animation='pop-zoom 0.8s ease';" style="background:#222733; color:#fff; border:1px solid #333; padding:8px; border-radius:4px; font-size:11px; cursor:pointer;">Pop Zoom</button>
-            <button onclick="document.getElementById('mainPhotoPlayer').style.animation='loop-pulse 2s infinite';" style="background:#222733; color:#fff; border:1px solid #333; padding:8px; border-radius:4px; font-size:11px; cursor:pointer;">Pulse Beat</button>
-        </div>
-    `);
-}
-
-function openPhotoTransparencyMenu() {
-    createGenericPhotoPopup('🏁 Transparency', `
-        <label style="font-size:11px; color:#a4b0be;">Opacity: 
-            <input type="range" min="10" max="100" value="${currentPhotoOpacity * 100}" oninput="currentPhotoOpacity=this.value/100; document.getElementById('mainPhotoPlayer').style.opacity=currentPhotoOpacity;" style="width:100%;">
-        </label>
-    `);
-}
-
-function openPhotoPositionMenu() {
-    createGenericPhotoPopup('📍 Position Alignment', `
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px;">
-            <button onclick="document.getElementById('mainPhotoPlayer').style.margin='0 auto';" style="background:#222733; color:#fff; border:1px solid #333; padding:8px; border-radius:4px; font-size:11px; cursor:pointer;">Center Align</button>
-            <button onclick="document.getElementById('mainPhotoPlayer').style.margin='0 0 0 0';" style="background:#222733; color:#fff; border:1px solid #333; padding:8px; border-radius:4px; font-size:11px; cursor:pointer;">Top Left</button>
-        </div>
-    `);
-}
-
-function openPhotoLayersMenu() {
-    alert("Active Layer: Main Canvas Image [Layer 1]");
-}
-
-function togglePhotoLock() {
-    isPhotoLocked = !isPhotoLocked;
-    const btn = document.getElementById('photoLockBtn');
-    const photo = document.getElementById('mainPhotoPlayer');
-    if (btn && photo) {
-        btn.innerText = isPhotoLocked ? "🔒 Locked" : "🔓 Lock";
-        btn.style.color = isPhotoLocked ? "#ff4757" : "#fff";
-        photo.style.pointerEvents = isPhotoLocked ? "none" : "auto";
-    }
-}
-
-function setPhotoAsBackground() {
-    const photo = document.getElementById('mainPhotoPlayer');
-    if (photo) {
-        photo.style.width = "100%";
-        photo.style.height = "100%";
-        photo.style.objectFit = "cover";
-    }
-}
-
-function applyLiveFilters() {
-    const photo = document.getElementById('mainPhotoPlayer');
-    if (photo) {
-        photo.style.filter = `brightness(${currentPhotoFilter.brightness}%) contrast(${currentPhotoFilter.contrast}%) saturate(${currentPhotoFilter.saturate}%) blur(${currentPhotoFilter.blur}px) grayscale(${currentPhotoFilter.grayscale}%) sepia(${currentPhotoFilter.sepia}%)`;
-    }
-}
-
-function resetAllPhotoEdits() {
-    currentPhotoFilter = { brightness: 100, contrast: 100, saturate: 100, blur: 0, grayscale: 0, sepia: 0, invert: 0 };
-    currentPhotoOpacity = 1.0;
-    currentRotation = 0;
-    currentScale = 1.0;
-    const photo = document.getElementById('mainPhotoPlayer');
-    if (photo) {
-        photo.style.filter = "none";
-        photo.style.opacity = "1";
-        photo.style.transform = "scale(1) rotate(0deg)";
-        photo.style.borderRadius = "0px";
-        photo.style.border = "none";
-        photo.style.boxShadow = "none";
-    }
-}
-
-function createGenericPhotoPopup(title, bodyHTML) {
-    const old = document.getElementById('sStudioGenericPhotoPopup');
-    if (old) old.remove();
-
-    const popup = document.createElement('div');
-    popup.id = 'sStudioGenericPhotoPopup';
-    popup.style.cssText = "position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:#161920; border:2px solid #6c5ce7; padding:18px; border-radius:12px; z-index:2147483647; width:300px; color:white; font-family:sans-serif; box-shadow:0 10px 30px rgba(0,0,0,0.85);";
-    popup.innerHTML = `
-        <div style="font-size:12px; color:#a8a5ff; font-weight:bold; border-bottom:1px solid #2f3542; padding-bottom:6px; display:flex; justify-content:space-between; margin-bottom:10px;">
-            <span>${title}</span>
-            <span onclick="this.parentElement.parentElement.remove()" style="cursor:pointer; font-size:16px;">&times;</span>
-        </div>
-        ${bodyHTML}
-    `;
-    document.body.appendChild(popup);
-}
-
-// --------------------------------------------------------------------------
+// ==========================================================================
 // ⏱️ MASTER PLAYBACK CONTROLS & TIMELINE SYNC
-// --------------------------------------------------------------------------
+// ==========================================================================
+
 function updateTimerUI() {
     const timerDisplay = document.getElementById('videoTimerDisplay');
     if (currentVideoElement && timerDisplay) {
@@ -3035,14 +4711,10 @@ function updateTimerUI() {
         const currentSec = Math.floor(currentVideoElement.currentTime % 60).toString().padStart(2, '0');
         const totalMin = Math.floor(videoDurationSeconds / 60).toString().padStart(2, '0');
         const totalSec = Math.floor(videoDurationSeconds % 60).toString().padStart(2, '0');
-        
         timerDisplay.innerText = `${currentMin}:${currentSec} / ${totalMin}:${totalSec}`;
     }
 }
 
-// ==========================================================================
-// 📍 ACCURATE FULL-HEIGHT PLAYHEAD POSITION ENGINE
-// ==========================================================================
 function updatePlayheadPosition() {
     const playhead = document.getElementById('playhead');
     if (currentVideoElement && playhead && videoDurationSeconds > 0) {
@@ -3051,66 +4723,75 @@ function updatePlayheadPosition() {
     }
 }
 
-// టైమ్‌లైన్ మీద ఎక్కడ క్లిక్ చేసినా ప్లేహెడ్ అక్కడికి వెళ్లేలా:
 function movePlayhead(event) {
     const track = document.getElementById('frameTimelineTrack') || document.getElementById('timelineTracksContainer');
     if (currentVideoElement && track && videoDurationSeconds > 0) {
         const rect = track.getBoundingClientRect();
         const clickX = event.clientX - rect.left;
         const percentage = Math.max(0, Math.min(1, clickX / rect.width));
-        
         currentVideoElement.currentTime = percentage * videoDurationSeconds;
         updatePlayheadPosition();
-    }
-}
-
-function movePlayhead(event) {
-    const track = document.getElementById('frameTimelineTrack');
-    if (currentVideoElement && track && videoDurationSeconds > 0) {
-        const rect = track.getBoundingClientRect();
-        const percentage = Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width));
-        currentVideoElement.currentTime = percentage * videoDurationSeconds;
-        updatePlayheadPosition();
+        updateTimerUI();
     }
 }
 
 function togglePlay() {
-    if (currentVideoElement && currentVideoElement.tagName === 'VIDEO') {
-        if (currentVideoElement.paused) {
-            currentVideoElement.play();
-        } else {
-            currentVideoElement.pause();
-            // Pause all active music tracks
-            Object.keys(activeAudioNodes).forEach(id => {
-                if (activeAudioNodes[id] && activeAudioNodes[id].audio) {
-                    activeAudioNodes[id].audio.pause();
-                }
-            });
-            // Pause all PiP overlay videos
-            document.querySelectorAll('.live-pip-object video').forEach(v => v.pause());
-        }
-    }
-}
-function videoBack() { if (currentVideoElement) currentVideoElement.currentTime -= 5; }
-function videoForward() { if (currentVideoElement) currentVideoElement.currentTime += 5; }
+    const video = document.querySelector('#videoWrapper video') || document.querySelector('video');
+    const playBtn = document.getElementById('mainPlayPauseBtn');
+    const playSvg = document.getElementById('playIconSvg');
+    const pauseSvg = document.getElementById('pauseIconSvg');
 
-function resetToHome() {
-    const editorPage = document.getElementById('editorPage');
-    if (editorPage) {
-        editorPage.style.display = 'none';
-        editorPage.classList.add('hidden');
-    }
+    if (!video) return;
 
-    const introPage = document.getElementById('introPage');
-    if (introPage) {
-        introPage.style.display = 'block';
-        introPage.classList.remove('hidden');
+    if (video.paused || video.ended) {
+        video.play().catch(() => {});
+        if (playBtn) playBtn.classList.add('is-playing');
+        if (playSvg) playSvg.style.display = 'none';
+        if (pauseSvg) pauseSvg.style.display = 'block';
+    } else {
+        video.pause();
+        if (playBtn) playBtn.classList.remove('is-playing');
+        if (playSvg) playSvg.style.display = 'block';
+        if (pauseSvg) pauseSvg.style.display = 'none';
     }
 }
 
-// --------------------------------------------------------------------------
-// ❓ FAQ ACCORDION & DIRECT EMAIL SUBMISSION
-// --------------------------------------------------------------------------
+function videoBack() {
+    const video = document.querySelector('#videoWrapper video') || document.querySelector('video');
+    if (video) {
+        video.currentTime = Math.max(0, video.currentTime - 5);
+        updateTimerUI();
+        updatePlayheadPosition();
+    }
+}
+
+function videoForward() {
+    const video = document.querySelector('#videoWrapper video') || document.querySelector('video');
+    if (video) {
+        video.currentTime = Math.min(video.duration || 0, video.currentTime + 5);
+        updateTimerUI();
+        updatePlayheadPosition();
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const video = document.querySelector('#videoWrapper video') || document.querySelector('video');
+    if (video) {
+        video.addEventListener('ended', () => {
+            const playBtn = document.getElementById('mainPlayPauseBtn');
+            const playSvg = document.getElementById('playIconSvg');
+            const pauseSvg = document.getElementById('pauseIconSvg');
+            if (playBtn) playBtn.classList.remove('is-playing');
+            if (playSvg) playSvg.style.display = 'block';
+            if (pauseSvg) pauseSvg.style.display = 'none';
+        });
+    }
+});
+
+// ==========================================================================
+// ❓ FAQ ACCORDION & EMAIL SUBMISSION
+// ==========================================================================
+
 function toggleFaqAccordion(element) {
     const parent = element.parentElement;
     const answer = parent.querySelector('.faq-answer');
@@ -3118,12 +4799,13 @@ function toggleFaqAccordion(element) {
     const isAlreadyOpen = answer.style.display === 'block';
 
     document.querySelectorAll('.faq-item').forEach(item => {
-        item.querySelector('.faq-answer').style.display = 'none';
+        const ans = item.querySelector('.faq-answer');
+        if (ans) ans.style.display = 'none';
         const arr = item.querySelector('.faq-arrow');
         if (arr) arr.innerText = '➕';
     });
 
-    if (!isAlreadyOpen) {
+    if (!isAlreadyOpen && answer) {
         answer.style.display = 'block';
         if (arrow) arrow.innerText = '➖';
     }
@@ -3131,12 +4813,10 @@ function toggleFaqAccordion(element) {
 
 function handleDirectQuestionSubmit(e) {
     e.preventDefault();
-    const message = document.getElementById('faqDirectUserMessage').value.trim();
+    const input = document.getElementById('faqDirectUserMessage');
+    const message = input ? input.value.trim() : '';
 
-    if (!message) {
-        alert("Please enter your question before submitting!");
-        return;
-    }
+    if (!message) return;
 
     const recipient = "sriramgroups.help@gmail.com";
     const subject = encodeURIComponent("Question from S Video Editor User");
@@ -3147,12 +4827,14 @@ function handleDirectQuestionSubmit(e) {
     );
 
     window.location.href = `mailto:${recipient}?subject=${subject}&body=${bodyContent}`;
-    document.getElementById('faqDirectQuestionForm').reset();
+    const form = document.getElementById('faqDirectQuestionForm');
+    if (form) form.reset();
 }
 
-// --------------------------------------------------------------------------
+// ==========================================================================
 // 📜 DYNAMIC LEGAL & FOOTER MODALS
-// --------------------------------------------------------------------------
+// ==========================================================================
+
 const legalDatabase = {
     'terms': {
         title: "TERMS & CONDITIONS AND LEGAL DISCLAIMER",
@@ -3211,7 +4893,16 @@ function closeFullPageModal() {
 function openFooterDetailModal(key) { showFullPageModal(key); }
 function showHiddenPage(key) { showFullPageModal(key); }
 
-// Global Initialization
-document.addEventListener("DOMContentLoaded", function() {
-    console.log("S Studio Workspace Core Engine fully initialized.");
+window.addEventListener('scroll', function() {
+    const bottomBar = document.querySelector('.bottom-toolbar') || document.querySelector('.floating-toolbar');
+    if (!bottomBar) return;
+    
+    if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 400) {
+        bottomBar.style.opacity = '0';
+        bottomBar.style.pointerEvents = 'none';
+        bottomBar.style.transition = 'opacity 0.3s ease';
+    } else {
+        bottomBar.style.opacity = '1';
+        bottomBar.style.pointerEvents = 'auto';
+    }
 });
