@@ -437,14 +437,82 @@ html, body {
     box-sizing: border-box !important;
 }
 
-/* Mini player controls box below video */
+/* Player Controls Container */
 .player-controls {
-    display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
-    gap: 10px !important;
-    margin: 5px 0 !important;
-    flex-shrink: 0 !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 10px 16px;
+    background: #121520;
+    border-radius: 12px;
+    border: 1px solid #1f2738;
+    width: fit-content;
+    margin: 12px auto;
+}
+
+/* Nav Buttons (Back / Forward) */
+.ctrl-nav-btn {
+    background: #181d2c;
+    border: 1px solid #28334a;
+    color: #cbd5e1;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.15s ease-in-out;
+}
+
+.ctrl-nav-btn:hover {
+    background: #232b3f;
+    border-color: #00f2fe;
+    color: #00f2fe;
+    transform: translateY(-2px);
+}
+
+.ctrl-nav-btn:active {
+    transform: scale(0.90);
+    background: #00f2fe;
+    color: #000;
+}
+
+/* Play State (Paused - Cyan/Blue Color) */
+.ctrl-play-btn {
+    background: linear-gradient(135deg, #00f2fe, #4facfe);
+    border: none;
+    color: #000;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0, 242, 254, 0.35);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ctrl-play-btn:hover {
+    transform: scale(1.08);
+    box-shadow: 0 6px 20px rgba(0, 242, 254, 0.55);
+}
+
+.ctrl-play-btn:active {
+    transform: scale(0.92);
+}
+
+/* Playing State (Video Running - Red Color) */
+.ctrl-play-btn.is-playing {
+    background: linear-gradient(135deg, #ff4757, #ff6b81);
+    box-shadow: 0 4px 15px rgba(255, 71, 87, 0.4);
+    color: #fff;
+}
+
+.ctrl-play-btn.is-playing:hover {
+    box-shadow: 0 6px 20px rgba(255, 71, 87, 0.6);
 }
 
 /* Timeline area container fixed at the bottom */
@@ -2074,5 +2142,489 @@ html, body {
     .photo-suite-list {
         font-size: 13.5px;
         line-height: 1.7;
+    }
+}
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+/* Ensure Support Card is Never Hidden */
+.support-channels-card, 
+.scroll-reveal-card {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: none !important;
+}
+
+/* ==========================================================================
+   🌟 99% FULL-PAGE KEY HIGHLIGHTS STYLES
+   ========================================================================== */
+
+.s-highlights-full-section {
+    width: 99% !important;
+    max-width: 99vw !important;
+    margin: 30px auto !important;
+    padding: 30px 20px !important;
+    box-sizing: border-box !important;
+    background: linear-gradient(180deg, #10131a 0%, #0a0c10 100%) !important;
+    border: 1px solid #6c5ce7 !important;
+    border-radius: 16px !important;
+    color: #ffffff !important;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+    box-shadow: 0 10px 40px rgba(108, 92, 231, 0.15) !important;
+}
+
+.s-highlights-header {
+    text-align: center;
+    margin-bottom: 26px;
+}
+
+.s-badge-highlight {
+    background: rgba(108, 92, 231, 0.18);
+    color: #a8a5ff;
+    border: 1px solid #6c5ce7;
+    font-size: 11px;
+    font-weight: 800;
+    padding: 4px 14px;
+    border-radius: 20px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    display: inline-block;
+    margin-bottom: 8px;
+}
+
+.s-main-title {
+    font-size: clamp(20px, 2.5vw, 28px);
+    font-weight: 800;
+    margin: 6px 0;
+    color: #ffffff;
+}
+
+.s-cyan-text {
+    color: #00f2fe;
+}
+
+.s-subtitle {
+    font-size: 14px;
+    color: #94a3b8;
+    margin: 0;
+}
+
+/* 99% Fluid Grid */
+.s-highlights-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 16px;
+    width: 100%;
+    margin-bottom: 16px;
+    box-sizing: border-box;
+}
+
+/* Base Card Styling */
+.s-card-item {
+    background: #141722;
+    border: 1px solid #232936;
+    padding: 18px 20px;
+    border-radius: 10px;
+    box-sizing: border-box;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.s-card-item:hover {
+    transform: translateY(-2px);
+}
+
+.s-card-item h3 {
+    font-size: 15px;
+    font-weight: 700;
+    margin: 0 0 6px 0;
+}
+
+.s-card-item p {
+    font-size: 13px;
+    color: #cbd5e1;
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* Color Edge Accents */
+.card-purple { border-left: 4px solid #6c5ce7 !important; }
+.card-purple h3 { color: #a8a5ff; }
+
+.card-cyan { border-left: 4px solid #00f2fe !important; }
+.card-cyan h3 { color: #00f2fe; }
+
+.card-pink { border-left: 4px solid #ff4757 !important; }
+.card-pink h3 { color: #ff6b81; }
+
+.card-green { border-left: 4px solid #10ac84 !important; }
+.card-green h3 { color: #1dd1a1; }
+
+.card-yellow { border-left: 4px solid #f1c40f !important; }
+.card-yellow h3 { color: #f1c40f; }
+
+.card-orange { border-left: 4px solid #ff9f43 !important; }
+.card-orange h3 { color: #ff9f43; }
+
+.card-blue { border-left: 4px solid #54a0ff !important; }
+.card-blue h3 { color: #54a0ff; }
+
+.s-full-span-card {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+/* Bottom CTA Banner */
+.s-cta-banner {
+    text-align: center;
+    padding: 14px;
+    background: rgba(0, 242, 254, 0.05);
+    border: 1px solid rgba(0, 242, 254, 0.2);
+    border-radius: 10px;
+    color: #f1f5f9;
+    font-size: 13.5px;
+    font-weight: 600;
+}
+
+.s-cta-banner a {
+    color: #00f2fe;
+    text-decoration: none;
+    font-weight: 800;
+}
+
+.s-cta-banner a:hover {
+    text-decoration: underline;
+}
+
+/* ==========================================================================
+   📸 99% FULL-PAGE PHOTO EDITING SECTION STYLES
+   ========================================================================== */
+
+.s-photo-tools-section {
+    width: 99% !important;
+    max-width: 99vw !important;
+    margin: 30px auto !important;
+    padding: 30px 20px !important;
+    box-sizing: border-box !important;
+    background: linear-gradient(180deg, #0d1518 0%, #080d10 100%) !important;
+    border: 1px solid #10ac84 !important;
+    border-radius: 16px !important;
+    color: #ffffff !important;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+    box-shadow: 0 10px 40px rgba(16, 172, 132, 0.15) !important;
+}
+
+.s-photo-header {
+    text-align: center;
+    margin-bottom: 26px;
+}
+
+.s-photo-badge {
+    background: rgba(16, 172, 132, 0.18);
+    color: #1dd1a1;
+    border: 1px solid #10ac84;
+    font-size: 11px;
+    font-weight: 800;
+    padding: 4px 14px;
+    border-radius: 20px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    display: inline-block;
+    margin-bottom: 8px;
+}
+
+.s-photo-title {
+    font-size: clamp(20px, 2.5vw, 28px);
+    font-weight: 800;
+    margin: 6px 0;
+    color: #ffffff;
+}
+
+.s-emerald-text {
+    color: #1dd1a1;
+}
+
+.s-photo-subtitle {
+    font-size: 14px;
+    color: #94a3b8;
+    max-width: 900px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+
+/* 99% Grid */
+.s-photo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 16px;
+    width: 100%;
+    margin-bottom: 20px;
+    box-sizing: border-box;
+}
+
+/* Photo Card Styles */
+.s-photo-card {
+    background: #111a1e;
+    border: 1px solid #1d2d33;
+    padding: 18px 20px;
+    border-radius: 10px;
+    box-sizing: border-box;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.s-photo-card:hover {
+    transform: translateY(-2px);
+}
+
+.s-photo-card h3 {
+    font-size: 15px;
+    font-weight: 700;
+    margin: 0 0 6px 0;
+}
+
+.s-photo-card p {
+    font-size: 13px;
+    color: #cbd5e1;
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* Card Borders */
+.card-teal { border-left: 4px solid #1dd1a1 !important; }
+.card-teal h3 { color: #1dd1a1; }
+
+.card-green { border-left: 4px solid #8f2e53 !important; }
+.card-green h3 { color: #55efc4; }
+
+.card-amber { border-left: 4px solid #f39c12 !important; }
+.card-amber h3 { color: #f1c40f; }
+
+.card-purple { border-left: 4px solid #a8a5ff !important; }
+.card-purple h3 { color: #a8a5ff; }
+
+.card-cyan { border-left: 4px solid #00f2fe !important; }
+.card-cyan h3 { color: #00f2fe; }
+
+.card-rose { border-left: 4px solid #ff4757 !important; }
+.card-rose h3 { color: #ff6b81; }
+
+/* Call to Action */
+.s-photo-cta {
+    text-align: center;
+    padding: 14px 18px;
+    background: rgba(16, 172, 132, 0.08);
+    border: 1px solid rgba(16, 172, 132, 0.3);
+    border-radius: 10px;
+    color: #f1f5f9;
+    font-size: 13.5px;
+    line-height: 1.5;
+}
+
+.s-photo-cta strong {
+    color: #1dd1a1;
+}
+/* ==========================================================================
+   🛠️ GLOBAL LAYOUT FIX (FULL-WIDTH CENTERING & NO OVERFLOW)
+   ========================================================================== */
+
+/* Centers all sections on the page with a 98% width */
+.guide-section,
+.support-channels-card,
+.upcoming-updates-card,
+.s-highlights-full-section,
+.s-photo-tools-section,
+.s-simple-editing-section,
+.s-studio-full-container {
+    width: 98% !important;
+    max-width: 1280px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    box-sizing: border-box !important;
+    float: none !important;
+}
+
+/* Sets all footer cards equally across columns */
+.footer-container, 
+.footer-columns-wrapper {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)) !important;
+    gap: 20px !important;
+    width: 98% !important;
+    max-width: 1280px !important;
+    margin: 30px auto 10px auto !important;
+    padding: 20px 15px !important;
+    box-sizing: border-box !important;
+}
+
+/* Prevents text and boxes from overflowing the screen */
+body, html {
+    overflow-x: hidden !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+/* Adds space at the bottom so the editing toolbar doesn't block the footer */
+footer, .s-studio-master-footer {
+    margin-bottom: 90px !important; /* Slightly more space than the toolbar height */
+    position: relative;
+    z-index: 10;
+}
+
+/* Sets the layer level for the editing toolbar */
+.bottom-tools-bar, 
+.editing-tools-dock,
+.action-buttons-bar {
+    z-index: 999 !important;
+}
+/* ==========================================================================
+   ✂️ EDITING TOOLBAR POSITION FIX
+   ========================================================================== */
+
+/* Keeps the editing toolbar inside the workspace instead of fixing it to the screen bottom */
+.editing-tools-toolbar,
+.bottom-tools-bar,
+.tools-action-dock {
+    position: relative !important;
+    bottom: auto !important;
+    left: auto !important;
+    transform: none !important;
+    width: 100% !important;
+    max-width: 1280px !important;
+    margin: 15px auto !important;
+    z-index: 1 !important;
+}
+
+/* Ends the website cleanly with the footer without extra space or overlap */
+footer, .s-studio-master-footer {
+    position: relative !important;
+    margin-bottom: 0 !important;
+    padding-bottom: 25px !important;
+    z-index: 10 !important;
+}
+/* ========================================================================== */
+/* 🌟 99% FULL WIDTH MODERN GRID LAYOUT */
+/* ========================================================================== */
+
+.s-studio-full-container {
+    width: 99%;
+    max-width: 99vw;
+    margin: 20px auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* Base Panel Styling */
+.s-studio-panel {
+    background: #0f121d;
+    border: 1px solid #1f2738;
+    border-radius: 12px;
+    padding: 24px 28px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.info-panel {
+    border-left: 4px solid #38bdf8;
+}
+
+.feature-panel {
+    border-left: 4px solid #00f2fe;
+}
+
+/* Tags & Headers */
+.panel-tag {
+    display: inline-block;
+    align-self: flex-start;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #38bdf8;
+    background: rgba(56, 189, 248, 0.1);
+    padding: 3px 8px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+
+.accent-tag {
+    color: #00f2fe;
+    background: rgba(0, 242, 254, 0.1);
+}
+
+.panel-heading {
+    margin: 0 0 12px 0;
+    font-size: 20px;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: -0.2px;
+}
+
+.panel-text {
+    font-size: 14px;
+    line-height: 1.7;
+    color: #94a3b8;
+    margin: 0 0 16px 0;
+    text-align: justify;
+}
+
+/* Spec Metrics Grid */
+.feature-metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    background: #141824;
+    border: 1px solid #1f2738;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-top: auto;
+}
+
+.metric-box {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.metric-label {
+    font-size: 11px;
+    color: #64748b;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.metric-value {
+    font-size: 13px;
+    font-weight: 700;
+    color: #38bdf8;
+}
+
+.brand-footer-callout {
+    font-size: 13px;
+    color: #cbd5e1;
+    background: #141824;
+    border: 1px dashed #28334a;
+    padding: 10px 14px;
+    border-radius: 6px;
+    margin-top: auto;
+}
+
+.brand-footer-callout strong {
+    color: #00f2fe;
+}
+
+/* Mobile & Tablet Responsiveness */
+@media (max-width: 900px) {
+    .s-studio-full-container {
+        grid-template-columns: 1fr;
+        width: 96%;
+    }
+
+    .feature-metrics-grid {
+        grid-template-columns: 1fr;
+        gap: 8px;
     }
 }
