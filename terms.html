@@ -3,203 +3,301 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Terms and Conditions | S Studio</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Terms and Conditions & Legal Policies | S Studio</title>
     <style>
-        body {
-            background-color: #0b0d14;
-            color: #cbd5e1;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            line-height: 1.8;
         }
 
-        .legal-page-container {
-            max-width: 1000px;
-            margin: 40px auto;
-            padding: 40px 30px;
-            background: #0f121d;
-            border: 1px solid #232a3b;
-            border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            color: #cbd5e1;
+            line-height: 1.85;
+            background-color: #07090e;
+            /* ప్రొఫెషనల్ డార్క్ లీగల్/కోర్టు బ్యాక్‌గ్రౌండ్ ఇమేజ్ విత్ హై-ఎండ్ ఓవర్‌లే */
+            background: linear-gradient(rgba(7, 9, 14, 0.88), rgba(7, 9, 14, 0.94)), 
+                        url('https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat fixed;
+            min-height: 100vh;
         }
 
-        .legal-header {
-            border-bottom: 1px solid #232a3b;
-            padding-bottom: 20px;
-            margin-bottom: 30px;
+        /* పూర్తి పేజీని కవర్ చేసే ఫుల్-విడ్త్ లేఅవుట్ */
+        .full-page-legal-wrapper {
+            width: 100%;
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 40px 24px 80px 24px;
+        }
+
+        /* టాప్ నావిగేషన్ హెడర్ */
+        .legal-top-navbar {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            padding: 20px 30px;
+            background: rgba(16, 20, 31, 0.75);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(0, 242, 254, 0.2);
+            border-radius: 14px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+            margin-bottom: 35px;
             flex-wrap: wrap;
             gap: 15px;
         }
 
-        .legal-header h1 {
+        .legal-top-navbar h1 {
             color: #00f2fe;
-            margin: 0;
-            font-size: 26px;
+            font-size: 22px;
             font-weight: 800;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
         }
 
-        .back-home-btn {
+        .home-return-button {
             background: linear-gradient(135deg, #00f2fe, #4facfe);
             color: #000000;
             text-decoration: none;
-            padding: 10px 20px;
-            font-weight: bold;
+            padding: 10px 22px;
+            font-weight: 800;
             font-size: 13px;
-            border-radius: 6px;
-            transition: all 0.3s ease;
+            border-radius: 8px;
+            transition: all 0.25s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
         }
 
-        .back-home-btn:hover {
-            box-shadow: 0 0 15px rgba(0, 242, 254, 0.4);
+        .home-return-button:hover {
+            box-shadow: 0 0 20px rgba(0, 242, 254, 0.5);
             transform: translateY(-2px);
         }
 
-        .legal-content h3 {
-            color: #ffffff;
-            font-size: 16px;
-            margin-top: 25px;
-            border-bottom: 1px solid #1e293b;
-            padding-bottom: 6px;
+        /* పూర్తి పేజీ లీగల్ కంటెంట్ కంటైనర్ */
+        .legal-main-sheet {
+            background: rgba(14, 18, 28, 0.85);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 18px;
+            padding: 50px 45px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.85);
         }
 
-        .notice-box {
-            background: rgba(255, 71, 87, 0.08);
-            border-left: 4px solid #ff4757;
-            padding: 15px;
-            border-radius: 4px;
+        .document-timestamp {
+            color: #38bdf8;
+            font-size: 13px;
+            font-weight: 600;
             margin-bottom: 25px;
-            color: #f1f5f9;
+            border-bottom: 1px solid #1e293b;
+            padding-bottom: 10px;
         }
 
-        .contact-card {
-            margin-top: 30px;
-            padding: 20px;
-            background: rgba(0, 242, 254, 0.05);
-            border: 1px solid rgba(0, 242, 254, 0.2);
+        .statutory-alert-banner {
+            background: rgba(255, 71, 87, 0.12);
+            border-left: 5px solid #ff4757;
+            padding: 18px 22px;
             border-radius: 8px;
+            margin-bottom: 35px;
+            color: #f8fafc;
+            font-size: 14px;
         }
 
-        .contact-card a {
+        .legal-main-sheet h2 {
+            color: #ffffff;
+            font-size: 18px;
+            margin-top: 36px;
+            margin-bottom: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .legal-main-sheet p {
+            font-size: 14.5px;
+            margin-bottom: 16px;
+            color: #cbd5e1;
+            text-align: justify;
+        }
+
+        .legal-main-sheet ul, .legal-main-sheet ol {
+            margin-bottom: 20px;
+            padding-left: 28px;
+            color: #94a3b8;
+            font-size: 14px;
+        }
+
+        .legal-main-sheet li {
+            margin-bottom: 8px;
+        }
+
+        .legal-main-sheet strong {
+            color: #e2e8f0;
+        }
+
+        .contact-legal-grid {
+            margin-top: 40px;
+            padding: 25px 30px;
+            background: rgba(0, 242, 254, 0.04);
+            border: 1px solid rgba(0, 242, 254, 0.2);
+            border-radius: 12px;
+        }
+
+        .contact-legal-grid a {
             color: #00f2fe;
             text-decoration: none;
+            font-weight: bold;
         }
 
-        @media (max-width: 600px) {
-            .legal-page-container {
-                padding: 20px 15px;
-                margin: 15px;
+        .contact-legal-grid a:hover {
+            text-decoration: underline;
+        }
+
+        .bottom-action-bar {
+            margin-top: 40px;
+            text-align: center;
+        }
+
+        .full-accept-button {
+            display: inline-block;
+            width: 100%;
+            max-width: 600px;
+            background: linear-gradient(135deg, #10ac84, #00f2fe);
+            color: #000000;
+            text-decoration: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-weight: 800;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(16, 172, 132, 0.3);
+        }
+
+        .full-accept-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0, 242, 254, 0.5);
+        }
+
+        @media (max-width: 768px) {
+            .full-page-legal-wrapper {
+                padding: 20px 12px;
             }
-            .legal-header h1 {
-                font-size: 20px;
+            .legal-main-sheet {
+                padding: 25px 18px;
+            }
+            .legal-top-navbar {
+                padding: 15px 18px;
+            }
+            .legal-top-navbar h1 {
+                font-size: 16px;
             }
         }
     </style>
 </head>
 <body>
 
-    <div class="legal-page-container">
+    <div class="full-page-legal-wrapper">
         
-        <!-- Header with Direct Back to Main Page Button -->
-        <div class="legal-header">
-            <h1>TERMS & CONDITIONS AND LEGAL DISCLAIMER</h1>
-            <a href="index.html" class="back-home-btn">← Back to Main Page</a>
+        <!-- Top Navigation Bar -->
+        <div class="legal-top-navbar">
+            <h1>TERMS OF SERVICE, DISCLAIMER & USER POLICIES</h1>
+            <a href="index.html" class="home-return-button">← Return to Studio</a>
         </div>
 
-        <div class="legal-content">
-            <p style="color: #94a3b8; font-size: 12.5px; margin-bottom: 20px;">
-                <strong>Official Legal Document for Website:</strong> Svideoeditor.com | <strong>Last Updated:</strong> August 2026
-            </p>
+        <!-- Full Page Legal Content Document -->
+        <div class="legal-main-sheet">
+            
+            <div class="document-timestamp">
+                <strong>Platform:</strong> S Studio (svideoeditor.com) | <strong>Parent Entity:</strong> Sriram Groups Official | <strong>Effective Date:</strong> September 2026
+            </div>
 
-            <div class="notice-box">
-                <strong style="color: #ff4757;">IMPORTANT NOTICE:</strong> Please read these Terms and Conditions carefully before using svideoeditor.com. By accessing or using any part of this platform, you agree to be bound by these terms and our Legal Disclaimer.</div>
+            <div class="statutory-alert-banner">
+                <strong>LEGAL NOTICE & STATUTORY ACKNOWLEDGMENT:</strong> Please read these comprehensive Terms and Conditions, Disclaimers, and Privacy Standards carefully before operating, rendering, or manipulating media on svideoeditor.com. Your continued access, uploading of media, or client-side execution confirms your unconditional legal agreement to this complete regulatory framework.
+            </div>
 
-            <!-- Section 1 -->
-            <h3>1. ACCEPTANCE OF TERMS & SERVICE PURPOSE</h3>
-            <p>Welcome to <strong>Svideoeditor.com</strong> Svideoeditor.com ("we," "us," or "our") provides free, browser-based video editing and media tools. Our goal is to give creators, students, and educators accessible tools to edit digital content without cost.</p>
-            <p>By accessing, browsing, or using Svideoeditor.com, you ("User", "Visitor", or "Client") explicitly agree to comply with and be bound by these Terms and Conditions and Legal Disclaimer. If you do not agree with any part of these terms, you are strictly prohibited from using this Website and must discontinue use immediately.</p>
+            <h2>1. PLATFORM ARCHITECTURE & NATURE OF SERVICE</h2>
+            <p>Welcome to <strong>S Studio</strong>, accessible via <strong>svideoeditor.com</strong> ("we", "us", "our", or "Platform"). S Studio operates strictly as a zero-cost, high-performance web utility platform designed to provide creators, students, freelance editors, and educators with accessible, browser-native video and image manipulation tools.</p>
+            <p>Our platform leverages modern HTML5 Canvas, Web Audio API, Web Workers, and WebAssembly technologies to conduct digital media processing directly within the user’s local web client environment. By accessing, browsing, or utilizing any feature on this platform, you acknowledge that S Studio functions as an impartial technical suite providing processing software, rather than a media distribution or cloud hosting network.</p>
 
-            <!-- Section 2 -->
-            <h3>2. AUTHORIZED USE & PLATFORM INTENT</h3>
-            <p>Svideoeditor.com is made available strictly for legitimate, lawful, personal, and educational video editing purposes. Users are authorized to utilize the tool to edit, trim, convert, enhance, or process video files that they lawfully own, have created themselves, or have obtained explicit permissions or open-source licenses to modify.</p>
-            <p>We provide this service in good faith to assist the public with utility software. However, the availability of these editing tools does not grant users any permission or legal right to violate intellectual property, privacy rights, or applicable statutory laws in any jurisdiction.</p>
-
-            <!-- Section 3 -->
-            <h3>3. USER RESPONSIBILITY & CONTENT OWNERSHIP</h3>
-            <p>Svideoeditor.com operates solely as a passive software utility. We do not curate, pre-screen, store permanently, monitor, review, or control the content, audio, images, or media files uploaded, processed, or exported by users through the platform.</p>
-            <p>As a user of this Website, you assume 100% full legal and financial responsibility for:</p>
-            <ul style="padding-left: 20px; color: #a4b0be;">
-                <li>All media files, videos, audio tracks, images, or text overlays you upload to or process via Svideoeditor.com.</li>
-                <li>Ensuring that you possess all necessary rights, titles, licenses, and legal permissions to edit and modify the uploaded content.</li>
-                <li>Any legal liabilities, copyright claims, privacy violations, or damages arising from your creation, processing, or distribution of modified media.</li>
+            <h2>2. 100% CLIENT-SIDE DATA SAFETY & ZERO-SERVER RETENTION</h2>
+            <p>Unlike conventional cloud-based rendering engines that mandate transmitting high-resolution private media to centralized server arrays, S Studio functions under a strict <strong>Local-First Client Sandbox Architecture</strong>:</p>
+            <ul>
+                <li><strong>No Remote Media Storage:</strong> Any video file, photo, audio asset, subtitle track, or overlay imported into S Studio is accessed locally through browser blob memory pointers (e.g., <code>URL.createObjectURL</code>). Your files are never uploaded, staged, processed, or backed up on external cloud servers.</li>
+                <li><strong>Browser Memory Evaporation:</strong> Once you refresh, close the active tab, or end your editing session, all active runtime memory pointers and canvas cache assets are automatically destroyed by your operating system’s browser garbage collector.</li>
+                <li><strong>No Surveillance or Data Scraping:</strong> We maintain zero mechanisms to monitor, analyze, parse, screen, or log the personal content of the files you import or export.</li>
             </ul>
 
-            <!-- Section 4 -->
-            <h3 style="color: #ff4757;">4. STRICTLY PROHIBITED ACTIVITIES & CONTENT</h3>
-            <p>Under no circumstances may Svideoeditor.com be used for unlawful, harmful, or unethical activities. You explicitly agree that you will not use this Website to create, edit, process, or assist in the distribution of content that includes, but is not limited to:</p>
-            <ol style="padding-left: 20px; color: #a4b0be;">
-                <li><strong>Copyright Infringement:</strong> Any material owned by third parties, studios, artists, or broadcasting networks without explicit written authorization or legal fair-use entitlement.</li>
-                <li><strong>Defamatory & Hate Speech:</strong> Content that is libelous, slanderous, abusive, harassing, threatening, discriminatory, or promotes violence or hatred against any individual or group.</li>
-                <li><strong>Illegal & Harmful Content:</strong> Videos depicting illegal acts, terrorism, non-consensual imagery, explicit sexual material, or child exploitation material.</li>
-                <li><strong>Misinformation & Deception:</strong> Manipulated media intended to defraud, deceive, impersonate others (including unauthorized deepfakes), perform financial scams, or spread dangerous public misinformation.</li>
-                <li><strong>Malicious Distribution:</strong> Uploading files containing malware, viruses, Trojan horses, or harmful code designed to compromise website infrastructure or third party devices.</li>
+            <h2>3. USER LEGAL OWNERSHIP, CONTENT RESPONSIBILITY & COPYRIGHT</h2>
+            <p>Because S Studio operates purely as an offline-capable client-side processing instrument, we possess no ownership, claim, or supervision over the media modified on this platform.</p>
+            <ul>
+                <li><strong>100% User Liability:</strong> You assume sole and absolute legal, moral, and civil responsibility for any video, graphic, musical track, subtitle font, or voiceover asset you inject into the workspace.</li>
+                <li><strong>Intellectual Property Warranties:</strong> You certify that you either possess lawful copyright ownership, hold a valid public-domain / creative-commons license, or hold express written licensing from the copyright holder for every media asset processed.</li>
+                <li><strong>Third-Party Infringement:</strong> S Studio, its developers, and Sriram Groups Official shall not be held liable for any copyright infringement notices, DMCA claims, royalties disputes, or intellectual property infringements resulting from your media exports.</li>
+            </ul>
+
+            <h2>4. STRICTLY PROHIBITED CONDUCT & UNLAWFUL USAGE</h2>
+            <p>Users are strictly forbidden from leveraging S Studio tools, canvas engines, or export pipelines to produce, compile, or aid in the creation of content involving:</p>
+            <ol>
+                <li><strong>Non-Consensual Imagery & Impersonation:</strong> Fabricating deepfakes, deceptive audio-visual manipulations, or unconsented personal recordings designed to defame, harass, or extort individuals.</li>
+                <li><strong>Terrorism, Extremism & Hate Speech:</strong> Producing propaganda, violent extremism, criminal organization recruitment materials, or hate speech targeting race, religion, gender, or nationality.</li>
+                <li><strong>Exploitation & Explicit Harm:</strong> Any depiction of child abuse, explicit unlawful sexual media, non-consensual private imagery, or severe violence.</li>
+                <li><strong>Financial Scams & Cyber Attacks:</strong> Constructing phishing assets, financial deception videos, or attempting to inject malicious script payloads via SVG masks or malicious subtitle files into the platform DOM.</li>
             </ol>
 
-            <!-- Section 5 -->
-            <h3>5. THIRD PARTY WEBSITES & EXTERNAL DISTRIBUTION DISCLAIMER</h3>
-            <p>Once a user edits or processes a media file using Svideoeditor.com and downloads it to their local device, Svideoeditor.com retains zero control over how, where, or for what purpose that media is published, uploaded, distributed, or broadcasted.</p>
-            <p>If a user uploads or shares an edited video to third party platforms including but not limited to YouTube, Facebook, Instagram, TikTok, Twitter/X, websites, or public forums Svideoeditor.com, its owners, developers, and parent company (Sriram Groups) shall have absolutely no association, involvement, or legal liability regarding such distribution.</p>
-            <p>Any copyright strike, takedown notice, civil lawsuit, or criminal investigation arising from the publication of edited media on third party channels is strictly between the user and the respective platform, copyright owner, or legal authority.</p>
-
-            <!-- Section 6 -->
-            <h3>6. INTELLECTUAL PROPERTY & TRADEMARK ACKNOWLEDGMENT</h3>
-            <p>All brand names, product names, logos, trademarks, and service marks referenced on Svideoeditor.com belong to their respective owners. Svideoeditor.com is an independent utility platform and is not affiliated, endorsed, sponsored, or associated with any social media platform, video streaming network, or third party software provider unless explicitly stated.</p>
-            <p>The compilation, branding, source code, layout, and visual identity of Svideoeditor.com are protected under intellectual property laws. Unconsented copying, scraping, or reproduction of our website infrastructure is strictly prohibited.</p>
-
-            <!-- Section 7 -->
-            <h3>7. DISCLAIMER OF WARRANTIES ("AS-IS" PROVISION)</h3>
-            <p>Svideoeditor.com is provided on an AS IS and AS AVAILABLE basis without warranties of any kind, whether express, implied, statutory, or otherwise. To the fullest extent permissible under applicable law, Svideoeditor.com expressly disclaims all warranties, including but not limited to:</p>
-            <ul style="padding-left: 20px; color: #a4b0be;">
-                <li>Implied warranties of merchantability, fitness for a particular purpose, and non-infringement.</li>
-                <li>Guarantees that the Website will operate uninterrupted, secure, error-free, or free from server outages or technical defects.</li>
-                <li>Guarantees regarding the accuracy, quality, resolution, or complete data integrity of edited or converted video files.</li>
+            <h2>5. AI UTILITIES & EXPERIMENTAL TOOLS DISCLAIMER</h2>
+            <p>S Studio features auxiliary automated utilities including Auto-AI Captioning, chroma background estimation, and smart aspect cropping. You acknowledge that:</p>
+            <ul>
+                <li>All automated AI captioning, transcription approximations, and heuristic masking tools are provided on an experimental basis. S Studio makes no warranty regarding the phonetic accuracy, contextual correctness, or legal fitness of generated subtitles.</li>
+                <li>Users are required to manually audit and verify all auto-generated text prior to commercial publishing or formal distribution.</li>
             </ul>
-            <p>Users download and process media files at their own discretion and risk. You are solely responsible for backing up your original files prior to using our tools.</p>
 
-            <!-- Section 8 -->
-            <h3>8. LIMITATION OF LIABILITY & INDEMNIFICATION</h3>
-            <p>To the maximum extent permitted by governing laws, in no event shall Svideoeditor.com, its founders, operators, employees, affiliates, or technical partners be held liable for any direct, indirect, incidental, consequential, special, punitive, or exemplary damages (including loss of data, loss of revenue, legal fees, or business interruption) resulting from:</p>
-            <ul style="padding-left: 20px; color: #a4b0be;">
-                <li>The use or inability to use our tools and website services.</li>
-                <li>Any unauthorized access, alteration, or misuse of user media by third parties.</li>
-                <li>Any legal disputes, copyright infringement actions, or third party claims resulting from user-uploaded or user-edited content.</li>
+            <h2>6. THIRD-PARTY ADVERTISING (GOOGLE ADSENSE) & MONETIZATION DISCLOSURE</h2>
+            <p>To sustain server bandwidth, domain management, SSL infrastructure, and ongoing technical development without charging user subscriptions, S Studio may display advertisements mediated by third-party advertising networks, such as <strong>Google AdSense</strong>.</p>
+            <ul>
+                <li>Third-party ad vendors, including Google, utilize cookies (such as the DoubleClick cookie) to serve ads based on a user's prior visits to this website or other internet websites.</li>
+                <li>Users can opt out of personalized advertising by visiting Google's Ads Settings (<a href="https://www.google.com/settings/ads" target="_blank" rel="noopener noreferrer">google.com/settings/ads</a>) or opting out of third-party vendor cookies via <a href="https://www.aboutads.info" target="_blank" rel="noopener noreferrer">aboutads.info</a>.</li>
+                <li>S Studio maintains zero affiliation with, and accepts no legal responsibility for, the products, claims, services, or representations presented in external sponsored advertisements.</li>
             </ul>
-            <p><strong>Indemnification:</strong> You agree to defend, indemnify, and hold harmless Svideoeditor.com and its management from and against any claims, liabilities, losses, damages, expenses, or legal costs arising from your violation of these Terms or misuse of the platform.</p>
 
-            <!-- Section 9 -->
-            <h3>9. POLICY UPDATES & MODIFICATIONS</h3>
-            <p>Svideoeditor.com reserves the right to revise, update, or modify these Terms & Conditions and Legal Disclaimer at any time without prior individual notice. All updates will become effective immediately upon being published on this page. Your continued use of the Website following any changes constitutes your binding acceptance of the updated terms.</p>
+            <h2>7. INDEPENDENT UTILITY & THIRD-PARTY TRADEMARKS ACKNOWLEDGMENT</h2>
+            <p>References to aspect ratios or platform presets—including YouTube (16:9), Instagram (1:1 / 4:5), TikTok / YouTube Shorts (9:16), or Pinterest (2:3)—are provided strictly for contextual resolution identification and user convenience.</p>
+            <p>YouTube, Instagram, TikTok, Meta, Google, Apple, and all associated logos are registered trademarks of their respective legal entities. S Studio is an independent development platform and is in no way endorsed, sponsored, affiliated, or certified by any of these social platforms or corporate software publishers.</p>
 
-            <!-- Contact Section -->
-            <div class="contact-card">
-                <h4 style="color: #00f2fe; margin-top: 0; margin-bottom: 8px;">Contact & Legal Inquiries:</h4>
-                <p style="margin: 0; font-size: 13px;">If you have questions regarding these Terms & Conditions, copyright concerns, or legal notices, please reach out to our team via email:</p>
-                <p style="margin: 8px 0 0 0; font-size: 13px;">
-                    <strong>Email:</strong> <a href="mailto:sriramgroup.help@gmail.com">sriramgroup.help@gmail.com</a> / <a href="mailto:sriramgroupsofficial@gmail.com">sriramgroupsofficial@gmail.com</a><br>
-                    <strong>Website:</strong> Svideoeditor.com (A unit of Sriram Groups)
+            <h2>8. WARRANTY DISCLAIMER ("AS-IS" PROVISION)</h2>
+            <p>S Studio is delivered to the user community on an <strong>"AS IS"</strong> and <strong>"AS AVAILABLE"</strong> basis without express or implied warranties of any form. To the maximum degree permitted by governing legislation, S Studio expressly disclaims all warranties, including but not limited to:</p>
+            <ul>
+                <li>Warranties of uninterrupted uptime, total absence of browser software crashes, hardware memory overflow, or zero frame drops during high-framerate 60 FPS / 2K rendering operations.</li>
+                <li>Guarantees regarding the preservation of media data integrity in cases where the client's device exhausts hardware memory (RAM) or browser cache allocations.</li>
+            </ul>
+            <p><strong>Pre-Editing Safety Warning:</strong> Users are solely responsible for maintaining local archival backups of all source media prior to utilizing editing, trimming, or compression features.</p>
+
+            <h2>9. LIMITATION OF LIABILITY & INDEMNIFICATION</h2>
+            <p>Under no legal circumstance, including negligence, shall S Studio, its management, developers, or Sriram Groups Official be held liable for any direct, indirect, incidental, punitive, or consequential damages (including loss of media, device hardware strain, business interruption, or legal disputes) stemming from the usage, misuse, or inability to use this web software.</p>
+            <p><strong>Indemnity Clause:</strong> You agree to defend, indemnify, and hold completely harmless S Studio, its founder, and technical partners against any claims, regulatory penalties, damages, judgments, or legal expenditures arising from your violation of these Terms or your infringement upon the rights of third parties.</p>
+
+            <h2>10. AMENDMENTS & REVISIONS TO LEGAL FRAMEWORK</h2>
+            <p>We reserve the unilateral legal prerogative to modify, enhance, append, or modernize these Terms of Service, Legal Disclaimers, and Privacy Standards at any time without prior written notice. Updated frameworks become effective immediately upon public deployment to this URL. Continued interaction with S Studio constitutes full acceptance of the updated document.</p>
+
+            <!-- Corporate Contact & Entity Card -->
+            <div class="contact-legal-grid">
+                <h3 style="color: #00f2fe; margin-top: 0; margin-bottom: 10px; font-size: 16px;">Corporate Entity & Regulatory Contact:</h3>
+                <p style="margin-bottom: 6px;">For formal inquiries, copyright concerns, DMCA correspondence, or technical partnership queries, contact our governance desk:</p>
+                <p style="margin-bottom: 0;">
+                    <strong>Operating Platform:</strong> S Studio (<a href="https://svideoeditor.com">svideoeditor.com</a>)<br>
+                    <strong>Parent Organization:</strong> Sriram Groups Official<br>
+                    <strong>Founder & CEO:</strong> S. Purushotham<br>
+                    <strong>Official Inquiries:</strong> <a href="mailto:sriramgroup.help@gmail.com">sriramgroup.help@gmail.com</a> / <a href="mailto:sriramgroupsofficial@gmail.com">sriramgroupsofficial@gmail.com</a>
                 </p>
             </div>
 
-            <!-- Agreement Action Button -->
-            <div style="margin-top: 30px; text-align: center;">
-                <a href="index.html" class="back-home-btn" style="display: block; width: 100%; padding: 14px; text-align: center; box-sizing: border-box;">
-                    I HAVE READ & AGREE TO THE TERMS — RETURN TO MAIN PAGE
+            <!-- Bottom Return Button -->
+            <div class="bottom-action-bar">
+                <a href="index.html" class="full-accept-button">
+                    I HAVE FULLY READ & AGREE TO ALL TERMS — RETURN TO S STUDIO
                 </a>
             </div>
+
         </div>
 
     </div>
