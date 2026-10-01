@@ -20,6 +20,68 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <body>
 
+<!-- ========================================================================== -->
+        <!-- 🌐 EXPANDED STICKY TOP NAVIGATION BAR (WITH DIRECT STUDIO ACCESS) -->
+        <!-- ========================================================================== -->
+        <nav class="home-sticky-navbar">
+            <div class="sticky-nav-inner">
+                
+                <!-- Home Link -->
+                <button class="nav-link-btn" onclick="scrollToTopHome()">
+                     Home
+                </button>
+
+                <!--  DIRECT STUDIO LAUNCHER (VIDEO & PHOTO EDITING) -->
+                <div class="nav-dropdown-item" id="editorLaunchDropdown">
+                    <button class="nav-link-btn nav-btn-highlight" onclick="toggleNavDropdown('editorLaunchDropdown')">
+                         Open Studio <span class="nav-arrow-icon">▾</span>
+                    </button>
+                    <div class="nav-sub-menu">
+                        <a href="javascript:void(0)" onclick="enterStudio('video'); closeAllNavDropdowns();">
+                            📽 Video Editing Studio
+                        </a>
+                        <a href="javascript:void(0)" onclick="enterStudio('photo'); closeAllNavDropdowns();">
+                            🏞️ Photo Editing Studio
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Company Dropdown -->
+                <div class="nav-dropdown-item" id="companyDropdown">
+                    <button class="nav-link-btn" onclick="toggleNavDropdown('companyDropdown')">
+                        Company <span class="nav-arrow-icon">▾</span>
+                    </button>
+                    <div class="nav-sub-menu">
+                        <a href="javascript:void(0)" onclick="toggleModal('aboutModal', true); closeAllNavDropdowns();">About Us</a>
+                        <a href="https://sriramgroupsofficial.com/" target="_blank" rel="noopener noreferrer" onclick="closeAllNavDropdowns();">Sriram Groups Official</a>
+                    </div>
+                </div>
+
+                <!-- Blogs Button -->
+                <a href="blog.html" class="nav-link-btn nav-anchor-link">
+                     Blogs
+                </a>
+
+                <!-- Terms & Conditions Dropdown -->
+                <div class="nav-dropdown-item" id="termsDropdown">
+                    <button class="nav-link-btn" onclick="toggleNavDropdown('termsDropdown')">
+                        Terms & Policies <span class="nav-arrow-icon">▾</span>
+                    </button>
+                    <div class="nav-sub-menu">
+                        <a href="terms.html" onclick="closeAllNavDropdowns();">Terms & Conditions</a>
+                        <a href="javascript:void(0)" onclick="toggleModal('privacyModal', true); closeAllNavDropdowns();">Privacy Policy</a>
+                        <a href="javascript:void(0)" onclick="showFullPageModal('disclaimer'); closeAllNavDropdowns();">Disclaimer & Other Terms</a>
+                    </div>
+                </div>
+
+                <!-- Connect Button -->
+                <button class="nav-link-btn" onclick="scrollToSupportChannels()">
+                     Connect
+                </button>
+
+            </div>
+        </nav>
+    
     <!-- ========================================================================== -->
     <!-- 1. INTRO PAGE / WORKSPACE SELECTOR & LANDING CONTENT -->
     <!-- ========================================================================== -->
@@ -313,228 +375,7 @@
             </div>
         </section>
 
-       <!-- ========================================================================== -->
-<!-- 🌟 FULL WIDTH HERO & CORE FEATURES SHOWCASE (99% RESPONSIVE GRID) -->
-<!-- ========================================================================== -->
-<section class="s-studio-full-container">
-    
-    <!-- 1. Left Card: Guidance & Brand Philosophy -->
-    <div class="s-studio-panel info-panel">
-        <div class="panel-tag">Overview</div>
-        <h2 class="panel-heading">S Studio – Simply Editing Tools</h2>
-        <p class="panel-text">
-            Most people find video editing difficult, confusing, and stressful to learn. We built S Studio to solve this problem and make the entire creative process effortless for everyone. Every single button inside our editor is clearly named and organized so you immediately understand what each tool does before you even click it. You do not need any prior technical skills, expensive computers, or complicated software installations. Everything runs smoothly directly inside your web browser completely free of cost.
-        </p>
-        <div class="brand-footer-callout">
-            Explore advanced in-browser editing tools now on <strong>S Studio (svideoeditor.com)</strong>.
-        </div>
-    </div>
-
-    <!-- 2. Right Card: Precision Slider Controls -->
-    <div class="s-studio-panel feature-panel">
-        <div class="feature-header-wrap">
-            <div class="panel-tag accent-tag">Core Engine</div>
-            <h3 class="panel-heading">Precision Slider Control</h3>
-        </div>
-        <p class="panel-text">
-            Editing requires precision, and S Studio gives you complete control with a responsive slider interface. Adjust video playback speed smoothly down to fractional increments like 1.00x to 1.05x for seamless pacing. The same responsive controls let you fine-tune frame brightness, balance visual contrast, and scale on-screen layers with pinpoint accuracy. Everything operates directly in your browser without guesswork or complicated menus.
-        </p>
-        
-        <!-- Live Spec Metrics -->
-        <div class="feature-metrics-grid">
-            <div class="metric-box">
-                <span class="metric-label">Speed Ramping</span>
-                <span class="metric-value">0.25x – 2.00x</span>
-            </div>
-            <div class="metric-box">
-                <span class="metric-label">Visual Fine-Tuning</span>
-                <span class="metric-value">Brightness & Contrast</span>
-            </div>
-            <div class="metric-box">
-                <span class="metric-label">Layer Scaling</span>
-                <span class="metric-value">Sub-Pixel Precision</span>
-            </div>
-        </div>
-    </div>
-
-</section>
-
-        <!-- 2. UPCOMING UPDATES CARD -->
-        <section style="width: 98%; max-width: 1280px; margin: 25px auto; padding: 26px 22px; box-sizing: border-box; background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(17, 24, 39, 0.98)); border: 2px dashed #a8a5ff; border-radius: 14px; color: #ffffff; font-family: sans-serif;">
-            <div style="border-bottom: 1px solid rgba(168, 165, 255, 0.2); padding-bottom: 12px; margin-bottom: 16px;">
-                <h2 style="color: #a8a5ff; margin: 0; font-size: 22px; font-weight: 800;">UPCOMING UPDATES</h2>
-                <p style="color: #cbd5e1; font-size: 13.5px; margin: 4px 0 0 0;">More creative tools are on the way to svideoeditor.com — stay tuned for our next big update.</p>
-            </div>
-
-            <div style="color: #e2e8f0; font-size: 14px; line-height: 1.7;">
-                <p style="margin-bottom: 16px;">
-                    New creative tools are coming soon to S Studio! We are expanding our editor with more features to help you build, edit, and polish your videos faster.
-                </p>
-
-                <div style="background: rgba(108, 92, 231, 0.08); border-left: 4px solid #6c5ce7; padding: 14px; border-radius: 6px; margin-bottom: 16px;">
-                    <h3 style="color: #a8a5ff; margin: 0 0 6px 0; font-size: 15px; font-weight: 700;">Next-Gen AI & VFX Video Editing</h3>
-                    <ul style="padding-left: 18px; color: #cbd5e1; margin: 0;">
-                        <li style="margin-bottom: 4px;"><strong>True Photo Modification:</strong> Custom controls without generic outputs.</li>
-                        <li style="margin-bottom: 4px;"><strong>Rapid Video Generation:</strong> Produce crisp, high-definition videos in minutes.</li>
-                        <li><strong>VFX & Special Effects:</strong> Direct visual effects right in your timeline.</li>
-                    </ul>
-                </div>
-
-                <div style="border-top: 1px dashed rgba(255, 255, 255, 0.15); padding-top: 14px; margin-top: 14px;">
-                    <p style="margin: 0 0 10px 0; color: #94a3b8; font-size: 13px;">
-                        Follow along for official announcements: 
-                        <a href="https://sriramgroupsofficial.com" target="_blank" rel="noopener noreferrer" style="color: #00f2fe; text-decoration: none; font-weight: bold; margin-left: 6px;">sriramgroupsofficial.com</a>
-                    </p>
-                </div>
-            </div>
-        </section>
-
-        <!-- FOUNDER'S ORIGIN STORY CARD -->
-        <section class="origin-story-wrapper">
-            <div class="origin-story-card">
-                <div class="story-badge">Founder's Note</div>
-                <h2 class="story-main-title">The Origin Story of S Studio</h2>
-                <p class="story-subtitle">A Personal Journey Behind <a href="https://svideoeditor.com/" target="_blank" rel="noopener" class="story-domain-link">svideoeditor.com</a></p>
-
-                <div class="story-divider"></div>
-
-                <p class="story-lead-quote">
-                    "Every meaningful platform begins with a personal struggle and a genuine purpose."
-                </p>
-
-                <p class="story-body-text">
-                    A while ago, while creating a promotional video for Sriram Groups, I needed a few specific editing features and searched online for browser-based video editors. I picked one, spent valuable time perfecting the edit, and finally hit the download button—only to be blocked by sudden login requirements and expensive monthly subscription paywalls.
-                </p>
-
-                <p class="story-body-text">
-                    Frustrated, I switched to a second website, re-uploaded the footage, and re-did the entire edit from scratch. When I attempted to export this time, it offered only a few seconds of free rendering and locked the rest behind a paywall. There is an old Telugu saying: <em>"between a rock and a hard place"</em> or <em>"between the devil and the deep blue sea."</em> At that point in my life, my financial situation was difficult, and paying expensive recurring fees for a basic download was simply out of the question.
-                </p>
-
-                <p class="story-body-text">
-                    Once my circumstances stabilized, I realized that thousands of aspiring students, passionate creators, and small business owners face the exact same frustrating barrier every single day. Determined to break this cycle, I teamed up with skilled developers and worked tirelessly with one unwavering vision: <strong>Modern creative technology should never be locked behind wealth; it must be accessible to everyone.</strong> That belief became S Video Editor (<a href="https://svideoeditor.com/" target="_blank" rel="noopener" class="story-inline-link">svideoeditor.com</a>).
-                </p>
-
-                <p class="story-body-text">
-                    If this platform helps creators sharpen their craft, produce great content, and achieve their dreams, our mission is fulfilled. Whenever you create a successful video using S Studio, share your milestones and stories with us via our official social media handles or email—nothing brings our team greater happiness than witnessing your success!
-                </p>
-
-                <div class="founder-signature-box">
-                    <p class="founder-regards">Warm regards,</p>
-                    <h3 class="founder-name">S. Purushotham</h3>
-                    <p class="founder-title">Founder & CEO, Sriram Groups</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- FEEDBACK & CREATIVE IDEAS CARD -->
-        <div class="feedback-reward-card auto-scroll-pause-card">
-            <div class="marquee-content-wrapper">
-                <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 18px; border-bottom: 1px solid rgba(16, 172, 132, 0.2); padding-bottom: 15px; flex-wrap: wrap;">
-                    <div style="flex: 1; min-width: 250px;">
-                        <h2 style="color: #10ac84; margin: 0; font-size: 23px; font-weight: 800; letter-spacing: -0.3px;">WE WANT YOUR FEEDBACK & CREATIVE IDEAS!</h2>
-                        <p style="color: #38bdf8; font-size: 13.5px; margin: 4px 0 0 0; font-weight: 600;">Have Ideas for S Studio? Tell Us Below</p>
-                    </div>
-                </div>
-
-                <div style="color: #e2e8f0; font-size: 14px; line-height: 1.8; font-family: system-ui, -apple-system, sans-serif;">
-                    <p style="margin-bottom: 20px;">
-                        Got an idea to make <strong>S Studio (svideoeditor.com)</strong> better or found a bug? Share your feedback below to help us improve the platform plus, win exciting rewards for top suggestions!
-                    </p>
-
-                    <h3 style="color: #ffffff; font-size: 16px; margin: 20px 0 12px 0;">How You Can Participate & Get Rewarded:</h3>
-                    
-                    <div style="background: rgba(16, 172, 132, 0.05); border-left: 4px solid #10ac84; padding: 16px; border-radius: 6px; margin-bottom: 22px;">
-                        <ul style="padding-left: 18px; color: #cbd5e1; margin: 0; list-style: none;">
-                            <li style="margin-bottom: 10px;">
-                                <strong>Share Your Ideas & Feedback:</strong> Tell us what features you would love to see, what improvements we can make, or share your honest review/feedback.
-                            </li>
-                            <li style="margin-bottom: 10px;">
-                                <strong>Report Bugs or Glitches:</strong> If you notice any technical issues, broken features, or layout bugs, let us know right away.
-                            </li>
-                            <li style="margin-bottom: 0;">
-                                <strong>Submit Your Creative Concepts:</strong> No need for technical jargon just explain your ideas or editing shortcuts in plain English.
-                            </li>
-                        </ul>
-                    </div>
-
-                    <div style="background: rgba(108, 92, 231, 0.1); border: 1px solid rgba(108, 92, 231, 0.3); padding: 22px; border-radius: 12px; margin: 25px 0;">
-                        <h4 style="color: #a8a5ff; margin: 0 0 12px 0; font-size: 16px; font-weight: 700;">How to Submit:</h4>
-                        
-                        <p style="margin: 0 0 10px 0;">
-                            <strong>Via Email:</strong> Send your thoughts or bug reports to: 
-                            <a href="mailto:sriramgroupsofficial@gmail.com" style="color: #00f2fe; font-weight: bold; text-decoration: none;">sriramgroupsofficial@gmail.com</a> / 
-                            <a href="mailto:sriramgroup.help@gmail.com" style="color: #00f2fe; font-weight: bold; text-decoration: none;">sriramgroup.help@gmail.com</a>
-                        </p>
-                        
-                        <p style="margin: 0;">
-                            <strong>In App Submission:</strong> Click the <button onclick="toggleModal('bugReportModal', true)" style="background: rgba(255, 71, 87, 0.2); color: #ff4757; border: 1px dashed #ff4757; padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: bold; cursor: pointer; margin: 0 4px;">Report a Bug & Get Reward!</button> button directly on the website.
-                        </p>
-                    </div>
-
-                    <div style="border-top: 1px dashed rgba(255, 255, 255, 0.15); padding-top: 18px; margin-top: 20px;">
-                        <h4 style="color: #ffffff; margin: 0 0 8px 0; font-size: 15px;">Leave a Review:</h4>
-                        <p style="margin: 0; color: #94a3b8; font-size: 13.5px;">
-                           Have a minute? Drop your review below and tell us how S Studio is working for you. Your feedback helps us build better tools! 
-                        </p>
-                    </div>
-
-                    <div style="text-align: center; margin-top: 22px; padding: 12px; background: rgba(0, 242, 254, 0.04); border: 1px solid rgba(0, 242, 254, 0.2); border-radius: 8px;">
-                        <span style="color: #00f2fe; font-weight: bold; font-size: 13.5px;">Our team is ready to read your ideas let us build the best free video editor together!</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- EXPORT ENGINE SHOWCASE SECTION -->
-        <section class="export-feature-wrapper">
-            <div class="export-feature-card">
-                <div class="export-badge">Intelligent Export Engine</div>
-                <h2 class="export-main-title">Crystal-Clear Quality from 240p to 1440p 2K Ultra HD</h2>
-                
-                <p class="export-lead-text">
-                    No matter how hard you work on shooting a video or how many hours you spend perfecting your edits, if the final export loses its sharpness, the entire effort goes to waste. Crisp, high-fidelity visual output is what truly makes content look professional!
-                </p>
-
-                <p class="export-body-text">
-                    Understanding this, S Video Editor (Powered by Sriram Groups) introduces a robust, intelligent Export Engine built to deliver maximum visual brilliance directly at <a href="https://svideoeditor.com/" target="_blank" rel="noopener" class="export-inline-link">svideoeditor.com</a>:
-                </p>
-
-                <ul class="export-features-list">
-                    <li>
-                        <strong>From 240p to 1440p (2K Ultra HD):</strong> Total resolution freedom! Export lightweight clips starting from 240p, 360p, and 480p up to 720p HD, 1080p Full HD, and ultra-sharp 1440p (2K Resolution).
-                    </li>
-                    <li>
-                        <strong>Smart Compression (KB & MB Control):</strong> Advanced bitrate encoding lets you drastically shrink file sizes to save device storage without sacrificing clarity.
-                    </li>
-                    <li>
-                        <strong>Ultra-Fast Rendering & Zero Watermarks:</strong> High-speed processing delivers clean, studio-grade video files 100% free of intrusive watermarks.
-                    </li>
-                </ul>
-
-                <div class="export-card-footer">
-                    <p class="export-closing-text">
-                        Your vision deserves the sharpest clarity—export in pure high definition effortlessly on <a href="https://svideoeditor.com/" target="_blank" rel="noopener" class="export-inline-link">S Video Editor</a>!
-                    </p>
-                </div>
-            </div>
-        </section>
-
-        <!-- S STUDIO VALUE PROPOSITION SECTION -->
-        <section class="benefits-feature-wrapper">
-            <div class="benefits-content-box">
-                <h2 class="benefits-cyan-title">Why Use S Video Editor</h2>
-                
-                <p class="benefits-body-text">
-                    Editing your videos on S Studio saves your valuable time, money, and device storage. You can produce studio-grade, professional videos directly within your web browser on any standard smartphone or PC without installing expensive software.
-                </p>
-
-                <p class="benefits-body-text">
-                    Packed with free subtitles, background noise removal, built-in cinematic music, and watermark-free high-definition exports, S Studio gives your YouTube videos, Reels, and business content the polished look needed to boost views, engagement, and online growth effortlessly.
-                </p>
-            </div>
-        </section>
-
-        <!-- 3-COLUMN FEATURE CARDS -->
+       <!-- 3-COLUMN FEATURE CARDS -->
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; max-width: 1200px; margin: 30px auto; padding: 0 15px; align-items: stretch;">
             
             <!-- Card 1: Free Subtitles -->
@@ -803,66 +644,144 @@
                 <span style="color: #38bdf8; font-weight: bold; font-size: 13px;"> Thank you for connecting with Sriram Groups!</span>
             </div>
         </div>
+        
+        <!-- ========================================================================== -->
+        <!-- COMPREHENSIVE TECH UPGRADE GUIDE & AI WORKFLOWS (ON-PAGE CONTENT) -->
+        <!-- ========================================================================== -->
+        <section id="techGuideSection" style="max-width: 1200px; margin: 50px auto 30px auto; padding: 30px 24px; background: rgba(16, 20, 31, 0.7); border: 1px solid #232a3b; border-radius: 16px; scroll-margin-top: 30px;">
+            
+            <div style="border-bottom: 1px solid #2f3542; padding-bottom: 15px; margin-bottom: 25px;">
+                <h2 style="color: #a855f7; font-size: 24px; margin: 0 0 8px 0; font-weight: 800;">
+                    HOW TO STAY UPDATED IN FAST-MOVING TECHNOLOGY
+                </h2>
+                <p style="color: #94a3b8; font-size: 14px; margin: 0;">
+                    A practical guide on upgrading technical skills, adopting modern browser standards, and mastering media production workflows.
+                </p>
+            </div>
+
+            <!-- Part 1: Tech Upgrade Roadmap -->
+            <div style="margin-bottom: 30px;">
+                <h3 style="color: #ffffff; font-size: 17px; margin-bottom: 10px;">1. Continuous Learning & Architectural Shifts</h3>
+                <p style="color: #cbd5e1; font-size: 13.5px; line-height: 1.8; text-align: justify; margin-bottom: 12px;">
+                    Technology evolves rapidly from centralized server processing toward client-side computing. To keep pace with modern software standards, developers and creators must understand browser-native capabilities like HTML5 Canvas, WebAssembly (WASM), and the Web Audio API. Staying updated requires hands-on exploration of real-time sandbox execution where end users benefit from zero latency and complete privacy without third-party server dependencies.
+                </p>
+                <ul style="color: #94a3b8; font-size: 13px; padding-left: 20px; line-height: 1.8;">
+                    <li><strong>Master Core Standards:</strong> Deepen your understanding of JavaScript ES6+, responsive DOM handling, and progressive web application concepts.</li>
+                    <li><strong>Explore Client-Side Performance:</strong> Adopt local memory buffers and streaming blob pipelines to eliminate recurring server bandwidth costs.</li>
+                    <li><strong>Track Open Source Communities:</strong> Engage with active technical repositories, web developer forums, and open-source media utilities.</li>
+                </ul>
+            </div>
+
+            <!-- Part 2: Next-Gen AI Workflows -->
+            <div id="aiWorkflowSection" style="margin-bottom: 30px; scroll-margin-top: 30px;">
+                <h3 style="color: #c084fc; font-size: 17px; margin-bottom: 10px;">2. Integrating Modern AI & Automation Into Media Editing</h3>
+                <p style="color: #cbd5e1; font-size: 13.5px; line-height: 1.8; text-align: justify; margin-bottom: 12px;">
+                    Artificial Intelligence in creative platforms is no longer just a trend—it is a core productivity standard. In modern video and photo workflows, heuristic algorithms now assist with auto-caption generation, frame alignment, background removal, and aspect ratio adaptation for diverse social channels. Leveraging lightweight browser algorithms allows creators to automate time-consuming tasks while maintaining hands-on editorial control over the final export.
+                </p>
+            </div>
+
+            <!-- Part 3: Essential Editor Tips -->
+            <div id="editorTipsSection" style="margin-bottom: 10px; scroll-margin-top: 30px;">
+                <h3 style="color: #00f2fe; font-size: 17px; margin-bottom: 10px;">3. Pro Video & Photo Optimization Tips</h3>
+                <p style="color: #cbd5e1; font-size: 13.5px; line-height: 1.8; text-align: justify;">
+                    Always verify that your timeline cuts match standard display ratios (16:9 for YouTube desktop, 9:16 for vertical reels, and 1:1 for social feeds). When exporting high frame-rate content at 60 FPS, balancing bitrates between 6.0 Mbps and 8.0 Mbps ensures pristine clarity without causing excessive memory consumption on mobile devices.
+                </p>
+            </div>
+
+        </section>
 
         <!-- CLEAN FOOTER -->
         <footer style="width: 98%; max-width: 1280px; margin: 30px auto 10px auto; padding: 25px 20px; box-sizing: border-box; background: #0c0f15; border-top: 1px solid #2f3542; border-radius: 12px; color: #ffffff; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
                 
-                <!-- Col 1 -->
+                <!-- Col 1: Policies -->
                 <div>
                     <h4 style="color: #00f2fe; margin: 0 0 12px 0; font-size: 14px; font-weight: 700;">S Studio Policies</h4>
                     <div style="display: flex; flex-direction: column; gap: 8px; font-size: 12.5px;">
-                        <a href="terms.html" style="color: #94a3b8; text-decoration: none;"> Terms & Conditions</a>
-                        <a href="javascript:void(0)" onclick="toggleModal('privacyModal', true)" style="color: #94a3b8; text-decoration: none;"> Privacy Policy</a>
-                        <a href="javascript:void(0)" onclick="toggleModal('cookiesModal', true)" style="color: #94a3b8; text-decoration: none;"> Cookies Policy</a>
-                        <a href="javascript:void(0)" onclick="toggleModal('copyrightModal', true)" style="color: #94a3b8; text-decoration: none;"> Copyright Policy</a>
-                    </div>
-                </div>
-
-                <!-- Col 2 -->
-                <div>
-                    <h4 style="color: #a8a5ff; margin: 0 0 12px 0; font-size: 14px; font-weight: 700;">Company Details</h4>
-                    <div style="font-size: 12.5px; color: #94a3b8; line-height: 1.6;">
-                        <strong style="color: #ffffff;">Sriram Groups Official</strong><br>
-                        Founder & CEO: S. Purushotham<br>
-                        <div style="margin-top: 6px; display: flex; flex-direction: column; gap: 4px;">
-                            <a href="javascript:void(0)" onclick="toggleModal('founderModal', true)" style="color: #a8a5ff; text-decoration: none;"> Founder Profile</a>
-                            <a href="javascript:void(0)" onclick="toggleModal('visionModal', true)" style="color: #a8a5ff; text-decoration: none;"> Theme & Vision</a>
+                        <div onclick="showFullPageModal('disclaimer')" style="cursor: pointer; color: #cbd5e1; font-size: 13px;">
+                            Disclaimer
                         </div>
+                        <a href="terms.html" style="color: #94a3b8; text-decoration: none;">Terms & Conditions</a>
+                        <a href="javascript:void(0)" onclick="toggleModal('privacyModal', true)" style="color: #94a3b8; text-decoration: none;">Privacy Policy</a>
+                        <a href="javascript:void(0)" onclick="toggleModal('cookiesModal', true)" style="color: #94a3b8; text-decoration: none;">Cookies Policy</a>
+                        <a href="javascript:void(0)" onclick="toggleModal('copyrightModal', true)" style="color: #94a3b8; text-decoration: none;">Copyright Policy</a>
                     </div>
                 </div>
 
-                <!-- Col 3 -->
+                <!-- Col 2: Company Details -->
                 <div>
-                    <h4 style="color: #10ac84; margin: 0 0 12px 0; font-size: 14px; font-weight: 700;">Contact & Links</h4>
-                    <div style="display: flex; flex-direction: column; gap: 6px; font-size: 12.5px; color: #94a3b8;">
-                        <span> Support: <a href="mailto:sriramgroup.help@gmail.com" style="color: #10ac84; text-decoration: none;">sriramgroup.help@gmail.com</a></span>
-                        <span> Official: <a href="https://sriramgroupsofficial.com" target="_blank" rel="noopener noreferrer" style="color: #10ac84; text-decoration: none;">sriramgroupsofficial.com</a></span>
-                        <span> YouTube: <a href="https://youtube.com/@sriramgroups-i7t?si=J_jklV3t-tU1qFT4" target="_blank" rel="noopener noreferrer" style="color: #10ac84; text-decoration: none;">Sriram Groups Official</a></span>
+    <h4 style="color: #00f2fe; margin: 0 0 12px 0; font-size: 14px; font-weight: 700;">Company Details</h4>
+    <div style="font-size: 12.5px; color: #94a3b8; line-height: 1.6; display: flex; flex-direction: column; gap: 8px;">
+        <!-- Official Main Company Website Link -->
+        <a href="https://sriramgroupsofficial.com/" target="_blank" rel="noopener noreferrer" style="color: #ffffff; font-weight: bold; text-decoration: none; display: inline-flex; align-items: center; gap: 5px; transition: color 0.2s;" onmouseover="this.style.color='#00f2fe'" onmouseout="this.style.color='#ffffff'">
+             Sriram Groups Official ↗
+        </a>
+
+        <!-- About Us Modal Trigger -->
+        <a href="javascript:void(0)" onclick="toggleModal('founderModal', true)" style="color: #94a3b8; text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='#00f2fe'" onmouseout="this.style.color='#94a3b8'">
+            About Us
+        </a>
+
+        <!-- Theme & Vision Modal Trigger -->
+        <a href="javascript:void(0)" onclick="toggleModal('visionModal', true)" style="color: #94a3b8; text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='#00f2fe'" onmouseout="this.style.color='#94a3b8'">
+            Theme & Vision
+        </a>
+    </div>
+</div>
+
+                <!-- Col 3: Contact Us -->
+                <div>
+                    <h4 style="color: #00f2fe; margin: 0 0 12px 0; font-size: 14px; font-weight: 700;">Contact Us</h4>
+                    <div style="font-size: 12.5px; color: #94a3b8; line-height: 1.6; display: flex; flex-direction: column; gap: 6px;">
+                        <span>Support: <a href="mailto:sriramgroup.help@gmail.com" style="color: #38bdf8; text-decoration: none;">sriramgroup.help@gmail.com</a></span>
+                        <span>Official: <a href="https://sriramgroupsofficial.com" target="_blank" rel="noopener noreferrer" style="color: #38bdf8; text-decoration: none;">sriramgroupsofficial.com</a></span>
+                        <span>YouTube: <a href="https://youtube.com/@sriramgroups-i7t" target="_blank" rel="noopener noreferrer" style="color: #38bdf8; text-decoration: none;">Sriram Groups Official</a></span>
                     </div>
                 </div>
 
-                <!-- Col 4 -->
+                <!-- Col 4: Why Best & Support -->
                 <div>
                     <h4 style="color: #ff9f43; margin: 0 0 12px 0; font-size: 14px; font-weight: 700;">Why Best & Support</h4>
-                    <div style="font-size: 12.5px; color: #94a3b8; line-height: 1.6; margin-bottom: 10px; display: flex; flex-direction: column; gap: 4px;">
-                        <a href="javascript:void(0)" onclick="toggleModal('whyBestModal', true)" style="color: #ff9f43; text-decoration: none;"> Why S Studio is Best?</a>
-                        <a href="javascript:void(0)" onclick="toggleModal('faqModal', true)" style="color: #ff9f43; text-decoration: none;"> FAQs & Documentation</a>
+                    <div style="font-size: 12.5px; color: #94a3b8; line-height: 1.6; margin-bottom: 12px; display: flex; flex-direction: column; gap: 6px;">
+                        <a href="javascript:void(0)" onclick="toggleModal('whyBestModal', true)" style="color: #ff9f43; text-decoration: none;">Why S Studio is Best?</a>
+                        <a href="javascript:void(0)" onclick="toggleModal('faqModal', true)" style="color: #ff9f43; text-decoration: none;">FAQs & Documentation</a>
+                        <a href="blog.html" style="color: #00f2fe; text-decoration: none; font-weight: bold;">Tutorials & Blog</a>
                     </div>
                     <button onclick="toggleModal('bugReportModal', true)" style="background: linear-gradient(135deg, #ff4757, #ff6b81); color: #fff; border: none; padding: 7px 14px; border-radius: 6px; font-size: 11.5px; font-weight: bold; cursor: pointer;">
-                         Report a Bug & Get Reward!
+                        Report a Bug & Get Reward!
                     </button>
                 </div>
+
+                <!-- Col 5: Tech & Updates -->
+                <div style="flex: 1; min-width: 180px; margin-bottom: 20px;">
+                    <h4 style="color: #a855f7; margin: 0 0 12px 0; font-size: 14px; font-weight: 700; text-transform: uppercase;">Tech & Updates</h4>
+                    <div style="font-size: 12.5px; color: #94a3b8; line-height: 1.6; margin-bottom: 12px; display: flex; flex-direction: column; gap: 6px;">
+                        <span style="color: #cbd5e1; font-size: 12px;">Stay ahead with modern web tech trends:</span>
+                        <a href="#techGuideSection" style="color: #c084fc; text-decoration: none; font-size: 12.5px;">Modern Tech Trends</a>
+                        <a href="#aiWorkflowSection" style="color: #c084fc; text-decoration: none; font-size: 12.5px;">Next-Gen AI Workflows</a>
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <a href="#techGuideSection" style="background: linear-gradient(135deg, #a855f7, #6366f1); color: #ffffff; text-decoration: none; padding: 7px 12px; border-radius: 6px; font-size: 11px; font-weight: bold; text-align: center; display: block;">
+                            How to Update in Tech?
+                        </a>
+                        <a href="blog.html" style="background: rgba(168, 85, 247, 0.15); border: 1px solid #a855f7; color: #d8b4fe; text-decoration: none; padding: 6px 12px; border-radius: 6px; font-size: 11px; font-weight: bold; text-align: center; display: block; transition: all 0.25s ease;" onmouseover="this.style.background='#a855f7'; this.style.color='#ffffff'; this.style.boxShadow='0 0 12px rgba(168, 85, 247, 0.6)';" onmouseout="this.style.background='rgba(168, 85, 247, 0.15)'; this.style.color='#d8b4fe'; this.style.boxShadow='none';">
+    View Tech Tips & Guides
+</a>
+                    </div>
+                </div>
+
             </div>
 
-            <div style="text-align: center; margin-top: 22px; padding-top: 15px; border-top: 1px solid #1c2230; font-size: 12px; color: #64748b;">
-                © 2026 Sriram Groups Official. All Rights Reserved.
+            <!-- Full-width Bottom Centered Copyright Line -->
+            <div style="width: 100%; text-align: center; margin-top: 25px; padding-top: 15px; border-top: 1px solid #1c2230; font-size: 12px; color: #64748b;">
+                © 2026 S studio | Sriram Groups Official. All Rights Reserved.
             </div>
         </footer>
 
-    </div> <!-- End #introPage (Landings completely end here!) -->
+    </div> <!-- End #introPage -->
 
-    <!-- ========================================================================== -->
+    
+ <!-- ========================================================================== -->
     <!-- 2. MAIN EDITOR STUDIO WORKSPACE (HIDDEN INITIALLY) -->
     <!-- ========================================================================== -->
     <div class="editor-container hidden" id="editorPage">
@@ -912,11 +831,9 @@
 
                     <!-- Main Dynamic Play / Pause Button -->
                     <button class="ctrl-play-btn" id="mainPlayPauseBtn" type="button" onclick="togglePlay()" title="Play / Pause">
-                        <!-- Play Icon -->
                         <svg id="playIconSvg" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="margin-left: 2px;">
                             <path d="M8 5v14l11-7z"/>
                         </svg>
-                        <!-- Pause Icon -->
                         <svg id="pauseIconSvg" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="display: none;">
                             <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
                         </svg>
@@ -936,12 +853,15 @@
                 </div>
             </div>
         </main>
-<!-- DRAGGABLE SCREEN RESIZER BAR -->
-<div id="studioScreenResizerBar" style="width: 100%; height: 10px; background: #161a26; border-top: 1px solid #232b3c; border-bottom: 1px solid #232b3c; cursor: row-resize; display: flex; align-items: center; justify-content: center; margin: 4px 0; z-index: 100;">
-    <div style="width: 40px; height: 3px; background: #00f2fe; border-radius: 2px; box-shadow: 0 0 6px #00f2fe;"></div>
-</div>
+
+        <!-- DRAGGABLE SCREEN RESIZER BAR -->
+        <div id="studioScreenResizerBar" style="width: 100%; height: 10px; background: #161a26; border-top: 1px solid #232b3c; border-bottom: 1px solid #232b3c; cursor: row-resize; display: flex; align-items: center; justify-content: center; margin: 4px 0; z-index: 100;">
+            <div style="width: 40px; height: 3px; background: #00f2fe; border-radius: 2px; box-shadow: 0 0 6px #00f2fe;"></div>
+        </div>
+
         <!-- Bottom Timeline & Editing Controls Area -->
-        <div class="timeline-area media-dependent hidden" id="timelineAreaBox">
+        
+           <div class="timeline-area" id="timelineAreaBox">
             <div class="timeline-zoom-header" style="display: flex; align-items: center; gap: 8px; padding: 6px 16px; background: #111318;">
                 <label style="font-size: 11px; color: #a4b0be;">🔍 Zoom:</label>
                 <input type="range" id="timelineZoomSlider" min="0.5" max="2.0" step="0.1" value="1.0" oninput="adjustTimelineZoom(this.value)" style="width: 100px; accent-color: #6c5ce7; cursor: pointer;">
@@ -999,8 +919,8 @@
                     <button class="tool-btn chroma-btn" onclick="executeTool('Chroma Key')" style="background: rgba(16, 172, 132, 0.2); border: 1px solid #10ac84; color: #10ac84;">🟢 Chroma Key</button>
                     <button class="tool-btn ai-btn" onclick="executeTool('Review AI')">Review AI</button>
                     <button class="tool-btn ai-btn" onclick="toggleModal('askAiModal', true)" style="background: rgba(108, 92, 231, 0.2); border: 1px solid #6c5ce7; color: #a8a5ff; cursor: pointer;">
-    🤖 Ask AI
-</button>
+                        🤖 Ask AI
+                    </button>
                     <button class="tool-btn delete-btn" onclick="executeTool('Delete')">Delete</button>
                 </div>
             </div>
@@ -1008,8 +928,102 @@
     </div> <!-- End #editorPage -->
 
     <!-- ========================================================================== -->
+        <!-- 📸 DEDICATED PHOTO EDITING TOOLBAR DOCK (ACTIVE ONLY IN PHOTO MODE) -->
+        <!-- ========================================================================== -->
+        <div id="photoToolsToolbar" class="photo-tools-bar" style="display: none;">
+            <div class="photo-tools-inner">
+                <button class="photo-tool-btn" onclick="openPhotoAdjustModal()">
+                    🎨 Adjust
+                </button>
+                <button class="photo-tool-btn" onclick="openPhotoFiltersModal()">
+                    🎭 Filters
+                </button>
+                <button class="photo-tool-btn" onclick="removePhotoBackground()">
+                    🪄 BG Remove
+                </button>
+                <button class="photo-tool-btn" onclick="triggerPixelEraser()">
+                    🧹 Eraser
+                </button>
+                <button class="photo-tool-btn" onclick="openTopCanvasCropMenu()">
+                    📐 Crop
+                </button>
+                <button class="photo-tool-btn" onclick="addPhotoTextOverlay()">
+                    📝 Add Text
+                </button>
+                <button class="photo-tool-btn" onclick="togglePhotoBorders()">
+                    🖼️ Border/Style
+                </button>
+                <button class="photo-tool-btn" onclick="openPhotoOpacitySlider()">
+                    💧 Opacity
+                </button>
+                <button class="photo-tool-btn" onclick="rotatePhotoCanvas(90)">
+                    🔄 Rotate 90°
+                </button>
+                <button class="photo-tool-btn" onclick="flipPhotoHorizontal()">
+                    🪞 Flip H
+                </button>
+                <button class="photo-tool-btn" onclick="openPhotoStickersModal()">
+                    🌟 Stickers
+                </button>
+                <button class="photo-tool-btn reset-tool-btn" onclick="resetPhotoAdjustments()">
+                    ↺ Reset
+                </button>
+                <button class="photo-tool-btn download-tool-btn" onclick="downloadEditedPhoto()">
+                    💾 Download Photo
+                </button>
+            </div>
+
+            <!-- Dynamic Floating Photo Adjustment Sub-Panel -->
+            <div id="photoAdjustSubPanel" class="photo-sub-panel" style="display: none;">
+                <div class="sub-panel-header">
+                    <span>🎨 Image Adjustments</span>
+                    <span onclick="this.parentElement.parentElement.style.display='none'" class="close-sub-panel">✕</span>
+                </div>
+                <div class="sub-panel-sliders">
+                    <label>Brightness: <span id="photoBrightnessVal">100%</span>
+                        <input type="range" id="photoBrightnessSlider" min="0" max="200" value="100" oninput="applyPhotoLiveFilters()">
+                    </label>
+                    <label>Contrast: <span id="photoContrastVal">100%</span>
+                        <input type="range" id="photoContrastSlider" min="0" max="200" value="100" oninput="applyPhotoLiveFilters()">
+                    </label>
+                    <label>Saturation: <span id="photoSaturationVal">100%</span>
+                        <input type="range" id="photoSaturationSlider" min="0" max="200" value="100" oninput="applyPhotoLiveFilters()">
+                    </label>
+                    <label>Warmth (Sepia): <span id="photoWarmthVal">0%</span>
+                        <input type="range" id="photoWarmthSlider" min="0" max="100" value="0" oninput="applyPhotoLiveFilters()">
+                    </label>
+                </div>
+            </div>
+
+            <!-- Dynamic Floating Photo Filters Sub-Panel -->
+            <div id="photoFiltersSubPanel" class="photo-sub-panel" style="display: none;">
+                <div class="sub-panel-header">
+                    <span>🎭 Presets & Filters</span>
+                    <span onclick="this.parentElement.parentElement.style.display='none'" class="close-sub-panel">✕</span>
+                </div>
+                <div class="filter-chips-grid">
+                    <button onclick="applyPresetFilter('none')">Normal</button>
+                    <button onclick="applyPresetFilter('cinematic')">Cinematic</button>
+                    <button onclick="applyPresetFilter('vintage')">Vintage</button>
+                    <button onclick="applyPresetFilter('bw')">B & W</button>
+                    <button onclick="applyPresetFilter('vivid')">Vivid</button>
+                    <button onclick="applyPresetFilter('cold')">Cyber Cool</button>
+                </div>
+            </div>
+        </div>
+
+    <!-- ========================================================================== -->
     <!-- MODALS & POPUPS -->
     <!-- ========================================================================== -->
+
+    <!-- FULL SCREEN LEGAL MODAL (DISCLAIMER / POLICIES VIA SCRIPT) -->
+    <div id="fullScreenLegalModal" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(11, 13, 19, 0.9); backdrop-filter: blur(8px); align-items: center; justify-content: center; z-index: 2147483647;">
+        <div style="background: #161920; border: 2px solid #00f2fe; border-radius: 14px; width: 90%; max-width: 600px; max-height: 80vh; overflow-y: auto; padding: 20px; position: relative; box-shadow: 0 10px 40px rgba(0,0,0,0.9);">
+            <span onclick="closeFullPageModal()" style="position: absolute; top: 12px; right: 16px; color: #a4b0be; font-size: 24px; cursor: pointer; font-weight: bold;">✕</span>
+            <div id="fullScreenModalTitle" style="font-size: 16px; font-weight: bold; color: #00f2fe; margin-bottom: 10px;"></div>
+            <div id="fullScreenModalContent"></div>
+        </div>
+    </div>
 
     <!-- PRIVACY POLICY MODAL -->
     <div id="privacyModal" class="export-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.85); z-index: 999999; justify-content: center; align-items: center;">
@@ -1077,12 +1091,17 @@
             <div style="display: grid; grid-template-columns: 200px 1fr; gap: 20px; align-items: start;">
                 <div style="width: 100%; aspect-ratio: 1 / 1.414; background: rgba(108, 92, 231, 0.08); border: 2px dashed #6c5ce7; border-radius: 10px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 10px; color: #a4b0be;">
                     <span style="font-size: 11px; font-weight: bold; color: #00f2fe;">FOUNDER PHOTO</span>
-                    <span style="font-size: 9.5px; color: #64748b; margin-top: 4px;">(A4 Ratio Reserved Space)</span>
+                    <span style="font-size: 9.5px; color: #64748b; margin-top: 4px;">(The photograph is not being published due to unavoidable reasons.)</span>
                 </div>
                 <div style="color: #cbd5e1; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 13px; line-height: 1.6;">
                     <div style="background: rgba(108, 92, 231, 0.12); border-left: 4px solid #6c5ce7; padding: 12px; border-radius: 6px; margin-bottom: 15px;">
                         <h2 style="color: #ffffff; margin: 0 0 3px 0; font-size: 20px;">S. Purushotham</h2>
-                        <p style="color: #00f2fe; margin: 0; font-weight: bold; font-size: 12.5px;">Founder & CEO — Sriram Groups Official</p>
+                        <p style="color: #00f2fe; margin: 0; font-weight: bold; font-size: 12.5px;">
+    Founder & CEO — 
+    <a href="https://sriramgroupsofficial.com/" target="_blank" rel="noopener noreferrer" style="color: #00f2fe; text-decoration: underline; text-underline-offset: 3px; transition: all 0.2s ease;" onmouseover="this.style.color='#ffffff'; this.style.textShadow='0 0 8px #00f2fe';" onmouseout="this.style.color='#00f2fe'; this.style.textShadow='none';">
+        Sriram Groups Official
+    </a>
+</p>
                     </div>
                     <p style="margin-top: 0;"><strong>S Studio (svideoeditor.com)</strong> was conceptualized and launched under the visionary leadership of S. Purushotham. Driven by a core commitment to make high-quality creative technology accessible to everyone, the platform empowers creators of all backgrounds to edit and produce professional content completely free of cost.</p>
                 </div>
@@ -1134,279 +1153,226 @@
         </div>
     </div>
 
-    <!-- ========================================================================== -->
-<!-- ❓ FAQ ACCORDION MODAL (10 QUESTIONS - NO NUMBERS) -->
-<!-- ========================================================================== -->
-<div id="faqModal" class="export-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.85); z-index: 999999; justify-content: center; align-items: center;">
-    <div class="modal-content" style="max-width: 760px; width: 92%; max-height: 85vh; overflow-y: auto; background: #0f121d; border: 1px solid #232a3b; border-radius: 14px; padding: 28px; text-align: left; box-shadow: 0 20px 50px rgba(0,0,0,0.9);">
-        
-        <!-- Header -->
-        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #232a3b; padding-bottom: 14px; margin-bottom: 18px;">
-            <div>
-                <h3 style="color: #00f2fe; margin: 0; font-size: 22px; font-weight: 800;">Frequently Asked Questions</h3>
-                <p style="margin: 4px 0 0 0; font-size: 12px; color: #94a3b8;">Everything you need to know about using S Studio & S Video Editor</p>
+    <!-- ❓ FAQ ACCORDION MODAL (10 QUESTIONS - NO NUMBERS) -->
+    <div id="faqModal" class="export-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.85); z-index: 999999; justify-content: center; align-items: center;">
+        <div class="modal-content" style="max-width: 760px; width: 92%; max-height: 85vh; overflow-y: auto; background: #0f121d; border: 1px solid #232a3b; border-radius: 14px; padding: 28px; text-align: left; box-shadow: 0 20px 50px rgba(0,0,0,0.9);">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #232a3b; padding-bottom: 14px; margin-bottom: 18px;">
+                <div>
+                    <h3 style="color: #00f2fe; margin: 0; font-size: 22px; font-weight: 800;">Frequently Asked Questions</h3>
+                    <p style="margin: 4px 0 0 0; font-size: 12px; color: #94a3b8;">Everything you need to know about using S Studio & S Video Editor</p>
+                </div>
+                <button onclick="toggleModal('faqModal', false)" style="background: none; border: none; color: #ff4757; font-size: 24px; cursor: pointer; font-weight: bold; line-height: 1;">✕</button>
             </div>
-            <button onclick="toggleModal('faqModal', false)" style="background: none; border: none; color: #ff4757; font-size: 24px; cursor: pointer; font-weight: bold; line-height: 1;">✕</button>
+            <div class="faq-accordion-container" style="display: flex; flex-direction: column; gap: 10px;">
+                <div class="faq-item" style="background: #161922; border: 1px solid #232a3b; border-radius: 8px; overflow: hidden;">
+                    <div class="faq-question" onclick="toggleFaqAccordion(this)" style="padding: 14px 16px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; color: #f1f5f9; font-weight: 600; font-size: 14px;">
+                        <span>Is S Video Editor completely free to use?</span>
+                        <span class="faq-arrow" style="color: #00f2fe; transition: transform 0.2s ease;">➕</span>
+                    </div>
+                    <div class="faq-answer" style="display: none; padding: 0 16px 14px 16px; color: #cbd5e1; font-size: 13.5px; line-height: 1.7; border-top: 1px solid rgba(255,255,255,0.05);">
+                        Yes. All core editing features, AI tools, subtitle generation, and high-definition exports are completely free without hidden subscription paywalls, credit limits, or trial expirations.
+                    </div>
+                </div>
+                <div class="faq-item" style="background: #161922; border: 1px solid #232a3b; border-radius: 8px; overflow: hidden;">
+                    <div class="faq-question" onclick="toggleFaqAccordion(this)" style="padding: 14px 16px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; color: #f1f5f9; font-weight: 600; font-size: 14px;">
+                        <span>Are my uploaded videos and photos stored on your servers?</span>
+                        <span class="faq-arrow" style="color: #00f2fe; transition: transform 0.2s ease;">➕</span>
+                    </div>
+                    <div class="faq-answer" style="display: none; padding: 0 16px 14px 16px; color: #cbd5e1; font-size: 13.5px; line-height: 1.7; border-top: 1px solid rgba(255,255,255,0.05);">
+                        No. Your privacy is 100% protected. Everything processes locally directly inside your web browser. Your private videos, personal clips, and images are never stored or uploaded to external cloud servers.
+                    </div>
+                </div>
+                <div class="faq-item" style="background: #161922; border: 1px solid #232a3b; border-radius: 8px; overflow: hidden;">
+                    <div class="faq-question" onclick="toggleFaqAccordion(this)" style="padding: 14px 16px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; color: #f1f5f9; font-weight: 600; font-size: 14px;">
+                        <span>Do exported videos have forced watermarks?</span>
+                        <span class="faq-arrow" style="color: #00f2fe; transition: transform 0.2s ease;">➕</span>
+                    </div>
+                    <div class="faq-answer" style="display: none; padding: 0 16px 14px 16px; color: #cbd5e1; font-size: 13.5px; line-height: 1.7; border-top: 1px solid rgba(255,255,255,0.05);">
+                        Never. Every single exported video or edited photo is delivered completely clean without forced watermarks or brand overlays, keeping your content fully professional.
+                    </div>
+                </div>
+                <div class="faq-item" style="background: #161922; border: 1px solid #232a3b; border-radius: 8px; overflow: hidden;">
+                    <div class="faq-question" onclick="toggleFaqAccordion(this)" style="padding: 14px 16px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; color: #f1f5f9; font-weight: 600; font-size: 14px;">
+                        <span>What video resolutions and formats can I export?</span>
+                        <span class="faq-arrow" style="color: #00f2fe; transition: transform 0.2s ease;">➕</span>
+                    </div>
+                    <div class="faq-answer" style="display: none; padding: 0 16px 14px 16px; color: #cbd5e1; font-size: 13.5px; line-height: 1.7; border-top: 1px solid rgba(255,255,255,0.05);">
+                        You have total resolution freedom. You can export lightweight videos in 240p, 360p, or 480p for fast sharing, up to 720p HD, 1080p Full HD, and crisp 1440p (2K Ultra HD) in universal MP4 format.
+                    </div>
+                </div>
+                <div class="faq-item" style="background: #161922; border: 1px solid #232a3b; border-radius: 8px; overflow: hidden;">
+                    <div class="faq-question" onclick="toggleFaqAccordion(this)" style="padding: 14px 16px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; color: #f1f5f9; font-weight: 600; font-size: 14px;">
+                        <span>How does the Auto AI Subtitles feature work?</span>
+                        <span class="faq-arrow" style="color: #00f2fe; transition: transform 0.2s ease;">➕</span>
+                    </div>
+                    <div class="faq-answer" style="display: none; padding: 0 16px 14px 16px; color: #cbd5e1; font-size: 13.5px; line-height: 1.7; border-top: 1px solid rgba(255,255,255,0.05);">
+                        When you click the Subtitles button, our browser speech tool listens to your audio and generates readable captions automatically. You can also tweak text fonts, font sizes, colors, and box positioning with live preview.
+                    </div>
+                </div>
+                <div class="faq-item" style="background: #161922; border: 1px solid #232a3b; border-radius: 8px; overflow: hidden;">
+                    <div class="faq-question" onclick="toggleFaqAccordion(this)" style="padding: 14px 16px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; color: #f1f5f9; font-weight: 600; font-size: 14px;">
+                        <span>Can I edit both videos and photos in one single workspace?</span>
+                        <span class="faq-arrow" style="color: #00f2fe; transition: transform 0.2s ease;">➕</span>
+                    </div>
+                    <div class="faq-answer" style="display: none; padding: 0 16px 14px 16px; color: #cbd5e1; font-size: 13.5px; line-height: 1.7; border-top: 1px solid rgba(255,255,255,0.05);">
+                        Yes. S Studio includes a dedicated Photo Editing suite alongside the video editor. You can design YouTube thumbnails, remove photo backgrounds, and create graphic overlays without switching between multiple apps.
+                    </div>
+                </div>
+                <div class="faq-item" style="background: #161922; border: 1px solid #232a3b; border-radius: 8px; overflow: hidden;">
+                    <div class="faq-question" onclick="toggleFaqAccordion(this)" style="padding: 14px 16px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; color: #f1f5f9; font-weight: 600; font-size: 14px;">
+                        <span>Do I need a high-end computer or graphics card to run S Studio?</span>
+                        <span class="faq-arrow" style="color: #00f2fe; transition: transform 0.2s ease;">➕</span>
+                    </div>
+                    <div class="faq-answer" style="display: none; padding: 0 16px 14px 16px; color: #cbd5e1; font-size: 13.5px; line-height: 1.7; border-top: 1px solid rgba(255,255,255,0.05);">
+                        No expensive hardware is needed. The editor is engineered to run smoothly inside modern web browsers across everyday laptops, desktop PCs, and smartphones without heavy memory bottlenecks.
+                    </div>
+                </div>
+                <div class="faq-item" style="background: #161922; border: 1px solid #232a3b; border-radius: 8px; overflow: hidden;">
+                    <div class="faq-question" onclick="toggleFaqAccordion(this)" style="padding: 14px 16px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; color: #f1f5f9; font-weight: 600; font-size: 14px;">
+                        <span>How can I blur sensitive details like faces, phone numbers, or license plates?</span>
+                        <span class="faq-arrow" style="color: #00f2fe; transition: transform 0.2s ease;">➕</span>
+                    </div>
+                    <div class="faq-answer" style="display: none; padding: 0 16px 14px 16px; color: #cbd5e1; font-size: 13.5px; line-height: 1.7; border-top: 1px solid rgba(255,255,255,0.05);">
+                        Using our built-in Blur Mask slider and Mosaic tools, you can easily cover up private text, personal details, or moving faces anywhere across your video canvas.
+                    </div>
+                </div>
+                <div class="faq-item" style="background: #161922; border: 1px solid #232a3b; border-radius: 8px; overflow: hidden;">
+                    <div class="faq-question" onclick="toggleFaqAccordion(this)" style="padding: 14px 16px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; color: #f1f5f9; font-weight: 600; font-size: 14px;">
+                        <span>Does S Studio support green screen (Chroma Key) background removal?</span>
+                        <span class="faq-arrow" style="color: #00f2fe; transition: transform 0.2s ease;">➕</span>
+                    </div>
+                    <div class="faq-answer" style="display: none; padding: 0 16px 14px 16px; color: #cbd5e1; font-size: 13.5px; line-height: 1.7; border-top: 1px solid rgba(255,255,255,0.05);">
+                        Yes. The Chroma Key toggle allows you to knock out solid green or blue backdrops in one click and layer custom photos, gameplay videos, or graphics behind your subject.
+                    </div>
+                </div>
+                <div class="faq-item" style="background: #161922; border: 1px solid #232a3b; border-radius: 8px; overflow: hidden;">
+                    <div class="faq-question" onclick="toggleFaqAccordion(this)" style="padding: 14px 16px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; color: #f1f5f9; font-weight: 600; font-size: 14px;">
+                        <span>Do I need to sign up or create an account to edit and export?</span>
+                        <span class="faq-arrow" style="color: #00f2fe; transition: transform 0.2s ease;">➕</span>
+                    </div>
+                    <div class="faq-answer" style="display: none; padding: 0 16px 14px 16px; color: #cbd5e1; font-size: 13.5px; line-height: 1.7; border-top: 1px solid rgba(255,255,255,0.05);">
+                        No. You do not need to create an account or provide an email address just to edit and download. Simply open the website, start editing, and export directly.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Direct Question Form -->
+            <div style="margin-top: 24px; padding: 20px; background: rgba(0, 242, 254, 0.04); border: 1px solid rgba(0, 242, 254, 0.25); border-radius: 12px; text-align: left;">
+                <div style="text-align: center; margin-bottom: 14px;">
+                    <h4 style="margin: 0 0 6px 0; color: #00f2fe; font-size: 15px; font-weight: 700;">Have a different question or need direct help?</h4>
+                    <div style="font-size: 12.5px; color: #cbd5e1;">
+                        Official Support: <strong style="color: #38bdf8;">sriramgroups.help@gmail.com</strong>
+                    </div>
+                </div>
+                <form id="faqDirectQuestionForm" onsubmit="handleDirectQuestionSubmit(event)" style="display: flex; flex-direction: column; gap: 10px;">
+                    <textarea id="faqDirectUserMessage" rows="3" required placeholder="Type your question or issue here..." style="width: 100%; box-sizing: border-box; background: #161922; border: 1px solid #282c37; padding: 12px; border-radius: 8px; color: #fff; font-size: 13px; outline: none; resize: vertical; font-family: sans-serif;"></textarea>
+                    <button type="submit" style="background: linear-gradient(135deg, #00f2fe, #38bdf8); color: #000; font-weight: 800; font-size: 13px; border: none; padding: 12px; border-radius: 6px; cursor: pointer; box-shadow: 0 4px 15px rgba(0, 242, 254, 0.3);">
+                        ✉️ Submit Question
+                    </button>
+                </form>
+            </div>
+            <button onclick="toggleModal('faqModal', false)" style="width: 100%; margin-top: 16px; padding: 12px; background: #232a3b; color: #cbd5e1; font-weight: bold; border: 1px solid #334155; border-radius: 8px; cursor: pointer;">
+                Close FAQs
+            </button>
         </div>
+    </div>
 
-        <!-- 10 Questions Accordion List (Without Numbers) -->
-        <div class="faq-accordion-container" style="display: flex; flex-direction: column; gap: 10px;">
-
-            <!-- Q1 -->
-            <div class="faq-item" style="background: #161922; border: 1px solid #232a3b; border-radius: 8px; overflow: hidden;">
-                <div class="faq-question" onclick="toggleFaqAccordion(this)" style="padding: 14px 16px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; color: #f1f5f9; font-weight: 600; font-size: 14px;">
-                    <span>Is S Video Editor completely free to use?</span>
-                    <span class="faq-arrow" style="color: #00f2fe; transition: transform 0.2s ease;">➕</span>
+    <!-- ADVANCED VIDEO EXPORT ENGINE (AUTO & MANUAL) -->
+    <div id="exportModal" class="export-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.85); z-index: 9999999; justify-content: center; align-items: center; font-family: sans-serif; backdrop-filter: blur(6px);">
+        <div style="max-width: 500px; width: 92%; background: #0f121d; border: 1px solid #00f2fe; border-radius: 16px; padding: 24px; text-align: left; box-shadow: 0 20px 50px rgba(0, 242, 254, 0.25); position: relative;">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #1f2738; padding-bottom: 12px; margin-bottom: 16px;">
+                <div>
+                    <h3 style="color: #00f2fe; margin: 0; font-size: 20px; font-weight: 800;">Export Video</h3>
+                    <span style="color: #94a3b8; font-size: 11.5px;">Studio Quality - Zero Watermarks</span>
                 </div>
-                <div class="faq-answer" style="display: none; padding: 0 16px 14px 16px; color: #cbd5e1; font-size: 13.5px; line-height: 1.7; border-top: 1px solid rgba(255,255,255,0.05);">
-                    Yes. All core editing features, AI tools, subtitle generation, and high-definition exports are completely free without hidden subscription paywalls, credit limits, or trial expirations.
-                </div>
+                <button type="button" onclick="toggleExportModal(false)" style="background: none; border: none; color: #ff4757; font-size: 22px; cursor: pointer; font-weight: bold;">X</button>
             </div>
-
-            <!-- Q2 -->
-            <div class="faq-item" style="background: #161922; border: 1px solid #232a3b; border-radius: 8px; overflow: hidden;">
-                <div class="faq-question" onclick="toggleFaqAccordion(this)" style="padding: 14px 16px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; color: #f1f5f9; font-weight: 600; font-size: 14px;">
-                    <span>Are my uploaded videos and photos stored on your servers?</span>
-                    <span class="faq-arrow" style="color: #00f2fe; transition: transform 0.2s ease;">➕</span>
-                </div>
-                <div class="faq-answer" style="display: none; padding: 0 16px 14px 16px; color: #cbd5e1; font-size: 13.5px; line-height: 1.7; border-top: 1px solid rgba(255,255,255,0.05);">
-                    No. Your privacy is 100% protected. Everything processes locally directly inside your web browser. Your private videos, personal clips, and images are never stored or uploaded to external cloud servers.
-                </div>
-            </div>
-
-            <!-- Q3 -->
-            <div class="faq-item" style="background: #161922; border: 1px solid #232a3b; border-radius: 8px; overflow: hidden;">
-                <div class="faq-question" onclick="toggleFaqAccordion(this)" style="padding: 14px 16px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; color: #f1f5f9; font-weight: 600; font-size: 14px;">
-                    <span>Do exported videos have forced watermarks?</span>
-                    <span class="faq-arrow" style="color: #00f2fe; transition: transform 0.2s ease;">➕</span>
-                </div>
-                <div class="faq-answer" style="display: none; padding: 0 16px 14px 16px; color: #cbd5e1; font-size: 13.5px; line-height: 1.7; border-top: 1px solid rgba(255,255,255,0.05);">
-                    Never. Every single exported video or edited photo is delivered completely clean without forced watermarks or brand overlays, keeping your content fully professional.
-                </div>
-            </div>
-
-            <!-- Q4 -->
-            <div class="faq-item" style="background: #161922; border: 1px solid #232a3b; border-radius: 8px; overflow: hidden;">
-                <div class="faq-question" onclick="toggleFaqAccordion(this)" style="padding: 14px 16px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; color: #f1f5f9; font-weight: 600; font-size: 14px;">
-                    <span>What video resolutions and formats can I export?</span>
-                    <span class="faq-arrow" style="color: #00f2fe; transition: transform 0.2s ease;">➕</span>
-                </div>
-                <div class="faq-answer" style="display: none; padding: 0 16px 14px 16px; color: #cbd5e1; font-size: 13.5px; line-height: 1.7; border-top: 1px solid rgba(255,255,255,0.05);">
-                    You have total resolution freedom. You can export lightweight videos in 240p, 360p, or 480p for fast sharing, up to 720p HD, 1080p Full HD, and crisp 1440p (2K Ultra HD) in universal MP4 format.
-                </div>
-            </div>
-
-            <!-- Q5 -->
-            <div class="faq-item" style="background: #161922; border: 1px solid #232a3b; border-radius: 8px; overflow: hidden;">
-                <div class="faq-question" onclick="toggleFaqAccordion(this)" style="padding: 14px 16px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; color: #f1f5f9; font-weight: 600; font-size: 14px;">
-                    <span>How does the Auto AI Subtitles feature work?</span>
-                    <span class="faq-arrow" style="color: #00f2fe; transition: transform 0.2s ease;">➕</span>
-                </div>
-                <div class="faq-answer" style="display: none; padding: 0 16px 14px 16px; color: #cbd5e1; font-size: 13.5px; line-height: 1.7; border-top: 1px solid rgba(255,255,255,0.05);">
-                    When you click the Subtitles button, our browser speech tool listens to your audio and generates readable captions automatically. You can also tweak text fonts, font sizes, colors, and box positioning with live preview.
-                </div>
-            </div>
-
-            <!-- Q6 -->
-            <div class="faq-item" style="background: #161922; border: 1px solid #232a3b; border-radius: 8px; overflow: hidden;">
-                <div class="faq-question" onclick="toggleFaqAccordion(this)" style="padding: 14px 16px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; color: #f1f5f9; font-weight: 600; font-size: 14px;">
-                    <span>Can I edit both videos and photos in one single workspace?</span>
-                    <span class="faq-arrow" style="color: #00f2fe; transition: transform 0.2s ease;">➕</span>
-                </div>
-                <div class="faq-answer" style="display: none; padding: 0 16px 14px 16px; color: #cbd5e1; font-size: 13.5px; line-height: 1.7; border-top: 1px solid rgba(255,255,255,0.05);">
-                    Yes. S Studio includes a dedicated Photo Editing suite alongside the video editor. You can design YouTube thumbnails, remove photo backgrounds, and create graphic overlays without switching between multiple apps.
-                </div>
-            </div>
-
-            <!-- Q7 -->
-            <div class="faq-item" style="background: #161922; border: 1px solid #232a3b; border-radius: 8px; overflow: hidden;">
-                <div class="faq-question" onclick="toggleFaqAccordion(this)" style="padding: 14px 16px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; color: #f1f5f9; font-weight: 600; font-size: 14px;">
-                    <span>Do I need a high-end computer or graphics card to run S Studio?</span>
-                    <span class="faq-arrow" style="color: #00f2fe; transition: transform 0.2s ease;">➕</span>
-                </div>
-                <div class="faq-answer" style="display: none; padding: 0 16px 14px 16px; color: #cbd5e1; font-size: 13.5px; line-height: 1.7; border-top: 1px solid rgba(255,255,255,0.05);">
-                    No expensive hardware is needed. The editor is engineered to run smoothly inside modern web browsers across everyday laptops, desktop PCs, and smartphones without heavy memory bottlenecks.
-                </div>
-            </div>
-
-            <!-- Q8 -->
-            <div class="faq-item" style="background: #161922; border: 1px solid #232a3b; border-radius: 8px; overflow: hidden;">
-                <div class="faq-question" onclick="toggleFaqAccordion(this)" style="padding: 14px 16px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; color: #f1f5f9; font-weight: 600; font-size: 14px;">
-                    <span>How can I blur sensitive details like faces, phone numbers, or license plates?</span>
-                    <span class="faq-arrow" style="color: #00f2fe; transition: transform 0.2s ease;">➕</span>
-                </div>
-                <div class="faq-answer" style="display: none; padding: 0 16px 14px 16px; color: #cbd5e1; font-size: 13.5px; line-height: 1.7; border-top: 1px solid rgba(255,255,255,0.05);">
-                    Using our built-in Blur Mask slider and Mosaic tools, you can easily cover up private text, personal details, or moving faces anywhere across your video canvas.
-                </div>
-            </div>
-
-            <!-- Q9 -->
-            <div class="faq-item" style="background: #161922; border: 1px solid #232a3b; border-radius: 8px; overflow: hidden;">
-                <div class="faq-question" onclick="toggleFaqAccordion(this)" style="padding: 14px 16px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; color: #f1f5f9; font-weight: 600; font-size: 14px;">
-                    <span>Does S Studio support green screen (Chroma Key) background removal?</span>
-                    <span class="faq-arrow" style="color: #00f2fe; transition: transform 0.2s ease;">➕</span>
-                </div>
-                <div class="faq-answer" style="display: none; padding: 0 16px 14px 16px; color: #cbd5e1; font-size: 13.5px; line-height: 1.7; border-top: 1px solid rgba(255,255,255,0.05);">
-                    Yes. The Chroma Key toggle allows you to knock out solid green or blue backdrops in one click and layer custom photos, gameplay videos, or graphics behind your subject.
-                </div>
-            </div>
-
-            <!-- Q10 -->
-            <div class="faq-item" style="background: #161922; border: 1px solid #232a3b; border-radius: 8px; overflow: hidden;">
-                <div class="faq-question" onclick="toggleFaqAccordion(this)" style="padding: 14px 16px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; color: #f1f5f9; font-weight: 600; font-size: 14px;">
-                    <span>Do I need to sign up or create an account to edit and export?</span>
-                    <span class="faq-arrow" style="color: #00f2fe; transition: transform 0.2s ease;">➕</span>
-                </div>
-                <div class="faq-answer" style="display: none; padding: 0 16px 14px 16px; color: #cbd5e1; font-size: 13.5px; line-height: 1.7; border-top: 1px solid rgba(255,255,255,0.05);">
-                    No. You do not need to create an account or provide an email address just to edit and download. Simply open the website, start editing, and export directly.
-                </div>
-            </div>
-
-        </div>
-
-        <!-- Direct Question Form -->
-        <div style="margin-top: 24px; padding: 20px; background: rgba(0, 242, 254, 0.04); border: 1px solid rgba(0, 242, 254, 0.25); border-radius: 12px; text-align: left;">
-            <div style="text-align: center; margin-bottom: 14px;">
-                <h4 style="margin: 0 0 6px 0; color: #00f2fe; font-size: 15px; font-weight: 700;">Have a different question or need direct help?</h4>
-                <div style="font-size: 12.5px; color: #cbd5e1;">
-                    Official Support: <strong style="color: #38bdf8;">sriramgroups.help@gmail.com</strong>
-                </div>
-            </div>
-
-            <form id="faqDirectQuestionForm" onsubmit="handleDirectQuestionSubmit(event)" style="display: flex; flex-direction: column; gap: 10px;">
-                <textarea id="faqDirectUserMessage" rows="3" required placeholder="Type your question or issue here..." style="width: 100%; box-sizing: border-box; background: #161922; border: 1px solid #282c37; padding: 12px; border-radius: 8px; color: #fff; font-size: 13px; outline: none; resize: vertical; font-family: sans-serif;"></textarea>
-                <button type="submit" style="background: linear-gradient(135deg, #00f2fe, #38bdf8); color: #000; font-weight: 800; font-size: 13px; border: none; padding: 12px; border-radius: 6px; cursor: pointer; box-shadow: 0 4px 15px rgba(0, 242, 254, 0.3);">
-                    ✉️ Submit Question
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; background: #161a26; padding: 4px; border-radius: 10px; margin-bottom: 18px;">
+                <button id="tabAutoBtn" type="button" onclick="switchExportMode('auto')" style="background: #00f2fe; color: #000; border: none; padding: 9px; border-radius: 8px; font-weight: 800; font-size: 13px; cursor: pointer;">
+                    Auto Optimize
                 </button>
-            </form>
-        </div>
-
-        <!-- Close Modal Button -->
-        <button onclick="toggleModal('faqModal', false)" style="width: 100%; margin-top: 16px; padding: 12px; background: #232a3b; color: #cbd5e1; font-weight: bold; border: 1px solid #334155; border-radius: 8px; cursor: pointer;">
-            Close FAQs
-        </button>
-
-    </div>
-</div>
-
-<!-- ADVANCED VIDEO EXPORT ENGINE (AUTO & MANUAL) -->
-<div id="exportModal" class="export-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.85); z-index: 9999999; justify-content: center; align-items: center; font-family: sans-serif; backdrop-filter: blur(6px);">
-    <div style="max-width: 500px; width: 92%; background: #0f121d; border: 1px solid #00f2fe; border-radius: 16px; padding: 24px; text-align: left; box-shadow: 0 20px 50px rgba(0, 242, 254, 0.25); position: relative;">
-        
-        <!-- Header -->
-        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #1f2738; padding-bottom: 12px; margin-bottom: 16px;">
-            <div>
-                <h3 style="color: #00f2fe; margin: 0; font-size: 20px; font-weight: 800;">Export Video</h3>
-                <span style="color: #94a3b8; font-size: 11.5px;">Studio Quality - Zero Watermarks</span>
+                <button id="tabManualBtn" type="button" onclick="switchExportMode('manual')" style="background: transparent; color: #cbd5e1; border: none; padding: 9px; border-radius: 8px; font-weight: 700; font-size: 13px; cursor: pointer;">
+                    Manual Controls
+                </button>
             </div>
-            <button type="button" onclick="toggleExportModal(false)" style="background: none; border: none; color: #ff4757; font-size: 22px; cursor: pointer; font-weight: bold;">X</button>
-        </div>
-
-        <!-- Mode Tabs -->
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; background: #161a26; padding: 4px; border-radius: 10px; margin-bottom: 18px;">
-            <button id="tabAutoBtn" type="button" onclick="switchExportMode('auto')" style="background: #00f2fe; color: #000; border: none; padding: 9px; border-radius: 8px; font-weight: 800; font-size: 13px; cursor: pointer;">
-                Auto Optimize
+            <div id="exportAutoView" style="display: block;">
+                <div style="background: rgba(0, 242, 254, 0.06); border: 1px solid rgba(0, 242, 254, 0.2); border-radius: 10px; padding: 14px; margin-bottom: 18px;">
+                    <span style="color: #00f2fe; font-size: 13.5px; font-weight: 700;">Smart Resolution Lock: 1080p FHD</span>
+                    <p style="color: #94a3b8; font-size: 12px; margin: 6px 0 0 0; line-height: 1.5;">
+                        Automatically renders at optimal 1080p quality, 30 FPS, with balanced file compression.
+                    </p>
+                </div>
+            </div>
+            <div id="exportManualView" style="display: none;">
+                <div style="margin-bottom: 16px;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                        <span style="color: #cbd5e1; font-size: 12px; font-weight: 600;">1. Resolution:</span>
+                        <span id="resDisplayBadge" style="color: #00f2fe; font-size: 13px; font-weight: bold;">1080p Full HD</span>
+                    </div>
+                    <input type="range" id="resSlider" min="0" max="5" step="1" value="4" oninput="updateManualExportSettings()" onchange="updateManualExportSettings()" style="width: 100%; accent-color: #00f2fe; cursor: pointer;">
+                    <div style="display: flex; justify-content: space-between; color: #64748b; font-size: 10px; margin-top: 2px;">
+                        <span>240p</span>
+                        <span>360p</span>
+                        <span>480p</span>
+                        <span>720p</span>
+                        <span>1080p</span>
+                        <span>1440p</span>
+                    </div>
+                </div>
+                <div style="margin-bottom: 16px;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                        <span style="color: #cbd5e1; font-size: 12px; font-weight: 600;">2. Frame Rate (FPS):</span>
+                        <span id="fpsDisplayBadge" style="color: #a8a5ff; font-size: 13px; font-weight: bold;">60 FPS</span>
+                    </div>
+                    <input type="range" id="fpsSlider" min="0" max="5" step="1" value="4" oninput="updateManualExportSettings()" onchange="updateManualExportSettings()" style="width: 100%; accent-color: #6c5ce7; cursor: pointer;">
+                    <div style="display: flex; justify-content: space-between; color: #64748b; font-size: 10px; margin-top: 2px;">
+                        <span>20</span>
+                        <span>24</span>
+                        <span>30</span>
+                        <span>50</span>
+                        <span>60</span>
+                        <span>70 FPS</span>
+                    </div>
+                </div>
+                <div style="margin-bottom: 16px;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                        <span style="color: #cbd5e1; font-size: 12px; font-weight: 600;">3. Quality / Size Compression:</span>
+                        <span id="qualityPresetBadge" style="color: #1dd1a1; font-size: 13px; font-weight: bold;">Balanced</span>
+                    </div>
+                    <input type="range" id="sizeFactorSlider" min="0" max="4" step="1" value="2" oninput="updateManualExportSettings()" onchange="updateManualExportSettings()" style="width: 100%; accent-color: #1dd1a1; cursor: pointer;">
+                    <div style="display: flex; justify-content: space-between; color: #64748b; font-size: 10px; margin-top: 2px;">
+                        <span>Lowest MB</span>
+                        <span>Small</span>
+                        <span>Balanced</span>
+                        <span>High</span>
+                        <span>Max Bitrate</span>
+                    </div>
+                </div>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; background: #131722; border: 1px solid #222a3b; padding: 12px 16px; border-radius: 10px; margin-bottom: 18px;">
+                <div>
+                    <span style="display: block; font-size: 11px; color: #94a3b8;">Locked Output Size:</span>
+                    <strong id="estSizeDisplay" style="color: #1dd1a1; font-size: 16px; font-weight: 800;">~ 18.5 MB</strong>
+                </div>
+                <div style="text-align: right;">
+                    <span style="display: block; font-size: 11px; color: #94a3b8;">Render Bitrate:</span>
+                    <span id="bitrateDisplay" style="color: #00f2fe; font-size: 12px; font-weight: bold;">8.0 Mbps</span>
+                </div>
+            </div>
+            <div id="exportProgressBox" style="display: none; margin-bottom: 16px;">
+                <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px; color: #cbd5e1;">
+                    <span id="exportStatusText">Rendering video...</span>
+                    <span id="exportPercentText" style="color: #00f2fe; font-weight: bold;">0%</span>
+                </div>
+                <div style="width: 100%; height: 7px; background: #1c2230; border-radius: 4px; overflow: hidden;">
+                    <div id="exportProgressBarFill" style="width: 0%; height: 100%; background: linear-gradient(90deg, #00f2fe, #6c5ce7);"></div>
+                </div>
+            </div>
+            <button id="startExportBtn" type="button" onclick="triggerActualVideoExport()" style="width: 100%; background: linear-gradient(135deg, #00f2fe, #6c5ce7); color: #ffffff; font-weight: 800; font-size: 14px; border: none; padding: 12px; border-radius: 8px; cursor: pointer; box-shadow: 0 4px 15px rgba(0, 242, 254, 0.3);">
+                Export in Selected Quality
             </button>
-            <button id="tabManualBtn" type="button" onclick="switchExportMode('manual')" style="background: transparent; color: #cbd5e1; border: none; padding: 9px; border-radius: 8px; font-weight: 700; font-size: 13px; cursor: pointer;">
-                Manual Controls
-            </button>
         </div>
-
-        <!-- AUTO VIEW -->
-        <div id="exportAutoView" style="display: block;">
-            <div style="background: rgba(0, 242, 254, 0.06); border: 1px solid rgba(0, 242, 254, 0.2); border-radius: 10px; padding: 14px; margin-bottom: 18px;">
-                <span style="color: #00f2fe; font-size: 13.5px; font-weight: 700;">Smart Resolution Lock: 1080p FHD</span>
-                <p style="color: #94a3b8; font-size: 12px; margin: 6px 0 0 0; line-height: 1.5;">
-                    Automatically renders at optimal 1080p quality, 30 FPS, with balanced file compression.
-                </p>
-            </div>
-        </div>
-
-        <!-- MANUAL VIEW (3 STEPPED LINES) -->
-        <div id="exportManualView" style="display: none;">
-            
-            <!-- Line 1: Resolution -->
-            <div style="margin-bottom: 16px;">
-                <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
-                    <span style="color: #cbd5e1; font-size: 12px; font-weight: 600;">1. Resolution:</span>
-                    <span id="resDisplayBadge" style="color: #00f2fe; font-size: 13px; font-weight: bold;">1080p Full HD</span>
-                </div>
-                <input type="range" id="resSlider" min="0" max="5" step="1" value="4" oninput="updateManualExportSettings()" onchange="updateManualExportSettings()" style="width: 100%; accent-color: #00f2fe; cursor: pointer;">
-                <div style="display: flex; justify-content: space-between; color: #64748b; font-size: 10px; margin-top: 2px;">
-                    <span>240p</span>
-                    <span>360p</span>
-                    <span>480p</span>
-                    <span>720p</span>
-                    <span>1080p</span>
-                    <span>1440p</span>
-                </div>
-            </div>
-
-            <!-- Line 2: Frame Rate (FPS) -->
-            <div style="margin-bottom: 16px;">
-                <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
-                    <span style="color: #cbd5e1; font-size: 12px; font-weight: 600;">2. Frame Rate (FPS):</span>
-                    <span id="fpsDisplayBadge" style="color: #a8a5ff; font-size: 13px; font-weight: bold;">60 FPS</span>
-                </div>
-                <input type="range" id="fpsSlider" min="0" max="5" step="1" value="4" oninput="updateManualExportSettings()" onchange="updateManualExportSettings()" style="width: 100%; accent-color: #6c5ce7; cursor: pointer;">
-                <div style="display: flex; justify-content: space-between; color: #64748b; font-size: 10px; margin-top: 2px;">
-                    <span>20</span>
-                    <span>24</span>
-                    <span>30</span>
-                    <span>50</span>
-                    <span>60</span>
-                    <span>70 FPS</span>
-                </div>
-            </div>
-
-            <!-- Line 3: Quality / Size Compression -->
-            <div style="margin-bottom: 16px;">
-                <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
-                    <span style="color: #cbd5e1; font-size: 12px; font-weight: 600;">3. Quality / Size Compression:</span>
-                    <span id="qualityPresetBadge" style="color: #1dd1a1; font-size: 13px; font-weight: bold;">Balanced</span>
-                </div>
-                <input type="range" id="sizeFactorSlider" min="0" max="4" step="1" value="2" oninput="updateManualExportSettings()" onchange="updateManualExportSettings()" style="width: 100%; accent-color: #1dd1a1; cursor: pointer;">
-                <div style="display: flex; justify-content: space-between; color: #64748b; font-size: 10px; margin-top: 2px;">
-                    <span>Lowest MB</span>
-                    <span>Small</span>
-                    <span>Balanced</span>
-                    <span>High</span>
-                    <span>Max Bitrate</span>
-                </div>
-            </div>
-
-        </div>
-
-        <!-- Output Size Summary Box -->
-        <div style="display: flex; justify-content: space-between; align-items: center; background: #131722; border: 1px solid #222a3b; padding: 12px 16px; border-radius: 10px; margin-bottom: 18px;">
-            <div>
-                <span style="display: block; font-size: 11px; color: #94a3b8;">Locked Output Size:</span>
-                <strong id="estSizeDisplay" style="color: #1dd1a1; font-size: 16px; font-weight: 800;">~ 18.5 MB</strong>
-            </div>
-            <div style="text-align: right;">
-                <span style="display: block; font-size: 11px; color: #94a3b8;">Render Bitrate:</span>
-                <span id="bitrateDisplay" style="color: #00f2fe; font-size: 12px; font-weight: bold;">8.0 Mbps</span>
-            </div>
-        </div>
-
-        <!-- Progress Bar -->
-        <div id="exportProgressBox" style="display: none; margin-bottom: 16px;">
-            <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px; color: #cbd5e1;">
-                <span id="exportStatusText">Rendering video...</span>
-                <span id="exportPercentText" style="color: #00f2fe; font-weight: bold;">0%</span>
-            </div>
-            <div style="width: 100%; height: 7px; background: #1c2230; border-radius: 4px; overflow: hidden;">
-                <div id="exportProgressBarFill" style="width: 0%; height: 100%; background: linear-gradient(90deg, #00f2fe, #6c5ce7);"></div>
-            </div>
-        </div>
-
-        <!-- Export Action Button -->
-        <button id="startExportBtn" type="button" onclick="triggerActualVideoExport()" style="width: 100%; background: linear-gradient(135deg, #00f2fe, #6c5ce7); color: #ffffff; font-weight: 800; font-size: 14px; border: none; padding: 12px; border-radius: 8px; cursor: pointer; box-shadow: 0 4px 15px rgba(0, 242, 254, 0.3);">
-            Export in Selected Quality
-        </button>
-
     </div>
-</div>
 
     <!-- BUG REPORT MODAL -->
     <div id="bugReportModal" class="export-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.85); z-index: 999999; justify-content: center; align-items: center;">
@@ -1424,14 +1390,177 @@
         </div>
     </div>
 
-    <!-- PRESENTATION OVERLAY -->
-    <div id="presentationOverlay" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000; z-index: 999999; flex-direction: column; justify-content: center; align-items: center; font-family: sans-serif;">
-        <button type="button" onclick="closePresentationMode()" style="position: absolute; top: 20px; right: 25px; background: rgba(255,71,87,0.2); border: 1px solid #ff4757; color: #ff4757; font-size: 20px; padding: 5px 12px; border-radius: 50%; cursor: pointer; font-weight: bold;">✕</button>
-        <div id="presentationVideoContainer" style="width: 85%; height: 70%; display: flex; justify-content: center; align-items: center;"></div>
-        <div style="margin-top: 30px; display: flex; align-items: center; gap: 20px; background: rgba(255,255,255,0.03); padding: 10px 30px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.05);">
-            <button type="button" onclick="videoBack()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: white;">⏮️</button>
-            <button type="button" class="play-main" onclick="togglePlay()" style="background: #6c5ce7; border: none; font-size: 24px; cursor: pointer; color: white; width: 50px; height: 50px; border-radius: 50%; display: flex; justify-content: center; align-items: center;">▶️</button>
-            <button type="button" onclick="videoForward()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: white;">⏭️</button>
+    <!-- S CROP CANVAS RATIO MODAL -->
+    <div id="cropPresetModal" class="export-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.85); z-index: 999999; justify-content: center; align-items: center; font-family: sans-serif;">
+        <div style="max-width: 480px; width: 90%; background: #0f121d; border: 1px solid #6c5ce7; border-radius: 14px; padding: 24px; text-align: center; box-shadow: 0 10px 40px rgba(108, 92, 231, 0.3);">
+            <h3 style="color: #a8a5ff; margin: 0 0 8px 0; font-size: 20px;">📐 Select Canvas Ratio (S Crop)</h3>
+            <p style="color: #94a3b8; font-size: 13px; margin: 0 0 18px 0;">Choose the aspect ratio for your video canvas:</p>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px;">
+                <button onclick="applyCanvasRatio('16:9')" style="background: #161924; border: 1px solid #2f3542; color: #fff; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                    📺 16:9 (YouTube)
+                </button>
+                <button onclick="applyCanvasRatio('9:16')" style="background: #161924; border: 1px solid #2f3542; color: #fff; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                    📱 9:16 (Reels/Shorts)
+                </button>
+                <button onclick="applyCanvasRatio('1:1')" style="background: #161924; border: 1px solid #2f3542; color: #fff; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                    🔲 1:1 (Instagram Post)
+                </button>
+                <button onclick="applyCanvasRatio('4:5')" style="background: #161924; border: 1px solid #2f3542; color: #fff; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                    🖼️ 4:5 (Portrait)
+                </button>
+            </div>
+            <button onclick="toggleModal('cropPresetModal', false)" style="width: 100%; padding: 10px; background: #232a3b; color: #cbd5e1; font-weight: bold; border: none; border-radius: 6px; cursor: pointer;">
+                Cancel
+            </button>
+        </div>
+    </div>
+
+    <!-- ASK AI ASSISTANT MODAL -->
+    <div id="askAiModal" class="export-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.85); z-index: 999999; justify-content: center; align-items: center; font-family: sans-serif;">
+        <div style="max-width: 650px; width: 92%; max-height: 85vh; background: #0f121d; border: 1px solid #00f2fe; border-radius: 14px; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 10px 40px rgba(0, 242, 254, 0.25);">
+            <div style="padding: 14px 18px; background: #141724; border-bottom: 1px solid #232a3b; display: flex; justify-content: space-between; align-items: center;">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <span style="font-size: 22px;">🤖</span>
+                    <div>
+                        <h3 style="color: #00f2fe; margin: 0; font-size: 16px; font-weight: bold;">S Studio AI Assistant</h3>
+                        <span style="color: #10ac84; font-size: 11px; font-weight: 600;">● Online Ready</span>
+                    </div>
+                </div>
+                <button onclick="toggleModal('askAiModal', false)" style="background: none; border: none; color: #ff4757; font-size: 22px; cursor: pointer; font-weight: bold;">✕</button>
+            </div>
+            <div id="aiChatBox" style="flex: 1; padding: 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; min-height: 250px; max-height: 350px; background: #0b0d14;">
+                <div style="display: flex; gap: 8px; align-items: flex-start;">
+                    <span style="font-size: 18px;">🤖</span>
+                    <div style="background: #161a26; border: 1px solid #232b3e; padding: 10px 14px; border-radius: 0 10px 10px 10px; color: #cbd5e1; font-size: 13px; line-height: 1.5;">
+                        Hello! Ask me any question regarding editing (e.g., <em>How to Crop, Export, Split, or use Green Screen</em>).
+                    </div>
+                </div>
+            </div>
+            <div style="padding: 6px 14px; background: #121520; border-top: 1px solid #1f2535; display: flex; gap: 6px; overflow-x: auto;">
+                <button onclick="askPresetQuestion('How to crop?')" style="background: rgba(0,242,254,0.1); border: 1px solid #00f2fe; color: #00f2fe; padding: 3px 8px; border-radius: 12px; font-size: 11px; cursor: pointer;">📐 Crop</button>
+                <button onclick="askPresetQuestion('How to export video?')" style="background: rgba(108,92,231,0.15); border: 1px solid #6c5ce7; color: #a8a5ff; padding: 3px 8px; border-radius: 12px; font-size: 11px; cursor: pointer;">🚀 Export</button>
+                <button onclick="askPresetQuestion('How to use subtitles?')" style="background: rgba(16,172,132,0.15); border: 1px solid #10ac84; color: #1dd1a1; padding: 3px 8px; border-radius: 12px; font-size: 11px; cursor: pointer;">📝 Subtitles</button>
+                <button onclick="askPresetQuestion('How to use chroma key?')" style="background: rgba(241,196,15,0.1); border: 1px solid #f1c40f; color: #f1c40f; padding: 3px 8px; border-radius: 12px; font-size: 11px; cursor: pointer;">🟢 Green Screen</button>
+            </div>
+            <form onsubmit="handleAiUserSubmit(event)" style="padding: 10px 14px; background: #141724; border-top: 1px solid #232a3b; display: flex; gap: 8px;">
+                <input type="text" id="aiUserInput" placeholder="Ask a question..." required style="flex: 1; background: #090b10; border: 1px solid #2a3245; padding: 8px 12px; border-radius: 6px; color: #fff; font-size: 13px; outline: none;">
+                <button type="submit" style="background: #00f2fe; color: #000; border: none; padding: 8px 14px; border-radius: 6px; font-weight: bold; font-size: 13px; cursor: pointer;">Send</button>
+            </form>
+            <div style="padding: 6px; background: #0c0e16; text-align: center; font-size: 11px; color: #64748b;">
+                Official Support: <a href="mailto:sriramgroup.help@gmail.com" style="color: #00f2fe; text-decoration: none;">sriramgroup.help@gmail.com</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- USER AUTHENTICATION SYSTEM (LOGIN, SIGNUP, OTP & FORGOT PASSWORD) -->
+    <div id="authModal" class="export-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.85); z-index: 999999; justify-content: center; align-items: center; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+        <div style="max-width: 440px; width: 92%; background: #0f121d; border: 1px solid #6c5ce7; border-radius: 16px; padding: 26px; text-align: left; box-shadow: 0 20px 50px rgba(108, 92, 231, 0.3); position: relative;">
+            <button onclick="toggleModal('authModal', false)" style="position: absolute; top: 16px; right: 18px; background: none; border: none; color: #ff4757; font-size: 22px; cursor: pointer; font-weight: bold;">✕</button>
+            <div style="text-align: center; margin-bottom: 20px;">
+                <h3 style="color: #00f2fe; margin: 0; font-size: 20px; font-weight: 800;">S Studio Account</h3>
+                <p id="authSubtitle" style="color: #94a3b8; font-size: 12.5px; margin: 4px 0 0 0;">Access your free browser workspace & cloud projects</p>
+            </div>
+
+            <!-- VIEW 1: LOGIN FORM -->
+            <form id="loginForm" onsubmit="handleLoginSubmit(event)">
+                <div style="margin-bottom: 14px;">
+                    <label style="display: block; color: #cbd5e1; font-size: 12px; margin-bottom: 5px; font-weight: 600;">Email Address</label>
+                    <input type="email" id="loginEmail" required placeholder="name@example.com" style="width: 100%; box-sizing: border-box; background: #161a26; border: 1px solid #283144; padding: 10px 12px; border-radius: 8px; color: #fff; font-size: 13.5px; outline: none;">
+                </div>
+                <div style="margin-bottom: 16px;">
+                    <label style="display: block; color: #cbd5e1; font-size: 12px; margin-bottom: 5px; font-weight: 600;">Password</label>
+                    <div style="position: relative; display: flex; align-items: center;">
+                        <input type="password" id="loginPassword" required placeholder="Enter password" style="width: 100%; box-sizing: border-box; background: #161a26; border: 1px solid #283144; padding: 10px 38px 10px 12px; border-radius: 8px; color: #fff; font-size: 13.5px; outline: none;">
+                        <span onclick="togglePasswordVisibility('loginPassword', this)" style="position: absolute; right: 10px; cursor: pointer; font-size: 16px; user-select: none; color: #94a3b8;">👁️</span>
+                    </div>
+                </div>
+                <button type="submit" style="width: 100%; background: linear-gradient(135deg, #00f2fe, #6c5ce7); color: #fff; font-weight: 800; font-size: 14px; border: none; padding: 11px; border-radius: 8px; cursor: pointer; margin-bottom: 16px;">
+                    🔒 Sign In
+                </button>
+                <div style="display: flex; justify-content: space-between; align-items: center; font-size: 12px; border-top: 1px solid #1e2535; padding-top: 14px;">
+                    <a href="javascript:void(0)" onclick="switchAuthView('signup')" style="color: #00f2fe; text-decoration: none; font-weight: 600;">Create Account</a>
+                    <a href="javascript:void(0)" onclick="switchAuthView('forgot')" style="color: #a8a5ff; text-decoration: none;">Forgot Password?</a>
+                </div>
+            </form>
+
+            <!-- VIEW 2: SIGNUP FORM -->
+            <form id="signupForm" style="display: none;" onsubmit="handleSendOtp(event)">
+                <div style="margin-bottom: 12px;">
+                    <label style="display: block; color: #cbd5e1; font-size: 12px; margin-bottom: 5px; font-weight: 600;">Full Name</label>
+                    <input type="text" id="signupName" required placeholder="Your full name" style="width: 100%; box-sizing: border-box; background: #161a26; border: 1px solid #283144; padding: 10px 12px; border-radius: 8px; color: #fff; font-size: 13.5px; outline: none;">
+                </div>
+                <div style="margin-bottom: 12px;">
+                    <label style="display: block; color: #cbd5e1; font-size: 12px; margin-bottom: 5px; font-weight: 600;">Email Address</label>
+                    <input type="email" id="signupEmail" required placeholder="name@example.com" style="width: 100%; box-sizing: border-box; background: #161a26; border: 1px solid #283144; padding: 10px 12px; border-radius: 8px; color: #fff; font-size: 13.5px; outline: none;">
+                </div>
+                <div id="otpInputGroup" style="display: none; margin-bottom: 14px;">
+                    <label style="display: block; color: #38bdf8; font-size: 12px; margin-bottom: 5px; font-weight: 600;">Enter 6-Digit OTP</label>
+                    <div style="display: flex; gap: 8px;">
+                        <input type="text" id="userEnteredOtp" maxlength="6" placeholder="123456" style="flex: 1; background: #161a26; border: 1px solid #38bdf8; padding: 10px 12px; border-radius: 8px; color: #fff; font-size: 14px; text-align: center; letter-spacing: 2px;">
+                        <button type="button" onclick="verifyOtpCode()" style="background: #10ac84; color: #fff; border: none; padding: 10px 14px; border-radius: 8px; font-weight: bold; cursor: pointer;">Verify</button>
+                    </div>
+                </div>
+                <button type="submit" id="sendOtpBtn" style="width: 100%; background: #6c5ce7; color: #fff; font-weight: 700; font-size: 13.5px; border: none; padding: 11px; border-radius: 8px; cursor: pointer; margin-bottom: 14px;">
+                    📩 Send Verification OTP
+                </button>
+                <div style="text-align: center; font-size: 12px; border-top: 1px solid #1e2535; padding-top: 12px;">
+                    <span style="color: #94a3b8;">Already have an account? </span>
+                    <a href="javascript:void(0)" onclick="switchAuthView('login')" style="color: #00f2fe; text-decoration: none; font-weight: 600;">Sign In</a>
+                </div>
+            </form>
+
+            <!-- VIEW 3: SET PASSWORD -->
+            <form id="setPasswordForm" style="display: none;" onsubmit="handleFinalSignup(event)">
+                <div style="background: rgba(16, 172, 132, 0.1); border: 1px solid #10ac84; color: #1dd1a1; padding: 8px 12px; border-radius: 6px; font-size: 12px; margin-bottom: 14px; text-align: center;">
+                    ✓ Email verified successfully! Set your password.
+                </div>
+                <div style="margin-bottom: 12px;">
+                    <label style="display: block; color: #cbd5e1; font-size: 12px; margin-bottom: 5px; font-weight: 600;">New Password</label>
+                    <div style="position: relative; display: flex; align-items: center;">
+                        <input type="password" id="newPassword" required placeholder="Minimum 6 characters" style="width: 100%; box-sizing: border-box; background: #161a26; border: 1px solid #283144; padding: 10px 38px 10px 12px; border-radius: 8px; color: #fff; font-size: 13.5px; outline: none;">
+                        <span onclick="togglePasswordVisibility('newPassword', this)" style="position: absolute; right: 10px; cursor: pointer; font-size: 16px; user-select: none; color: #94a3b8;">👁️</span>
+                    </div>
+                </div>
+                <div style="margin-bottom: 16px;">
+                    <label style="display: block; color: #cbd5e1; font-size: 12px; margin-bottom: 5px; font-weight: 600;">Re-enter Password</label>
+                    <div style="position: relative; display: flex; align-items: center;">
+                        <input type="password" id="confirmPassword" required placeholder="Re-type password" style="width: 100%; box-sizing: border-box; background: #161a26; border: 1px solid #283144; padding: 10px 38px 10px 12px; border-radius: 8px; color: #fff; font-size: 13.5px; outline: none;">
+                        <span onclick="togglePasswordVisibility('confirmPassword', this)" style="position: absolute; right: 10px; cursor: pointer; font-size: 16px; user-select: none; color: #94a3b8;">👁️</span>
+                    </div>
+                </div>
+                <button type="submit" style="width: 100%; background: linear-gradient(135deg, #10ac84, #00f2fe); color: #000; font-weight: 800; font-size: 14px; border: none; padding: 11px; border-radius: 8px; cursor: pointer;">
+                    🔒 Complete Sign Up & Login
+                </button>
+            </form>
+
+            <!-- VIEW 4: FORGOT PASSWORD -->
+            <form id="forgotForm" style="display: none;" onsubmit="handleForgotPassword(event)">
+                <p style="color: #cbd5e1; font-size: 12.5px; line-height: 1.5; margin-top: 0;">
+                    Enter your registered email address. We will send you a password reset link from our official support desk.
+                </p>
+                <div style="margin-bottom: 14px;">
+                    <input type="email" id="forgotEmail" required placeholder="name@example.com" style="width: 100%; box-sizing: border-box; background: #161a26; border: 1px solid #283144; padding: 10px 12px; border-radius: 8px; color: #fff; font-size: 13.5px; outline: none;">
+                </div>
+                <button type="submit" style="width: 100%; background: #6c5ce7; color: #fff; font-weight: 700; font-size: 13.5px; border: none; padding: 11px; border-radius: 8px; cursor: pointer; margin-bottom: 14px;">
+                    Send Reset Link
+                </button>
+                <div style="text-align: center; font-size: 12px;">
+                    <a href="javascript:void(0)" onclick="switchAuthView('login')" style="color: #00f2fe; text-decoration: none;">← Back to Sign In</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- FULL-SCREEN PRESENTATION MODE OVERLAY -->
+    <div id="presentationOverlay" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.96); z-index: 9999999; flex-direction: column; justify-content: center; align-items: center; box-sizing: border-box; backdrop-filter: blur(8px);">
+        <button type="button" onclick="closePresentationMode()" title="Close Fullscreen (Esc)" style="position: absolute; top: 22px; right: 28px; background: rgba(255, 71, 87, 0.2); border: 1.5px solid #ff4757; color: #ff4757; font-size: 22px; width: 44px; height: 44px; border-radius: 50%; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center; transition: all 0.2s ease; z-index: 10000000;" onmouseover="this.style.background='#ff4757'; this.style.color='#fff';" onmouseout="this.style.background='rgba(255,71,87,0.2)'; this.style.color='#ff4757';">
+            ✕
+        </button>
+        <div id="presentationVideoContainer" style="width: 90vw; height: 75vh; display: flex; justify-content: center; align-items: center; position: relative;"></div>
+        <div style="margin-top: 24px; display: flex; align-items: center; gap: 20px; background: rgba(22, 26, 38, 0.85); padding: 10px 28px; border-radius: 40px; border: 1px solid rgba(255, 255, 255, 0.12); box-shadow: 0 10px 30px rgba(0,0,0,0.6);">
+            <button type="button" onclick="videoBack()" style="background: none; border: none; font-size: 22px; cursor: pointer; color: white;" title="Rewind">⏮️</button>
+            <button type="button" id="presPlayBtn" onclick="togglePlay()" style="background: #6c5ce7; border: none; font-size: 20px; cursor: pointer; color: white; width: 48px; height: 48px; border-radius: 50%; display: flex; justify-content: center; align-items: center; box-shadow: 0 0 15px rgba(108, 92, 231, 0.5);" title="Play/Pause">▶️</button>
+            <button type="button" onclick="videoForward()" style="background: none; border: none; font-size: 22px; cursor: pointer; color: white;" title="Fast Forward">⏭️</button>
         </div>
     </div>
 
@@ -1445,221 +1574,5 @@
         }
     }
     </script>
-    <!-- ========================================================================== -->
-<!-- 📐 S CROP CANVAS RATIO MODAL -->
-<!-- ========================================================================== -->
-<div id="cropPresetModal" class="export-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.85); z-index: 999999; justify-content: center; align-items: center; font-family: sans-serif;">
-    <div style="max-width: 480px; width: 90%; background: #0f121d; border: 1px solid #6c5ce7; border-radius: 14px; padding: 24px; text-align: center; box-shadow: 0 10px 40px rgba(108, 92, 231, 0.3);">
-        <h3 style="color: #a8a5ff; margin: 0 0 8px 0; font-size: 20px;">📐 Select Canvas Ratio (S Crop)</h3>
-        <p style="color: #94a3b8; font-size: 13px; margin: 0 0 18px 0;">Choose the aspect ratio for your video canvas:</p>
-        
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px;">
-            <button onclick="applyCanvasRatio('16:9')" style="background: #161924; border: 1px solid #2f3542; color: #fff; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold;">
-                📺 16:9 (YouTube)
-            </button>
-            <button onclick="applyCanvasRatio('9:16')" style="background: #161924; border: 1px solid #2f3542; color: #fff; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold;">
-                📱 9:16 (Reels/Shorts)
-            </button>
-            <button onclick="applyCanvasRatio('1:1')" style="background: #161924; border: 1px solid #2f3542; color: #fff; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold;">
-                🔲 1:1 (Instagram Post)
-            </button>
-            <button onclick="applyCanvasRatio('4:5')" style="background: #161924; border: 1px solid #2f3542; color: #fff; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold;">
-                🖼️ 4:5 (Portrait)
-            </button>
-        </div>
-
-        <button onclick="toggleModal('cropPresetModal', false)" style="width: 100%; padding: 10px; background: #232a3b; color: #cbd5e1; font-weight: bold; border: none; border-radius: 6px; cursor: pointer;">
-            Cancel
-        </button>
-    </div>
-</div>
-
-<!-- ========================================================================== -->
-<!-- 🤖 ASK AI ASSISTANT MODAL -->
-<!-- ========================================================================== -->
-<div id="askAiModal" class="export-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.85); z-index: 999999; justify-content: center; align-items: center; font-family: sans-serif;">
-    <div style="max-width: 650px; width: 92%; max-height: 85vh; background: #0f121d; border: 1px solid #00f2fe; border-radius: 14px; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 10px 40px rgba(0, 242, 254, 0.25);">
-        
-        <!-- Header -->
-        <div style="padding: 14px 18px; background: #141724; border-bottom: 1px solid #232a3b; display: flex; justify-content: space-between; align-items: center;">
-            <div style="display: flex; align-items: center; gap: 10px;">
-                <span style="font-size: 22px;">🤖</span>
-                <div>
-                    <h3 style="color: #00f2fe; margin: 0; font-size: 16px; font-weight: bold;">S Studio AI Assistant</h3>
-                    <span style="color: #10ac84; font-size: 11px; font-weight: 600;">● Online Ready</span>
-                </div>
-            </div>
-            <button onclick="toggleModal('askAiModal', false)" style="background: none; border: none; color: #ff4757; font-size: 22px; cursor: pointer; font-weight: bold;">✕</button>
-        </div>
-
-        <!-- Chat Area -->
-        <div id="aiChatBox" style="flex: 1; padding: 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; min-height: 250px; max-height: 350px; background: #0b0d14;">
-            <div style="display: flex; gap: 8px; align-items: flex-start;">
-                <span style="font-size: 18px;">🤖</span>
-                <div style="background: #161a26; border: 1px solid #232b3e; padding: 10px 14px; border-radius: 0 10px 10px 10px; color: #cbd5e1; font-size: 13px; line-height: 1.5;">
-                    Hello! Ask me any question regarding editing (e.g., <em>How to Crop, Export, Split, or use Green Screen</em>).
-                </div>
-            </div>
-        </div>
-
-        <!-- Quick Chips -->
-        <div style="padding: 6px 14px; background: #121520; border-top: 1px solid #1f2535; display: flex; gap: 6px; overflow-x: auto;">
-            <button onclick="askPresetQuestion('How to crop?')" style="background: rgba(0,242,254,0.1); border: 1px solid #00f2fe; color: #00f2fe; padding: 3px 8px; border-radius: 12px; font-size: 11px; cursor: pointer;">📐 Crop</button>
-            <button onclick="askPresetQuestion('How to export video?')" style="background: rgba(108,92,231,0.15); border: 1px solid #6c5ce7; color: #a8a5ff; padding: 3px 8px; border-radius: 12px; font-size: 11px; cursor: pointer;">🚀 Export</button>
-            <button onclick="askPresetQuestion('How to use subtitles?')" style="background: rgba(16,172,132,0.15); border: 1px solid #10ac84; color: #1dd1a1; padding: 3px 8px; border-radius: 12px; font-size: 11px; cursor: pointer;">📝 Subtitles</button>
-            <button onclick="askPresetQuestion('How to use chroma key?')" style="background: rgba(241,196,15,0.1); border: 1px solid #f1c40f; color: #f1c40f; padding: 3px 8px; border-radius: 12px; font-size: 11px; cursor: pointer;">🟢 Green Screen</button>
-        </div>
-
-        <!-- Input Bar -->
-        <form onsubmit="handleAiUserSubmit(event)" style="padding: 10px 14px; background: #141724; border-top: 1px solid #232a3b; display: flex; gap: 8px;">
-            <input type="text" id="aiUserInput" placeholder="Ask a question..." required style="flex: 1; background: #090b10; border: 1px solid #2a3245; padding: 8px 12px; border-radius: 6px; color: #fff; font-size: 13px; outline: none;">
-            <button type="submit" style="background: #00f2fe; color: #000; border: none; padding: 8px 14px; border-radius: 6px; font-weight: bold; font-size: 13px; cursor: pointer;">Send</button>
-        </form>
-
-        <!-- Official Support Note -->
-        <div style="padding: 6px; background: #0c0e16; text-align: center; font-size: 11px; color: #64748b;">
-            Official Support: <a href="mailto:sriramgroup.help@gmail.com" style="color: #00f2fe; text-decoration: none;">sriramgroup.help@gmail.com</a>
-        </div>
-    </div>
-</div>
-<!-- ========================================================================== -->
-<!-- 🔐 USER AUTHENTICATION SYSTEM (LOGIN, SIGNUP, OTP & FORGOT PASSWORD) -->
-<!-- ========================================================================== -->
-<div id="authModal" class="export-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.85); z-index: 999999; justify-content: center; align-items: center; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
-    <div style="max-width: 440px; width: 92%; background: #0f121d; border: 1px solid #6c5ce7; border-radius: 16px; padding: 26px; text-align: left; box-shadow: 0 20px 50px rgba(108, 92, 231, 0.3); position: relative;">
-        
-        <!-- Close Button -->
-        <button onclick="toggleModal('authModal', false)" style="position: absolute; top: 16px; right: 18px; background: none; border: none; color: #ff4757; font-size: 22px; cursor: pointer; font-weight: bold;">✕</button>
-
-        <!-- Brand Header -->
-        <div style="text-align: center; margin-bottom: 20px;">
-            <h3 style="color: #00f2fe; margin: 0; font-size: 20px; font-weight: 800;">S Studio Account</h3>
-            <p id="authSubtitle" style="color: #94a3b8; font-size: 12.5px; margin: 4px 0 0 0;">Access your free browser workspace & cloud projects</p>
-        </div>
-
-        <!-- ================= VIEW 1: LOGIN FORM ================= -->
-        <form id="loginForm" onsubmit="handleLoginSubmit(event)">
-            <div style="margin-bottom: 14px;">
-                <label style="display: block; color: #cbd5e1; font-size: 12px; margin-bottom: 5px; font-weight: 600;">Email Address</label>
-                <input type="email" id="loginEmail" required placeholder="name@example.com" style="width: 100%; box-sizing: border-box; background: #161a26; border: 1px solid #283144; padding: 10px 12px; border-radius: 8px; color: #fff; font-size: 13.5px; outline: none;">
-            </div>
-
-            <div style="margin-bottom: 16px;">
-                <label style="display: block; color: #cbd5e1; font-size: 12px; margin-bottom: 5px; font-weight: 600;">Password</label>
-                <div style="position: relative; display: flex; align-items: center;">
-                    <input type="password" id="loginPassword" required placeholder="Enter password" style="width: 100%; box-sizing: border-box; background: #161a26; border: 1px solid #283144; padding: 10px 38px 10px 12px; border-radius: 8px; color: #fff; font-size: 13.5px; outline: none;">
-                    <span onclick="togglePasswordVisibility('loginPassword', this)" style="position: absolute; right: 10px; cursor: pointer; font-size: 16px; user-select: none; color: #94a3b8;">👁️</span>
-                </div>
-            </div>
-
-            <button type="submit" style="width: 100%; background: linear-gradient(135deg, #00f2fe, #6c5ce7); color: #fff; font-weight: 800; font-size: 14px; border: none; padding: 11px; border-radius: 8px; cursor: pointer; margin-bottom: 16px;">
-                🔒 Sign In
-            </button>
-
-            <div style="display: flex; justify-content: space-between; align-items: center; font-size: 12px; border-top: 1px solid #1e2535; padding-top: 14px;">
-                <a href="javascript:void(0)" onclick="switchAuthView('signup')" style="color: #00f2fe; text-decoration: none; font-weight: 600;">Create Account</a>
-                <a href="javascript:void(0)" onclick="switchAuthView('forgot')" style="color: #a8a5ff; text-decoration: none;">Forgot Password?</a>
-            </div>
-        </form>
-
-        <!-- ================= VIEW 2: SIGNUP (STEP 1: NAME, EMAIL & OTP) ================= -->
-        <form id="signupForm" style="display: none;" onsubmit="handleSendOtp(event)">
-            <div style="margin-bottom: 12px;">
-                <label style="display: block; color: #cbd5e1; font-size: 12px; margin-bottom: 5px; font-weight: 600;">Full Name</label>
-                <input type="text" id="signupName" required placeholder="Your full name" style="width: 100%; box-sizing: border-box; background: #161a26; border: 1px solid #283144; padding: 10px 12px; border-radius: 8px; color: #fff; font-size: 13.5px; outline: none;">
-            </div>
-
-            <div style="margin-bottom: 12px;">
-                <label style="display: block; color: #cbd5e1; font-size: 12px; margin-bottom: 5px; font-weight: 600;">Email Address</label>
-                <input type="email" id="signupEmail" required placeholder="name@example.com" style="width: 100%; box-sizing: border-box; background: #161a26; border: 1px solid #283144; padding: 10px 12px; border-radius: 8px; color: #fff; font-size: 13.5px; outline: none;">
-            </div>
-
-            <!-- OTP Input (Visible after Send OTP) -->
-            <div id="otpInputGroup" style="display: none; margin-bottom: 14px;">
-                <label style="display: block; color: #38bdf8; font-size: 12px; margin-bottom: 5px; font-weight: 600;">Enter 6-Digit OTP</label>
-                <div style="display: flex; gap: 8px;">
-                    <input type="text" id="userEnteredOtp" maxlength="6" placeholder="123456" style="flex: 1; background: #161a26; border: 1px solid #38bdf8; padding: 10px 12px; border-radius: 8px; color: #fff; font-size: 14px; text-align: center; letter-spacing: 2px;">
-                    <button type="button" onclick="verifyOtpCode()" style="background: #10ac84; color: #fff; border: none; padding: 10px 14px; border-radius: 8px; font-weight: bold; cursor: pointer;">Verify</button>
-                </div>
-            </div>
-
-            <button type="submit" id="sendOtpBtn" style="width: 100%; background: #6c5ce7; color: #fff; font-weight: 700; font-size: 13.5px; border: none; padding: 11px; border-radius: 8px; cursor: pointer; margin-bottom: 14px;">
-                📩 Send Verification OTP
-            </button>
-
-            <div style="text-align: center; font-size: 12px; border-top: 1px solid #1e2535; padding-top: 12px;">
-                <span style="color: #94a3b8;">Already have an account? </span>
-                <a href="javascript:void(0)" onclick="switchAuthView('login')" style="color: #00f2fe; text-decoration: none; font-weight: 600;">Sign In</a>
-            </div>
-        </form>
-
-        <!-- ================= VIEW 3: SET PASSWORD (AFTER OTP VERIFIED) ================= -->
-        <form id="setPasswordForm" style="display: none;" onsubmit="handleFinalSignup(event)">
-            <div style="background: rgba(16, 172, 132, 0.1); border: 1px solid #10ac84; color: #1dd1a1; padding: 8px 12px; border-radius: 6px; font-size: 12px; margin-bottom: 14px; text-align: center;">
-                ✓ Email verified successfully! Set your password.
-            </div>
-
-            <div style="margin-bottom: 12px;">
-                <label style="display: block; color: #cbd5e1; font-size: 12px; margin-bottom: 5px; font-weight: 600;">New Password</label>
-                <div style="position: relative; display: flex; align-items: center;">
-                    <input type="password" id="newPassword" required placeholder="Minimum 6 characters" style="width: 100%; box-sizing: border-box; background: #161a26; border: 1px solid #283144; padding: 10px 38px 10px 12px; border-radius: 8px; color: #fff; font-size: 13.5px; outline: none;">
-                    <span onclick="togglePasswordVisibility('newPassword', this)" style="position: absolute; right: 10px; cursor: pointer; font-size: 16px; user-select: none; color: #94a3b8;">👁️</span>
-                </div>
-            </div>
-
-            <div style="margin-bottom: 16px;">
-                <label style="display: block; color: #cbd5e1; font-size: 12px; margin-bottom: 5px; font-weight: 600;">Re-enter Password</label>
-                <div style="position: relative; display: flex; align-items: center;">
-                    <input type="password" id="confirmPassword" required placeholder="Re-type password" style="width: 100%; box-sizing: border-box; background: #161a26; border: 1px solid #283144; padding: 10px 38px 10px 12px; border-radius: 8px; color: #fff; font-size: 13.5px; outline: none;">
-                    <span onclick="togglePasswordVisibility('confirmPassword', this)" style="position: absolute; right: 10px; cursor: pointer; font-size: 16px; user-select: none; color: #94a3b8;">👁️</span>
-                </div>
-            </div>
-
-            <button type="submit" style="width: 100%; background: linear-gradient(135deg, #10ac84, #00f2fe); color: #000; font-weight: 800; font-size: 14px; border: none; padding: 11px; border-radius: 8px; cursor: pointer;">
-                🔒 Complete Sign Up & Login
-            </button>
-        </form>
-
-        <!-- ================= VIEW 4: FORGOT PASSWORD ================= -->
-        <form id="forgotForm" style="display: none;" onsubmit="handleForgotPassword(event)">
-            <p style="color: #cbd5e1; font-size: 12.5px; line-height: 1.5; margin-top: 0;">
-                Enter your registered email address. We will send you a password reset link from our official support desk.
-            </p>
-            <div style="margin-bottom: 14px;">
-                <input type="email" id="forgotEmail" required placeholder="name@example.com" style="width: 100%; box-sizing: border-box; background: #161a26; border: 1px solid #283144; padding: 10px 12px; border-radius: 8px; color: #fff; font-size: 13.5px; outline: none;">
-            </div>
-            <button type="submit" style="width: 100%; background: #6c5ce7; color: #fff; font-weight: 700; font-size: 13.5px; border: none; padding: 11px; border-radius: 8px; cursor: pointer; margin-bottom: 14px;">
-                Send Reset Link
-            </button>
-            <div style="text-align: center; font-size: 12px;">
-                <a href="javascript:void(0)" onclick="switchAuthView('login')" style="color: #00f2fe; text-decoration: none;">← Back to Sign In</a>
-            </div>
-        </form>
-
-    </div>
-</div>
-<!-- ========================================================================== -->
-<!-- 📺 FULL-SCREEN PRESENTATION MODE OVERLAY -->
-<!-- ========================================================================== -->
-<div id="presentationOverlay" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.96); z-index: 9999999; flex-direction: column; justify-content: center; align-items: center; box-sizing: border-box; backdrop-filter: blur(8px);">
-    
-    <!-- Top Close (✕) Button -->
-    <button type="button" onclick="closePresentationMode()" title="Close Fullscreen (Esc)" style="position: absolute; top: 22px; right: 28px; background: rgba(255, 71, 87, 0.2); border: 1.5px solid #ff4757; color: #ff4757; font-size: 22px; width: 44px; height: 44px; border-radius: 50%; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center; transition: all 0.2s ease; z-index: 10000000;" onmouseover="this.style.background='#ff4757'; this.style.color='#fff';" onmouseout="this.style.background='rgba(255,71,87,0.2)'; this.style.color='#ff4757';">
-        ✕
-    </button>
-
-    <!-- Main Full Screen Video Container -->
-    <div id="presentationVideoContainer" style="width: 90vw; height: 75vh; display: flex; justify-content: center; align-items: center; position: relative;">
-        <!-- Video moves here via JavaScript -->
-    </div>
-
-    <!-- Presentation Playback Controls Bar -->
-    <div style="margin-top: 24px; display: flex; align-items: center; gap: 20px; background: rgba(22, 26, 38, 0.85); padding: 10px 28px; border-radius: 40px; border: 1px solid rgba(255, 255, 255, 0.12); box-shadow: 0 10px 30px rgba(0,0,0,0.6);">
-        <button type="button" onclick="videoBack()" style="background: none; border: none; font-size: 22px; cursor: pointer; color: white;" title="Rewind">⏮️</button>
-        <button type="button" id="presPlayBtn" onclick="togglePlay()" style="background: #6c5ce7; border: none; font-size: 20px; cursor: pointer; color: white; width: 48px; height: 48px; border-radius: 50%; display: flex; justify-content: center; align-items: center; box-shadow: 0 0 15px rgba(108, 92, 231, 0.5);" title="Play/Pause">▶️</button>
-        <button type="button" onclick="videoForward()" style="background: none; border: none; font-size: 22px; cursor: pointer; color: white;" title="Fast Forward">⏭️</button>
-    </div>
-
-</div>
 </body>
 </html>
