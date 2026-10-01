@@ -1,5 +1,5 @@
 /* ==========================================================================
-   🌐 GLOBAL VARIABLES & CORE RESETS (PREMIUM DARK THEME)
+   GLOBAL VARIABLES & CORE RESETS (PREMIUM DARK THEME)
    ========================================================================== */
 :root {
     --bg-main: #0d0e12;
@@ -36,6 +36,7 @@ html, body {
 .hidden {
     display: none !important;
 }
+
 /* ==========================================================================
    🌐 UNIFIED FULL-WIDTH CARD CONTAINERS WITH MULTI-COLOR ACCENTS
    ========================================================================== */
@@ -132,7 +133,6 @@ html, body {
     transform: translateY(0);
 }
 
-/* Floating animation for icons/badges */
 @keyframes softFloat {
     0%, 100% { transform: translateY(0); }
     50% { transform: translateY(-5px); }
@@ -202,7 +202,6 @@ html, body {
     width: 100%;
 }
 
-/* Inline horizontal flexbox for logo & S STUDIO text */
 .main-logo-wrapper {
     display: inline-flex !important;
     align-items: center !important;
@@ -384,15 +383,10 @@ html, body {
 /* ==========================================================================
    💻 EDITOR SCREEN NAVBAR & WORKSPACE
    ========================================================================== */
-/* ==========================================================================
-   🛠️ PERFECT FIT EDITOR WORKSPACE & TOOLBAR FIX (CSS)
-   ========================================================================== */
-
-/* Editor container to fit full browser window without vertical body scrolling */
 .editor-container, #editorPage {
     width: 100vw !important;
     height: 100vh !important;
-    display: flex !important;
+    display: flex;
     flex-direction: column !important;
     justify-content: space-between !important;
     padding: 0 !important;
@@ -402,13 +396,19 @@ html, body {
     overflow: hidden !important;
 }
 
-/* Navbar fixed height */
+/* Hidden క్లాస్ ఉన్నప్పుడు కచ్చితంగా దాగి ఉండాలి */
+.hidden, #editorPage.hidden {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    overflow: hidden !important;
+}
+
 .navbar {
     height: 55px !important;
     flex-shrink: 0 !important;
 }
 
-/* Workspace wrapper taking available center space */
 .workspace {
     flex: 1 !important;
     display: flex !important;
@@ -420,24 +420,33 @@ html, body {
     overflow: hidden !important;
 }
 
-/* Preview window to hold video */
 .preview-window {
     width: 100% !important;
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
     justify-content: center !important;
+    position: relative !important;
 }
 
-/* Video wrapper compact height so buttons and timeline fit perfectly */
 .video-wrapper {
     max-height: 38vh !important;
     width: 70% !important;
     margin: 0 auto !important;
     box-sizing: border-box !important;
+    position: relative !important;
 }
 
-/* Player Controls Container */
+/* Subtitle & Status Overlays Integration */
+#sStudioLiveSubtitleOverlay {
+    text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+    transition: all 0.15s ease-in-out;
+}
+
+#studioScreenResizerBar:hover > div {
+    box-shadow: 0 0 10px #00f2fe;
+}
+
 .player-controls {
     display: flex;
     align-items: center;
@@ -451,7 +460,6 @@ html, body {
     margin: 12px auto;
 }
 
-/* Nav Buttons (Back / Forward) */
 .ctrl-nav-btn {
     background: #181d2c;
     border: 1px solid #28334a;
@@ -479,7 +487,6 @@ html, body {
     color: #000;
 }
 
-/* Play State (Paused - Cyan/Blue Color) */
 .ctrl-play-btn {
     background: linear-gradient(135deg, #00f2fe, #4facfe);
     border: none;
@@ -500,6 +507,9 @@ html, body {
     box-shadow: 0 6px 20px rgba(0, 242, 254, 0.55);
 }
 
+/* ==========================================================================
+   🎮 PLAY/PAUSE INTERACTIVE STATES
+   ========================================================================== */
 .ctrl-play-btn:active {
     transform: scale(0.92);
 }
@@ -515,45 +525,20 @@ html, body {
     box-shadow: 0 6px 20px rgba(255, 71, 87, 0.6);
 }
 
-/* Timeline area container fixed at the bottom */
-#timelineAreaBox {
-    display: block !important;
-    visibility: visible !important;
-    width: 100% !important;
-    background: #161920 !important;
-    padding: 8px 12px !important;
-    border-top: 2px solid #2f3542 !important;
-    box-sizing: border-box !important;
-    flex-shrink: 0 !important;
-}
-
-/* Timeline tracks horizontal scroll layout */
-.timeline-tracks {
-    display: flex !important;
-    gap: 8px !important;
-    overflow-x: auto !important;
-    padding-bottom: 4px !important;
-  max-height: 90px !important;
-}
-
-/* Tools container grid alignment for editing buttons */
-.tools-container {
-    display: flex !important;
-    flex-wrap: wrap !important;
-    gap: 6px !important;
-    margin-top: 6px !important;
-}
-
+/* ==========================================================================
+   🖥️ NAVBAR STYLING
+   ========================================================================== */
 .navbar {
     width: 100% !important;
     background-color: var(--bg-panel);
-    height: 60px;
+    height: 55px !important;
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 0 20px !important;
     border-bottom: 1px solid var(--border-color);
     flex-shrink: 0;
+    box-sizing: border-box !important;
 }
 
 .brand {
@@ -615,6 +600,12 @@ html, body {
     font-weight: 600;
     font-size: 13px;
     cursor: pointer;
+    transition: transform 0.2s, background 0.2s;
+}
+
+.export-btn-main:hover {
+    background-color: #ff6b81;
+    transform: translateY(-2px);
 }
 
 /* ==========================================================================
@@ -630,6 +621,7 @@ html, body {
     background-color: var(--bg-darker);
     padding: 10px !important;
     overflow: hidden !important;
+    box-sizing: border-box !important;
 }
 
 .preview-window {
@@ -640,6 +632,7 @@ html, body {
     flex-direction: column !important;
     align-items: center !important;
     justify-content: center !important;
+    position: relative !important;
 }
 
 .video-wrapper, #videoWrapper {
@@ -678,6 +671,7 @@ html, body {
     outline: none;
     border: 1px dashed transparent;
     user-select: none;
+    z-index: 100;
 }
 
 .live-text-box.selected-active {
@@ -688,14 +682,6 @@ html, body {
 #placeholderText {
     color: var(--text-secondary);
     font-size: 14px;
-}
-
-.player-controls {
-    display: flex;
-    justify-content: center;
-    gap: 12px;
-    align-items: center;
-    margin-top: 10px;
 }
 
 .player-btn {
@@ -720,24 +706,28 @@ html, body {
    ========================================================================== */
 .timeline-area, #timelineAreaBox {
     width: 100% !important;
-    min-height: 220px;
-    display: flex;
-    flex-direction: column;
-    background-color: #11141f;
-    border-top: 1px solid var(--border-color);
-    flex-shrink: 0;
+    min-height: 200px;
+    display: flex !important;
+    flex-direction: column !important;
+    background-color: #11141f !important;
+    border-top: 2px solid #2f3542 !important;
+    flex-shrink: 0 !important;
+    box-sizing: border-box !important;
+    position: relative;
 }
 
 .timeline-tracks {
     width: 100% !important;
-    min-height: 130px;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    padding: 10px 16px;
-    background-color: var(--bg-main);
-    overflow-y: auto;
-    position: relative;
+    min-height: 120px;
+    max-height: 140px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 6px !important;
+    padding: 10px 16px !important;
+    background-color: var(--bg-main) !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    position: relative !important;
 }
 
 .track-row {
@@ -759,6 +749,7 @@ html, body {
     align-items: center;
     justify-content: center;
     gap: 4px;
+    flex-shrink: 0;
 }
 
 .track-block {
@@ -805,7 +796,7 @@ html, body {
     position: absolute !important;
     top: 0 !important;
     bottom: 0 !important;
-    height: 100% !important; /* Full height across all tracks */
+    height: 100% !important;
     width: 2px !important;
     background: #ffffff !important;
     box-shadow: 0 0 10px #8b5cf6, 0 0 4px #ffffff !important;
@@ -814,7 +805,6 @@ html, body {
     transition: left 0.05s linear;
 }
 
-/* Round pointer pin at the top of the playhead */
 #playhead::before {
     content: '';
     position: absolute;
@@ -842,10 +832,10 @@ html, body {
 }
 
 .tools-container {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 8px;
+    display: flex !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+    gap: 6px 8px !important;
 }
 
 .tool-btn, .control-btn {
@@ -858,6 +848,7 @@ html, body {
     cursor: pointer;
     border: 1px solid rgba(255, 255, 255, 0.05);
     transition: all 0.2s ease;
+    white-space: nowrap;
 }
 
 .tool-btn:hover, .control-btn:hover {
@@ -893,6 +884,7 @@ html, body {
 .control-group input[type="range"] {
     width: 75px;
     accent-color: var(--accent-color);
+    cursor: pointer;
 }
 
 .control-group label, .control-group span {
@@ -943,13 +935,13 @@ html, body {
 }
 
 /* ==========================================================================
-   🏢 SRI RAM GROUPS - 4-COLUMN MASTER FOOTER
+   🏢 SRI RAM GROUPS - 5-COLUMN RESPONSIVE MASTER FOOTER
    ========================================================================== */
 .s-studio-master-footer {
     width: 100% !important;
     background-color: #0d0e12;
     border-top: 1px solid #232a3b;
-    padding: 40px 5% 0 5% !important;
+    padding: 40px 5% 20px 5% !important;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     color: #cbd5e1;
     margin-top: 40px;
@@ -961,17 +953,17 @@ html, body {
     max-width: 1400px;
     margin: 0 auto;
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 30px;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 25px;
     padding-bottom: 30px;
 }
 
 .footer-col-title {
     color: var(--cyan-accent);
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 700;
     margin-top: 0;
-    margin-bottom: 18px;
+    margin-bottom: 16px;
 }
 
 .company-desc-text {
@@ -1013,6 +1005,9 @@ html, body {
     color: #38bdf8;
 }
 
+/* ==========================================================================
+   🐛 BUG REPORT & STANDALONE FOOTER STYLES
+   ========================================================================== */
 .report-bug-btn {
     background: rgba(255, 71, 87, 0.12);
     color: #ff4757;
@@ -1050,7 +1045,7 @@ html, body {
    ========================================================================== */
 @media screen and (max-width: 900px) {
     .footer-grid-container {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(2, 1fr) !important;
         gap: 25px;
     }
 }
@@ -1073,7 +1068,13 @@ html, body {
     .upcoming-updates-card,
     .feedback-reward-card,
     .support-channels-card,
-    .innovation-rewards-card {
+    .innovation-rewards-card,
+    .subtitle-content-box,
+    .benefits-content-box,
+    .suite-content-box,
+    .photo-feature-card,
+    .export-feature-card,
+    .photo-suite-content-box {
         padding: 18px !important;
         margin: 15px auto !important;
         width: 98% !important;
@@ -1086,15 +1087,14 @@ html, body {
         padding: 6px 8px !important;
     }
     .footer-grid-container {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr !important;
         text-align: center;
     }
 }
-/* ==========================================================================
-   ✨ ATTENTION-GRABBING ANIMATED SUPPORT CARD (NO EMOJIS & ADS SAFE)
-   ========================================================================== */
 
-/* Scroll Animation Initial State */
+/* ==========================================================================
+   ✨ ATTENTION-GRABBING ANIMATED SUPPORT CARD
+   ========================================================================== */
 .scroll-reveal-card {
     opacity: 0;
     transform: translateY(40px) scale(0.98);
@@ -1102,7 +1102,6 @@ html, body {
     will-change: opacity, transform;
 }
 
-/* Active State Triggered On Scroll */
 .scroll-reveal-card.reveal-active {
     opacity: 1;
     transform: translateY(0) scale(1);
@@ -1208,7 +1207,6 @@ html, body {
     box-shadow: 0 0 12px rgba(0, 242, 254, 0.6) !important;
 }
 
-/* Responsive adjustments */
 @media screen and (max-width: 600px) {
     .support-channels-card {
         padding: 22px 18px !important;
@@ -1226,7 +1224,6 @@ html, body {
 /* ==========================================================================
    ✨ MARQUEE AUTO-SCROLL WITH HOVER/VIEW PAUSE ENGINE
    ========================================================================== */
-
 .auto-scroll-pause-card {
     background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(17, 24, 39, 0.98)) !important;
     border: 2px solid #10ac84 !important;
@@ -1242,36 +1239,26 @@ html, body {
     position: relative;
 }
 
-/* Continuous Side-Scroll Animation */
 .auto-scroll-pause-card .marquee-content-wrapper {
     display: block;
     animation: scrollHighlight 15s linear infinite;
     will-change: transform;
 }
 
-/* 1. Pause Animation when user Hovers Mouse over the Card */
 .auto-scroll-pause-card:hover .marquee-content-wrapper {
     animation-play-state: paused !important;
 }
 
-/* 2. Pause Animation when user Scrolls directly to this section */
 .auto-scroll-pause-card.user-view-focused .marquee-content-wrapper {
     animation-play-state: paused !important;
     transform: translateX(0) !important;
     transition: transform 0.6s ease-out;
 }
 
-/* Smooth Horizontal Motion Keyframes */
 @keyframes scrollHighlight {
-    0% {
-        transform: translateX(30px);
-    }
-    50% {
-        transform: translateX(-15px);
-    }
-    100% {
-        transform: translateX(30px);
-    }
+    0% { transform: translateX(30px); }
+    50% { transform: translateX(-15px); }
+    100% { transform: translateX(30px); }
 }
 
 @media screen and (max-width: 600px) {
@@ -1283,7 +1270,6 @@ html, body {
 /* ==========================================================================
    🖼️ PHOTO EDITING LARGE CANVAS & HANDS CONTROL STYLES
    ========================================================================== */
-
 .video-wrapper.photo-mode-large {
     width: 98% !important;
     height: 80vh !important;
@@ -1301,17 +1287,15 @@ html, body {
     -webkit-user-drag: none;
 }
 
-/* Photo Adjustment Range Styling */
 #sStudioAdjustMenu input[type="range"] {
     accent-color: #6c5ce7;
     width: 100%;
 }
-/* Hand cursor for Color Picker pointer */
+
 .chroma-picker-active {
     cursor: crosshair !important;
 }
 
-/* Chroma Key Timeline Track Styling */
 .chroma-track-block {
     background: rgba(16, 172, 132, 0.25) !important;
     border: 1px solid #10ac84 !important;
@@ -1323,15 +1307,14 @@ html, body {
     align-items: center !important;
     height: 32px !important;
     min-width: 140px;
-    cursor: e-resize !important; /* Optimized icon for grab and drag */
+    cursor: e-resize !important;
     user-select: none;
     position: relative;
 }
+
 /* ==========================================================================
    🎬 PROFESSIONAL TIMELINE TRACKS LAYOUT (HORIZONTAL SCROLL)
    ========================================================================== */
-
-/* Main container holding all timeline rows */
 .timeline-tracks {
     display: flex !important;
     flex-direction: column !important;
@@ -1341,7 +1324,6 @@ html, body {
     box-sizing: border-box !important;
 }
 
-/* Individual track row layout */
 .track-row {
     display: flex !important;
     align-items: center !important;
@@ -1354,7 +1336,6 @@ html, body {
     box-sizing: border-box !important;
 }
 
-/* Track icon box on the left */
 .track-icon {
     width: 40px !important;
     height: 100% !important;
@@ -1366,7 +1347,6 @@ html, body {
     border-right: 1px solid #2f3542 !important;
 }
 
-/* Track block container where items align horizontally with scrollbar */
 .track-block {
     display: flex !important;
     flex-direction: row !important;
@@ -1383,7 +1363,6 @@ html, body {
     scrollbar-color: #6c5ce7 #161920;
 }
 
-/* Custom scrollbar styling for professional look */
 .track-block::-webkit-scrollbar {
     height: 5px;
 }
@@ -1397,18 +1376,9 @@ html, body {
     border-radius: 3px;
 }
 
-.hidden {
-    display: none !important;
-}
-
-#editorPage.hidden {
-    display: none !important;
-}
-
-.media-dependent.hidden {
-    display: none !important;
-}
-
+/* ==========================================================================
+   📄 SUBTITLE & BENEFIT SECTIONS
+   ========================================================================== */
 .subtitle-feature-wrapper {
     width: 100%;
     min-height: 80vh;
@@ -1430,7 +1400,6 @@ html, body {
     box-sizing: border-box;
 }
 
-/* గులాబీ రంగు టైటిల్ */
 .subtitle-pink-title {
     color: #ff5c8a;
     font-size: 32px;
@@ -1441,7 +1410,6 @@ html, body {
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
-/* సాధారణ, చదవడానికి వీలైన బాడీ టెక్స్ట్ */
 .subtitle-body-text {
     color: #d1d5db;
     font-size: 16px;
@@ -1542,6 +1510,9 @@ html, body {
     box-sizing: border-box;
 }
 
+/* ==========================================================================
+   🖼️ SUITE IMAGE, HEADING & LIST STYLING
+   ========================================================================== */
 .suite-image-container {
     width: 100%;
     border-radius: 10px;
@@ -1888,6 +1859,7 @@ html, body {
         line-height: 1.7;
     }
 }
+
 /* ==========================================================================
    🎬 S STUDIO - EXPORT ENGINE SECTION STYLING
    ========================================================================== */
@@ -2144,11 +2116,13 @@ html, body {
         line-height: 1.7;
     }
 }
+
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
-/* Ensure Support Card is Never Hidden */
+
+/* Ensure Support Card is Always Visible */
 .support-channels-card, 
 .scroll-reveal-card {
     opacity: 1 !important;
@@ -2159,7 +2133,6 @@ html, body {
 /* ==========================================================================
    🌟 99% FULL-PAGE KEY HIGHLIGHTS STYLES
    ========================================================================== */
-
 .s-highlights-full-section {
     width: 99% !important;
     max-width: 99vw !important;
@@ -2299,7 +2272,6 @@ html, body {
 /* ==========================================================================
    📸 99% FULL-PAGE PHOTO EDITING SECTION STYLES
    ========================================================================== */
-
 .s-photo-tools-section {
     width: 99% !important;
     max-width: 99vw !important;
@@ -2423,11 +2395,10 @@ html, body {
 .s-photo-cta strong {
     color: #1dd1a1;
 }
+
 /* ==========================================================================
    🛠️ GLOBAL LAYOUT FIX (FULL-WIDTH CENTERING & NO OVERFLOW)
    ========================================================================== */
-
-/* Centers all sections on the page with a 98% width */
 .guide-section,
 .support-channels-card,
 .upcoming-updates-card,
@@ -2447,7 +2418,7 @@ html, body {
 .footer-container, 
 .footer-columns-wrapper {
     display: grid !important;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)) !important;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)) !important;
     gap: 20px !important;
     width: 98% !important;
     max-width: 1280px !important;
@@ -2456,28 +2427,21 @@ html, body {
     box-sizing: border-box !important;
 }
 
-/* Prevents text and boxes from overflowing the screen */
-body, html {
-    overflow-x: hidden !important;
-    margin: 0 !important;
-    padding: 0 !important;
-}
-/* Adds space at the bottom so the editing toolbar doesn't block the footer */
+/* Ends the website cleanly with the footer without extra space or overlap */
 footer, .s-studio-master-footer {
-    margin-bottom: 90px !important; /* Slightly more space than the toolbar height */
-    position: relative;
-    z-index: 10;
+    position: relative !important;
+    margin-bottom: 0 !important;
+    padding-bottom: 25px !important;
+    z-index: 10 !important;
 }
 
 /* Sets the layer level for the editing toolbar */
 .bottom-tools-bar, 
 .editing-tools-dock,
-.action-buttons-bar {
+.action-buttons-bar,
+.tools-container {
     z-index: 999 !important;
 }
-/* ==========================================================================
-   ✂️ EDITING TOOLBAR POSITION FIX
-   ========================================================================== */
 
 /* Keeps the editing toolbar inside the workspace instead of fixing it to the screen bottom */
 .editing-tools-toolbar,
@@ -2493,17 +2457,9 @@ footer, .s-studio-master-footer {
     z-index: 1 !important;
 }
 
-/* Ends the website cleanly with the footer without extra space or overlap */
-footer, .s-studio-master-footer {
-    position: relative !important;
-    margin-bottom: 0 !important;
-    padding-bottom: 25px !important;
-    z-index: 10 !important;
-}
-/* ========================================================================== */
-/* 🌟 99% FULL WIDTH MODERN GRID LAYOUT */
-/* ========================================================================== */
-
+/* ==========================================================================
+   🌟 99% FULL WIDTH MODERN GRID LAYOUT
+   ========================================================================== */
 .s-studio-full-container {
     width: 99%;
     max-width: 99vw;
@@ -2515,7 +2471,6 @@ footer, .s-studio-master-footer {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
-/* Base Panel Styling */
 .s-studio-panel {
     background: #0f121d;
     border: 1px solid #1f2738;
@@ -2535,7 +2490,6 @@ footer, .s-studio-master-footer {
     border-left: 4px solid #00f2fe;
 }
 
-/* Tags & Headers */
 .panel-tag {
     display: inline-block;
     align-self: flex-start;
@@ -2571,7 +2525,6 @@ footer, .s-studio-master-footer {
     text-align: justify;
 }
 
-/* Spec Metrics Grid */
 .feature-metrics-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -2616,7 +2569,6 @@ footer, .s-studio-master-footer {
     color: #00f2fe;
 }
 
-/* Mobile & Tablet Responsiveness */
 @media (max-width: 900px) {
     .s-studio-full-container {
         grid-template-columns: 1fr;
@@ -2627,4 +2579,496 @@ footer, .s-studio-master-footer {
         grid-template-columns: 1fr;
         gap: 8px;
     }
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+/* Sections Scroll-Margin Offset */
+#techGuideSection,
+#aiWorkflowSection,
+#editorTipsSection {
+    scroll-margin-top: 40px;
+}
+/* ==========================================================================
+   🌐 100% FIXED STICKY TOP NAVIGATION BAR (SCROLL AYINA PINANE UNTUNDI)
+   ========================================================================== */
+.home-sticky-navbar {
+    position: fixed !important; /* Sticky బదులు Fixed వాడటం వల్ల ఎప్పుడూ పైనే లాక్ అయి ఉంటుంది */
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    background: rgba(11, 14, 22, 0.96) !important;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
+    border-bottom: 2px solid rgba(0, 242, 254, 0.35) !important;
+    z-index: 999999 !important; /* అన్నింటికంటే పైన ఉండేలా హైయెస్ట్ లేయర్ */
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.8), 0 0 20px rgba(0, 242, 254, 0.25) !important;
+    padding: 10px 20px !important;
+    box-sizing: border-box !important;
+}
+
+/* Navbar fixed గా ఉండటం వల్ల కింద కంటెంట్ దాని కిందకి వెళ్ళిపోకుండా టాప్ స్పేసింగ్ */
+#introPage {
+    padding-top: 80px !important;
+}
+
+.sticky-nav-inner {
+    width: 100% !important;
+    max-width: 1280px !important;
+    margin: 0 auto !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-evenly !important;
+    gap: 16px !important;
+    flex-wrap: wrap !important;
+}
+
+.nav-link-btn, .nav-anchor-link {
+    background: #141824 !important;
+    color: #f1f5f9 !important;
+    border: 1.5px solid rgba(0, 242, 254, 0.4) !important;
+    padding: 10px 22px !important;
+    border-radius: 10px !important;
+    font-size: 14.5px !important;
+    font-weight: 700 !important;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+    cursor: pointer !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    text-decoration: none !important;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5) !important;
+}
+
+.nav-btn-highlight {
+    background: linear-gradient(135deg, rgba(0, 242, 254, 0.2), rgba(108, 92, 231, 0.3)) !important;
+    border-color: #00f2fe !important;
+    color: #00f2fe !important;
+    box-shadow: 0 0 15px rgba(0, 242, 254, 0.4) !important;
+}
+
+.nav-link-btn:hover, .nav-anchor-link:hover {
+    color: #ffffff !important;
+    background: rgba(0, 242, 254, 0.25) !important;
+    border-color: #00f2fe !important;
+    box-shadow: 0 0 18px rgba(0, 242, 254, 0.75), inset 0 0 10px rgba(0, 242, 254, 0.35) !important;
+    transform: translateY(-2px) !important;
+}
+
+.nav-link-btn:active, .nav-anchor-link:active {
+    transform: scale(0.96) !important;
+    box-shadow: 0 0 25px rgba(0, 242, 254, 0.9) !important;
+}
+
+.nav-arrow-icon {
+    font-size: 12px !important;
+    color: #00f2fe !important;
+    transition: transform 0.2s ease !important;
+}
+
+.nav-dropdown-item {
+    position: relative !important;
+    display: inline-block !important;
+}
+
+.nav-sub-menu {
+    display: none;
+    position: absolute !important;
+    top: calc(100% + 10px) !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    background: #111420 !important;
+    border: 2px solid #00f2fe !important;
+    border-radius: 12px !important;
+    padding: 8px !important;
+    min-width: 220px !important;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.95), 0 0 20px rgba(0, 242, 254, 0.4) !important;
+    z-index: 1000000 !important;
+    flex-direction: column !important;
+    gap: 6px !important;
+}
+
+.nav-sub-menu.show-menu {
+    display: flex !important;
+    animation: dropFadeIn 0.2s ease forwards !important;
+}
+
+.nav-sub-menu a {
+    color: #cbd5e1 !important;
+    text-decoration: none !important;
+    font-size: 13.5px !important;
+    font-weight: 600 !important;
+    padding: 10px 14px !important;
+    border-radius: 8px !important;
+    transition: all 0.2s ease !important;
+    white-space: nowrap !important;
+    text-align: left !important;
+    display: block !important;
+}
+
+.nav-sub-menu a:hover {
+    color: #000000 !important;
+    background: #00f2fe !important;
+    font-weight: 800 !important;
+    box-shadow: 0 0 12px rgba(0, 242, 254, 0.6) !important;
+}
+
+@keyframes dropFadeIn {
+    from { opacity: 0; transform: translate(-50%, -8px); }
+    to { opacity: 1; transform: translate(-50%, 0); }
+}
+
+@media screen and (max-width: 900px) {
+    .sticky-nav-inner {
+        gap: 10px !important;
+    }
+    .nav-link-btn, .nav-anchor-link {
+        font-size: 12.5px !important;
+        padding: 8px 14px !important;
+    }
+    #introPage {
+        padding-top: 110px !important;
+    }
+}
+/* ==========================================================================
+   🛠️ EDITOR FULL-FIT LAYOUT & VISIBLE TOOLBAR FIX
+   ========================================================================== */
+.editor-container, #editorPage {
+    height: 100vh !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+    overflow: hidden !important;
+}
+
+/* వీడియో ప్రివ్యూ ఎత్తును నియంత్రించడం */
+.workspace {
+    flex: 1 1 auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+    min-height: 0 !important;
+    padding: 4px !important;
+}
+
+.video-wrapper, #videoWrapper {
+    max-height: 40vh !important;
+    width: auto !important;
+    aspect-ratio: 16 / 9 !important;
+}
+
+/* ప్లేయర్ కంట్రోల్స్ పరిమాణం తగ్గించడం */
+.player-controls {
+    margin: 6px auto !important;
+    padding: 6px 12px !important;
+}
+
+/* టైమ్‌లైన్ మరియు ఎడిటింగ్ టూల్ బటన్లు ఎల్లప్పుడూ కనిపించేలా స్థిరపరచడం */
+#timelineAreaBox {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    flex-shrink: 0 !important;
+    max-height: 45vh !important;
+    background: #161920 !important;
+    border-top: 2px solid #2f3542 !important;
+    padding: 6px 12px !important;
+}
+
+/* ఎడిటింగ్ బటన్ల కంటైనర్ స్పష్టంగా కనిపించడం */
+.timeline-controls {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 6px !important;
+    padding: 8px 0 !important;
+}
+
+.tools-container {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 6px !important;
+    visibility: visible !important;
+}
+
+.tool-btn {
+    display: inline-block !important;
+    visibility: visible !important;
+}
+/* ==========================================================================
+   📸 PHOTO EDITING DEDICATED TOOLBAR & SUB-PANELS
+   ========================================================================== */
+.photo-tools-bar {
+    width: 100% !important;
+    background: #111420 !important;
+    border-top: 2px solid #6c5ce7 !important;
+    padding: 10px 16px !important;
+    position: relative !important;
+    z-index: 1000 !important;
+    box-shadow: 0 -8px 25px rgba(0, 0, 0, 0.8) !important;
+    box-sizing: border-box !important;
+}
+
+.photo-tools-inner {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    flex-wrap: wrap !important;
+    max-width: 1350px !important;
+    margin: 0 auto !important;
+}
+
+.photo-tool-btn {
+    background: #181d2c !important;
+    color: #e2e8f0 !important;
+    border: 1px solid rgba(108, 92, 231, 0.4) !important;
+    padding: 8px 14px !important;
+    border-radius: 8px !important;
+    font-size: 12.5px !important;
+    font-weight: 700 !important;
+    cursor: pointer !important;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 5px !important;
+    white-space: nowrap !important;
+}
+
+.photo-tool-btn:hover {
+    background: rgba(108, 92, 231, 0.3) !important;
+    color: #ffffff !important;
+    border-color: #00f2fe !important;
+    box-shadow: 0 0 12px rgba(0, 242, 254, 0.4) !important;
+    transform: translateY(-2px) !important;
+}
+
+.photo-tool-btn.reset-tool-btn {
+    border-color: #ff4757 !important;
+    color: #ff4757 !important;
+}
+
+.photo-tool-btn.reset-tool-btn:hover {
+    background: #ff4757 !important;
+    color: #ffffff !important;
+}
+
+.photo-tool-btn.download-tool-btn {
+    background: linear-gradient(135deg, #10ac84, #00f2fe) !important;
+    color: #000000 !important;
+    border: none !important;
+    font-weight: 800 !important;
+    box-shadow: 0 0 15px rgba(0, 242, 254, 0.4) !important;
+}
+
+.photo-sub-panel {
+    position: absolute !important;
+    bottom: calc(100% + 12px) !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    background: #161a26 !important;
+    border: 2px solid #00f2fe !important;
+    border-radius: 12px !important;
+    padding: 16px 20px !important;
+    width: 90% !important;
+    max-width: 480px !important;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.9) !important;
+    z-index: 10000 !important;
+}
+
+.sub-panel-header {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    color: #00f2fe !important;
+    font-weight: 800 !important;
+    font-size: 13.5px !important;
+    border-bottom: 1px solid #283144 !important;
+    padding-bottom: 8px !important;
+    margin-bottom: 12px !important;
+}
+
+.close-sub-panel {
+    color: #ff4757 !important;
+    cursor: pointer !important;
+    font-size: 16px !important;
+}
+
+.sub-panel-sliders label {
+    display: flex !important;
+    flex-direction: column !important;
+    font-size: 11.5px !important;
+    color: #cbd5e1 !important;
+    margin-bottom: 8px !important;
+    gap: 4px !important;
+}
+
+.sub-panel-sliders input[type="range"] {
+    accent-color: #00f2fe !important;
+    cursor: pointer !important;
+}
+
+.filter-chips-grid {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 8px !important;
+}
+
+.filter-chips-grid button {
+    background: #202738 !important;
+    color: #f1f5f9 !important;
+    border: 1px solid #334155 !important;
+    padding: 8px !important;
+    border-radius: 6px !important;
+    cursor: pointer !important;
+    font-weight: 600 !important;
+    font-size: 12px !important;
+    transition: all 0.2s !important;
+}
+
+.filter-chips-grid button:hover {
+    background: #00f2fe !important;
+    color: #000000 !important;
+}
+:root {
+  --tut-bg: #12141a;
+  --tut-border: #262933;
+  --tut-border-hover: #3b4054;
+  --tut-text: #e6e8ec;
+  --tut-muted: #8b92a5;
+  --tut-accent: #3b82f6;
+  --tut-accent-bg: rgba(59, 130, 246, 0.12);
+}
+
+.tutorial-item-card {
+  background: var(--tut-bg);
+  border: 1px solid var(--tut-border);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 16px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.tutorial-item-card:hover {
+  border-color: var(--tut-border-hover);
+}
+
+.tutorial-header-trigger {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  cursor: pointer;
+  user-select: none;
+  gap: 16px;
+}
+
+.tutorial-header-trigger:focus-visible {
+  outline: 2px solid var(--tut-accent);
+  outline-offset: -2px;
+}
+
+.title-meta-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.tut-badge {
+  display: inline-block;
+  align-self: flex-start;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--tut-accent);
+  background: var(--tut-accent-bg);
+  padding: 4px 10px;
+  border-radius: 4px;
+  text-transform: uppercase;
+}
+
+.tut-title {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--tut-text);
+  line-height: 1.4;
+}
+
+.tut-short-desc {
+  margin: 0;
+  font-size: 0.92rem;
+  color: var(--tut-muted);
+}
+
+.expand-indicator-btn {
+  background: transparent;
+  border: 1px solid var(--tut-border);
+  color: var(--tut-text);
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.arrow-indicator {
+  display: inline-block;
+  transition: transform 0.25s ease;
+}
+
+/* Accordion Smooth Expand/Collapse */
+.tutorial-full-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background: rgba(255, 255, 255, 0.02);
+  border-top: 1px solid transparent;
+}
+
+.tutorial-item-card.is-open .tutorial-full-content {
+  border-top-color: var(--tut-border);
+}
+
+.tutorial-item-card.is-open .arrow-indicator {
+  transform: rotate(180deg);
+}
+
+.content-body {
+  padding: 24px;
+  color: var(--tut-text);
+}
+
+.content-body h4 {
+  margin: 0 0 10px 0;
+  font-size: 1.05rem;
+  color: #fff;
+}
+
+.content-body p {
+  margin: 0 0 16px 0;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--tut-muted);
+}
+
+.specs-list {
+  margin: 0;
+  padding-left: 20px;
+  color: var(--tut-muted);
+  font-size: 0.9rem;
+  line-height: 1.7;
+}
+
+.specs-list strong {
+  color: var(--tut-text);
 }
