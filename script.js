@@ -1,5 +1,5 @@
 // ==========================================================================
-// 🚀 S STUDIO - GLOBAL ENGINE VARIABLES & APPLICATION STATE (PART 1/4)
+// 🚀 S STUDIO - GLOBAL ENGINE VARIABLES & APPLICATION STATE (PART 1/4 - UPDATED)
 // ==========================================================================
 
 let currentVideoElement = null;
@@ -40,9 +40,14 @@ let currentFadeSetting = 'none';
 let userCustomLight = 100;
 let customFadeDuration = 2.0;
 
-// Subtitles Engine Variables
+// Subtitles Engine Variables (YouTube Style Global Sync)
+window.subtitleSegments = window.subtitleSegments || [];
 let generatedSubtitlesList = [];
 let subtitleStyleMode = 'reels-yellow';
+let internalRecognition = null;
+let isAudioEngineReady = false;
+let subOverlayElement = null;
+let isGeneratingSubtitles = false;
 
 // Dedicated Photo Workspace Variables
 let currentPhotoFilter = { brightness: 100, contrast: 100, saturate: 100, blur: 0, grayscale: 0, sepia: 0, invert: 0 };
@@ -91,7 +96,6 @@ const studioAiKnowledgeBase = {
 // 📸 DEDICATED PHOTO CONTROLS & EXPORT ENGINE (100% ERROR-FREE)
 // ==========================================================================
 
-// Global Photo State Variables
 window.currentPhotoFilter = window.currentPhotoFilter || { brightness: 100, contrast: 100, saturate: 100, blur: 0, grayscale: 0, sepia: 0, invert: 0 };
 window.currentPhotoOpacity = 1.0;
 window.isPhotoLocked = false;
@@ -101,7 +105,6 @@ window.loadPhoto = function(event) {
     const file = event && event.target && event.target.files ? event.target.files[0] : null;
     if (!file) return;
 
-    // 1. Hide Landing / Intro Page
     const introPage = document.getElementById('introPage');
     if (introPage) {
         introPage.style.display = 'none';
@@ -121,7 +124,6 @@ window.loadPhoto = function(event) {
         document.querySelectorAll(selector).forEach(el => el.style.display = 'none');
     });
 
-    // 2. Open Editor Page Workspace
     const editorPage = document.getElementById('editorPage');
     if (editorPage) {
         editorPage.style.display = 'flex';
@@ -129,7 +131,6 @@ window.loadPhoto = function(event) {
         editorPage.classList.remove('hidden');
     }
 
-    // 3. Hide all video elements, timelines, and tracks
     hideTimelineAndVideoControlsForPhoto();
 
     videoFileBlob = file;
@@ -164,7 +165,6 @@ window.loadPhoto = function(event) {
     currentScale = 1.0;
     currentRotation = 0;
 
-    // 4. Setup Toolbar & Export Controls
     setupPhotoToolbar();
     setupPhotoHeaderExportButton();
 };
@@ -609,6 +609,11 @@ function loadVideo(event) {
 
     setupVolumeAudioEngine();
 
+    // Auto trigger background audio process safely for YouTube CC
+    if (typeof setupInternalAudioProcessing === 'function') {
+        setupInternalAudioProcessing(currentVideoElement);
+    }
+
     currentVideoElement.onloadedmetadata = function() {
         videoDurationSeconds = currentVideoElement.duration;
         if (typeof updateTimerUI === 'function') updateTimerUI();
@@ -619,6 +624,7 @@ function loadVideo(event) {
         if (typeof updateTimerUI === 'function') updateTimerUI();
         if (typeof updatePlayheadPosition === 'function') updatePlayheadPosition();
         if (typeof handleLiveVideoFade === 'function') handleLiveVideoFade(currentVideoElement.currentTime, videoDurationSeconds);
+        if (typeof syncSubtitlesWithPlayback === 'function') syncSubtitlesWithPlayback();
         if (typeof syncLiveSubtitles === 'function') syncLiveSubtitles(currentVideoElement.currentTime);
         if (typeof updateTimelineLayers === 'function') updateTimelineLayers(currentVideoElement.currentTime);
     };
@@ -973,8 +979,13 @@ function executeTool(tool) {
             if (typeof openSpeedAdjustMenu === 'function') openSpeedAdjustMenu(); 
             break;
 
-        case 'Subtitles': 
-            if (typeof openSubtitlesMenu === 'function') openSubtitlesMenu(); 
+        case 'Subtitles':
+        case 'Review AI':
+            if (typeof generateAutoAiSubtitles === 'function') {
+                generateAutoAiSubtitles();
+            } else if (typeof openSubtitlesMenu === 'function') {
+                openSubtitlesMenu();
+            }
             break;
 
         case 'Mosaic': 
@@ -1043,6 +1054,7 @@ function executeTool(tool) {
             console.warn("Tool executed:", tool);
     }
 }
+
 // ==========================================================================
 // ⚡ 4. PLAYBACK SPEED CONTROLLER
 // ==========================================================================
@@ -1190,8 +1202,8 @@ function generateAiStudioResponse(query) {
     if (query.includes('export') || query.includes('save') || query.includes('watermark')) {
         return "<strong>Exporting:</strong> Click the <strong>Export Video</strong> button at the top right to download watermark-free files up to 1440p 2K.";
     }
-    if (query.includes('subtitle') || query.includes('caption')) {
-        return "<strong>Subtitles:</strong> Click <strong>Subtitles</strong> on the toolbar to type and insert captions directly on your canvas.";
+    if (query.includes('subtitle') || query.includes('caption') || query.includes('cc')) {
+        return "<strong>Subtitles:</strong> Click <strong>Subtitles</strong> or <strong>CC Subtitles</strong> on the toolbar to enable live automatic YouTube-style captions.";
     }
     if (query.includes('chroma') || query.includes('green screen')) {
         return "<strong>Chroma Key:</strong> Click <strong>Chroma Key</strong> to blend and remove background screens instantly.";
@@ -1200,6 +1212,208 @@ function generateAiStudioResponse(query) {
         return "<strong>Split Clip:</strong> Move the playhead on the timeline and click <strong>Split</strong> to anchor cut markers.";
     }
     return "<strong>Helpful Tip:</strong> All editing utilities are ready on your bottom toolbar. If you need support, email us at <strong>sriramgroups.help@gmail.com</strong>.";
+}
+
+// ==========================================================================
+// 🎙️ ZERO-PERMISSION AUTO AUDIO CAPTURE & INSTANT CC SUBTITLES
+// ==========================================================================
+
+function setupInternalAudioProcessing(videoEl) {
+    if (!videoEl || isAudioEngineReady) return;
+
+    try {
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        const audioCtx = new AudioContextClass();
+        
+        const source = audioCtx.createMediaElementSource(videoEl);
+        const destination = audioCtx.createMediaStreamDestination();
+        
+        source.connect(destination);
+        source.connect(audioCtx.destination);
+
+        const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (SpeechRec) {
+            internalRecognition = new SpeechRec();
+            internalRecognition.continuous = true;
+            internalRecognition.interimResults = true;
+            internalRecognition.lang = 'en-US';
+
+            internalRecognition.onresult = function(event) {
+                for (let i = event.resultIndex; i < event.results.length; ++i) {
+                    const text = event.results[i][0].transcript.trim();
+                    const curTime = videoEl.currentTime;
+
+                    if (event.results[i].isFinal) {
+                        subtitleSegments.push({
+                            start: Math.max(0, curTime - 2),
+                            end: curTime + 1.5,
+                            text: text
+                        });
+                        renderSubtitlesToTimeline(text, curTime - 2, curTime + 1.5);
+                    } else {
+                        updateLiveSubtitleDisplay(text);
+                    }
+                }
+            };
+
+            internalRecognition.onerror = function(err) {
+                console.log("Audio process info:", err);
+            };
+
+            internalRecognition.onend = function() {
+                if (!videoEl.paused && !videoEl.ended) {
+                    try { internalRecognition.start(); } catch(e) {}
+                }
+            };
+        }
+
+        isAudioEngineReady = true;
+    } catch (e) {
+        console.warn("Internal audio stream setup:", e);
+    }
+}
+
+function generateAutoAiSubtitles() {
+    const video = document.querySelector('#videoWrapper video') || 
+                  document.querySelector('video') || 
+                  (typeof currentVideoElement !== 'undefined' ? currentVideoElement : null);
+
+    if (!video) {
+        alert("Please load a video first!");
+        return;
+    }
+
+    if (!isAudioEngineReady) {
+        setupInternalAudioProcessing(video);
+    }
+
+    if (!subOverlayElement) {
+        const wrapper = document.getElementById('videoWrapper') || video.parentElement;
+        subOverlayElement = document.createElement('div');
+        subOverlayElement.id = 'sStudioLiveSubtitleOverlay';
+        subOverlayElement.style.cssText = `
+            position: absolute !important;
+            bottom: 10% !important;
+            left: 50% !important;
+            transform: translateX(-50%) !important;
+            background: rgba(0, 0, 0, 0.85) !important;
+            color: #ffffff !important;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+            font-size: 15px !important;
+            font-weight: 600 !important;
+            padding: 5px 12px !important;
+            border-radius: 5px !important;
+            text-align: center !important;
+            pointer-events: none !important;
+            z-index: 150 !important;
+            max-width: 85% !important;
+            line-height: 1.4 !important;
+            display: block !important;
+            letter-spacing: 0.3px !important;
+        `;
+        wrapper.appendChild(subOverlayElement);
+    } else {
+        subOverlayElement.style.display = subOverlayElement.style.display === 'none' ? 'block' : 'none';
+    }
+
+    if (internalRecognition) {
+        try {
+            internalRecognition.start();
+        } catch(e) {}
+    }
+
+    video.ontimeupdate = syncSubtitlesWithPlayback;
+    showSubtitleStatusToast("Auto CC Enabled (YouTube Style)");
+}
+
+// 🛡️ SAFE SUBTITLES PLAYBACK SYNC (NO CRASH / NO LOOP ERRORS)
+function syncSubtitlesWithPlayback() {
+    try {
+        const video = document.querySelector('#videoWrapper video') || 
+                      document.querySelector('video') || 
+                      (typeof currentVideoElement !== 'undefined' ? currentVideoElement : null);
+
+        if (!video) return;
+
+        const subOverlay = document.getElementById('sStudioLiveSubtitleOverlay');
+        if (!subOverlay) return;
+
+        if (!Array.isArray(subtitleSegments) || subtitleSegments.length === 0) {
+            return;
+        }
+
+        const curTime = Number(video.currentTime) || 0;
+        
+        const match = subtitleSegments.find(item => {
+            return item && typeof item.start === 'number' && typeof item.end === 'number' &&
+                   curTime >= item.start && curTime <= item.end;
+        });
+
+        if (match && match.text) {
+            if (subOverlay.innerText !== match.text) {
+                subOverlay.innerText = match.text;
+            }
+            subOverlay.style.display = 'block';
+        } else {
+            subOverlay.innerText = "";
+            subOverlay.style.display = 'none';
+        }
+    } catch (err) {
+        console.warn("Subtitle sync handler:", err);
+    }
+}
+
+function updateLiveSubtitleDisplay(txt) {
+    try {
+        const subOverlay = document.getElementById('sStudioLiveSubtitleOverlay');
+        if (subOverlay && txt) {
+            subOverlay.innerText = txt;
+            subOverlay.style.display = 'block';
+        }
+    } catch (e) {
+        console.warn("Subtitle live display handler:", e);
+    }
+}
+
+function renderSubtitlesToTimeline(text, start, end) {
+    const track = document.getElementById('textTrackBlock') || document.getElementById('frameTimelineTrack');
+    if (!track) return;
+
+    const block = document.createElement('div');
+    block.style.cssText = `
+        background: rgba(0, 242, 254, 0.25) !important;
+        border: 1px solid #00f2fe !important;
+        color: #ffffff !important;
+        padding: 2px 8px !important;
+        border-radius: 4px !important;
+        font-size: 11px !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        display: inline-block !important;
+        margin-right: 6px !important;
+        height: 22px !important;
+    `;
+    block.innerText = "CC: " + text;
+    block.title = text;
+    track.appendChild(block);
+}
+
+function showSubtitleStatusToast(msg) {
+    let toast = document.getElementById('sStudioSubToast');
+    if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'sStudioSubToast';
+        toast.style.cssText = "position:fixed; top:20px; left:50%; transform:translateX(-50%); background:#00f2fe; color:#000; padding:8px 18px; border-radius:20px; font-weight:800; font-size:12px; z-index:2147483647; box-shadow:0 4px 15px rgba(0,242,254,0.4);";
+        document.body.appendChild(toast);
+    }
+    toast.innerText = msg;
+    setTimeout(() => { if (toast) toast.remove(); }, 2500);
+}
+
+function hideSubtitleStatusToast() {
+    const toast = document.getElementById('sStudioSubToast');
+    if (toast) toast.remove();
 }
 
 // ==========================================================================
@@ -1516,12 +1730,8 @@ function openSubtitlesMenu() {
         </div>
 
         <div style="margin-top: 10px; background: rgba(108, 92, 231, 0.12); border: 1px solid #6c5ce7; padding: 12px; border-radius: 8px; text-align: center;">
-            <div id="aiSubLoadingBox" style="display: none; margin-bottom: 6px;">
-                <div style="display: inline-block; width: 20px; height: 20px; border: 3px solid #6c5ce7; border-top-color: #00f2fe; border-radius: 50%; animation: spin 0.8s linear infinite;"></div>
-                <div style="font-size: 11px; color: #00f2fe; margin-top: 4px; font-weight: bold;">Generating AI Subtitles...</div>
-            </div>
-            <button id="btnStartAiSub" onclick="triggerAutoAISubtitleGeneration()" style="width: 100%; background: linear-gradient(135deg, #6c5ce7, #00f2fe); color: black; border: none; padding: 9px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 12px; display: flex; align-items: center; justify-content: center; gap: 6px;">
-                <span>🤖</span> Generate Auto AI Subtitles
+            <button class="tool-btn ai-btn" onclick="generateAutoAiSubtitles()" style="background: linear-gradient(135deg, #00f2fe, #6c5ce7); color: #000; font-weight: bold; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer;">
+                🎙️ Instant YouTube CC Subtitles
             </button>
         </div>
 
@@ -1586,51 +1796,6 @@ function openSubtitlesMenu() {
     `;
 
     document.body.appendChild(modal);
-}
-
-function triggerAutoAISubtitleGeneration() {
-    let video = currentVideoElement 
-        || document.getElementById('mainPlayer') 
-        || document.querySelector('#videoWrapper video')
-        || document.getElementById('mainPhotoPlayer');
-
-    const loader = document.getElementById('aiSubLoadingBox');
-    const startBtn = document.getElementById('btnStartAiSub');
-    if (loader) loader.style.display = 'block';
-    if (startBtn) startBtn.style.display = 'none';
-
-    let duration = (video && video.duration && !isNaN(video.duration) && video.duration > 0) 
-        ? video.duration 
-        : (videoDurationSeconds || 16);
-
-    setTimeout(() => {
-        const autoSentences = [
-            "Welcome to S Studio",
-            "Auto AI Subtitles Generated",
-            "Click to edit, zoom or style text",
-            "Create stunning videos easily"
-        ];
-
-        const step = Math.max(2.5, duration / autoSentences.length);
-        let currentStart = 0;
-
-        autoSentences.forEach(sentence => {
-            const currentEnd = Math.min(duration, currentStart + step);
-            insertConfiguredSubtitle(
-                sentence, 
-                parseFloat(currentStart.toFixed(1)), 
-                parseFloat(currentEnd.toFixed(1)), 
-                "#ffffff", 
-                "rgba(0, 0, 0, 0.75)", 
-                "Arial, sans-serif"
-            );
-            currentStart += step;
-        });
-
-        if (loader) loader.style.display = 'none';
-        const modal = document.getElementById('sStudioSubtitlesModal');
-        if (modal) modal.remove();
-    }, 800);
 }
 
 function submitCustomSubtitle() {
@@ -1716,7 +1881,9 @@ function insertConfiguredSubtitle(text, startSec, endSec, textColor, bgColor, fo
 
     subNode.onclick = function(e) {
         e.stopPropagation();
-        openInteractiveSubtitleFloatingBar(subNode);
+        if (typeof openInteractiveSubtitleFloatingBar === 'function') {
+            openInteractiveSubtitleFloatingBar(subNode);
+        }
     };
 
     if (typeof makeElementDraggable === 'function') {
@@ -1758,122 +1925,99 @@ function insertConfiguredSubtitle(text, startSec, endSec, textColor, bgColor, fo
     }
 }
 
-function openInteractiveSubtitleFloatingBar(subNode) {
-    const oldBar = document.getElementById('sStudioSubFloatingBar');
-    if (oldBar) oldBar.remove();
-
-    const bar = document.createElement('div');
-    bar.id = 'sStudioSubFloatingBar';
-    bar.style.cssText = `
-        position: fixed;
-        bottom: 75px;
-        left: 50%;
-        transform: translateX(-50%);
-        background: #161920;
-        border: 2px solid #6c5ce7;
-        padding: 6px 12px;
-        border-radius: 10px;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        z-index: 2147483647;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.85);
-        color: white;
-        font-family: sans-serif;
-    `;
-
-    const label = subNode.querySelector('.sub-text-label');
-
-    bar.innerHTML = `
-        <span style="font-size: 11px; font-weight: bold; color: #a8a5ff;">Edit Subtitle:</span>
-        <input type="text" id="floatingSubInput" value="${label ? label.innerText : ''}" style="background: #222733; border: 1px solid #444; color: white; padding: 4px 8px; border-radius: 4px; font-size: 11px; width: 140px;">
-        <button id="btnDeleteSub" style="background: #ff4757; color: white; border: none; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; cursor: pointer;">Delete</button>
-        <span onclick="this.parentElement.remove()" style="cursor: pointer; font-size: 14px; color: #a4b0be; margin-left: 4px;">✕</span>
-    `;
-
-    const input = bar.querySelector('#floatingSubInput');
-    input.oninput = function() {
-        if (label) label.innerText = this.value;
-        const trackSpan = document.querySelector(`#track_${subNode.id} span`);
-        if (trackSpan) trackSpan.innerText = "💬 " + this.value;
-    };
-
-    bar.querySelector('#btnDeleteSub').onclick = function() {
-        subNode.remove();
-        const trackBlock = document.getElementById('track_' + subNode.id);
-        if (trackBlock) trackBlock.remove();
-        bar.remove();
-    };
-
-    document.body.appendChild(bar);
-}
-
 function clearAllSubtitleLayers() {
     document.querySelectorAll('.live-subtitle-box').forEach(el => el.remove());
-    document.querySelectorAll('[id^="track_sub_"]').forEach(el => el.remove());
-    const modal = document.getElementById('sStudioSubtitlesModal');
-    if (modal) modal.remove();
+    const textTrack = document.getElementById('textTrackBlock') || document.getElementById('frameTimelineTrack');
+    if (textTrack) {
+        textTrack.querySelectorAll('[id^="track_sub_"]').forEach(el => el.remove());
+    }
+    subtitleSegments = [];
+    const subOverlay = document.getElementById('sStudioLiveSubtitleOverlay');
+    if (subOverlay) subOverlay.innerText = '';
 }
 
 // ==========================================================================
-// 💬 5. FLOATING INTERACTIVE SUBTITLE EDITOR BAR
+// 💬 5. FLOATING INTERACTIVE SUBTITLE EDITOR BAR & CONTROLS
 // ==========================================================================
 
+let activeSubtitleElement = null;
+
 function openInteractiveSubtitleFloatingBar(subNode) {
+    if (!subNode) return;
     activeSubtitleElement = subNode;
 
+    // Highlight the selected subtitle box
     document.querySelectorAll('.live-subtitle-box').forEach(s => s.style.border = "2px dashed transparent");
     subNode.style.border = "2px dashed #00f2fe";
 
-    const oldBar = document.getElementById('sStudioLiveSubEditorBar');
+    const oldBar = document.getElementById('sStudioLiveSubEditorBar') || document.getElementById('sStudioSubFloatingBar');
     if (oldBar) oldBar.remove();
 
-    const currentText = subNode.querySelector('.sub-text-label') ? subNode.querySelector('.sub-text-label').innerText : subNode.innerText;
+    const label = subNode.querySelector('.sub-text-label');
+    const currentText = label ? label.innerText : subNode.innerText;
     const currentSize = parseInt(window.getComputedStyle(subNode).fontSize) || 18;
 
     const bar = document.createElement('div');
     bar.id = 'sStudioLiveSubEditorBar';
     bar.style.cssText = `
         position: fixed;
-        bottom: 125px;
+        bottom: 90px;
         left: 50%;
         transform: translateX(-50%);
         background: #14171f;
         border: 2px solid #00f2fe;
         padding: 8px 14px;
-        border-radius: 10px;
+        border-radius: 12px;
         display: flex;
         align-items: center;
-        gap: 10px;
-        z-index: 100005;
-        box-shadow: 0 10px 35px rgba(0,0,0,0.9);
+        gap: 8px;
+        z-index: 2147483647;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.9);
         color: white;
         font-family: sans-serif;
         font-size: 11px;
+        flex-wrap: nowrap;
     `;
 
     bar.innerHTML = `
-        <input type="text" id="liveSubEditInput" value="${currentText}" oninput="updateLiveSubText(this.value)" style="background:#222733; color:white; border:1px solid #444; padding:4px 8px; border-radius:4px; font-size:11px; width:120px;">
-        <div style="display:flex; align-items:center; gap:4px;">
+        <span style="font-size: 11px; font-weight: bold; color: #00f2fe;">Edit:</span>
+        <input type="text" id="liveSubEditInput" value="${currentText}" oninput="updateLiveSubText(this.value)" style="background:#222733; color:white; border:1px solid #444; padding:5px 8px; border-radius:4px; font-size:11px; width:130px; outline:none;">
+        
+        <div style="display:flex; align-items:center; gap:3px;">
             <button onclick="adjustLiveSubSize(-2)" style="background:#222733; color:white; border:1px solid #444; padding:3px 7px; border-radius:3px; cursor:pointer; font-weight:bold;">-</button>
             <span id="liveSubSizeVal" style="color:#00f2fe; font-weight:bold; min-width:30px; text-align:center;">${currentSize}px</span>
             <button onclick="adjustLiveSubSize(2)" style="background:#222733; color:white; border:1px solid #444; padding:3px 7px; border-radius:3px; cursor:pointer; font-weight:bold;">+</button>
         </div>
-        <div style="display:flex; align-items:center; gap:3px;">
-            <span>🎨</span>
-            <input type="color" onchange="updateLiveSubColor(this.value)" title="Text Color" style="width:22px; height:22px; border:none; cursor:pointer; background:none;">
-            <input type="color" onchange="updateLiveSubBg(this.value)" title="Background Color" style="width:22px; height:22px; border:none; cursor:pointer; background:none;">
+
+        <div style="display:flex; align-items:center; gap:4px;">
+            <input type="color" onchange="updateLiveSubColor(this.value)" title="Text Color" style="width:24px; height:24px; border:none; cursor:pointer; background:none;">
+            <input type="color" onchange="updateLiveSubBg(this.value)" title="Background Color" style="width:24px; height:24px; border:none; cursor:pointer; background:none;">
         </div>
-        <select onchange="updateLiveSubFont(this.value)" style="background:#222733; color:white; border:1px solid #444; border-radius:4px; padding:3px; font-size:10px;">
+
+        <select onchange="updateLiveSubFont(this.value)" style="background:#222733; color:white; border:1px solid #444; border-radius:4px; padding:4px; font-size:10px; outline:none;">
             <option value="Arial, sans-serif">Arial</option>
             <option value="'Impact', sans-serif">Impact</option>
             <option value="'Courier New', monospace">Typewriter</option>
             <option value="'Trebuchet MS', sans-serif">Modern</option>
         </select>
-        <button onclick="closeLiveSubtitleEditor()" style="background:#10ac84; color:white; border:none; padding:4px 8px; border-radius:4px; font-weight:bold; cursor:pointer;">
+
+        <button id="btnDeleteCurrentSub" style="background:#ff4757; color:white; border:none; padding:5px 9px; border-radius:4px; font-size:11px; font-weight:bold; cursor:pointer;">
+            Delete
+        </button>
+
+        <button onclick="closeLiveSubtitleEditor()" style="background:#10ac84; color:white; border:none; padding:5px 9px; border-radius:4px; font-weight:bold; cursor:pointer;">
             Done
         </button>
+
+        <span onclick="closeLiveSubtitleEditor()" style="cursor: pointer; font-size: 15px; color: #a4b0be; margin-left: 2px;">✕</span>
     `;
+
+    bar.querySelector('#btnDeleteCurrentSub').onclick = function() {
+        subNode.remove();
+        const trackBlock = document.getElementById('track_' + subNode.id);
+        if (trackBlock) trackBlock.remove();
+        closeLiveSubtitleEditor();
+    };
 
     document.body.appendChild(bar);
 }
@@ -1919,7 +2063,7 @@ function closeLiveSubtitleEditor() {
         activeSubtitleElement.style.border = "2px dashed transparent";
         activeSubtitleElement = null;
     }
-    const bar = document.getElementById('sStudioLiveSubEditorBar');
+    const bar = document.getElementById('sStudioLiveSubEditorBar') || document.getElementById('sStudioSubFloatingBar');
     if (bar) bar.remove();
 }
 
@@ -1929,6 +2073,8 @@ function clearAllSubtitleLayers() {
         if (trackBlock) trackBlock.remove();
         el.remove();
     });
+    document.querySelectorAll('[id^="track_sub_"]').forEach(el => el.remove());
+    
     const modal = document.getElementById('sStudioSubtitlesModal');
     if (modal) modal.remove();
     closeLiveSubtitleEditor();
@@ -2568,9 +2714,10 @@ function createPermanentBlurMask(left, top, width, height) {
 // ==========================================================================
 
 function getActiveMediaElement() {
-    return currentActivePIPLayer 
-        ? (currentActivePIPLayer.querySelector('video, img') || currentActivePIPLayer)
-        : (document.getElementById('mainPlayer') || document.getElementById('mainPhotoPlayer') || currentVideoElement);
+    if (currentActivePIPLayer) {
+        return currentActivePIPLayer.querySelector('video, img') || currentActivePIPLayer;
+    }
+    return document.getElementById('mainPlayer') || document.getElementById('mainPhotoPlayer') || currentVideoElement;
 }
 
 function openMaskStudioMenu() {
@@ -2644,30 +2791,38 @@ function applyMaskPreset(type) {
     if (!target) return;
 
     currentMaskType = type;
+    target.style.transition = "clip-path 0.3s ease, border-radius 0.3s ease";
 
     switch(type) {
         case 'linear':
             target.style.clipPath = isMaskInverted 
-                ? "polygon(0% 50%, 100% 50%, 100% 100%, 0% 100%)" 
-                : "polygon(0% 0%, 100% 0%, 100% 50%, 0% 50%)";
+                ? "polygon(50% 0, 100% 0, 100% 100%, 50% 100%)" 
+                : "polygon(0 0, 50% 0, 50% 100%, 0 100%)";
+            target.style.borderRadius = "0px";
             break;
         case 'circle':
-            target.style.clipPath = "circle(42% at 50% 50%)";
+            target.style.clipPath = isMaskInverted ? "none" : "circle(42% at 50% 50%)";
+            target.style.borderRadius = isMaskInverted ? "50%" : "0px";
             break;
         case 'cinematic':
-            target.style.clipPath = "inset(12% 0% 12% 0%)";
+            target.style.clipPath = isMaskInverted ? "none" : "inset(12% 0% 12% 0%)";
+            target.style.borderRadius = "0px";
             break;
         case 'rounded':
-            target.style.clipPath = "inset(6% 6% 6% 6% round 24px)";
+            target.style.clipPath = "none";
+            target.style.borderRadius = isMaskInverted ? "0px" : "24px";
             break;
         case 'heart':
             target.style.clipPath = "polygon(50% 15%, 80% 0%, 100% 20%, 100% 50%, 50% 95%, 0% 50%, 0% 20%, 20% 0%)";
+            target.style.borderRadius = "0px";
             break;
         case 'star':
             target.style.clipPath = "polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)";
+            target.style.borderRadius = "0px";
             break;
         default:
             target.style.clipPath = "none";
+            target.style.borderRadius = "0px";
             break;
     }
 }
@@ -2675,7 +2830,11 @@ function applyMaskPreset(type) {
 function toggleMaskInvert() {
     isMaskInverted = !isMaskInverted;
     const btn = document.getElementById('btnInvertMask');
-    if (btn) btn.innerText = isMaskInverted ? 'ON' : 'OFF';
+    if (btn) {
+        btn.innerText = isMaskInverted ? 'ON' : 'OFF';
+        btn.style.background = isMaskInverted ? "#1abc9c" : "#222733";
+        btn.style.color = isMaskInverted ? "#000" : "#1abc9c";
+    }
     if (currentMaskType !== 'none') {
         applyMaskPreset(currentMaskType);
     }
@@ -2688,7 +2847,7 @@ function updateMaskFeather(val) {
 
     const target = getActiveMediaElement();
     if (target) {
-        target.style.filter = maskFeatherPx > 0 ? `blur(${maskFeatherPx / 4}px)` : 'none';
+        target.style.filter = maskFeatherPx > 0 ? `drop-shadow(0 0 ${maskFeatherPx}px rgba(0,0,0,0.8))` : 'none';
     }
 }
 
@@ -2696,105 +2855,24 @@ function resetMaskEffect() {
     const target = getActiveMediaElement();
     if (target) {
         target.style.clipPath = "none";
+        target.style.borderRadius = "0px";
         target.style.filter = "none";
     }
     currentMaskType = 'none';
     isMaskInverted = false;
     maskFeatherPx = 0;
+    
     const btn = document.getElementById('btnInvertMask');
-    if (btn) btn.innerText = 'OFF';
+    if (btn) {
+        btn.innerText = 'OFF';
+        btn.style.background = "#222733";
+        btn.style.color = "#1abc9c";
+    }
     const disp = document.getElementById('featherValDisplay');
     if (disp) disp.innerText = '0px';
     const slider = document.getElementById('maskFeatherSlider');
     if (slider) slider.value = 0;
-}
-
-// ==========================================================================
-// 🎭 CINEMATIC MASKING ENGINE
-// ==========================================================================
-
-function getActiveMediaElement() {
-    if (currentActivePIPLayer) {
-        return currentActivePIPLayer.querySelector('video, img');
-    }
-    return document.getElementById('mainPlayer') || document.getElementById('mainPhotoPlayer') || currentVideoElement;
-}
-
-function applyMaskPreset(type) {
-    currentMaskType = type;
-    const media = getActiveMediaElement();
-    if (!media) return;
-
-    media.style.transition = "clip-path 0.3s ease, border-radius 0.3s ease";
-
-    switch (type) {
-        case 'linear':
-            media.style.clipPath = isMaskInverted 
-                ? "polygon(50% 0, 100% 0, 100% 100%, 50% 100%)" 
-                : "polygon(0 0, 50% 0, 50% 100%, 0 100%)";
-            media.style.borderRadius = "0px";
-            break;
-        case 'circle':
-            media.style.clipPath = isMaskInverted ? "none" : "circle(42% at 50% 50%)";
-            media.style.borderRadius = isMaskInverted ? "50%" : "0px";
-            break;
-        case 'cinematic':
-            media.style.clipPath = isMaskInverted ? "none" : "inset(12% 0% 12% 0%)";
-            media.style.borderRadius = "0px";
-            break;
-        case 'rounded':
-            media.style.clipPath = "none";
-            media.style.borderRadius = isMaskInverted ? "0px" : "24px";
-            break;
-        case 'heart':
-            media.style.clipPath = "polygon(50% 15%, 100% 35%, 82% 90%, 50% 75%, 18% 90%, 0% 35%)";
-            media.style.borderRadius = "0px";
-            break;
-        case 'star':
-            media.style.clipPath = "polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)";
-            media.style.borderRadius = "0px";
-            break;
-        default:
-            media.style.clipPath = "none";
-            media.style.borderRadius = "0px";
-            break;
-    }
-}
-
-function toggleMaskInvert() {
-    isMaskInverted = !isMaskInverted;
-    const btn = document.getElementById('btnInvertMask');
-    if (btn) {
-        btn.innerText = isMaskInverted ? "ON" : "OFF";
-        btn.style.background = isMaskInverted ? "#1abc9c" : "#222733";
-        btn.style.color = isMaskInverted ? "#000" : "#1abc9c";
-    }
-    if (currentMaskType !== 'none') {
-        applyMaskPreset(currentMaskType);
-    }
-}
-
-function updateMaskFeather(val) {
-    maskFeatherPx = parseInt(val) || 0;
-    const disp = document.getElementById('featherValDisplay');
-    if (disp) disp.innerText = maskFeatherPx + "px";
-
-    const media = getActiveMediaElement();
-    if (media) {
-        media.style.filter = maskFeatherPx > 0 ? `drop-shadow(0 0 ${maskFeatherPx}px rgba(0,0,0,0.8))` : "none";
-    }
-}
-
-function resetMaskEffect() {
-    const media = getActiveMediaElement();
-    if (media) {
-        media.style.clipPath = "none";
-        media.style.borderRadius = "0px";
-        media.style.filter = "none";
-    }
-    currentMaskType = 'none';
-    isMaskInverted = false;
-    maskFeatherPx = 0;
+    
     const menu = document.getElementById('sStudioMaskMenu');
     if (menu) menu.remove();
 }
@@ -2864,6 +2942,10 @@ function showOverlayPositionOptionsModal(fileName) {
 
     document.body.appendChild(modal);
 }
+
+// ==========================================================================
+// 🖼️ OVERLAY TRACK INJECTION & POSITIONING ENGINE
+// ==========================================================================
 
 function injectOverlayWithPosition(positionType) {
     if (!pendingOverlayFile) return;
@@ -3131,63 +3213,8 @@ function removeAllMagnifiers() {
 }
 
 // ==========================================================================
-// 🛠️ PIP FLOATING TOOLKIT & DRAGGABLE ENGINE
+// 🛠️ DRAGGABLE ENGINE
 // ==========================================================================
-
-function createFloatingToolkit(layerContainer) {
-    const oldKit = document.getElementById('sStudioFloatingLayerToolkit');
-    if (oldKit) oldKit.remove();
-
-    const kit = document.createElement('div');
-    kit.id = 'sStudioFloatingLayerToolkit';
-    kit.style.cssText = `
-        position: fixed;
-        bottom: 80px;
-        left: 50%;
-        transform: translateX(-50%);
-        background: #161920;
-        border: 2px solid #10ac84;
-        padding: 6px 12px;
-        border-radius: 10px;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        z-index: 2147483647;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.85);
-        color: white;
-        font-family: sans-serif;
-        font-size: 11px;
-    `;
-
-    kit.innerHTML = `
-        <span style="font-weight: bold; color: #10ac84;">Layer Selected</span>
-        <button id="btnLayerLock" style="background: #222733; color: white; border: 1px solid #444; padding: 4px 8px; border-radius: 4px; cursor: pointer;">🔓 Lock</button>
-        <button id="btnLayerCrop" style="background: #222733; color: #00f2fe; border: 1px solid #00f2fe; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-weight: bold;">✂️ Crop</button>
-        <button id="btnLayerDelete" style="background: #ff4757; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-weight: bold;">🗑️ Delete</button>
-        <span onclick="this.parentElement.remove()" style="cursor: pointer; font-size: 14px; color: #a4b0be; margin-left: 4px;">✕</span>
-    `;
-
-    kit.querySelector('#btnLayerLock').onclick = function() {
-        const isLocked = layerContainer.dataset.locked === "true";
-        layerContainer.dataset.locked = isLocked ? "false" : "true";
-        this.innerText = isLocked ? "🔓 Lock" : "🔒 Locked";
-        this.style.color = isLocked ? "#fff" : "#ff4757";
-    };
-
-    kit.querySelector('#btnLayerCrop').onclick = function() {
-        openCustomFreeCropModal();
-    };
-
-    kit.querySelector('#btnLayerDelete').onclick = function() {
-        const trackBlock = document.getElementById('track_' + layerContainer.id);
-        if (trackBlock) trackBlock.remove();
-        layerContainer.remove();
-        kit.remove();
-        currentActivePIPLayer = null;
-    };
-
-    document.body.appendChild(kit);
-}
 
 function makeElementDraggable(element) {
     element.style.cursor = 'move';
@@ -3224,7 +3251,7 @@ function makeElementDraggable(element) {
 }
 
 // ==========================================================================
-// 🎛️ PIP FLOATING TOOLKIT & ACTIONS (MASTER ENGINE)
+// 🎛️ PIP FLOATING TOOLKIT & ACTIONS (ALL 12 BUTTONS INTEGRATED)
 // ==========================================================================
 
 function createFloatingToolkit(pipObject) {
@@ -3265,10 +3292,12 @@ function createFloatingToolkit(pipObject) {
     };
     pipPanel.appendChild(closeBtn);
 
+    // Complete Integrated Button List (No Feature Omitted)
     const btnList = [
         { id: 'replace', label: 'Replace' },
         { id: 'motion', label: 'Motion' },
-        { id: 'lock', label: 'Lock' },
+        { id: 'crop', label: 'Crop' },
+        { id: 'lock', label: (pipObject.dataset.locked === 'true' ? 'Locked' : 'Lock') },
         { id: 'duplicate', label: 'Duplicate' },
         { id: 'rotate', label: 'Rotate' },
         { id: 'fit', label: 'Auto Fit' },
@@ -3282,9 +3311,10 @@ function createFloatingToolkit(pipObject) {
     btnList.forEach(btnInfo => {
         const btn = document.createElement('button');
         btn.className = 'sStudioPipBtn';
+        btn.id = 'pipBtn_' + btnInfo.id;
         btn.innerText = btnInfo.label;
         btn.style.cssText = `
-            background: ${btnInfo.id === 'delete' ? '#ff4757' : '#222733'} !important; 
+            background: ${btnInfo.id === 'delete' ? '#ff4757' : (btnInfo.id === 'crop' ? '#00b894' : '#222733')} !important; 
             color: #fff !important; 
             border: 1px solid #333 !important; 
             padding: 6px 10px !important; 
@@ -3313,6 +3343,9 @@ function executePipToolAction(actionId, targetObject) {
     const mediaEl = targetObject.querySelector('img') || targetObject.querySelector('video');
 
     switch (actionId) {
+        case 'crop':
+            if (typeof openCustomFreeCropModal === 'function') openCustomFreeCropModal();
+            break;
         case 'motion':
             openPipMotionMenu(targetObject);
             break;
@@ -3330,6 +3363,8 @@ function executePipToolAction(actionId, targetObject) {
             let isLocked = targetObject.dataset.locked === "true";
             targetObject.dataset.locked = isLocked ? "false" : "true";
             targetObject.style.border = isLocked ? "2px dashed #ff9f43" : "2px solid #ff4757";
+            const lockBtn = document.getElementById('pipBtn_lock');
+            if (lockBtn) lockBtn.innerText = isLocked ? "Lock" : "Locked";
             break;
         case 'duplicate':
             const parent = targetObject.parentElement || document.getElementById('videoWrapper');
@@ -4070,10 +4105,10 @@ function toggleVoiceRecording() {
 
         const toast = document.createElement('div');
         toast.id = 'sStudioVoiceToast';
-        toast.style.cssText = "position:fixed; top:20px; left:50%; transform:translateX(-50%); background:#ff4757; color:white; padding:8px 16px; border-radius:20px; font-weight:bold; font-size:12px; z-index:2147483647; box-shadow:0 4px 15px rgba(255,71,87,0.4); display:flex; gap:8px; align-items:center;";
+        toast.style.cssText = "position:fixed; top:20px; left:50%; transform:translateX(-50%); background:#ff4757; color:white; padding:8px 16px; border-radius:20px; font-weight:bold; font-size:12px; z-index:2147483647; box-shadow:0 4px 15px rgba(255,71,87,0.4); display:flex; gap:8px; align-items:center; cursor:pointer;";
         toast.innerHTML = `<span>🔴 Recording Voice... Click to Stop</span>`;
         toast.onclick = () => {
-            mediaRecorder.stop();
+            if (mediaRecorder && mediaRecorder.state === "recording") mediaRecorder.stop();
             toast.remove();
         };
         document.body.appendChild(toast);
@@ -4118,6 +4153,7 @@ function processAudioTrackInjection(trackName, customSrc) {
         cursor: pointer !important;
         user-select: none !important;
         z-index: 10;
+        box-sizing: border-box !important;
     `;
 
     let waveHTML = `<div style="display: flex; align-items: center; gap: 2px; height: 100%; opacity: 0.6; margin-right: 6px;">`;
@@ -4164,9 +4200,10 @@ function processAudioTrackInjection(trackName, customSrc) {
     if (container) container.appendChild(block); 
 }
 
-function showAudioTrackActionPanel(audioId, trackName, src) {
-    const oldModal = document.getElementById('sStudioAudioTrackModal');
-    if (oldModal) oldModal.remove();
+// Integrated Audio Control Panel (Includes Volume, Replace, and Delete)
+function showAudioTrackActionPanel(audioId, trackName, currentSrc) {
+    const oldPanel = document.getElementById('sStudioAudioTrackModal') || document.getElementById('sStudioAudioActionPanel');
+    if (oldPanel) oldPanel.remove();
 
     const node = activeAudioNodes[audioId];
     if (!node) return;
@@ -4175,87 +4212,38 @@ function showAudioTrackActionPanel(audioId, trackName, src) {
     modal.id = 'sStudioAudioTrackModal';
     modal.style.cssText = `
         position: fixed !important;
-        top: 50% !important;
+        bottom: 85px !important;
         left: 50% !important;
-        transform: translate(-50%, -50%) !important;
+        transform: translate(-50%, 0) !important;
         background: #161920 !important;
         border: 2px solid #10ac84 !important;
-        padding: 18px !important;
+        padding: 14px 18px !important;
         border-radius: 12px !important;
         display: flex !important;
         flex-direction: column !important;
         gap: 10px !important;
-        z-index: 100000 !important;
-        width: 300px !important;
+        z-index: 2147483647 !important;
+        width: 320px !important;
         color: white !important;
         font-family: sans-serif !important;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.85) !important;
+        box-shadow: 0 10px 35px rgba(0,0,0,0.9) !important;
     `;
 
     modal.innerHTML = `
         <div style="font-size: 12px; color: #10ac84; font-weight: bold; border-bottom: 1px solid #2f3542; padding-bottom: 6px; display: flex; justify-content: space-between; align-items: center;">
-            <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:240px;">🎵 ${trackName}</span>
+            <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:260px;">🎵 ${trackName}</span>
             <span onclick="this.parentElement.parentElement.remove()" style="cursor: pointer; font-size: 18px; color: #a4b0be;">&times;</span>
         </div>
-        <label style="font-size: 11px; color: #a4b0be;">Volume:
-            <input type="range" min="0" max="1" step="0.05" value="${node.audio.volume}" style="width: 100%; accent-color: #10ac84;" oninput="activeAudioNodes['${audioId}'].audio.volume = this.value">
+        <label style="font-size: 11px; color: #a4b0be; display: flex; flex-direction: column; gap: 4px;">Volume:
+            <input type="range" min="0" max="1" step="0.05" value="${node.audio.volume}" style="width: 100%; accent-color: #10ac84; cursor: pointer;" oninput="activeAudioNodes['${audioId}'].audio.volume = this.value">
         </label>
-        <button id="btnDeleteAudioTrack" style="background: #ff4757; color: white; border: none; padding: 8px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 11px; margin-top: 4px;">
-            Delete Track
-        </button>
+        <div style="display: flex; gap: 8px; margin-top: 4px;">
+            <button id="btnReplaceAudio" style="flex: 1; background: #6c5ce7; color: white; border: none; padding: 7px 10px; border-radius: 5px; font-weight: bold; cursor: pointer; font-size: 11px;">Replace</button>
+            <button id="btnDeleteAudioTrack" style="flex: 1; background: #ff4757; color: white; border: none; padding: 7px 10px; border-radius: 5px; font-weight: bold; cursor: pointer; font-size: 11px;">Delete</button>
+        </div>
     `;
 
-    modal.querySelector('#btnDeleteAudioTrack').onclick = function() {
-        if (node.audio) {
-            node.audio.pause();
-            node.audio.src = '';
-        }
-        delete activeAudioNodes[audioId];
-        const block = document.getElementById(audioId);
-        if (block) block.remove();
-        modal.remove();
-    };
-
-    document.body.appendChild(modal);
-}
-
-// ==========================================================================
-// 🎵 AUDIO TRACK ACTION PANEL & VOICE RECORDER
-// ==========================================================================
-
-function showAudioTrackActionPanel(audioId, trackName, currentSrc) {
-    const oldPanel = document.getElementById('sStudioAudioActionPanel');
-    if (oldPanel) oldPanel.remove();
-
-    const panel = document.createElement('div');
-    panel.id = 'sStudioAudioActionPanel';
-    panel.style.cssText = `
-        position: fixed !important;
-        bottom: 85px !important;
-        left: 50% !important;
-        transform: translateX(-50%) !important;
-        background: #161920 !important;
-        border: 2px solid #10ac84 !important;
-        padding: 8px 15px !important;
-        border-radius: 10px !important;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.8) !important;
-        z-index: 2147483647 !important;
-        display: flex !important;
-        align-items: center !important;
-        gap: 10px !important;
-        color: white !important;
-        font-family: sans-serif !important;
-        font-size: 11px !important;
-    `;
-
-    panel.innerHTML = `
-        <span style="font-weight:bold; color:#10ac84;">🎵 ${trackName}</span>
-        <button id="btnReplaceAudio" style="background:#6c5ce7; color:white; border:none; padding:6px 10px; border-radius:4px; font-weight:bold; cursor:pointer;">Replace Track</button>
-        <button id="btnDeleteAudio" style="background:#ff4757; color:white; border:none; padding:6px 10px; border-radius:4px; font-weight:bold; cursor:pointer;">Delete Track</button>
-        <span onclick="this.parentElement.remove()" style="cursor:pointer; font-size:16px; color:#a4b0be; margin-left:5px;">✕</span>
-    `;
-
-    panel.querySelector('#btnReplaceAudio').onclick = function(e) {
+    modal.querySelector('#btnReplaceAudio').onclick = function(e) {
         e.stopPropagation();
         const picker = document.createElement('input');
         picker.type = 'file';
@@ -4272,24 +4260,25 @@ function showAudioTrackActionPanel(audioId, trackName, currentSrc) {
                 }
                 const blockSpan = document.querySelector(`#${audioId} span`);
                 if (blockSpan) blockSpan.innerText = "🎵 " + file.name;
-                panel.remove();
+                modal.remove();
             }
         };
         picker.click();
     };
 
-    panel.querySelector('#btnDeleteAudio').onclick = function(e) {
+    modal.querySelector('#btnDeleteAudioTrack').onclick = function(e) {
         e.stopPropagation();
-        if (activeAudioNodes[audioId]) {
-            activeAudioNodes[audioId].audio.pause();
-            delete activeAudioNodes[audioId];
+        if (node.audio) {
+            node.audio.pause();
+            node.audio.src = '';
         }
+        delete activeAudioNodes[audioId];
         const block = document.getElementById(audioId);
         if (block) block.remove();
-        panel.remove();
+        modal.remove();
     };
 
-    document.body.appendChild(panel);
+    document.body.appendChild(modal);
 }
 
 // ==========================================================================
@@ -4643,28 +4632,7 @@ function triggerActualVideoExport() {
     }, 80);
 }
 
-function downloadFinalConfiguredFile() {
-    const video = document.querySelector('#videoWrapper video') || currentVideoElement;
-    if (!video) return;
-
-    const sourceURL = window.currentVideoURL || (video.src) || (video.querySelector('source') ? video.querySelector('source').src : '');
-    
-    if (sourceURL) {
-        const a = document.createElement('a');
-        a.href = sourceURL;
-        a.download = `S_Studio_Render_${selectedExportConfig.resolution.height}p_${Date.now()}.mp4`;
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-    }
-
-    toggleExportModal(false);
-}
-
-// ==========================================================================
-// 📥 6. DIRECT VIDEO DOWNLOADER ENGINE
-// ==========================================================================
-
+// Direct Universal Video Downloader Engine (Cleaned & De-duplicated)
 function downloadFinalConfiguredFile() {
     const videoEl = document.querySelector('#videoWrapper video') || document.querySelector('video') || currentVideoElement;
     const resHeight = (selectedExportConfig && selectedExportConfig.resolution) ? selectedExportConfig.resolution.height : 1080;
@@ -4832,7 +4800,7 @@ function handleDirectQuestionSubmit(e) {
 }
 
 // ==========================================================================
-// 📜 DYNAMIC LEGAL & FOOTER MODALS
+// 📜 DYNAMIC LEGAL & FOOTER MODALS (WITH DISCLAIMER)
 // ==========================================================================
 
 const legalDatabase = {
@@ -4864,37 +4832,113 @@ const legalDatabase = {
                 <p>"Technology belongs to everyone, not just those who can afford expensive software. S Studio brings free, high-performance video editing to creators worldwide."</p>
             </div>
         `
+    },
+    'disclaimer': {
+        title: "LEGAL DISCLAIMER",
+        content: `
+            <div style="color: #cbd5e1; line-height: 1.8; text-align: left; padding: 10px; font-family: sans-serif;">
+                <h1 style="color: #00f2fe; font-size: 22px; border-bottom: 2px solid #2f3542; padding-bottom: 10px; margin-bottom: 15px;">DISCLAIMER</h1>
+                <p><strong>1. General Information:</strong> The media editing tools provided by <strong>S Studio (svideoeditor.com)</strong> are intended solely for general editing, educational, and creative purposes. All tools and exported media are provided on an "as is" and "as available" basis.</p>
+                <p><strong>2. Client-Side Data Safety:</strong> All video and photo processing operations execute locally in your web browser. Your private media files are never transferred, saved, or cataloged on remote cloud servers.</p>
+                <p><strong>3. Content Ownership:</strong> Users maintain complete ownership and legal responsibility for all media files uploaded, manipulated, and exported through this platform.</p>
+                <p><strong>4. Third-Party Services:</strong> S Studio may display third-party advertisements or external links (e.g., Google AdSense). We do not assume liability for external practices or websites.</p>
+                <p><strong>5. Inquiries:</strong> For questions regarding this legal disclaimer, contact us at <strong>sriramgroups.help@gmail.com</strong>.</p>
+            </div>
+        `
     }
 };
 
-function showFullPageModal(typeKey) {
-    const modalOverlay = document.getElementById('fullScreenLegalModal');
-    const modalTitle = document.getElementById('fullScreenModalTitle');
-    const modalContent = document.getElementById('fullScreenModalContent');
+// Functions to open and close Full-Page Legal Modal (e.g., Disclaimer)
+function showFullPageModal(type) {
+    const modal = document.getElementById('fullScreenLegalModal');
+    const titleEl = document.getElementById('fullScreenModalTitle');
+    const contentEl = document.getElementById('fullScreenModalContent');
 
-    if (modalOverlay && modalTitle && modalContent && legalDatabase[typeKey]) {
-        modalTitle.innerText = legalDatabase[typeKey].title;
-        modalContent.innerHTML = legalDatabase[typeKey].content;
-        modalOverlay.classList.remove('hidden');
-        modalOverlay.style.display = 'flex';
-        document.body.style.overflow = 'hidden';
+    if (!modal || !titleEl || !contentEl) return;
+
+    if (legalDatabase[type]) {
+        titleEl.innerText = legalDatabase[type].title;
+        contentEl.innerHTML = legalDatabase[type].content;
+        modal.style.display = 'flex';
     }
 }
 
 function closeFullPageModal() {
+    const modal = document.getElementById('fullScreenLegalModal');
+    if (modal) modal.style.display = 'none';
+}
+
+// ==========================================================================
+// 📜 DYNAMIC LEGAL FULL-SCREEN MODAL ENGINE (DISCLAIMER, TERMS, PRIVACY)
+// ==========================================================================
+
+window.showFullPageModal = function(typeKey) {
+    let modalOverlay = document.getElementById('fullScreenLegalModal');
+    let modalTitle = document.getElementById('fullScreenModalTitle');
+    let modalContent = document.getElementById('fullScreenModalContent');
+
+    // DOM లో మోడల్ ఎలిమెంట్ లేకపోతే ఆటోమేటిక్‌గా క్రియేట్ చేయడం
+    if (!modalOverlay) {
+        modalOverlay = document.createElement('div');
+        modalOverlay.id = 'fullScreenLegalModal';
+        modalOverlay.style.cssText = `
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100vw !important;
+            height: 100vh !important;
+            background: rgba(11, 13, 19, 0.9) !important;
+            backdrop-filter: blur(8px) !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            z-index: 2147483647 !important;
+        `;
+
+        modalOverlay.innerHTML = `
+            <div style="background: #161920; border: 2px solid #00f2fe; border-radius: 14px; width: 90%; max-width: 600px; max-height: 80vh; overflow-y: auto; padding: 20px; position: relative; box-shadow: 0 10px 40px rgba(0,0,0,0.9);">
+                <span onclick="window.closeFullPageModal()" style="position: absolute; top: 12px; right: 16px; color: #a4b0be; font-size: 24px; cursor: pointer; font-weight: bold;">&times;</span>
+                <div id="fullScreenModalTitle" style="font-size: 16px; font-weight: bold; color: #00f2fe; margin-bottom: 10px;"></div>
+                <div id="fullScreenModalContent"></div>
+            </div>
+        `;
+        document.body.appendChild(modalOverlay);
+
+        modalTitle = document.getElementById('fullScreenModalTitle');
+        modalContent = document.getElementById('fullScreenModalContent');
+    }
+
+    if (typeof legalDatabase !== 'undefined' && legalDatabase[typeKey]) {
+        if (modalTitle) modalTitle.innerText = legalDatabase[typeKey].title;
+        if (modalContent) modalContent.innerHTML = legalDatabase[typeKey].content;
+        modalOverlay.classList.remove('hidden');
+        modalOverlay.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
+};
+
+window.closeFullPageModal = function() {
     const modalOverlay = document.getElementById('fullScreenLegalModal');
     if (modalOverlay) {
         modalOverlay.classList.add('hidden');
         modalOverlay.style.display = 'none';
         document.body.style.overflow = 'auto';
     }
-}
+};
 
-function openFooterDetailModal(key) { showFullPageModal(key); }
-function showHiddenPage(key) { showFullPageModal(key); }
+window.openFooterDetailModal = function(key) { window.showFullPageModal(key); };
+window.showHiddenPage = function(key) { window.showFullPageModal(key); };
 
+function showFullPageModal(typeKey) { window.showFullPageModal(typeKey); }
+function closeFullPageModal() { window.closeFullPageModal(); }
+function openFooterDetailModal(key) { window.openFooterDetailModal(key); }
+function showHiddenPage(key) { window.showHiddenPage(key); }
+
+// స్క్రోల్ చేసినప్పుడు టూల్‌బార్ ఫూటర్‌పై ఓవర్‌లాప్ అవ్వకుండా స్మూత్‌గా హైడ్ చేయడం
 window.addEventListener('scroll', function() {
-    const bottomBar = document.querySelector('.bottom-toolbar') || document.querySelector('.floating-toolbar');
+    const bottomBar = document.querySelector('.tools-container') || 
+                      document.querySelector('.bottom-toolbar') || 
+                      document.querySelector('.floating-toolbar');
     if (!bottomBar) return;
     
     if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 400) {
@@ -4906,3 +4950,376 @@ window.addEventListener('scroll', function() {
         bottomBar.style.pointerEvents = 'auto';
     }
 });
+// ==========================================================================
+// 🛠️ TIMELINE TRACK CLICK HANDLERS & NAVIGATION BRIDGES
+// ==========================================================================
+
+// 1. PiP Track (+) బటన్ క్లిక్ చేసినప్పుడు నేరుగా ఫైల్ పిక్కర్ ఓపెన్ అయ్యి ఓవర్‌లే యాడ్ అవ్వడం
+function triggerDirectPIPSelection() {
+    let pipInput = document.getElementById('sStudioDirectPIPInput');
+    if (!pipInput) {
+        pipInput = document.createElement('input');
+        pipInput.id = 'sStudioDirectPIPInput';
+        pipInput.type = 'file';
+        pipInput.accept = 'image/*,video/*';
+        pipInput.style.display = 'none';
+        document.body.appendChild(pipInput);
+
+        pipInput.onchange = function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            pendingOverlayFile = file;
+            if (typeof showOverlayPositionOptionsModal === 'function') {
+                showOverlayPositionOptionsModal(file.name);
+            } else if (typeof injectOverlayWithPosition === 'function') {
+                injectOverlayWithPosition('center');
+            }
+            pipInput.value = '';
+        };
+    }
+    pipInput.click();
+}
+window.triggerDirectPIPSelection = triggerDirectPIPSelection;
+
+// 2. టాప్ హెడర్‌లోని S Crop బటన్ క్లిక్ హ్యాండ్లర్
+function openTopCanvasCropMenu() {
+    const cropModal = document.getElementById('cropPresetModal');
+    if (cropModal) {
+        cropModal.style.display = 'flex';
+    } else if (typeof openCropPresetsMenu === 'function') {
+        openCropPresetsMenu();
+    }
+}
+window.openTopCanvasCropMenu = openTopCanvasCropMenu;
+
+// 3. Canvas Aspect Ratio మార్చే ఫంక్షన్
+function applyCanvasRatio(ratioStr) {
+    let mappedRatio = 'fit';
+    if (ratioStr === '16:9') mappedRatio = '16-9';
+    else if (ratioStr === '9:16') mappedRatio = '9-16';
+    else if (ratioStr === '1:1') mappedRatio = '1-1';
+    else if (ratioStr === '4:5') mappedRatio = '4-5';
+
+    if (typeof applyCanvasFrameRatio === 'function') {
+        applyCanvasFrameRatio(mappedRatio);
+    }
+    const cropModal = document.getElementById('cropPresetModal');
+    if (cropModal) cropModal.style.display = 'none';
+}
+window.applyCanvasRatio = applyCanvasRatio;
+
+// 4. టాప్ హెడర్‌లోని Upload బటన్ హ్యాండ్లర్
+function requestUploadPermission() {
+    const videoInp = document.getElementById('videoInput');
+    if (videoInp) {
+        videoInp.click();
+    }
+}
+window.requestUploadPermission = requestUploadPermission;
+
+// 5. లోగో క్లిక్ చేసినప్పుడు హోమ్‌పేజీకి రీసెట్ చేయడం
+function resetToHome() {
+    const editorPage = document.getElementById('editorPage');
+    const introPage = document.getElementById('introPage');
+
+    if (editorPage) {
+        editorPage.style.display = 'none';
+        editorPage.classList.add('hidden');
+    }
+    if (introPage) {
+        introPage.style.display = 'block';
+        introPage.classList.remove('hidden');
+    }
+
+    // ల్యాండింగ్ కార్డ్‌లన్నీ తిరిగి కనిపించేలా చేయడం
+    const landingSelectors = [
+        '#sStudioScrollableGuide',
+        '.founders-vision-card-large',
+        '.upcoming-updates-card',
+        '.feedback-reward-card',
+        '.support-channels-card',
+        '.innovation-rewards-card',
+        '.s-studio-master-footer'
+    ];
+    landingSelectors.forEach(selector => {
+        document.querySelectorAll(selector).forEach(el => el.style.display = 'block');
+    });
+}
+window.resetToHome = resetToHome;
+
+// 6. టైమ్‌లైన్ జూమ్ స్లైడర్ హ్యాండ్లర్
+function adjustTimelineZoom(val) {
+    const zoomLevel = parseFloat(val) || 1.0;
+    const disp = document.getElementById('zoomValDisplay');
+    if (disp) disp.innerText = Math.round(zoomLevel * 100) + "%";
+
+    const tracksContainer = document.getElementById('timelineTracksContainer');
+    if (tracksContainer) {
+        tracksContainer.style.transformOrigin = "left center";
+        tracksContainer.style.width = (zoomLevel * 100) + "%";
+    }
+}
+window.adjustTimelineZoom = adjustTimelineZoom;
+
+// పేజీ లోడ్ అయినప్పుడు కేవలం హోమ్‌పేజీ మాత్రమే కనిపించేలా లాక్ చేయడం
+document.addEventListener("DOMContentLoaded", function() {
+    const editorPage = document.getElementById('editorPage');
+    const introPage = document.getElementById('introPage');
+    
+    if (editorPage) {
+        editorPage.style.setProperty('display', 'none', 'important');
+        editorPage.classList.add('hidden');
+    }
+    if (introPage) {
+        introPage.style.display = 'block';
+        introPage.classList.remove('hidden');
+    }
+});
+// ==========================================================================
+// 🌐 STICKY HEADER NAVIGATION & DROPDOWN ENGINE (COMPLETE)
+// ==========================================================================
+
+// 1. Dropdown click chesinappudu open/close cheyadam
+function toggleNavDropdown(id) {
+    const target = document.getElementById(id);
+    if (!target) return;
+    const subMenu = target.querySelector('.nav-sub-menu');
+    const arrow = target.querySelector('.nav-arrow-icon');
+    
+    const isOpen = subMenu.classList.contains('show-menu');
+    closeAllNavDropdowns();
+    
+    if (!isOpen) {
+        subMenu.classList.add('show-menu');
+        if (arrow) arrow.style.transform = 'rotate(180deg)';
+    }
+}
+
+function closeAllNavDropdowns() {
+    document.querySelectorAll('.nav-sub-menu').forEach(m => m.classList.remove('show-menu'));
+    document.querySelectorAll('.nav-arrow-icon').forEach(a => a.style.transform = 'rotate(0deg)');
+}
+
+// Bayata ekkada click chesina dropdown close avvadam
+document.addEventListener('click', function(e) {
+    if (!e.target.closest('.nav-dropdown-item')) {
+        closeAllNavDropdowns();
+    }
+});
+
+// 2. Home click chesinappudu top ki smooth scroll avvadam
+function scrollToTopHome() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// 3. Connect click chesinappudu support card daggariki scroll avvadam
+function scrollToSupportChannels() {
+    const target = document.querySelector('.support-channels-card');
+    if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+}
+
+// 4. Editor loki vellinappudu top navbar hide cheyadam
+const originalEnterStudio = window.enterStudio;
+window.enterStudio = function(mode) {
+    const topNav = document.querySelector('.home-sticky-navbar');
+    if (topNav) topNav.style.display = 'none';
+    if (typeof originalEnterStudio === 'function') {
+        originalEnterStudio(mode);
+    }
+};
+
+// 5. Malli Home ki vachinappudu top navbar chupinchadam
+const originalResetToHome = window.resetToHome;
+window.resetToHome = function() {
+    const topNav = document.querySelector('.home-sticky-navbar');
+    if (topNav) topNav.style.display = 'block';
+    if (typeof originalResetToHome === 'function') {
+        originalResetToHome();
+    }
+};// ==========================================================================
+// 📸 COMPLETE INTERACTIVE PHOTO EDITING ENGINE
+// ==========================================================================
+
+let currentPhotoRotation = 0;
+let currentPhotoFlipH = 1;
+let currentPhotoBorder = false;
+
+// ఫోటో లేదా వీడియో ఎడిటర్ మోడ్‌ల మధ్య స్విచ్ చేయడం
+function enterStudio(mode) {
+    const introPage = document.getElementById('introPage');
+    const editorPage = document.getElementById('editorPage');
+    const timelineBox = document.getElementById('timelineAreaBox');
+    const playerControls = document.getElementById('playerControlsBox');
+    const photoToolbar = document.getElementById('photoToolsToolbar');
+    const resizerBar = document.getElementById('studioScreenResizerBar');
+    const topNav = document.querySelector('.home-sticky-navbar');
+
+    if (topNav) topNav.style.display = 'none';
+    if (introPage) introPage.style.display = 'none';
+    if (editorPage) {
+        editorPage.style.display = 'flex';
+        editorPage.classList.remove('hidden');
+    }
+
+    if (mode === 'photo') {
+        // వీడియో కంట్రోల్స్ హైడ్ చేసి, ఫోటో టూల్స్ బార్ చూపించడం
+        if (timelineBox) timelineBox.style.display = 'none';
+        if (playerControls) playerControls.style.display = 'none';
+        if (resizerBar) resizerBar.style.display = 'none';
+        if (photoToolbar) photoToolbar.style.display = 'block';
+
+        const photoInput = document.getElementById('photoInput');
+        if (photoInput) photoInput.click();
+    } else {
+        // వీడియో ఎడిటర్ మోడ్
+        if (photoToolbar) photoToolbar.style.display = 'none';
+        if (timelineBox) timelineBox.style.display = 'flex';
+        if (playerControls) playerControls.style.display = 'flex';
+        if (resizerBar) resizerBar.style.display = 'flex';
+
+        const videoInput = document.getElementById('videoInput');
+        if (videoInput) videoInput.click();
+    }
+}
+window.enterStudio = enterStudio;
+
+// 1. ఫోటో లోడ్ చేయడం
+function loadPhoto(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const wrapper = document.getElementById('videoWrapper');
+    if (!wrapper) return;
+
+    wrapper.innerHTML = `
+        <img id="mainPhotoCanvas" src="${URL.createObjectURL(file)}" style="max-width:100%; max-height:100%; object-fit:contain; transition: filter 0.1s, transform 0.2s;" />
+    `;
+    resetPhotoAdjustments();
+}
+window.loadPhoto = loadPhoto;
+
+// 2. Adjustments Slider ప్యానెల్
+function openPhotoAdjustModal() {
+    const panel = document.getElementById('photoAdjustSubPanel');
+    const filterPanel = document.getElementById('photoFiltersSubPanel');
+    if (filterPanel) filterPanel.style.display = 'none';
+    if (panel) panel.style.display = (panel.style.display === 'block') ? 'none' : 'block';
+}
+window.openPhotoAdjustModal = openPhotoAdjustModal;
+
+// 3. లైవ్ ఫిల్టర్లు మరియు అడ్జస్ట్‌మెంట్లు అప్లై చేయడం
+function applyPhotoLiveFilters() {
+    const img = document.getElementById('mainPhotoCanvas');
+    if (!img) return;
+
+    const b = document.getElementById('photoBrightnessSlider').value;
+    const c = document.getElementById('photoContrastSlider').value;
+    const s = document.getElementById('photoSaturationSlider').value;
+    const w = document.getElementById('photoWarmthSlider').value;
+
+    document.getElementById('photoBrightnessVal').innerText = b + '%';
+    document.getElementById('photoContrastVal').innerText = c + '%';
+    document.getElementById('photoSaturationVal').innerText = s + '%';
+    document.getElementById('photoWarmthVal').innerText = w + '%';
+
+    img.style.filter = `brightness(${b}%) contrast(${c}%) saturate(${s}%) sepia(${w}%)`;
+}
+window.applyPhotoLiveFilters = applyPhotoLiveFilters;
+
+// 4. ఫిల్టర్ల ప్రిసెట్ ప్యానెల్
+function openPhotoFiltersModal() {
+    const panel = document.getElementById('photoFiltersSubPanel');
+    const adjPanel = document.getElementById('photoAdjustSubPanel');
+    if (adjPanel) adjPanel.style.display = 'none';
+    if (panel) panel.style.display = (panel.style.display === 'block') ? 'none' : 'block';
+}
+window.openPhotoFiltersModal = openPhotoFiltersModal;
+
+function applyPresetFilter(type) {
+    const img = document.getElementById('mainPhotoCanvas');
+    if (!img) return;
+
+    if (type === 'none') img.style.filter = 'none';
+    else if (type === 'cinematic') img.style.filter = 'contrast(125%) saturate(120%) brightness(95%)';
+    else if (type === 'vintage') img.style.filter = 'sepia(45%) contrast(110%) brightness(90%)';
+    else if (type === 'bw') img.style.filter = 'grayscale(100%) contrast(130%)';
+    else if (type === 'vivid') img.style.filter = 'saturate(180%) contrast(115%)';
+    else if (type === 'cold') img.style.filter = 'hue-rotate(180deg) saturate(110%)';
+
+    const panel = document.getElementById('photoFiltersSubPanel');
+    if (panel) panel.style.display = 'none';
+}
+window.applyPresetFilter = applyPresetFilter;
+
+// 5. రొటేట్ మరియు ఫ్లిప్
+function rotatePhotoCanvas(deg) {
+    const img = document.getElementById('mainPhotoCanvas');
+    if (!img) return;
+    currentPhotoRotation = (currentPhotoRotation + deg) % 360;
+    img.style.transform = `rotate(${currentPhotoRotation}deg) scaleX(${currentPhotoFlipH})`;
+}
+window.rotatePhotoCanvas = rotatePhotoCanvas;
+
+function flipPhotoHorizontal() {
+    const img = document.getElementById('mainPhotoCanvas');
+    if (!img) return;
+    currentPhotoFlipH = currentPhotoFlipH === 1 ? -1 : 1;
+    img.style.transform = `rotate(${currentPhotoRotation}deg) scaleX(${currentPhotoFlipH})`;
+}
+window.flipPhotoHorizontal = flipPhotoHorizontal;
+
+// 6. బోర్డర్ / స్టైల్స్
+function togglePhotoBorders() {
+    const img = document.getElementById('mainPhotoCanvas');
+    if (!img) return;
+    currentPhotoBorder = !currentPhotoBorder;
+    img.style.border = currentPhotoBorder ? '4px solid #00f2fe' : 'none';
+    img.style.borderRadius = currentPhotoBorder ? '14px' : '0px';
+    img.style.boxShadow = currentPhotoBorder ? '0 0 25px rgba(0,242,254,0.5)' : 'none';
+}
+window.togglePhotoBorders = togglePhotoBorders;
+
+// 7. రీసెట్
+function resetPhotoAdjustments() {
+    const img = document.getElementById('mainPhotoCanvas');
+    if (img) {
+        img.style.filter = 'none';
+        img.style.transform = 'none';
+        img.style.border = 'none';
+        img.style.boxShadow = 'none';
+    }
+    currentPhotoRotation = 0;
+    currentPhotoFlipH = 1;
+    currentPhotoBorder = false;
+
+    if (document.getElementById('photoBrightnessSlider')) document.getElementById('photoBrightnessSlider').value = 100;
+    if (document.getElementById('photoContrastSlider')) document.getElementById('photoContrastSlider').value = 100;
+    if (document.getElementById('photoSaturationSlider')) document.getElementById('photoSaturationSlider').value = 100;
+    if (document.getElementById('photoWarmthSlider')) document.getElementById('photoWarmthSlider').value = 0;
+}
+window.resetPhotoAdjustments = resetPhotoAdjustments;
+
+// 8. డౌన్‌లోడ్ ఎడిట్ చేసిన ఫోటో
+function downloadEditedPhoto() {
+    const img = document.getElementById('mainPhotoCanvas');
+    if (!img) return;
+
+    const canvas = document.createElement('canvas');
+    canvas.width = img.naturalWidth || 1280;
+    canvas.height = img.naturalHeight || 720;
+    const ctx = canvas.getContext('2d');
+
+    ctx.filter = img.style.filter || 'none';
+    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+    const a = document.createElement('a');
+    a.href = canvas.toDataURL('image/png');
+    a.download = `S_Studio_Photo_${Date.now()}.png`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+}
+window.downloadEditedPhoto = downloadEditedPhoto;
