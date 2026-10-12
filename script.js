@@ -1,5 +1,5 @@
 // ==========================================================================
-// 🚀 S STUDIO - GLOBAL ENGINE VARIABLES & APPLICATION STATE (PART 1/4 - UPDATED)
+// 🚀 S STUDIO - GLOBAL ENGINE VARIABLES & APPLICATION STATE (PART 1/5 - UPDATED)
 // ==========================================================================
 
 let currentVideoElement = null;
@@ -53,6 +53,9 @@ let isGeneratingSubtitles = false;
 let currentPhotoFilter = { brightness: 100, contrast: 100, saturate: 100, blur: 0, grayscale: 0, sepia: 0, invert: 0 };
 let currentPhotoOpacity = 1.0;
 let isPhotoLocked = false;
+let currentPhotoRotation = 0;
+let currentPhotoFlipH = 1;
+let currentPhotoBorder = false;
 
 // Layer Visibility Tracker
 let layerDurations = {};
@@ -314,7 +317,7 @@ function openPhotoDownloadModal() {
 }
 
 window.downloadRenderedCanvasPhoto = function(formatType, filename) {
-    const photo = document.getElementById('mainPhotoPlayer');
+    const photo = document.getElementById('mainPhotoPlayer') || document.getElementById('mainPhotoCanvas');
     if (!photo) return;
 
     const canvas = document.createElement('canvas');
@@ -445,7 +448,7 @@ function executeUndo() {
     currentVideoElement.style.height = prevState.videoHeight;
     currentVideoElement.style.objectFit = prevState.videoObjectFit;
 
-    if (currentVideoElement.id === 'mainPhotoPlayer') {
+    if (currentVideoElement.id === 'mainPhotoPlayer' || currentVideoElement.id === 'mainPhotoCanvas') {
         if (typeof applyLiveFilters === 'function') applyLiveFilters();
     } else {
         applyTransformations();
@@ -485,7 +488,7 @@ function executeRedo() {
     currentVideoElement.style.height = nextState.videoHeight;
     currentVideoElement.style.objectFit = nextState.videoObjectFit;
 
-    if (currentVideoElement.id === 'mainPhotoPlayer') {
+    if (currentVideoElement.id === 'mainPhotoPlayer' || currentVideoElement.id === 'mainPhotoCanvas') {
         if (typeof applyLiveFilters === 'function') applyLiveFilters();
     } else {
         applyTransformations();
@@ -500,14 +503,40 @@ function redoAction() { executeRedo(); }
 // ==========================================================================
 
 function enterStudio(studioType) {
+    const introPage = document.getElementById('introPage');
+    const editorPage = document.getElementById('editorPage');
+    const timelineBox = document.getElementById('timelineAreaBox');
+    const playerControls = document.getElementById('playerControlsBox');
+    const photoToolbar = document.getElementById('photoToolsToolbar');
+    const resizerBar = document.getElementById('studioScreenResizerBar');
+    const topNav = document.querySelector('.home-sticky-navbar');
+
+    if (topNav) topNav.style.display = 'none';
+    if (introPage) introPage.style.display = 'none';
+    if (editorPage) {
+        editorPage.style.display = 'flex';
+        editorPage.classList.remove('hidden');
+    }
+
     if (studioType === 'video') {
+        if (photoToolbar) photoToolbar.style.display = 'none';
+        if (timelineBox) timelineBox.style.display = 'flex';
+        if (playerControls) playerControls.style.display = 'flex';
+        if (resizerBar) resizerBar.style.display = 'flex';
+
         const videoInp = document.getElementById('videoInput');
         if (videoInp) videoInp.click();
     } else if (studioType === 'photo') {
+        if (timelineBox) timelineBox.style.display = 'none';
+        if (playerControls) playerControls.style.display = 'none';
+        if (resizerBar) resizerBar.style.display = 'none';
+        if (photoToolbar) photoToolbar.style.display = 'block';
+
         const photoInp = document.getElementById('photoInput');
         if (photoInp) photoInp.click();
     }
 }
+window.enterStudio = enterStudio;
 
 // ==========================================================================
 // 📺 LARGE SCREEN VIDEO LOADER & INTERACTIVE RESIZER ENGINE
@@ -842,7 +871,7 @@ function applyCanvasFrameRatio(ratioType) {
 }
 
 // ==========================================================================
-// 🛠️ S STUDIO - CUSTOM CROP & DYNAMIC TOOLBAR DISPATCHER (PART 2/4)
+// 🛠️ S STUDIO - CUSTOM CROP & DYNAMIC TOOLBAR DISPATCHER
 // ==========================================================================
 
 function openCustomFreeCropModal() {
@@ -949,7 +978,7 @@ function restoreVideoToolbar() {
 
 function executeTool(tool) {
     if (!currentVideoElement) {
-        currentVideoElement = document.getElementById('mainPlayer') || document.getElementById('mainPhotoPlayer');
+        currentVideoElement = document.getElementById('mainPlayer') || document.getElementById('mainPhotoPlayer') || document.getElementById('mainPhotoCanvas');
     }
     if (typeof saveStateToHistory === 'function') {
         saveStateToHistory();
@@ -1043,7 +1072,10 @@ function executeTool(tool) {
 
         case 'Ask AI': 
             const aiModal = document.getElementById('askAiModal');
-            if (aiModal) aiModal.style.display = 'flex';
+            if (aiModal) {
+                if (typeof toggleModal === 'function') toggleModal('askAiModal', true);
+                else aiModal.style.display = 'flex';
+            }
             break;
 
         case 'Delete': 
@@ -1056,7 +1088,7 @@ function executeTool(tool) {
 }
 
 // ==========================================================================
-// ⚡ 4. PLAYBACK SPEED CONTROLLER
+// ⚡ 4. PLAYBACK SPEED CONTROLLER (PART 2/5 - UPDATED)
 // ==========================================================================
 
 function openSpeedAdjustMenu() {
@@ -1084,7 +1116,8 @@ function openSpeedAdjustMenu() {
         box-shadow: 0 10px 30px rgba(0,0,0,0.8) !important;
     `;
 
-    const currentSpeed = (currentVideoElement && currentVideoElement.tagName === 'VIDEO') ? currentVideoElement.playbackRate : 1.0;
+    const activeVideo = document.getElementById('mainPlayer') || (currentVideoElement && currentVideoElement.tagName === 'VIDEO' ? currentVideoElement : null);
+    const currentSpeed = activeVideo ? activeVideo.playbackRate : 1.0;
 
     speedMenu.innerHTML = `
         <div style="font-size:12px; color:#ff9f43; font-weight:bold; border-bottom:1px solid #222733; padding-bottom:8px; display:flex; justify-content:space-between; align-items:center;">
@@ -1118,8 +1151,9 @@ function openSpeedAdjustMenu() {
     slider.oninput = function() {
         const val = parseFloat(this.value);
         display.innerText = val.toFixed(2) + "x";
-        if (currentVideoElement && currentVideoElement.tagName === 'VIDEO') {
-            currentVideoElement.playbackRate = val;
+        const video = document.getElementById('mainPlayer') || currentVideoElement;
+        if (video && video.tagName === 'VIDEO') {
+            video.playbackRate = val;
         }
     };
 
@@ -1128,8 +1162,9 @@ function openSpeedAdjustMenu() {
             const val = parseFloat(this.getAttribute('data-speed'));
             slider.value = val;
             display.innerText = val.toFixed(2) + "x";
-            if (currentVideoElement && currentVideoElement.tagName === 'VIDEO') {
-                currentVideoElement.playbackRate = val;
+            const video = document.getElementById('mainPlayer') || currentVideoElement;
+            if (video && video.tagName === 'VIDEO') {
+                video.playbackRate = val;
             }
         };
     });
@@ -1311,7 +1346,7 @@ function generateAutoAiSubtitles() {
             display: block !important;
             letter-spacing: 0.3px !important;
         `;
-        wrapper.appendChild(subOverlayElement);
+        if (wrapper) wrapper.appendChild(subOverlayElement);
     } else {
         subOverlayElement.style.display = subOverlayElement.style.display === 'none' ? 'block' : 'none';
     }
@@ -1415,232 +1450,6 @@ function hideSubtitleStatusToast() {
     const toast = document.getElementById('sStudioSubToast');
     if (toast) toast.remove();
 }
-
-// ==========================================================================
-// 🔐 S STUDIO LIVE SUPABASE AUTHENTICATION SYSTEM
-// ==========================================================================
-
-const SUPABASE_PROJECT_URL = "https://yhyumuevjcjkdgjzezbz.supabase.co";
-const SUPABASE_ANON_PUBLIC_KEY = "sb_publishable_8GNKtzXAG3pFNxq2kARa8Q_jqW5DgLC";
-
-const supabaseAuthClient = (window.supabase && typeof window.supabase.createClient === 'function')
-    ? window.supabase.createClient(SUPABASE_PROJECT_URL, SUPABASE_ANON_PUBLIC_KEY)
-    : null;
-
-let currentAuthSessionUser = {
-    name: '',
-    email: ''
-};
-
-function toggleAuthModal(show) {
-    if (typeof toggleModal === 'function') {
-        toggleModal('authModal', show);
-    } else {
-        const modal = document.getElementById('authModal');
-        if (modal) modal.style.display = show ? 'flex' : 'none';
-    }
-    if (show) switchAuthView('login');
-}
-
-function switchAuthView(view) {
-    const loginForm = document.getElementById('loginForm');
-    const signupForm = document.getElementById('signupForm');
-    const setPasswordForm = document.getElementById('setPasswordForm');
-    const forgotForm = document.getElementById('forgotForm');
-    const sub = document.getElementById('authSubtitle');
-
-    if (loginForm) loginForm.style.display = 'none';
-    if (signupForm) signupForm.style.display = 'none';
-    if (setPasswordForm) setPasswordForm.style.display = 'none';
-    if (forgotForm) forgotForm.style.display = 'none';
-
-    if (view === 'login') {
-        if (loginForm) loginForm.style.display = 'block';
-        if (sub) sub.innerText = "Access your free workspace and cloud projects";
-    } else if (view === 'signup') {
-        if (signupForm) signupForm.style.display = 'block';
-        const otpGroup = document.getElementById('otpInputGroup');
-        const sendBtn = document.getElementById('sendOtpBtn');
-        if (otpGroup) otpGroup.style.display = 'none';
-        if (sendBtn) sendBtn.style.display = 'block';
-        if (sub) sub.innerText = "Create your free lifetime account";
-    } else if (view === 'setPassword') {
-        if (setPasswordForm) setPasswordForm.style.display = 'block';
-        if (sub) sub.innerText = "Set a secure password for your account";
-    } else if (view === 'forgot') {
-        if (forgotForm) forgotForm.style.display = 'block';
-        if (sub) sub.innerText = "Reset your account password";
-    }
-}
-
-function togglePasswordVisibility(fieldId, el) {
-    const input = document.getElementById(fieldId);
-    if (!input) return;
-    if (input.type === 'password') {
-        input.type = 'text';
-        if (el) el.innerText = 'Hide';
-    } else {
-        input.type = 'password';
-        if (el) el.innerText = 'Show';
-    }
-}
-
-async function handleSendOtp(event) {
-    event.preventDefault();
-    if (!supabaseAuthClient) return;
-
-    const nameInput = document.getElementById('signupName');
-    const emailInput = document.getElementById('signupEmail');
-    const name = nameInput ? nameInput.value.trim() : '';
-    const email = emailInput ? emailInput.value.trim() : '';
-
-    if (!email || !name) return;
-
-    currentAuthSessionUser.name = name;
-    currentAuthSessionUser.email = email;
-
-    const sendBtn = document.getElementById('sendOtpBtn');
-    if (sendBtn) {
-        sendBtn.innerText = "Sending OTP...";
-        sendBtn.disabled = true;
-    }
-
-    try {
-        const { error } = await supabaseAuthClient.auth.signInWithOtp({
-            email: email,
-            options: {
-                data: { full_name: name },
-                shouldCreateUser: true
-            }
-        });
-
-        if (error) {
-            if (sendBtn) {
-                sendBtn.innerText = "Send Verification OTP";
-                sendBtn.disabled = false;
-            }
-        } else {
-            const otpGroup = document.getElementById('otpInputGroup');
-            if (otpGroup) otpGroup.style.display = 'block';
-            if (sendBtn) sendBtn.style.display = 'none';
-        }
-    } catch (err) {
-        if (sendBtn) {
-            sendBtn.innerText = "Send Verification OTP";
-            sendBtn.disabled = false;
-        }
-    }
-}
-
-async function verifyOtpCode() {
-    if (!supabaseAuthClient) return;
-    const otpInput = document.getElementById('userEnteredOtp');
-    const userOtp = otpInput ? otpInput.value.trim() : '';
-    const email = currentAuthSessionUser.email;
-
-    if (!userOtp || userOtp.length < 6) return;
-
-    try {
-        const { error } = await supabaseAuthClient.auth.verifyOtp({
-            email: email,
-            token: userOtp,
-            type: 'email'
-        });
-
-        if (!error) {
-            switchAuthView('setPassword');
-        }
-    } catch (err) {
-        console.error("OTP Verification Error:", err);
-    }
-}
-
-async function handleFinalSignup(event) {
-    event.preventDefault();
-    if (!supabaseAuthClient) return;
-    const passInput = document.getElementById('newPassword');
-    const confirmPassInput = document.getElementById('confirmPassword');
-    const pass = passInput ? passInput.value : '';
-    const confirmPass = confirmPassInput ? confirmPassInput.value : '';
-
-    if (pass.length < 6 || pass !== confirmPass) return;
-
-    try {
-        const { error } = await supabaseAuthClient.auth.updateUser({
-            password: pass
-        });
-
-        if (!error) {
-            const userName = currentAuthSessionUser.name || "Creator";
-            updateNavbarLoggedInState(userName);
-            toggleAuthModal(false);
-        }
-    } catch (err) {
-        console.error("Signup final error:", err);
-    }
-}
-
-async function handleLoginSubmit(event) {
-    event.preventDefault();
-    if (!supabaseAuthClient) return;
-    const emailInput = document.getElementById('loginEmail');
-    const passInput = document.getElementById('loginPassword');
-    const email = emailInput ? emailInput.value.trim() : '';
-    const pass = passInput ? passInput.value : '';
-
-    try {
-        const { data, error } = await supabaseAuthClient.auth.signInWithPassword({
-            email: email,
-            password: pass
-        });
-
-        if (!error && data) {
-            const userName = data.user?.user_metadata?.full_name || email.split('@')[0];
-            updateNavbarLoggedInState(userName);
-            toggleAuthModal(false);
-        }
-    } catch (err) {
-        console.error("Login Error:", err);
-    }
-}
-
-async function handleForgotPassword(event) {
-    event.preventDefault();
-    if (!supabaseAuthClient) return;
-    const emailInput = document.getElementById('forgotEmail');
-    const email = emailInput ? emailInput.value.trim() : '';
-
-    if (!email) return;
-
-    try {
-        const { error } = await supabaseAuthClient.auth.resetPasswordForEmail(email);
-        if (!error) {
-            switchAuthView('login');
-        }
-    } catch (err) {
-        console.error("Reset Password Error:", err);
-    }
-}
-
-function updateNavbarLoggedInState(userName) {
-    const authBtn = document.getElementById('authNavBtn');
-    if (authBtn) {
-        authBtn.innerHTML = `👤 ${userName}`;
-        authBtn.style.color = '#00f2fe';
-        authBtn.style.borderColor = '#00f2fe';
-    }
-}
-
-window.addEventListener('DOMContentLoaded', async () => {
-    if (!supabaseAuthClient) return;
-    try {
-        const { data } = await supabaseAuthClient.auth.getSession();
-        if (data && data.session && data.session.user) {
-            const name = data.session.user.user_metadata?.full_name || data.session.user.email.split('@')[0];
-            updateNavbarLoggedInState(name);
-        }
-    } catch (e) {}
-});
 
 // ==========================================================================
 // 📺 PRESENTATION MODE ENGINE
@@ -1946,7 +1755,6 @@ function openInteractiveSubtitleFloatingBar(subNode) {
     if (!subNode) return;
     activeSubtitleElement = subNode;
 
-    // Highlight the selected subtitle box
     document.querySelectorAll('.live-subtitle-box').forEach(s => s.style.border = "2px dashed transparent");
     subNode.style.border = "2px dashed #00f2fe";
 
@@ -2065,19 +1873,6 @@ function closeLiveSubtitleEditor() {
     }
     const bar = document.getElementById('sStudioLiveSubEditorBar') || document.getElementById('sStudioSubFloatingBar');
     if (bar) bar.remove();
-}
-
-function clearAllSubtitleLayers() {
-    document.querySelectorAll('.live-subtitle-box').forEach(el => {
-        const trackBlock = document.getElementById('track_' + el.id);
-        if (trackBlock) trackBlock.remove();
-        el.remove();
-    });
-    document.querySelectorAll('[id^="track_sub_"]').forEach(el => el.remove());
-    
-    const modal = document.getElementById('sStudioSubtitlesModal');
-    if (modal) modal.remove();
-    closeLiveSubtitleEditor();
 }
 
 // ==========================================================================
@@ -2252,6 +2047,10 @@ function applyCutOutPreset(type) {
             break;
     }
 }
+
+// ==========================================================================
+// ✂️ INTERACTIVE BOX CUTOUT & SPLIT ANIMATION ENGINE (PART 3/5 - UPDATED)
+// ==========================================================================
 
 function startInteractiveCustomBoxCutout() {
     const wrapper = document.getElementById('videoWrapper');
@@ -3213,208 +3012,8 @@ function removeAllMagnifiers() {
 }
 
 // ==========================================================================
-// 🛠️ DRAGGABLE ENGINE
+// 🎬 PIP ENTRANCE ANIMATIONS & MOTION ENGINE (PART 4/5 - UPDATED)
 // ==========================================================================
-
-function makeElementDraggable(element) {
-    element.style.cursor = 'move';
-    let pipScale = 1.0;
-
-    element.onmousedown = function(e) {
-        if (element.dataset && element.dataset.locked === "true") return;
-        if (e.target.tagName === 'SPAN' && e.target.innerText === '✕') return;
-        e.stopPropagation();
-
-        let shiftX = e.clientX - element.getBoundingClientRect().left;
-        let shiftY = e.clientY - element.getBoundingClientRect().top;
-        
-        function onMouseMove(ev) {
-            const wrapper = document.getElementById('videoWrapper');
-            if (!wrapper) return;
-            let rect = wrapper.getBoundingClientRect();
-            element.style.left = (ev.clientX - rect.left - shiftX) + 'px';
-            element.style.top = (ev.clientY - rect.top - shiftY) + 'px';
-        }
-
-        document.addEventListener('mousemove', onMouseMove);
-        window.addEventListener('mouseup', function() {
-            document.removeEventListener('mousemove', onMouseMove);
-        }, { once: true });
-    };
-
-    element.onwheel = function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        pipScale = e.deltaY < 0 ? pipScale + 0.05 : Math.max(0.2, pipScale - 0.05);
-        element.style.transform = `scale(${pipScale})`;
-    };
-}
-
-// ==========================================================================
-// 🎛️ PIP FLOATING TOOLKIT & ACTIONS (ALL 12 BUTTONS INTEGRATED)
-// ==========================================================================
-
-function createFloatingToolkit(pipObject) {
-    const oldPanel = document.getElementById('sStudioPipDynamicPanel');
-    if (oldPanel) oldPanel.remove();
-
-    const pipPanel = document.createElement('div');
-    pipPanel.id = 'sStudioPipDynamicPanel';
-    pipPanel.style.cssText = `
-        position: fixed !important; 
-        bottom: 25px !important; 
-        left: 50% !important; 
-        transform: translateX(-50%) !important; 
-        background: #14171f !important; 
-        border: 2px solid #10ac84 !important; 
-        padding: 8px 12px !important; 
-        border-radius: 10px !important; 
-        box-shadow: 0 10px 30px rgba(0,0,0,0.8) !important; 
-        z-index: 2147483647 !important; 
-        display: flex !important; 
-        flex-wrap: nowrap !important; 
-        gap: 6px !important; 
-        align-items: center !important; 
-        justify-content: flex-start !important; 
-        width: 95% !important; 
-        max-width: 1100px !important; 
-        overflow-x: auto !important; 
-        box-sizing: border-box !important;
-    `;
-
-    const closeBtn = document.createElement('button');
-    closeBtn.innerText = "✕ Close";
-    closeBtn.style.cssText = "background: #ff4757 !important; color: white !important; border: none !important; padding: 6px 12px !important; border-radius: 5px !important; cursor: pointer !important; font-size: 11px !important; font-weight: bold !important; flex-shrink: 0 !important;";
-    closeBtn.onclick = function(e) {
-        e.stopPropagation();
-        pipPanel.remove();
-        if (pipObject) pipObject.style.border = "none";
-    };
-    pipPanel.appendChild(closeBtn);
-
-    // Complete Integrated Button List (No Feature Omitted)
-    const btnList = [
-        { id: 'replace', label: 'Replace' },
-        { id: 'motion', label: 'Motion' },
-        { id: 'crop', label: 'Crop' },
-        { id: 'lock', label: (pipObject.dataset.locked === 'true' ? 'Locked' : 'Lock') },
-        { id: 'duplicate', label: 'Duplicate' },
-        { id: 'rotate', label: 'Rotate' },
-        { id: 'fit', label: 'Auto Fit' },
-        { id: 'blur', label: 'Blur' },
-        { id: 'opacity', label: 'Opacity' },
-        { id: 'mask', label: 'Mask' },
-        { id: 'chroma', label: 'Chroma' },
-        { id: 'delete', label: 'Delete' }
-    ];
-
-    btnList.forEach(btnInfo => {
-        const btn = document.createElement('button');
-        btn.className = 'sStudioPipBtn';
-        btn.id = 'pipBtn_' + btnInfo.id;
-        btn.innerText = btnInfo.label;
-        btn.style.cssText = `
-            background: ${btnInfo.id === 'delete' ? '#ff4757' : (btnInfo.id === 'crop' ? '#00b894' : '#222733')} !important; 
-            color: #fff !important; 
-            border: 1px solid #333 !important; 
-            padding: 6px 10px !important; 
-            border-radius: 5px !important; 
-            cursor: pointer !important; 
-            font-size: 11px !important; 
-            font-weight: bold !important; 
-            flex-shrink: 0 !important; 
-            white-space: nowrap !important; 
-            font-family: sans-serif !important;
-        `;
-
-        btn.onclick = function(e) {
-            e.stopPropagation();
-            executePipToolAction(btnInfo.id, pipObject);
-        };
-
-        pipPanel.appendChild(btn);
-    });
-
-    document.body.appendChild(pipPanel);
-}
-
-function executePipToolAction(actionId, targetObject) {
-    if (!targetObject) return;
-    const mediaEl = targetObject.querySelector('img') || targetObject.querySelector('video');
-
-    switch (actionId) {
-        case 'crop':
-            if (typeof openCustomFreeCropModal === 'function') openCustomFreeCropModal();
-            break;
-        case 'motion':
-            openPipMotionMenu(targetObject);
-            break;
-        case 'replace':
-            const picker = document.createElement('input');
-            picker.type = 'file';
-            picker.accept = 'image/*,video/*';
-            picker.onchange = function(e) {
-                const file = e.target.files[0];
-                if (file && mediaEl) mediaEl.src = URL.createObjectURL(file);
-            };
-            picker.click();
-            break;
-        case 'lock':
-            let isLocked = targetObject.dataset.locked === "true";
-            targetObject.dataset.locked = isLocked ? "false" : "true";
-            targetObject.style.border = isLocked ? "2px dashed #ff9f43" : "2px solid #ff4757";
-            const lockBtn = document.getElementById('pipBtn_lock');
-            if (lockBtn) lockBtn.innerText = isLocked ? "Lock" : "Locked";
-            break;
-        case 'duplicate':
-            const parent = targetObject.parentElement || document.getElementById('videoWrapper');
-            const clone = targetObject.cloneNode(true);
-            clone.id = 'pip_clone_' + Date.now();
-            clone.style.left = (parseInt(targetObject.style.left || 50) + 20) + "px";
-            clone.style.top = (parseInt(targetObject.style.top || 50) + 20) + "px";
-            makeElementDraggable(clone);
-            clone.onclick = function(e) {
-                e.stopPropagation();
-                currentActivePIPLayer = clone;
-                currentVideoElement = clone.querySelector('img') || clone.querySelector('video');
-                createFloatingToolkit(clone);
-            };
-            parent.appendChild(clone);
-            break;
-        case 'rotate':
-            let r = (parseInt(targetObject.dataset.rot || "0") + 90) % 360;
-            targetObject.dataset.rot = r;
-            targetObject.style.transform = `rotate(${r}deg)`;
-            break;
-        case 'fit':
-            targetObject.style.top = "0px";
-            targetObject.style.left = "0px";
-            targetObject.style.width = "100%";
-            targetObject.style.height = "100%";
-            if (mediaEl) mediaEl.style.objectFit = "contain";
-            break;
-        case 'blur':
-            if (mediaEl) mediaEl.style.filter = mediaEl.style.filter.includes('blur') ? 'none' : 'blur(8px)';
-            break;
-        case 'opacity':
-            if (mediaEl) mediaEl.style.opacity = mediaEl.style.opacity === "0.5" ? "1" : "0.5";
-            break;
-        case 'mask':
-            if (mediaEl) mediaEl.style.clipPath = mediaEl.style.clipPath && mediaEl.style.clipPath.includes('circle') ? 'none' : 'circle(40% at 50% 50%)';
-            break;
-        case 'chroma':
-            if (mediaEl) mediaEl.style.filter = "contrast(140%) saturate(120%) hue-rotate(-30deg)";
-            break;
-        case 'delete':
-            const trackBlock = document.getElementById('track_' + targetObject.id);
-            if (trackBlock) trackBlock.remove();
-            targetObject.remove();
-            const p = document.getElementById('sStudioPipDynamicPanel');
-            if (p) p.remove();
-            currentActivePIPLayer = null;
-            break;
-    }
-}
 
 function openPipMotionMenu(targetObject) {
     const oldMenu = document.getElementById('pipMotionMenuHub');
@@ -3905,568 +3504,8 @@ function insertGraphicElementToCanvas(icon, label) {
     }
 }
 
-// Global Safe Timeline Drag & Stretch Engine
-function attachTimelineDragAndStretch(trackBlock, onScreenElement, defaultDurationSec) {
-    if (!trackBlock) return;
-    const pixelsPerSec = 15;
-    const initialWidth = Math.max(60, (defaultDurationSec || 5) * pixelsPerSec);
-    trackBlock.style.width = initialWidth + "px";
-
-    if (onScreenElement) {
-        onScreenElement.dataset.start = onScreenElement.dataset.start || "0";
-        onScreenElement.dataset.end = onScreenElement.dataset.end || (defaultDurationSec || 5).toString();
-    }
-
-    const stretchHandle = trackBlock.querySelector('.stretch-handle') || trackBlock.querySelector('.audio-stretch-handle');
-    if (stretchHandle) {
-        stretchHandle.onmousedown = function(e) {
-            e.stopPropagation();
-            let startX = e.clientX;
-            let startW = trackBlock.offsetWidth;
-
-            function onMouseMove(ev) {
-                let newW = Math.max(50, startW + (ev.clientX - startX));
-                trackBlock.style.width = newW + "px";
-                let dur = (newW / pixelsPerSec).toFixed(2);
-                trackBlock.dataset.end = dur;
-                if (onScreenElement) onScreenElement.dataset.end = dur;
-            }
-
-            function onMouseUp() {
-                document.removeEventListener('mousemove', onMouseMove);
-                document.removeEventListener('mouseup', onMouseUp);
-            }
-
-            document.addEventListener('mousemove', onMouseMove);
-            document.addEventListener('mouseup', onMouseUp);
-        };
-    }
-}
-
 // ==========================================================================
-// 🎵 AUDIO HUB & VOICE RECORDING ENGINE
-// ==========================================================================
-
-function addMusicOverlay() {
-    const oldMenu = document.getElementById('sStudioMusicMenuHub');
-    if (oldMenu) { oldMenu.remove(); return; }
-
-    const menu = document.createElement('div');
-    menu.id = 'sStudioMusicMenuHub';
-    menu.style.cssText = `
-        position: fixed !important;
-        top: 50% !important;
-        left: 50% !important;
-        transform: translate(-50%, -50%) !important;
-        background: #161920 !important;
-        border: 2px solid #10ac84 !important;
-        padding: 16px !important;
-        border-radius: 12px !important;
-        display: flex !important;
-        flex-direction: column !important;
-        gap: 10px !important;
-        z-index: 100000 !important;
-        width: 340px !important;
-        max-height: 80vh !important;
-        overflow-y: auto !important;
-        color: white !important;
-        font-family: sans-serif !important;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.8) !important;
-    `;
-
-    const musicLibrary = {
-        "Cinematic Beats": [
-            { name: "Epic Trailer Pulse", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" },
-            { name: "Dramatic Tension Beat", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3" }
-        ],
-        "Corporate & Presentation": [
-            { name: "Inspiring Motivation", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" },
-            { name: "Modern Corporate Flow", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3" }
-        ],
-        "Upbeat Vlog Sounds": [
-            { name: "Summer Energy Funk", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3" },
-            { name: "Upbeat Groove Pop", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-10.mp3" }
-        ],
-        "Chill Lofi Beats": [
-            { name: "Lofi Study Session", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3" },
-            { name: "Midnight Coffee Lofi", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-12.mp3" }
-        ]
-    };
-
-    let categoriesHTML = '';
-    let previewAudioPlayer = new Audio();
-
-    Object.keys(musicLibrary).forEach(category => {
-        let tracksList = musicLibrary[category].map(track => `
-            <div style="display:flex; justify-content:space-between; align-items:center; background:#222733; padding:6px 8px; border-radius:4px; margin-top:4px;">
-                <span style="font-size:11px; color:#e2e8f0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:140px;">🎵 ${track.name}</span>
-                <div style="display:flex; gap:4px;">
-                    <button class="preview-btn" data-url="${track.url}" style="background:#334155; color:#38bdf8; border:none; padding:3px 8px; border-radius:3px; font-size:10px; cursor:pointer;">Play</button>
-                    <button class="add-track-btn" data-name="${track.name}" data-url="${track.url}" style="background:#10ac84; color:white; border:none; padding:3px 8px; border-radius:3px; font-size:10px; font-weight:bold; cursor:pointer;">+ Add</button>
-                </div>
-            </div>
-        `).join('');
-
-        categoriesHTML += `
-            <div style="border-bottom:1px solid #2f3542; padding-bottom:8px; margin-bottom:6px;">
-                <div style="font-size:11px; color:#10ac84; font-weight:bold; margin-bottom:4px;">${category}</div>
-                ${tracksList}
-            </div>
-        `;
-    });
-
-    menu.innerHTML = `
-        <div style="font-size:12px; color:#10ac84; font-weight:bold; border-bottom:1px solid #2f3542; padding-bottom:6px; display:flex; justify-content:space-between; align-items:center;">
-            <span>🎵 S STUDIO AUDIO HUB</span>
-            <span id="closeMusicMenuHub" style="cursor:pointer; font-size:18px; color:#a4b0be;">&times;</span>
-        </div>
-        <button id="uploadLocalTrackOpt" style="background:#6c5ce7; color:white; border:none; padding:8px; border-radius:6px; font-size:11px; font-weight:bold; cursor:pointer; width:100%; margin-bottom:6px;">📁 Upload Local Audio File</button>
-        <button id="recordLiveVoiceOpt" style="background:rgba(255, 159, 67, 0.2); border:1px solid #ff9f43; color:#ff9f43; padding:8px; border-radius:6px; font-size:11px; font-weight:bold; cursor:pointer; width:100%;">🎙️ Record Live VoiceOver</button>
-        <div style="margin-top:6px;">
-            ${categoriesHTML}
-        </div>
-    `;
-
-    document.body.appendChild(menu);
-
-    const stopPreviewAndClose = () => {
-        previewAudioPlayer.pause();
-        previewAudioPlayer.src = '';
-        menu.remove();
-    };
-
-    menu.querySelector('#closeMusicMenuHub').onclick = stopPreviewAndClose;
-
-    menu.querySelector('#uploadLocalTrackOpt').onclick = function() {
-        const inp = document.createElement('input'); 
-        inp.type = 'file'; 
-        inp.accept = 'audio/*'; 
-        inp.onchange = function(e) {
-            const file = e.target.files[0]; 
-            if(!file) return;
-            processAudioTrackInjection(file.name, URL.createObjectURL(file));
-            stopPreviewAndClose();
-        };
-        inp.click();
-    };
-
-    menu.querySelector('#recordLiveVoiceOpt').onclick = function() {
-        stopPreviewAndClose();
-        toggleVoiceRecording();
-    };
-
-    menu.querySelectorAll('.preview-btn').forEach(btn => {
-        btn.onclick = function() {
-            const url = this.getAttribute('data-url');
-            if (previewAudioPlayer.src === url && !previewAudioPlayer.paused) {
-                previewAudioPlayer.pause();
-                this.innerText = "Play";
-            } else {
-                menu.querySelectorAll('.preview-btn').forEach(b => b.innerText = "Play");
-                previewAudioPlayer.src = url;
-                previewAudioPlayer.play().catch(() => {});
-                this.innerText = "Pause";
-            }
-        };
-    });
-
-    menu.querySelectorAll('.add-track-btn').forEach(btn => {
-        btn.onclick = function() {
-            const name = this.getAttribute('data-name');
-            const url = this.getAttribute('data-url');
-            processAudioTrackInjection(name, url);
-            stopPreviewAndClose();
-        };
-    });
-}
-
-function toggleVoiceRecording() {
-    if (mediaRecorder && mediaRecorder.state === "recording") {
-        mediaRecorder.stop();
-        return;
-    }
-
-    navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
-        mediaRecorder = new MediaRecorder(stream);
-        audioChunks = [];
-
-        mediaRecorder.ondataavailable = e => {
-            if (e.data.size > 0) audioChunks.push(e.data);
-        };
-
-        mediaRecorder.onstop = () => {
-            const audioBlob = new Blob(audioChunks, { type: 'audio/mp3' });
-            const audioUrl = URL.createObjectURL(audioBlob);
-            processAudioTrackInjection("VoiceOver_" + Date.now(), audioUrl);
-            stream.getTracks().forEach(track => track.stop());
-        };
-
-        mediaRecorder.start();
-
-        const toast = document.createElement('div');
-        toast.id = 'sStudioVoiceToast';
-        toast.style.cssText = "position:fixed; top:20px; left:50%; transform:translateX(-50%); background:#ff4757; color:white; padding:8px 16px; border-radius:20px; font-weight:bold; font-size:12px; z-index:2147483647; box-shadow:0 4px 15px rgba(255,71,87,0.4); display:flex; gap:8px; align-items:center; cursor:pointer;";
-        toast.innerHTML = `<span>🔴 Recording Voice... Click to Stop</span>`;
-        toast.onclick = () => {
-            if (mediaRecorder && mediaRecorder.state === "recording") mediaRecorder.stop();
-            toast.remove();
-        };
-        document.body.appendChild(toast);
-    }).catch(err => {
-        console.warn("Microphone access denied or unavailable:", err);
-    });
-}
-
-// ==========================================================================
-// 🎵 AUDIO TRACK INJECTION & ACTION PANEL
-// ==========================================================================
-
-function processAudioTrackInjection(trackName, customSrc) {
-    const audioId = 'audio_track_' + Date.now();
-    const audio = new Audio(customSrc);
-    audio.loop = true;
-
-    activeAudioNodes[audioId] = { audio: audio, name: trackName, volume: 1.0 };
-
-    const block = document.createElement('div');
-    block.id = audioId;
-    block.dataset.start = "0";
-    block.dataset.end = (videoDurationSeconds || 10).toString();
-
-    block.style.cssText = `
-        background: rgba(16, 172, 132, 0.25) !important;
-        border: 1px solid #10ac84 !important;
-        color: white !important;
-        padding: 4px 10px !important;
-        border-radius: 6px !important;
-        display: inline-flex !important;
-        align-items: center !important;
-        justify-content: space-between !important;
-        margin-top: 4px !important;
-        margin-right: 8px !important;
-        position: relative !important;
-        overflow: hidden !important;
-        min-width: 180px;
-        width: 250px;
-        height: 36px !important;
-        font-family: sans-serif !important;
-        cursor: pointer !important;
-        user-select: none !important;
-        z-index: 10;
-        box-sizing: border-box !important;
-    `;
-
-    let waveHTML = `<div style="display: flex; align-items: center; gap: 2px; height: 100%; opacity: 0.6; margin-right: 6px;">`;
-    const barHeights = [30, 50, 80, 40, 20, 60, 90, 40, 70, 50, 30, 80, 60, 40, 90, 30, 50];
-    barHeights.forEach(h => { waveHTML += `<div style="width: 2px; height: ${h}%; background: #10ac84; border-radius: 1px;"></div>`; });
-    waveHTML += `</div>`;
-
-    block.innerHTML = `
-        <span style="font-size:11px; font-weight:bold; z-index:2; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px;">🎵 ${trackName}</span>
-        ${waveHTML}
-        <div class="audio-stretch-handle" style="position:absolute; right:0; top:0; width:14px; height:100%; background:#10ac84; cursor:e-resize; opacity:0.9;" title="Drag to extend audio"></div>
-    `;
-
-    block.onclick = function(e) {
-        e.stopPropagation();
-        showAudioTrackActionPanel(audioId, trackName, customSrc);
-    };
-
-    const stretchHandle = block.querySelector('.audio-stretch-handle');
-    if (stretchHandle) {
-        stretchHandle.onmousedown = function(e) {
-            e.stopPropagation();
-            let startX = e.clientX;
-            let startWidth = block.offsetWidth;
-
-            function onMouseMove(ev) {
-                let newWidth = Math.max(60, startWidth + (ev.clientX - startX));
-                block.style.width = newWidth + "px";
-                let durationSec = Math.max(1, newWidth / 15);
-                block.dataset.end = durationSec.toFixed(2);
-            }
-
-            function onMouseUp() {
-                document.removeEventListener('mousemove', onMouseMove);
-                document.removeEventListener('mouseup', onMouseUp);
-            }
-
-            document.addEventListener('mousemove', onMouseMove);
-            document.addEventListener('mouseup', onMouseUp);
-        };
-    }
-
-    const container = document.getElementById('audioTrackBlock') || document.getElementById('frameTimelineTrack');
-    if (container) container.appendChild(block); 
-}
-
-// Integrated Audio Control Panel (Includes Volume, Replace, and Delete)
-function showAudioTrackActionPanel(audioId, trackName, currentSrc) {
-    const oldPanel = document.getElementById('sStudioAudioTrackModal') || document.getElementById('sStudioAudioActionPanel');
-    if (oldPanel) oldPanel.remove();
-
-    const node = activeAudioNodes[audioId];
-    if (!node) return;
-
-    const modal = document.createElement('div');
-    modal.id = 'sStudioAudioTrackModal';
-    modal.style.cssText = `
-        position: fixed !important;
-        bottom: 85px !important;
-        left: 50% !important;
-        transform: translate(-50%, 0) !important;
-        background: #161920 !important;
-        border: 2px solid #10ac84 !important;
-        padding: 14px 18px !important;
-        border-radius: 12px !important;
-        display: flex !important;
-        flex-direction: column !important;
-        gap: 10px !important;
-        z-index: 2147483647 !important;
-        width: 320px !important;
-        color: white !important;
-        font-family: sans-serif !important;
-        box-shadow: 0 10px 35px rgba(0,0,0,0.9) !important;
-    `;
-
-    modal.innerHTML = `
-        <div style="font-size: 12px; color: #10ac84; font-weight: bold; border-bottom: 1px solid #2f3542; padding-bottom: 6px; display: flex; justify-content: space-between; align-items: center;">
-            <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:260px;">🎵 ${trackName}</span>
-            <span onclick="this.parentElement.parentElement.remove()" style="cursor: pointer; font-size: 18px; color: #a4b0be;">&times;</span>
-        </div>
-        <label style="font-size: 11px; color: #a4b0be; display: flex; flex-direction: column; gap: 4px;">Volume:
-            <input type="range" min="0" max="1" step="0.05" value="${node.audio.volume}" style="width: 100%; accent-color: #10ac84; cursor: pointer;" oninput="activeAudioNodes['${audioId}'].audio.volume = this.value">
-        </label>
-        <div style="display: flex; gap: 8px; margin-top: 4px;">
-            <button id="btnReplaceAudio" style="flex: 1; background: #6c5ce7; color: white; border: none; padding: 7px 10px; border-radius: 5px; font-weight: bold; cursor: pointer; font-size: 11px;">Replace</button>
-            <button id="btnDeleteAudioTrack" style="flex: 1; background: #ff4757; color: white; border: none; padding: 7px 10px; border-radius: 5px; font-weight: bold; cursor: pointer; font-size: 11px;">Delete</button>
-        </div>
-    `;
-
-    modal.querySelector('#btnReplaceAudio').onclick = function(e) {
-        e.stopPropagation();
-        const picker = document.createElement('input');
-        picker.type = 'file';
-        picker.accept = 'audio/*';
-        picker.onchange = function(ev) {
-            const file = ev.target.files[0];
-            if (file) {
-                const newURL = URL.createObjectURL(file);
-                if (activeAudioNodes[audioId]) {
-                    activeAudioNodes[audioId].audio.pause();
-                    activeAudioNodes[audioId].audio = new Audio(newURL);
-                    activeAudioNodes[audioId].audio.loop = true;
-                    activeAudioNodes[audioId].name = file.name;
-                }
-                const blockSpan = document.querySelector(`#${audioId} span`);
-                if (blockSpan) blockSpan.innerText = "🎵 " + file.name;
-                modal.remove();
-            }
-        };
-        picker.click();
-    };
-
-    modal.querySelector('#btnDeleteAudioTrack').onclick = function(e) {
-        e.stopPropagation();
-        if (node.audio) {
-            node.audio.pause();
-            node.audio.src = '';
-        }
-        delete activeAudioNodes[audioId];
-        const block = document.getElementById(audioId);
-        if (block) block.remove();
-        modal.remove();
-    };
-
-    document.body.appendChild(modal);
-}
-
-// ==========================================================================
-// 📝 TEXT OVERLAY & TRACK BLOCK ENGINE
-// ==========================================================================
-
-function addTextOverlay() {
-    const oldMenu = document.getElementById('sStudioTextMenu'); 
-    if (oldMenu) { oldMenu.remove(); return; }
-    
-    const textMenu = document.createElement('div'); 
-    textMenu.id = 'sStudioTextMenu';
-    textMenu.style.cssText = "position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); background:#161920; border:2px solid #10ac84; padding:15px; border-radius:10px; display:flex; flex-direction:column; gap:8px; z-index:100000; width: 280px; font-family:sans-serif; color: white; box-shadow:0 10px 30px rgba(0,0,0,0.8);";
-
-    textMenu.innerHTML = `
-        <div style="font-size:12px; color:#10ac84; font-weight:bold; border-bottom:1px solid #222733; padding-bottom:6px; display:flex; justify-content:space-between; align-items:center;">
-            <span>📝 TEXT OVERLAY CREATOR</span>
-            <span onclick="this.parentElement.parentElement.remove()" style="cursor:pointer; font-size:18px; color:#a4b0be; font-weight:bold;">&times;</span>
-        </div>
-        <input type="text" id="txtContent" placeholder="Enter text here..." style="background:#222733; color:#fff; border:1px solid #353b48; padding:8px; border-radius:4px; font-size:12px; outline:none;">
-        <div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap; background:#1e222b; padding:6px; border-radius:4px;">
-            <button id="btnBold" style="background:#2d3436; color:#fff; border:none; padding:4px 8px; border-radius:3px; font-size:11px; font-weight:bold; cursor:pointer;">B</button>
-            <button id="btnItalic" style="background:#2d3436; color:#fff; border:none; padding:4px 8px; border-radius:3px; font-size:11px; font-style:italic; cursor:pointer;">I</button>
-            <input type="color" id="txtColor" value="#ffffff" style="background:none; border:none; width:24px; height:24px; cursor:pointer;">
-            <select id="txtSize" style="background:#2d3436; color:#fff; border:none; padding:4px; border-radius:3px; font-size:11px; cursor:pointer;">
-                <option value="16px">Small</option> 
-                <option value="24px" selected>Medium</option> 
-                <option value="36px">Large</option> 
-            </select>
-        </div>
-        <div style="display:flex; gap:6px; margin-top:6px;">
-            <button id="btnCancel" onclick="this.parentElement.parentElement.remove()" style="flex:1; background:#2d3436; color:#fff; border:none; padding:6px; border-radius:4px; font-size:11px; cursor:pointer;">Cancel</button>
-            <button id="btnDone" style="flex:1; background:#10ac84; color:#fff; border:none; padding:6px; border-radius:4px; font-size:11px; font-weight:bold; cursor:pointer;">Add Text</button>
-        </div>
-    `;
-
-    let isBold = false; 
-    let isItalic = false;
-    const bBtn = textMenu.querySelector('#btnBold'); 
-    bBtn.onclick = function() { isBold = !isBold; bBtn.style.background = isBold ? '#10ac84' : '#2d3436'; };
-    const iBtn = textMenu.querySelector('#btnItalic'); 
-    iBtn.onclick = function() { isItalic = !isItalic; iBtn.style.background = isItalic ? '#10ac84' : '#2d3436'; };
-
-    textMenu.querySelector('#btnDone').onclick = function() {
-        const textVal = textMenu.querySelector('#txtContent').value.trim(); 
-        if (!textVal) return;
-        appendTextToTimeline(textVal, isBold, isItalic, textMenu.querySelector('#txtColor').value, textMenu.querySelector('#txtSize').value);
-        textMenu.remove();
-    };
-    document.body.appendChild(textMenu);
-}
-
-function appendTextToTimeline(textVal, isBold, isItalic, selectedColor, selectedSize) {
-    const wrapper = document.getElementById('videoWrapper'); 
-    if (!wrapper) return;
-
-    const textId = 'text_node_' + Date.now();
-    const textNode = document.createElement('div'); 
-    textNode.id = textId;
-    textNode.className = 'live-text-box selected-active';
-    textNode.innerText = textVal; 
-    textNode.contentEditable = true; 
-    textNode.dataset.start = "0";
-    textNode.dataset.end = (videoDurationSeconds || 10).toString();
-    textNode.style.cssText = `
-        position:absolute;
-        top:40%;
-        left:30%;
-        color:${selectedColor};
-        font-size:${selectedSize};
-        font-weight:${isBold ? 'bold' : 'normal'};
-        font-style:${isItalic ? 'italic' : 'normal'};
-        cursor:move;
-        z-index:50;
-        padding:4px 8px;
-        border:1px dashed #6c5ce7;
-        transition:all 0.1s;
-        font-family:sans-serif;
-        background: rgba(0,0,0,0.2);
-        border-radius:4px;
-    `;
-
-    textNode.oninput = function() {
-        const trackSpan = document.querySelector(`#track_${textId} span`);
-        if (trackSpan) trackSpan.innerText = "📝 " + this.innerText;
-    };
-
-    if (typeof makeElementDraggable === 'function') {
-        makeElementDraggable(textNode);
-    }
-    wrapper.appendChild(textNode);
-    addTextTimelineTrackBlock(textId, textVal);
-}
-
-function addTextTimelineTrackBlock(textId, textVal) {
-    const trackContainer = document.getElementById('textTrackBlock') || document.getElementById('frameTimelineTrack');
-    const screenElement = document.getElementById(textId);
-    if (!trackContainer) return;
-
-    const block = document.createElement('div');
-    block.id = 'track_' + textId;
-    block.style.cssText = `
-        background: rgba(108, 92, 231, 0.4) !important;
-        border: 1px solid #6c5ce7 !important;
-        color: white !important;
-        padding: 4px 8px !important;
-        border-radius: 6px !important;
-        display: inline-flex !important;
-        align-items: center !important;
-        justify-content: space-between !important;
-        margin-top: 4px !important;
-        height: 32px !important;
-        font-family: sans-serif !important;
-        cursor: move !important;
-        user-select: none !important;
-        z-index: 10;
-        box-sizing: border-box !important;
-    `;
-
-    block.innerHTML = `
-        <span style="font-size:11px; font-weight:bold; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:90px; pointer-events:none;">📝 ${textVal}</span>
-        <div class="stretch-handle" style="position:absolute; right:0; top:0; width:14px; height:100%; background:#6c5ce7; cursor:e-resize; border-radius:0 5px 5px 0;" title="Drag to resize duration"></div>
-    `;
-
-    block.onclick = function(e) {
-        e.stopPropagation();
-        showTextTrackActionPanel(textId, textVal);
-    };
-
-    trackContainer.appendChild(block);
-    if (typeof attachTimelineDragAndStretch === 'function') {
-        attachTimelineDragAndStretch(block, screenElement, 5);
-    }
-}
-
-function showTextTrackActionPanel(textId, currentTextVal) {
-    const oldPanel = document.getElementById('sStudioTextActionPanel');
-    if (oldPanel) oldPanel.remove();
-
-    const panel = document.createElement('div');
-    panel.id = 'sStudioTextActionPanel';
-    panel.style.cssText = `
-        position: fixed !important;
-        bottom: 85px !important;
-        left: 50% !important;
-        transform: translateX(-50%) !important;
-        background: #161920 !important;
-        border: 2px solid #6c5ce7 !important;
-        padding: 8px 15px !important;
-        border-radius: 10px !important;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.8) !important;
-        z-index: 2147483647 !important;
-        display: flex !important;
-        align-items: center !important;
-        gap: 10px !important;
-        color: white !important;
-        font-family: sans-serif !important;
-        font-size: 11px !important;
-    `;
-
-    panel.innerHTML = `
-        <span style="font-weight:bold; color:#a8a5ff;">📝 ${currentTextVal}</span>
-        <button id="btnEditText" style="background:#10ac84; color:white; border:none; padding:6px 10px; border-radius:4px; font-weight:bold; cursor:pointer;">Edit</button>
-        <button id="btnDeleteText" style="background:#ff4757; color:white; border:none; padding:6px 10px; border-radius:4px; font-weight:bold; cursor:pointer;">Delete</button>
-        <span onclick="this.parentElement.remove()" style="cursor:pointer; font-size:16px; color:#a4b0be; margin-left:5px;">✕</span>
-    `;
-
-    panel.querySelector('#btnEditText').onclick = function(e) {
-        e.stopPropagation();
-        const screenTextNode = document.getElementById(textId);
-        if (screenTextNode) screenTextNode.focus();
-        panel.remove();
-    };
-
-    panel.querySelector('#btnDeleteText').onclick = function(e) {
-        e.stopPropagation();
-        const screenTextNode = document.getElementById(textId);
-        if (screenTextNode) screenTextNode.remove();
-        const trackBlock = document.getElementById('track_' + textId);
-        if (trackBlock) trackBlock.remove();
-        panel.remove();
-    };
-
-    document.body.appendChild(panel);
-}
-
-// ==========================================================================
-// 🚀 ADVANCED VIDEO EXPORT ENGINE
+// 🚀 ADVANCED VIDEO EXPORT ENGINE (PART 5/5 - FINAL)
 // ==========================================================================
 
 const STEP_RESOLUTIONS = [
@@ -4632,7 +3671,6 @@ function triggerActualVideoExport() {
     }, 80);
 }
 
-// Direct Universal Video Downloader Engine (Cleaned & De-duplicated)
 function downloadFinalConfiguredFile() {
     const videoEl = document.querySelector('#videoWrapper video') || document.querySelector('video') || currentVideoElement;
     const resHeight = (selectedExportConfig && selectedExportConfig.resolution) ? selectedExportConfig.resolution.height : 1080;
@@ -4848,36 +3886,11 @@ const legalDatabase = {
     }
 };
 
-// Functions to open and close Full-Page Legal Modal (e.g., Disclaimer)
-function showFullPageModal(type) {
-    const modal = document.getElementById('fullScreenLegalModal');
-    const titleEl = document.getElementById('fullScreenModalTitle');
-    const contentEl = document.getElementById('fullScreenModalContent');
-
-    if (!modal || !titleEl || !contentEl) return;
-
-    if (legalDatabase[type]) {
-        titleEl.innerText = legalDatabase[type].title;
-        contentEl.innerHTML = legalDatabase[type].content;
-        modal.style.display = 'flex';
-    }
-}
-
-function closeFullPageModal() {
-    const modal = document.getElementById('fullScreenLegalModal');
-    if (modal) modal.style.display = 'none';
-}
-
-// ==========================================================================
-// 📜 DYNAMIC LEGAL FULL-SCREEN MODAL ENGINE (DISCLAIMER, TERMS, PRIVACY)
-// ==========================================================================
-
 window.showFullPageModal = function(typeKey) {
     let modalOverlay = document.getElementById('fullScreenLegalModal');
     let modalTitle = document.getElementById('fullScreenModalTitle');
     let modalContent = document.getElementById('fullScreenModalContent');
 
-    // DOM లో మోడల్ ఎలిమెంట్ లేకపోతే ఆటోమేటిక్‌గా క్రియేట్ చేయడం
     if (!modalOverlay) {
         modalOverlay = document.createElement('div');
         modalOverlay.id = 'fullScreenLegalModal';
@@ -4926,15 +3939,11 @@ window.closeFullPageModal = function() {
     }
 };
 
-window.openFooterDetailModal = function(key) { window.showFullPageModal(key); };
-window.showHiddenPage = function(key) { window.showFullPageModal(key); };
-
 function showFullPageModal(typeKey) { window.showFullPageModal(typeKey); }
 function closeFullPageModal() { window.closeFullPageModal(); }
-function openFooterDetailModal(key) { window.openFooterDetailModal(key); }
-function showHiddenPage(key) { window.showHiddenPage(key); }
+function openFooterDetailModal(key) { window.showFullPageModal(key); }
+function showHiddenPage(key) { window.showFullPageModal(key); }
 
-// స్క్రోల్ చేసినప్పుడు టూల్‌బార్ ఫూటర్‌పై ఓవర్‌లాప్ అవ్వకుండా స్మూత్‌గా హైడ్ చేయడం
 window.addEventListener('scroll', function() {
     const bottomBar = document.querySelector('.tools-container') || 
                       document.querySelector('.bottom-toolbar') || 
@@ -4950,11 +3959,11 @@ window.addEventListener('scroll', function() {
         bottomBar.style.pointerEvents = 'auto';
     }
 });
+
 // ==========================================================================
 // 🛠️ TIMELINE TRACK CLICK HANDLERS & NAVIGATION BRIDGES
 // ==========================================================================
 
-// 1. PiP Track (+) బటన్ క్లిక్ చేసినప్పుడు నేరుగా ఫైల్ పిక్కర్ ఓపెన్ అయ్యి ఓవర్‌లే యాడ్ అవ్వడం
 function triggerDirectPIPSelection() {
     let pipInput = document.getElementById('sStudioDirectPIPInput');
     if (!pipInput) {
@@ -4982,7 +3991,6 @@ function triggerDirectPIPSelection() {
 }
 window.triggerDirectPIPSelection = triggerDirectPIPSelection;
 
-// 2. టాప్ హెడర్‌లోని S Crop బటన్ క్లిక్ హ్యాండ్లర్
 function openTopCanvasCropMenu() {
     const cropModal = document.getElementById('cropPresetModal');
     if (cropModal) {
@@ -4993,7 +4001,6 @@ function openTopCanvasCropMenu() {
 }
 window.openTopCanvasCropMenu = openTopCanvasCropMenu;
 
-// 3. Canvas Aspect Ratio మార్చే ఫంక్షన్
 function applyCanvasRatio(ratioStr) {
     let mappedRatio = 'fit';
     if (ratioStr === '16:9') mappedRatio = '16-9';
@@ -5009,7 +4016,6 @@ function applyCanvasRatio(ratioStr) {
 }
 window.applyCanvasRatio = applyCanvasRatio;
 
-// 4. టాప్ హెడర్‌లోని Upload బటన్ హ్యాండ్లర్
 function requestUploadPermission() {
     const videoInp = document.getElementById('videoInput');
     if (videoInp) {
@@ -5018,7 +4024,6 @@ function requestUploadPermission() {
 }
 window.requestUploadPermission = requestUploadPermission;
 
-// 5. లోగో క్లిక్ చేసినప్పుడు హోమ్‌పేజీకి రీసెట్ చేయడం
 function resetToHome() {
     const editorPage = document.getElementById('editorPage');
     const introPage = document.getElementById('introPage');
@@ -5032,7 +4037,6 @@ function resetToHome() {
         introPage.classList.remove('hidden');
     }
 
-    // ల్యాండింగ్ కార్డ్‌లన్నీ తిరిగి కనిపించేలా చేయడం
     const landingSelectors = [
         '#sStudioScrollableGuide',
         '.founders-vision-card-large',
@@ -5048,7 +4052,6 @@ function resetToHome() {
 }
 window.resetToHome = resetToHome;
 
-// 6. టైమ్‌లైన్ జూమ్ స్లైడర్ హ్యాండ్లర్
 function adjustTimelineZoom(val) {
     const zoomLevel = parseFloat(val) || 1.0;
     const disp = document.getElementById('zoomValDisplay');
@@ -5062,25 +4065,10 @@ function adjustTimelineZoom(val) {
 }
 window.adjustTimelineZoom = adjustTimelineZoom;
 
-// పేజీ లోడ్ అయినప్పుడు కేవలం హోమ్‌పేజీ మాత్రమే కనిపించేలా లాక్ చేయడం
-document.addEventListener("DOMContentLoaded", function() {
-    const editorPage = document.getElementById('editorPage');
-    const introPage = document.getElementById('introPage');
-    
-    if (editorPage) {
-        editorPage.style.setProperty('display', 'none', 'important');
-        editorPage.classList.add('hidden');
-    }
-    if (introPage) {
-        introPage.style.display = 'block';
-        introPage.classList.remove('hidden');
-    }
-});
 // ==========================================================================
-// 🌐 STICKY HEADER NAVIGATION & DROPDOWN ENGINE (COMPLETE)
+// 🌐 STICKY HEADER NAVIGATION & DROPDOWN ENGINE
 // ==========================================================================
 
-// 1. Dropdown click chesinappudu open/close cheyadam
 function toggleNavDropdown(id) {
     const target = document.getElementById(id);
     if (!target) return;
@@ -5101,19 +4089,16 @@ function closeAllNavDropdowns() {
     document.querySelectorAll('.nav-arrow-icon').forEach(a => a.style.transform = 'rotate(0deg)');
 }
 
-// Bayata ekkada click chesina dropdown close avvadam
 document.addEventListener('click', function(e) {
     if (!e.target.closest('.nav-dropdown-item')) {
         closeAllNavDropdowns();
     }
 });
 
-// 2. Home click chesinappudu top ki smooth scroll avvadam
 function scrollToTopHome() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// 3. Connect click chesinappudu support card daggariki scroll avvadam
 function scrollToSupportChannels() {
     const target = document.querySelector('.support-channels-card');
     if (target) {
@@ -5121,205 +4106,238 @@ function scrollToSupportChannels() {
     }
 }
 
-// 4. Editor loki vellinappudu top navbar hide cheyadam
-const originalEnterStudio = window.enterStudio;
-window.enterStudio = function(mode) {
-    const topNav = document.querySelector('.home-sticky-navbar');
-    if (topNav) topNav.style.display = 'none';
-    if (typeof originalEnterStudio === 'function') {
-        originalEnterStudio(mode);
-    }
-};
-
-// 5. Malli Home ki vachinappudu top navbar chupinchadam
-const originalResetToHome = window.resetToHome;
-window.resetToHome = function() {
-    const topNav = document.querySelector('.home-sticky-navbar');
-    if (topNav) topNav.style.display = 'block';
-    if (typeof originalResetToHome === 'function') {
-        originalResetToHome();
-    }
-};// ==========================================================================
-// 📸 COMPLETE INTERACTIVE PHOTO EDITING ENGINE
+// ==========================================================================
+// 🎬 S STUDIO AUTHENTICATION CONTROLLER (LOGIN FIRST, SIGNUP ON-DEMAND)
 // ==========================================================================
 
-let currentPhotoRotation = 0;
-let currentPhotoFlipH = 1;
-let currentPhotoBorder = false;
+const S_STUDIO_AUTH_API = "https://script.google.com/macros/s/AKfycbwPbUN34AcyNgrHvxcLusf8gU0L3utFzd7COQ4P_vmyVwK4nEagr_iSyD__7Aj7K7e3/exec";
 
-// ఫోటో లేదా వీడియో ఎడిటర్ మోడ్‌ల మధ్య స్విచ్ చేయడం
-function enterStudio(mode) {
-    const introPage = document.getElementById('introPage');
-    const editorPage = document.getElementById('editorPage');
-    const timelineBox = document.getElementById('timelineAreaBox');
-    const playerControls = document.getElementById('playerControlsBox');
-    const photoToolbar = document.getElementById('photoToolsToolbar');
-    const resizerBar = document.getElementById('studioScreenResizerBar');
-    const topNav = document.querySelector('.home-sticky-navbar');
+let tempRegisterData = {};
 
-    if (topNav) topNav.style.display = 'none';
-    if (introPage) introPage.style.display = 'none';
-    if (editorPage) {
-        editorPage.style.display = 'flex';
-        editorPage.classList.remove('hidden');
-    }
-
-    if (mode === 'photo') {
-        // వీడియో కంట్రోల్స్ హైడ్ చేసి, ఫోటో టూల్స్ బార్ చూపించడం
-        if (timelineBox) timelineBox.style.display = 'none';
-        if (playerControls) playerControls.style.display = 'none';
-        if (resizerBar) resizerBar.style.display = 'none';
-        if (photoToolbar) photoToolbar.style.display = 'block';
-
-        const photoInput = document.getElementById('photoInput');
-        if (photoInput) photoInput.click();
+function togglePasswordVisibility(inputId, eyeIcon) {
+    const input = document.getElementById(inputId);
+    if (!input) return;
+    if (input.type === "password") {
+        input.type = "text";
+        if (eyeIcon) eyeIcon.innerText = "🔒";
     } else {
-        // వీడియో ఎడిటర్ మోడ్
-        if (photoToolbar) photoToolbar.style.display = 'none';
-        if (timelineBox) timelineBox.style.display = 'flex';
-        if (playerControls) playerControls.style.display = 'flex';
-        if (resizerBar) resizerBar.style.display = 'flex';
-
-        const videoInput = document.getElementById('videoInput');
-        if (videoInput) videoInput.click();
+        input.type = "password";
+        if (eyeIcon) eyeIcon.innerText = "👁️";
     }
 }
-window.enterStudio = enterStudio;
 
-// 1. ఫోటో లోడ్ చేయడం
-function loadPhoto(e) {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    const wrapper = document.getElementById('videoWrapper');
-    if (!wrapper) return;
-
-    wrapper.innerHTML = `
-        <img id="mainPhotoCanvas" src="${URL.createObjectURL(file)}" style="max-width:100%; max-height:100%; object-fit:contain; transition: filter 0.1s, transform 0.2s;" />
-    `;
-    resetPhotoAdjustments();
+function openRegisterIdLoginModal() {
+    const modal = document.getElementById('regLoginModal');
+    if (modal) modal.style.display = 'flex';
+    switchAuthScreen('signin');
 }
-window.loadPhoto = loadPhoto;
 
-// 2. Adjustments Slider ప్యానెల్
-function openPhotoAdjustModal() {
-    const panel = document.getElementById('photoAdjustSubPanel');
-    const filterPanel = document.getElementById('photoFiltersSubPanel');
-    if (filterPanel) filterPanel.style.display = 'none';
-    if (panel) panel.style.display = (panel.style.display === 'block') ? 'none' : 'block';
+function closeRegisterIdLoginModal() {
+    const modal = document.getElementById('regLoginModal');
+    if (modal) modal.style.display = 'none';
 }
-window.openPhotoAdjustModal = openPhotoAdjustModal;
 
-// 3. లైవ్ ఫిల్టర్లు మరియు అడ్జస్ట్‌మెంట్లు అప్లై చేయడం
-function applyPhotoLiveFilters() {
-    const img = document.getElementById('mainPhotoCanvas');
-    if (!img) return;
+function switchAuthScreen(screen) {
+    const viewSignIn = document.getElementById('viewSignIn');
+    const viewSignUp = document.getElementById('viewSignUp');
+    const viewOtp = document.getElementById('viewOtpVerification');
+    const viewSuccess = document.getElementById('viewSuccessIdDisplay');
 
-    const b = document.getElementById('photoBrightnessSlider').value;
-    const c = document.getElementById('photoContrastSlider').value;
-    const s = document.getElementById('photoSaturationSlider').value;
-    const w = document.getElementById('photoWarmthSlider').value;
+    if (viewSignIn) viewSignIn.style.display = (screen === 'signin') ? 'block' : 'none';
+    if (viewSignUp) viewSignUp.style.display = (screen === 'signup') ? 'block' : 'none';
+    if (viewOtp) viewOtp.style.display = (screen === 'otp') ? 'block' : 'none';
+    if (viewSuccess) viewSuccess.style.display = (screen === 'success') ? 'block' : 'none';
 
-    document.getElementById('photoBrightnessVal').innerText = b + '%';
-    document.getElementById('photoContrastVal').innerText = c + '%';
-    document.getElementById('photoSaturationVal').innerText = s + '%';
-    document.getElementById('photoWarmthVal').innerText = w + '%';
+    const title = document.getElementById('authModalTitle');
+    const sub = document.getElementById('authModalSub');
+    const banner = document.getElementById('authStatusBanner');
+    if (banner) banner.innerText = "";
 
-    img.style.filter = `brightness(${b}%) contrast(${c}%) saturate(${s}%) sepia(${w}%)`;
-}
-window.applyPhotoLiveFilters = applyPhotoLiveFilters;
-
-// 4. ఫిల్టర్ల ప్రిసెట్ ప్యానెల్
-function openPhotoFiltersModal() {
-    const panel = document.getElementById('photoFiltersSubPanel');
-    const adjPanel = document.getElementById('photoAdjustSubPanel');
-    if (adjPanel) adjPanel.style.display = 'none';
-    if (panel) panel.style.display = (panel.style.display === 'block') ? 'none' : 'block';
-}
-window.openPhotoFiltersModal = openPhotoFiltersModal;
-
-function applyPresetFilter(type) {
-    const img = document.getElementById('mainPhotoCanvas');
-    if (!img) return;
-
-    if (type === 'none') img.style.filter = 'none';
-    else if (type === 'cinematic') img.style.filter = 'contrast(125%) saturate(120%) brightness(95%)';
-    else if (type === 'vintage') img.style.filter = 'sepia(45%) contrast(110%) brightness(90%)';
-    else if (type === 'bw') img.style.filter = 'grayscale(100%) contrast(130%)';
-    else if (type === 'vivid') img.style.filter = 'saturate(180%) contrast(115%)';
-    else if (type === 'cold') img.style.filter = 'hue-rotate(180deg) saturate(110%)';
-
-    const panel = document.getElementById('photoFiltersSubPanel');
-    if (panel) panel.style.display = 'none';
-}
-window.applyPresetFilter = applyPresetFilter;
-
-// 5. రొటేట్ మరియు ఫ్లిప్
-function rotatePhotoCanvas(deg) {
-    const img = document.getElementById('mainPhotoCanvas');
-    if (!img) return;
-    currentPhotoRotation = (currentPhotoRotation + deg) % 360;
-    img.style.transform = `rotate(${currentPhotoRotation}deg) scaleX(${currentPhotoFlipH})`;
-}
-window.rotatePhotoCanvas = rotatePhotoCanvas;
-
-function flipPhotoHorizontal() {
-    const img = document.getElementById('mainPhotoCanvas');
-    if (!img) return;
-    currentPhotoFlipH = currentPhotoFlipH === 1 ? -1 : 1;
-    img.style.transform = `rotate(${currentPhotoRotation}deg) scaleX(${currentPhotoFlipH})`;
-}
-window.flipPhotoHorizontal = flipPhotoHorizontal;
-
-// 6. బోర్డర్ / స్టైల్స్
-function togglePhotoBorders() {
-    const img = document.getElementById('mainPhotoCanvas');
-    if (!img) return;
-    currentPhotoBorder = !currentPhotoBorder;
-    img.style.border = currentPhotoBorder ? '4px solid #00f2fe' : 'none';
-    img.style.borderRadius = currentPhotoBorder ? '14px' : '0px';
-    img.style.boxShadow = currentPhotoBorder ? '0 0 25px rgba(0,242,254,0.5)' : 'none';
-}
-window.togglePhotoBorders = togglePhotoBorders;
-
-// 7. రీసెట్
-function resetPhotoAdjustments() {
-    const img = document.getElementById('mainPhotoCanvas');
-    if (img) {
-        img.style.filter = 'none';
-        img.style.transform = 'none';
-        img.style.border = 'none';
-        img.style.boxShadow = 'none';
+    if (screen === 'signin') {
+        if (title) title.innerText = "Creator Sign In";
+        if (sub) sub.innerText = "Login with Register ID or Email";
+    } else if (screen === 'signup') {
+        if (title) title.innerText = "Create Creator Account";
+        if (sub) sub.innerText = "Fill details to receive verification OTP";
+    } else if (screen === 'otp') {
+        if (title) title.innerText = "Email Verification";
+        if (sub) sub.innerText = "Enter the 6-digit studio code";
+        focusFirstOtpDigit();
     }
-    currentPhotoRotation = 0;
-    currentPhotoFlipH = 1;
-    currentPhotoBorder = false;
-
-    if (document.getElementById('photoBrightnessSlider')) document.getElementById('photoBrightnessSlider').value = 100;
-    if (document.getElementById('photoContrastSlider')) document.getElementById('photoContrastSlider').value = 100;
-    if (document.getElementById('photoSaturationSlider')) document.getElementById('photoSaturationSlider').value = 100;
-    if (document.getElementById('photoWarmthSlider')) document.getElementById('photoWarmthSlider').value = 0;
 }
-window.resetPhotoAdjustments = resetPhotoAdjustments;
 
-// 8. డౌన్‌లోడ్ ఎడిట్ చేసిన ఫోటో
-function downloadEditedPhoto() {
-    const img = document.getElementById('mainPhotoCanvas');
-    if (!img) return;
-
-    const canvas = document.createElement('canvas');
-    canvas.width = img.naturalWidth || 1280;
-    canvas.height = img.naturalHeight || 720;
-    const ctx = canvas.getContext('2d');
-
-    ctx.filter = img.style.filter || 'none';
-    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-
-    const a = document.createElement('a');
-    a.href = canvas.toDataURL('image/png');
-    a.download = `S_Studio_Photo_${Date.now()}.png`;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
+function showAuthBanner(msg, isSuccess) {
+    const b = document.getElementById('authStatusBanner');
+    if (b) {
+        b.innerText = msg;
+        b.style.color = isSuccess ? '#10ac84' : '#ff4757';
+    }
 }
-window.downloadEditedPhoto = downloadEditedPhoto;
+
+function handleOtpStep(element, index) {
+    const boxes = document.querySelectorAll('.studio-otp-digit');
+    if (element.value.length === 1 && index < boxes.length - 1) {
+        boxes[index + 1].focus();
+    }
+}
+
+function handleOtpBackspace(event, index) {
+    const boxes = document.querySelectorAll('.studio-otp-digit');
+    if (event.key === "Backspace" && !boxes[index].value && index > 0) {
+        boxes[index - 1].focus();
+    }
+}
+
+function focusFirstOtpDigit() {
+    const boxes = document.querySelectorAll('.studio-otp-digit');
+    boxes.forEach(b => b.value = "");
+    setTimeout(() => { if (boxes[0]) boxes[0].focus(); }, 150);
+}
+
+function getEnteredOtp() {
+    let otp = "";
+    document.querySelectorAll('.studio-otp-digit').forEach(b => otp += b.value.trim());
+    return otp;
+}
+
+// 1. Sign In (Register ID / Email)
+async function submitUserSignIn() {
+    const idInput = document.getElementById('loginUserIdentifier');
+    const passInput = document.getElementById('loginPasswordInput');
+
+    const identifier = idInput ? idInput.value.trim() : '';
+    const password = passInput ? passInput.value : '';
+
+    if (!identifier || !password) {
+        return showAuthBanner("Please enter your Register ID / Email and password.", false);
+    }
+
+    showAuthBanner("Authenticating...", true);
+
+    try {
+        const res = await fetch(S_STUDIO_AUTH_API, {
+            method: "POST",
+            headers: { "Content-Type": "text/plain;charset=utf-8" },
+            body: JSON.stringify({
+                action: "login_universal",
+                identifier: identifier
+            })
+        });
+        const data = await res.json();
+
+        if (data.status === "success") {
+            showAuthBanner("Login successful! Welcome.", true);
+            localStorage.setItem("s_studio_register_id", data.register_id);
+            setTimeout(() => {
+                closeRegisterIdLoginModal();
+                alert(`Welcome back! Successfully logged in as ${data.register_id}`);
+            }, 1000);
+        } else {
+            showAuthBanner(data.message || "Account not found with this ID or Email.", false);
+        }
+    } catch (e) {
+        showAuthBanner("Network error. Please try again.", false);
+    }
+}
+
+// 2. Submit Sign Up Details & Send OTP
+async function requestSignUpOtp() {
+    const nameEl = document.getElementById('regFullName');
+    const emailEl = document.getElementById('regEmailAddress');
+    const passEl = document.getElementById('regPasswordInput');
+    const confirmPassEl = document.getElementById('regConfirmPasswordInput');
+
+    const name = nameEl ? nameEl.value.trim() : '';
+    const email = emailEl ? emailEl.value.trim().toLowerCase() : '';
+    const password = passEl ? passEl.value : '';
+    const confirmPassword = confirmPassEl ? confirmPassEl.value : '';
+
+    if (!name || !email || !password) {
+        return showAuthBanner("Please fill in all required fields.", false);
+    }
+    if (password !== confirmPassword) {
+        return showAuthBanner("Passwords do not match!", false);
+    }
+
+    tempRegisterData = { name, email };
+    const btn = document.getElementById('btnSendSignUpOtp');
+    if (btn) {
+        btn.disabled = true;
+        btn.innerText = "Sending Code...";
+    }
+    showAuthBanner("Sending OTP to your email...", true);
+
+    try {
+        const res = await fetch(S_STUDIO_AUTH_API, {
+            method: "POST",
+            headers: { "Content-Type": "text/plain;charset=utf-8" },
+            body: JSON.stringify({ action: "send_register_otp", email, name })
+        });
+        const data = await res.json();
+        if (btn) {
+            btn.disabled = false;
+            btn.innerText = "Submit to Verify OTP";
+        }
+
+        if (data.status === "success") {
+            switchAuthScreen('otp');
+            showAuthBanner("Verification code sent to your email!", true);
+        } else {
+            showAuthBanner(data.message || "Failed to send OTP.", false);
+        }
+    } catch (e) {
+        if (btn) {
+            btn.disabled = false;
+            btn.innerText = "Submit to Verify OTP";
+        }
+        showAuthBanner("Network error. Please try again.", false);
+    }
+}
+
+// 3. Verify OTP & Activate Account
+async function submitVerifyOtpCode() {
+    const otp = getEnteredOtp();
+    if (otp.length !== 6) {
+        return showAuthBanner("Please enter all 6 digits!", false);
+    }
+
+    const btn = document.getElementById('btnVerifyOtpAction');
+    if (btn) {
+        btn.disabled = true;
+        btn.innerText = "Activating Account...";
+    }
+
+    try {
+        const res = await fetch(S_STUDIO_AUTH_API, {
+            method: "POST",
+            headers: { "Content-Type": "text/plain;charset=utf-8" },
+            body: JSON.stringify({
+                action: "verify_and_register",
+                email: tempRegisterData.email,
+                name: tempRegisterData.name,
+                otp: otp
+            })
+        });
+        const data = await res.json();
+        if (btn) {
+            btn.disabled = false;
+            btn.innerText = "Verify & Activate Account";
+        }
+
+        if (data.status === "success") {
+            const idSpan = document.getElementById('createdRegisterIdSpan');
+            if (idSpan) idSpan.innerText = data.register_id;
+            switchAuthScreen('success');
+            localStorage.setItem("s_studio_register_id", data.register_id);
+            localStorage.setItem("s_studio_user_email", tempRegisterData.email);
+        } else {
+            showAuthBanner(data.message || "Invalid OTP code!", false);
+        }
+    } catch (e) {
+        if (btn) {
+            btn.disabled = false;
+            btn.innerText = "Verify & Activate Account";
+        }
+        showAuthBanner("Verification failed. Network issue.", false);
+    }
+}
