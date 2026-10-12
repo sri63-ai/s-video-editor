@@ -16,8 +16,6 @@
       gtag('config', 'G-0Y8V3GGLC6');
     </script>
 </head>
-<!-- Supabase Official SDK (Live Production Library) -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <body>
 
 <!-- ========================================================================== -->
@@ -87,24 +85,32 @@
     <!-- ========================================================================== -->
     <div id="introPage">
         
-        <!-- Brand Header -->
-        <div class="brand-header-box">
-            <div class="main-logo-wrapper">
-                <div class="logo-box-container">
-                    <img src="https://lh3.googleusercontent.com/d/1F4GgiyEVVlRXOWlmJ_IGBYpiTJH6Yot-" alt="S Studio Logo" class="s-main-logo">
-                </div>
-                <h1 class="main-heading-title">S STUDIO</h1>
-            </div>
-
-            <div>
-                <a href="https://sriramgroupsofficial.com/" target="_blank" rel="noopener noreferrer" class="powered-by-link">
-                    <img src="https://lh3.googleusercontent.com/d/1HQZbmwZXZUw9x_L7hv_N-kle4W2DHNTV" alt="Sriram Groups Official Logo" class="sriram-sub-logo">
-                    <span>Powered by Sriram Groups Official </span>
-                </a>
-            </div>
-            <p class="select-workspace-sub">Select your creative workspace to begin editing</p>
+        <!-- Top Header Bar: Left Title & Right Corner Login Icon -->
+<div style="width: 98%; max-width: 1400px; margin: 15px auto 20px auto; display: flex; align-items: center; justify-content: space-between; padding: 12px 20px; background: rgba(16, 20, 32, 0.85); backdrop-filter: blur(12px); border: 1px solid rgba(0, 242, 254, 0.25); border-radius: 14px; box-sizing: border-box;">
+    
+    <!-- Left Side: Title & Subtitle -->
+    <div style="display: flex; align-items: center; gap: 12px;">
+        <div style="width: 44px; height: 44px; border-radius: 10px; border: 1.5px solid #00f2fe; padding: 2px; background: #161c28; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 10px rgba(0, 242, 254, 0.3);">
+            <img src="https://lh3.googleusercontent.com/d/1F4GgiyEVVlRXOWlmJ_IGBYpiTJH6Yot-" alt="S Studio Logo" style="width: 100%; height: 100%; object-fit: contain;">
         </div>
+        <div>
+            <h1 style="color: #00f2fe; font-size: 24px; margin: 0; font-weight: 800; letter-spacing: 0.5px; text-shadow: 0 0 12px rgba(0, 242, 254, 0.45); line-height: 1.1;">S STUDIO</h1>
+            <p style="color: #64748b; font-size: 11px; margin: 2px 0 0 0; font-weight: 600;">Powered by Sriram Groups Official</p>
+        </div>
+    </div>
 
+    <!-- Right Side: User Icon Login Button -->
+    <div>
+        <button onclick="openRegisterIdLoginModal()" style="display: flex; align-items: center; gap: 8px; background: linear-gradient(135deg, rgba(0, 242, 254, 0.15), rgba(79, 172, 254, 0.25)); border: 1.5px solid #00f2fe; color: #00f2fe; padding: 8px 16px; border-radius: 30px; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.25s ease; box-shadow: 0 0 12px rgba(0, 242, 254, 0.2);" onmouseover="this.style.background='#00f2fe'; this.style.color='#000000'; this.style.boxShadow='0 0 20px rgba(0, 242, 254, 0.6)';" onmouseout="this.style.background='linear-gradient(135deg, rgba(0, 242, 254, 0.15), rgba(79, 172, 254, 0.25))'; this.style.color='#00f2fe'; this.style.boxShadow='0 0 12px rgba(0, 242, 254, 0.2)';">
+            <!-- Animated SVG User Icon -->
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
+            </svg>
+            <span>Login</span>
+        </button>
+    </div>
+
+</div>
         <!-- Workspace Choice Cards -->
         <div class="workspace-choice-container">
             <!-- Video Editing Card -->
@@ -127,142 +133,370 @@
         </div>
 
         <!-- Scrollable User Guide Box -->
-        <div id="sStudioScrollableGuide" class="scrollable-guide-box">
-            <div class="scrollable-guide-content">
-                
-                <div style="text-align: center; margin-bottom: 16px;">
-                    <h1 style="font-size: 24px; font-weight: 800; margin: 0 0 6px; font-family: sans-serif; color: #00f2fe; display: inline-block;">
-                        Guidelines of S Studio Editing & Editing Tools Usage
-                    </h1>
+        <!-- ========================================================================== -->
+<!-- 🚀 FULL-PAGE GUIDELINES WORKSPACE WITH INTERACTIVE CREATOR WORKSTATION ANIMATION -->
+<!-- ========================================================================== -->
+<div id="sStudioScrollableGuide" class="scrollable-guide-box" style="width: 98% !important; max-width: 1400px !important; margin: 30px auto !important; background: linear-gradient(180deg, #101422 0%, #0b0d14 100%) !important; border: 1.5px solid rgba(0, 242, 254, 0.4) !important; border-radius: 16px !important; padding: 35px 25px !important; box-shadow: 0 15px 45px rgba(0, 0, 0, 0.8), 0 0 25px rgba(0, 242, 254, 0.15) !important; box-sizing: border-box !important;">
+    <div class="scrollable-guide-content">
+        
+        <!-- 🎨 CUSTOM PURE-CODE ANIMATED WORKSTATION (BOY EDITING & STUDYING CODE/BOOK) -->
+        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; margin-bottom: 25px;">
+            
+            <div style="width: 100%; max-width: 520px; height: 180px; position: relative; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle, rgba(0, 242, 254, 0.08) 0%, rgba(16, 20, 34, 0) 70%); border-radius: 14px; overflow: hidden; border: 1px solid rgba(0, 242, 254, 0.15);">
+                <svg viewBox="0 0 500 200" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <!-- Glow Filters -->
+                        <filter id="neonScreenGlow" x="-20%" y="-20%" width="140%" height="140%">
+                            <feGaussianBlur stdDeviation="6" result="blur" />
+                            <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                        </filter>
+                        <!-- Screen Light Beam Gradient -->
+                        <linearGradient id="monitorLightCone" x1="0%" y1="0%" x2="100%" y2="80%">
+                            <stop offset="0%" stop-color="#00f2fe" stop-opacity="0.35" />
+                            <stop offset="100%" stop-color="#6c5ce7" stop-opacity="0.0" />
+                        </linearGradient>
+                        <linearGradient id="bookPageGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" stop-color="#1e2638" />
+                            <stop offset="50%" stop-color="#2d3748" />
+                            <stop offset="100%" stop-color="#1e2638" />
+                        </linearGradient>
+                    </defs>
+
+                    <!-- Desk Base Surface -->
+                    <rect x="30" y="150" width="440" height="8" rx="4" fill="#1f2738" stroke="#334155" stroke-width="1.5" />
+                    
+                    <!-- Ambient Desk Shadow -->
+                    <ellipse cx="250" cy="158" rx="200" ry="6" fill="rgba(0,0,0,0.6)" />
+
+                    <!-- Screen Light Cone Projected onto Desk & Boy -->
+                    <polygon points="170,55 330,55 420,150 80,150" fill="url(#monitorLightCone)" opacity="0.6" />
+
+                    <!-- 🖥️ MAIN DUAL-MONITOR SETUP (STUDIO WORKSPACE) -->
+                    <!-- Stand -->
+                    <rect x="240" y="125" width="20" height="25" fill="#334155" />
+                    <rect x="220" y="148" width="60" height="4" rx="2" fill="#475569" />
+                    
+                    <!-- Screen Body -->
+                    <rect x="160" y="35" width="180" height="95" rx="8" fill="#090d16" stroke="#00f2fe" stroke-width="2" filter="url(#neonScreenGlow)" />
+                    
+                    <!-- Inside Screen: Video Timeline & Moving Playhead Code Animation -->
+                    <!-- Video Clip Tracks -->
+                    <rect x="170" y="45" width="160" height="42" rx="4" fill="#0f172a" />
+                    <!-- Video Preview Miniature -->
+                    <rect x="180" y="50" width="45" height="30" rx="3" fill="#1e293b" stroke="#38bdf8" stroke-width="1" />
+                    <circle cx="202" cy="65" r="6" fill="#00f2fe" opacity="0.8" />
+                    
+                    <!-- Code Lines in Upper Screen -->
+                    <line x1="235" y1="53" x2="315" y2="53" stroke="#a855f7" stroke-width="2.5" stroke-linecap="round" />
+                    <line x1="235" y1="62" x2="295" y2="62" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" />
+                    <line x1="235" y1="71" x2="275" y2="71" stroke="#10ac84" stroke-width="2" stroke-linecap="round" />
+
+                    <!-- Horizontal Multi-track Timeline -->
+                    <rect x="170" y="92" width="160" height="30" rx="3" fill="#060911" />
+                    <rect x="175" y="96" width="60" height="8" rx="2" fill="#38bdf8" opacity="0.8" />
+                    <rect x="240" y="96" width="45" height="8" rx="2" fill="#6c5ce7" opacity="0.8" />
+                    <rect x="175" y="108" width="85" height="7" rx="2" fill="#10ac84" opacity="0.7" />
+                    <rect x="265" y="108" width="55" height="7" rx="2" fill="#ff4757" opacity="0.7" />
+
+                    <!-- Moving Laser Playhead Scrubber -->
+                    <line x1="225" y1="92" x2="225" y2="122" stroke="#ff4757" stroke-width="2">
+                        <animate attributeName="x1" values="175;320;175" dur="4s" repeatCount="indefinite" />
+                        <animate attributeName="x2" values="175;320;175" dur="4s" repeatCount="indefinite" />
+                    </line>
+
+                    <!-- Keyboard & Mouse on Desk -->
+                    <rect x="205" y="142" width="65" height="6" rx="2" fill="#334155" stroke="#475569" stroke-width="1" />
+                    <ellipse cx="285" cy="145" rx="5" ry="3" fill="#00f2fe" opacity="0.7" />
+
+                    <!-- 📖 OPEN CODE & EDITING REFERENCE MANUAL (LEFT/MIDDLE) -->
+                    <!-- Book Spine & Pages -->
+                    <path d="M 90 148 L 130 142 L 130 130 L 90 134 Z" fill="url(#bookPageGrad)" stroke="#475569" stroke-width="1" />
+                    <path d="M 130 142 L 170 148 L 170 134 L 130 130 Z" fill="url(#bookPageGrad)" stroke="#475569" stroke-width="1" />
+                    <!-- Book Ribbon Marker -->
+                    <path d="M 130 130 L 130 146" stroke="#00f2fe" stroke-width="2" />
+                    <!-- Code Text Lines on Opened Book Pages -->
+                    <line x1="98" y1="138" x2="122" y2="136" stroke="#38bdf8" stroke-width="1.5" stroke-linecap="round" opacity="0.7" />
+                    <line x1="98" y1="143" x2="118" y2="141" stroke="#94a3b8" stroke-width="1.2" stroke-linecap="round" opacity="0.6" />
+                    <line x1="138" y1="136" x2="162" y2="138" stroke="#a855f7" stroke-width="1.5" stroke-linecap="round" opacity="0.7" />
+                    <line x1="138" y1="141" x2="158" y2="143" stroke="#94a3b8" stroke-width="1.2" stroke-linecap="round" opacity="0.6" />
+
+                    <!-- 🧑‍💻 YOUNG CREATOR / DEVELOPER EDITING & STUDYING -->
+                    <!-- Chair Back -->
+                    <path d="M 360 80 Q 375 75 390 150" stroke="#1e293b" stroke-width="10" stroke-linecap="round" fill="none" />
+                    
+                    <!-- Creator Head (With Focused Eyeline toward Screen & Book) -->
+                    <ellipse cx="345" cy="85" rx="14" ry="16" fill="#f8fafc" />
+                    <!-- Modern Hair -->
+                    <path d="M 333 80 Q 345 65 360 76 Q 355 90 350 85 Z" fill="#0f172a" />
+                    <!-- Sleek Tech Glasses / AR Eyewear Glow -->
+                    <rect x="332" y="83" width="10" height="4" rx="1" fill="#00f2fe">
+                        <animate attributeName="opacity" values="0.7;1;0.7" dur="2s" repeatCount="indefinite" />
+                    </rect>
+
+                    <!-- Body / Hoodie (Engaged in Coding & Editing) -->
+                    <path d="M 335 102 C 320 115 315 140 315 150 L 375 150 C 375 130 365 105 350 102 Z" fill="#3b82f6" />
+                    
+                    <!-- Creator Arms Typing on Keyboard & Pointing to Screen -->
+                    <!-- Right Arm resting forward on desk near mouse -->
+                    <path d="M 345 115 Q 310 130 285 142" stroke="#3b82f6" stroke-width="7" stroke-linecap="round" fill="none" />
+                    <circle cx="285" cy="143" r="4" fill="#f8fafc" />
+
+                    <!-- Left Arm tilted toward notebook / keyboard -->
+                    <path d="M 335 118 Q 280 132 235 141" stroke="#2563eb" stroke-width="6" stroke-linecap="round" fill="none">
+                        <animateTransform attributeName="transform" type="rotate" values="0 335 118; -2 335 118; 0 335 118" dur="1.5s" repeatCount="indefinite" />
+                    </path>
+                    <circle cx="235" cy="142" r="3.5" fill="#f8fafc" />
+
+                    <!-- Floating Ambient Technology Particles -->
+                    <circle cx="120" cy="50" r="2" fill="#00f2fe" opacity="0.6">
+                        <animate attributeName="cy" values="50;40;50" dur="3s" repeatCount="indefinite" />
+                    </circle>
+                    <circle cx="410" cy="60" r="2.5" fill="#a855f7" opacity="0.7">
+                        <animate attributeName="cy" values="60;45;60" dur="2.5s" repeatCount="indefinite" />
+                    </circle>
+                    <circle cx="250" cy="20" r="1.5" fill="#10ac84" opacity="0.8">
+                        <animate attributeName="cx" values="250;260;250" dur="4s" repeatCount="indefinite" />
+                    </circle>
+                </svg>
+            </div>
+
+            <!-- Main Guidelines Centered Neon Title -->
+            <div style="text-align: center; margin-top: 18px;">
+                <h1 style="font-size: 26px; font-weight: 800; margin: 0 0 6px 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: #00f2fe; text-shadow: 0 0 15px rgba(0, 242, 254, 0.5); display: inline-block; letter-spacing: -0.3px;">
+                    Guidelines of S Studio Editing Tools Usage
+                </h1>
+            </div>
+
+        </div>
+
+        <header class="guide-mini-header" style="margin-bottom: 24px; text-align: center; border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding-bottom: 18px;">
+            <h2 style="font-size: 19px; color: #a8a5ff; margin-bottom: 8px; font-weight: 700;">S Studio (svideoeditor.com) – Ultimate Browser Video Editing Workspace</h2>
+            <p style="font-size: 14px; color: #cbd5e1; line-height: 1.7; max-width: 1050px; margin: 0 auto;">Perform high end video editing workflows directly within your web browser. Edit seamlessly and completely free of cost, without installing heavy desktop software. S Studio is engineered as an all in one educational and professional creative hub, continuously updated to support modern content creators, students, and digital marketers.</p>
+        </header>
+
+        <!-- Section 1 -->
+        <section class="guide-section" style="margin-bottom: 22px; background: rgba(255, 255, 255, 0.02); padding: 18px 22px; border-radius: 10px; border-left: 4px solid #00f2fe;">
+            <h3 style="font-size: 17px; color: #00f2fe; margin: 0 0 8px 0; font-weight: 700;">1. How to Upload Media Files</h3>
+            <p style="font-size: 13.5px; color: #dcdde1; line-height: 1.7; margin: 0;">Starting your project takes just a few clicks. Simply tap the Upload Video button to select your high resolution footage, screen recordings, or audio files directly from your phone or computer. As soon as your media is added, our complete suite of editing tools will instantly activate giving you everything you need to cut, trim, and enhance your content with full control.</p>
+        </section>
+
+        <!-- Section 2 -->
+        <section class="guide-section" style="margin-bottom: 22px; background: rgba(255, 255, 255, 0.02); padding: 18px 22px; border-radius: 10px; border-left: 4px solid #38bdf8;">
+            <h3 style="font-size: 17px; color: #38bdf8; margin: 0 0 8px 0; font-weight: 700;">2. Timeline Control & Unlimited PiP Overlays</h3>
+            <p style="font-size: 13.5px; color: #dcdde1; line-height: 1.7; margin-bottom: 10px;">The timeline sits right underneath your video preview player, and its where youll do most of your editing. You can easily drag and drop your clips, line up your audio tracks, and make clean, frame by frame cuts to piece your video together.</p>
+            <ul style="font-size: 13.5px; color: #dcdde1; line-height: 1.7; padding-left: 20px; margin: 0;">
+                <li style="margin-bottom: 6px;"><strong style="color: #ffffff;">Video Track:</strong> Make clean, frame by frame cuts and chop out the mistakes. Then, just drag and drop your best shots to stitch your video together.</li>
+                <li><strong style="color: #ffffff;">PiP Layering:</strong> Stack as many extra videos and photos on top of your main track as you want. It's perfect if you're adding a facecam for gaming videos, making reaction clips, or building a split screen collage.</li>
+            </ul>
+        </section>
+
+        <!-- Section 3 -->
+        <section class="guide-section" style="margin-bottom: 22px; background: rgba(255, 255, 255, 0.02); padding: 18px 22px; border-radius: 10px; border-left: 4px solid #a855f7;">
+            <h3 style="font-size: 17px; color: #c084fc; margin: 0 0 8px 0; font-weight: 700;">3. Dedicated Audio & Background Music Library</h3>
+            <p style="font-size: 13.5px; color: #dcdde1; line-height: 1.7; margin-bottom: 10px;">Add background music and sound effects using our built in audio library, or upload your own custom tracks.</p>
+            <ul style="font-size: 13.5px; color: #dcdde1; line-height: 1.7; padding-left: 20px; margin: 0;">
+                <li style="margin-bottom: 6px;"><strong style="color: #ffffff;">Local Track Import:</strong> Make your videos stand out by adding your own custom sound. You can pull voiceovers, music, or audio clips straight from your phone or computer. Whether youre dropping in a quick voice memo or layering a full track, just drag and drop the audio anywhere you want it on the timeline.</li>
+                <li style="margin-bottom: 6px;"><strong style="color: #ffffff;">Cinematic Beats BGM:</strong> High impact, immersive background tracks and powerful sound design engineered to give your action sequences, travel vlogs, and blockbuster style trailers that dramatic cinematic elevation.</li>
+                <li style="margin-bottom: 6px;"><strong style="color: #ffffff;">Corporate Info Music:</strong> Background tracks made specifically for business pitches, presentations, and tutorials. Clean, professional sound designed to keep the focus right where it belongs on your content.</li>
+                <li style="margin-bottom: 6px;"><strong style="color: #ffffff;">Upbeat Vlog Sounds:</strong> Catchy, high energy tracks built to snap scrolling eyes right to your videos. Grab the perfect upbeat background music to keep people watching your Shorts, Reels, or TikToks.</li>
+                <li><strong style="color: #ffffff;">Chill Lofi Loops:</strong> Relaxed, ambient lo fi beats perfect for a laid back vibe. Use these chill tracks to set a calm background mood for your aesthetic slow mosan cuts, vlogs, or voiceovers.</li>
+            </ul>
+        </section>
+
+        <!-- Section 4 -->
+        <section class="guide-section" style="margin-bottom: 22px; background: rgba(255, 255, 255, 0.02); padding: 18px 22px; border-radius: 10px; border-left: 4px solid #10ac84;">
+            <h3 style="font-size: 17px; color: #1dd1a1; margin: 0 0 8px 0; font-weight: 700;">4. Advanced Text & Smart AI Toolsets</h3>
+            <ul style="font-size: 13.5px; color: #dcdde1; line-height: 1.7; padding-left: 20px; margin: 0;">
+                <li style="margin-bottom: 6px;"><strong style="color: #ffffff;">Designer Text Overlays:</strong> Drop in titles, lower thirds, or captions. You can fully customize the text by tweaking the fonts, colors, and formatting to match your style.</li>
+                <li style="margin-bottom: 6px;"><strong style="color: #ffffff;">Auto AI Subtitles:</strong> Skip the manual typing. Our smart tool listens to your audio and generates perfectly timed subtitles automatically. You can even create captions in different languages to share your videos with viewers all over the world.</li>
+                <li style="margin-bottom: 6px;"><strong style="color: #ffffff;">i Info Trigger:</strong> Need help? Click the info button on any tool to get quick tips and step by step guides.</li>
+                <li style="margin-bottom: 6px;"><strong style="color: #ffffff;">Background Denoise:</strong> Clean up your audio in seconds. Automatically remove background noise, fan hum, and wind interference with a single click.</li>
+                <li><strong style="color: #ffffff;">Dynamic Font Styling:</strong> Swap your video's vibe instantly by switching between Modern, Neon, or Classic text looks to see how they look live.</li>
+            </ul>
+        </section>
+
+        <!-- Section 5 -->
+        <section class="guide-section" style="margin-bottom: 22px; background: rgba(255, 255, 255, 0.02); padding: 18px 22px; border-radius: 10px; border-left: 4px solid #f59e0b;">
+            <h3 style="font-size: 17px; color: #fbbf24; margin: 0 0 12px 0; font-weight: 700;">5. Master Editing Controls & Utility Matrix</h3>
+            <div class="step-card-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px;">
+                <div style="background: rgba(255,255,255,0.03); padding: 12px; border-radius: 8px; border: 1px solid #2f3542; font-size: 12.5px; color: #dcdde1; line-height: 1.6;"><strong style="color: #38bdf8;">Undo / Redo:</strong> Effortlessly step backward or forward through your editing history states to safely correct accidental mistakes and experiment with different creative choices worry free.</div>
+                <div style="background: rgba(255,255,255,0.03); padding: 12px; border-radius: 8px; border: 1px solid #2f3542; font-size: 12.5px; color: #dcdde1; line-height: 1.6;"><strong style="color: #38bdf8;">Blur Mask:</strong> Hide sensitive info like faces, private details, or license plates anywhere in your video.</div>
+                <div style="background: rgba(255,255,255,0.03); padding: 12px; border-radius: 8px; border: 1px solid #2f3542; font-size: 12.5px; color: #dcdde1; line-height: 1.6;"><strong style="color: #38bdf8;">Split Clip:</strong> Chop up long video or audio tracks exactly where you want. Use it to cut out mistakes, reorder clips, or clear out dead space.</div>
+                <div style="background: rgba(255,255,255,0.03); padding: 12px; border-radius: 8px; border: 1px solid #2f3542; font-size: 12.5px; color: #dcdde1; line-height: 1.6;"><strong style="color: #38bdf8;">Crop Presets:</strong> Change your videos shape to fit anywhere. Weve got ready made sizes for YouTube, Shorts and TikTok , or Instagram.</div>
+                <div style="background: rgba(255,255,255,0.03); padding: 12px; border-radius: 8px; border: 1px solid #2f3542; font-size: 12.5px; color: #dcdde1; line-height: 1.6;"><strong style="color: #38bdf8;">Speed Modifier:</strong> Speed up your footage up to 2x for fast time lapses, or slow it down to 0.5x for clean slow motion on your video .</div>
+                <div style="background: rgba(255,255,255,0.03); padding: 12px; border-radius: 8px; border: 1px solid #2f3542; font-size: 12.5px; color: #dcdde1; line-height: 1.6;"><strong style="color: #38bdf8;">Fill & Fit Canvas:</strong> Ditch those ugly black bars on the sides. Easily stretch and resize your clips to fill up the whole screen.</div>
+                <div style="background: rgba(255,255,255,0.03); padding: 12px; border-radius: 8px; border: 1px solid #2f3542; font-size: 12.5px; color: #dcdde1; line-height: 1.6;"><strong style="color: #38bdf8;">Zoom In:</strong> Punch into specific parts of your video to highlight small details or create a tighter crop.</div>
+                <div style="background: rgba(255,255,255,0.03); padding: 12px; border-radius: 8px; border: 1px solid #2f3542; font-size: 12.5px; color: #dcdde1; line-height: 1.6;"><strong style="color: #38bdf8;">Opacity Adjustment:</strong> Fade graphics and overlays in or out, or blend layers together so they look natural.</div>
+                <div style="background: rgba(255,255,255,0.03); padding: 12px; border-radius: 8px; border: 1px solid #2f3542; font-size: 12.5px; color: #dcdde1; line-height: 1.6;"><strong style="color: #38bdf8;">Rotate & Flip:</strong> Spin your clips 90° or 180°, or mirror them horizontally or vertically to fix upside down footage.</div>
+                <div style="background: rgba(255,255,255,0.03); padding: 12px; border-radius: 8px; border: 1px solid #2f3542; font-size: 12.5px; color: #dcdde1; line-height: 1.6;"><strong style="color: #38bdf8;">Color Filters:</strong> Give your video an instant mood upgrade with movie-grade filters, warm looks, and vintage styles.</div>
+                <div style="background: rgba(255,255,255,0.03); padding: 12px; border-radius: 8px; border: 1px solid #2f3542; font-size: 12.5px; color: #dcdde1; line-height: 1.6;"><strong style="color: #38bdf8;">Chroma Key:</strong> Knock out green screen or blue screen backgrounds instantly and swap them for custom photos or video backdrops.</div>
+                <div style="background: rgba(255,255,255,0.03); padding: 12px; border-radius: 8px; border: 1px solid #2f3542; font-size: 12.5px; color: #dcdde1; line-height: 1.6;"><strong style="color: #38bdf8;">Direct Voiceover:</strong> Record your commentary or narration straight into the timeline while watching your video play back.</div>
+                <div style="background: rgba(255,255,255,0.03); padding: 12px; border-radius: 8px; border: 1px solid #2f3542; font-size: 12.5px; color: #dcdde1; line-height: 1.6;"><strong style="color: #38bdf8;">Review AI:</strong> Double check and tweak your auto generated subtitles or smart cuts before you export the final project.</div>
+                <div style="background: rgba(255,255,255,0.03); padding: 12px; border-radius: 8px; border: 1px solid #2f3542; font-size: 12.5px; color: #dcdde1; line-height: 1.6;"><strong style="color: #38bdf8;">Ask AI Assistant:</strong> Stuck on a tool? Get fast troubleshooting tips and editing suggestions from the built in helper.</div>
+                <div style="background: rgba(255,255,255,0.03); padding: 12px; border-radius: 8px; border: 1px solid #2f3542; font-size: 12.5px; color: #dcdde1; line-height: 1.6;"><strong style="color: #38bdf8;">Delete Element:</strong> Clear out unwanted clips, audio tracks, stickers, or text blocks from your timeline instantly.</div>
+                <div style="background: rgba(255,255,255,0.03); padding: 12px; border-radius: 8px; border: 1px solid #2f3542; font-size: 12.5px; color: #dcdde1; line-height: 1.6;"><strong style="color: #38bdf8;">Auto Session Restore:</strong> S Studio automatically saves your project locally. If your browser crashes or reloads, your hard work will still be right here.</div>
+            </div>
+        </section>
+
+        <!-- Section 6: PIP Suite -->
+        <section class="guide-section pip-highlight" style="margin-bottom: 22px; background: rgba(255, 255, 255, 0.02); padding: 18px 22px; border-radius: 10px; border-left: 4px solid #ff4757;">
+            <h3 style="font-size: 17px; color: #ff6b81; margin: 0 0 8px 0; font-weight: 700;">6. PiP (Picture-in-Picture) Advanced Floating Control Suite</h3>
+            <p style="font-size: 13.5px; color: #dcdde1; line-height: 1.7; margin-bottom: 12px;">Selecting any active PiP overlay unlocks a specialized tool floating utility bar:</p>
+            <div class="pip-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px;">
+                <span style="background: rgba(255,255,255,0.03); padding: 10px 12px; border-radius: 6px; border: 1px solid #2f3542; font-size: 12.5px; color: #dcdde1; line-height: 1.6;"><strong style="color: #00f2fe;">Replace:</strong> Swap any video, image, or graphic with a new file without losing your original timing, applied effects, or screen position.</span>
+                <span style="background: rgba(255,255,255,0.03); padding: 10px 12px; border-radius: 6px; border: 1px solid #2f3542; font-size: 12.5px; color: #dcdde1; line-height: 1.6;"><strong style="color: #00f2fe;">Motion Animations:</strong> Add smooth entrance, exit, and transition effects to your text, stickers, and video clips to make them stand out.</span>
+                <span style="background: rgba(255,255,255,0.03); padding: 10px 12px; border-radius: 6px; border: 1px solid #2f3542; font-size: 12.5px; color: #dcdde1; line-height: 1.6;"><strong style="color: #00f2fe;">Keyframe Tracking:</strong> Animate text, facecam overlays, or graphics along custom paths so they move smoothly across the screen.</span>
+                <span style="background: rgba(255,255,255,0.03); padding: 10px 12px; border-radius: 6px; border: 1px solid #2f3542; font-size: 12.5px; color: #dcdde1; line-height: 1.6;"><strong style="color: #00f2fe;">Transform Lock:</strong> Lock elements in place on your screen so you do not accidentally move or resize them while editing other tracks.</span>
+                <span style="background: rgba(255,255,255,0.03); padding: 10px 12px; border-radius: 6px; border: 1px solid #2f3542; font-size: 12.5px; color: #dcdde1; line-height: 1.6;"><strong style="color: #00f2fe;">Duplicate Layer:</strong> Make an exact copy of any text block, sticker, or overlay including all its colors, effects, and settings with a single click.</span>
+                <span style="background: rgba(255,255,255,0.03); padding: 10px 12px; border-radius: 6px; border: 1px solid #2f3542; font-size: 12.5px; color: #dcdde1; line-height: 1.6;"><strong style="color: #00f2fe;">Precision Crop:</strong> Trim unwanted edges or borders off your footage to focus directly on the main subject in your frame.</span>
+                <span style="background: rgba(255,255,255,0.03); padding: 10px 12px; border-radius: 6px; border: 1px solid #2f3542; font-size: 12.5px; color: #dcdde1; line-height: 1.6;"><strong style="color: #00f2fe;">Duration Timer:</strong> Set the exact start and end times for your overlays down to the frame so they sync up perfectly with your audio.</span>
+                <span style="background: rgba(255,255,255,0.03); padding: 10px 12px; border-radius: 6px; border: 1px solid #2f3542; font-size: 12.5px; color: #dcdde1; line-height: 1.6;"><strong style="color: #00f2fe;">AI Cutout:</strong> Automatically isolate people or main objects from your footage and remove the background in just one step.</span>
+                <span style="background: rgba(255,255,255,0.03); padding: 10px 12px; border-radius: 6px; border: 1px solid #2f3542; font-size: 12.5px; color: #dcdde1; line-height: 1.6;"><strong style="color: #00f2fe;">Rotate & Flip:</strong> Spin your clips by 90° or 180°, or flip your footage upside down to fix awkward camera angles or create fun visual effects.</span>
+                <span style="background: rgba(255,255,255,0.03); padding: 10px 12px; border-radius: 6px; border: 1px solid #2f3542; font-size: 12.5px; color: #dcdde1; line-height: 1.6;"><strong style="color: #00f2fe;">Mirror Effect:</strong> Flip your video or image horizontally or vertically to create symmetrical patterns and split screen visual layouts.</span>
+                <span style="background: rgba(255,255,255,0.03); padding: 10px 12px; border-radius: 6px; border: 1px solid #2f3542; font-size: 12.5px; color: #dcdde1; line-height: 1.6;"><strong style="color: #00f2fe;">Auto Fit:</strong> Automatically resize any image or video clip so it fits your project canvas dimensions perfectly in one click.</span>
+                <span style="background: rgba(255,255,255,0.03); padding: 10px 12px; border-radius: 6px; border: 1px solid #2f3542; font-size: 12.5px; color: #dcdde1; line-height: 1.6;"><strong style="color: #00f2fe;">Layer Blur:</strong> Apply blur effects to your overlays to soften hard edges, create depth of field, or blend graphics into the background.</span>
+                <span style="background: rgba(255,255,255,0.03); padding: 10px 12px; border-radius: 6px; border: 1px solid #2f3542; font-size: 12.5px; color: #dcdde1; line-height: 1.6;"><strong style="color: #00f2fe;">Quick Purge:</strong> Remove unused video layers, stickers, and media clips from your project to keep your timeline organized and uncluttered.</span> 
+            </div>
+        </section>
+
+        <!-- Section 7: Export -->
+        <section class="guide-section" style="margin-bottom: 10px; background: rgba(255, 255, 255, 0.02); padding: 18px 22px; border-radius: 10px; border-left: 4px solid #6366f1;">
+            <h3 style="font-size: 17px; color: #818cf8; margin: 0 0 8px 0; font-weight: 700;">7. Export Engine & Lifetime Cloud Saving</h3>
+            <ul style="font-size: 13.5px; color: #dcdde1; line-height: 1.7; padding-left: 20px; margin: 0;">
+                <li style="margin-bottom: 6px;"><strong style="color: #ffffff;">Export Resolution:</strong> Let the app auto optimize your video for the best quality, or manually choose your own export settings up to a sharp 1440p (2K).</li>
+                <li style="margin-bottom: 6px;"><strong style="color: #ffffff;">Smart File Sizes:</strong> Our built in compression keeps your video file sizes small and easy to share without losing any of your crisp picture quality.</li>
+                <li style="margin-bottom: 6px;"><strong style="color: #ffffff;">Zero Watermarks:</strong> Export clean, professional videos without any annoying forced watermarks or hidden logos on your screen.</li>
+                <li><strong style="color: #ffffff;">Free Cloud Saving & Tutorials:</strong> Log into your free account to back up your projects safely in the cloud so you can edit across devices. Plus, get instant access to our library of video tutorials and editing guides anytime.</li>
+            </ul>
+        </section>
+
+    </div>
+</div>
+
+<!-- ========================================================================== -->
+<!-- 🎬 S STUDIO CREATOR AUTHENTICATION MODAL (UPDATED - CLEAN & NO DUPLICATES) -->
+<!-- ========================================================================== -->
+<div id="regLoginModal" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(5, 7, 12, 0.9); backdrop-filter: blur(10px); z-index: 1000000; align-items: center; justify-content: center;">
+    <div style="background: #111420; border: 1.5px solid #00f2fe; border-radius: 18px; padding: 32px 28px; width: 92%; max-width: 420px; box-shadow: 0 15px 50px rgba(0, 0, 0, 0.95), 0 0 25px rgba(0, 242, 254, 0.25); position: relative; box-sizing: border-box;">
+        
+        <!-- Close Button -->
+        <span onclick="closeRegisterIdLoginModal()" style="position: absolute; top: 14px; right: 18px; color: #64748b; font-size: 20px; cursor: pointer; transition: color 0.2s;" onmouseover="this.style.color='#ff4757'" onmouseout="this.style.color='#64748b'">✕</span>
+
+        <!-- Header -->
+        <div style="text-align: center; margin-bottom: 20px;">
+            <div style="width: 52px; height: 52px; border-radius: 12px; border: 1.5px solid #00f2fe; padding: 2px; background: #161c28; margin: 0 auto 8px auto; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 12px rgba(0,242,254,0.35);">
+                <img src="https://lh3.googleusercontent.com/d/1F4GgiyEVVlRXOWlmJ_IGBYpiTJH6Yot-" alt="S Studio Logo" style="width: 100%; height: 100%; object-fit: contain;">
+            </div>
+            <h2 id="authModalTitle" style="color: #00f2fe; font-size: 22px; margin: 0; font-weight: 800;">Creator Sign In</h2>
+            <p id="authModalSub" style="color: #94a3b8; font-size: 12px; margin: 3px 0 0 0;">Login with your Register ID or Email</p>
+        </div>
+
+        <!-- 1. DEFAULT VIEW: SIGN IN -->
+        <div id="viewSignIn">
+            <div style="margin-bottom: 12px;">
+                <label style="color: #cbd5e1; font-size: 12px; font-weight: 600; margin-bottom: 4px; display: block;">Register ID or Email</label>
+                <input type="text" id="loginUserIdentifier" placeholder="e.g., SSTU-1001 or email@domain.com" style="width: 100%; padding: 11px 14px; background: #090c14; border: 1px solid #1f2738; border-radius: 8px; color: #00f2fe; font-size: 13.5px; font-weight: 600; box-sizing: border-box; outline: none;">
+            </div>
+
+            <div style="margin-bottom: 8px; position: relative;">
+                <label style="color: #cbd5e1; font-size: 12px; font-weight: 600; margin-bottom: 4px; display: block;">Password</label>
+                <div style="position: relative;">
+                    <input type="password" id="loginPasswordInput" placeholder="Enter your password" style="width: 100%; padding: 11px 40px 11px 14px; background: #090c14; border: 1px solid #1f2738; border-radius: 8px; color: #ffffff; font-size: 13.5px; box-sizing: border-box; outline: none;">
+                    <span onclick="togglePasswordVisibility('loginPasswordInput', this)" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #94a3b8; user-select: none;">👁️</span>
                 </div>
+            </div>
 
-                <header class="guide-mini-header" style="margin-bottom: 20px;">
-                    <h2 style="font-size: 18px; color: #a8a5ff; margin-bottom: 6px;">S Studio (svideoeditor.com) – Ultimate Browser Video Editing Workspace</h2>
-                    <p style="font-size: 13px; color: #a4b0be; line-height: 1.6;">Perform high end video editing workflows directly within your web browser. Edit seamlessly and completely free of cost, without installing heavy desktop software. S Studio is engineered as an all in one educational and professional creative hub, continuously updated to support modern content creators, students, and digital marketers.</p>
-                </header>
+            <div style="text-align: right; margin-bottom: 18px;">
+                <a href="forgot-password.html" style="color: #00f2fe; font-size: 12px; text-decoration: none; font-weight: 600;">Forgot Password?</a>
+            </div>
 
-                <!-- Section 1 -->
-                <section class="guide-section" style="margin-bottom: 20px;">
-                    <h3 style="font-size: 16px; color: #00f2fe; margin-bottom: 6px;">1. How to Upload Media Files</h3>
-                    <p style="font-size: 13px; color: #dcdde1; line-height: 1.6;">Starting your project takes just a few clicks. Simply tap the Upload Video button to select your high resolution footage, screen recordings, or audio files directly from your phone or computer. As soon as your media is added, our complete suite of editing tools will instantly activate giving you everything you need to cut, trim, and enhance your content with full control.</p>
-                </section>
+            <button onclick="submitUserSignIn()" style="width: 100%; padding: 12px; background: linear-gradient(135deg, #00f2fe, #4facfe); color: #000000; font-weight: 800; font-size: 14px; border: none; border-radius: 8px; cursor: pointer; box-shadow: 0 4px 15px rgba(0, 242, 254, 0.35);">
+                Sign In to Studio
+            </button>
 
-                <!-- Section 2 -->
-                <section class="guide-section" style="margin-bottom: 20px;">
-                    <h3 style="font-size: 16px; color: #00f2fe; margin-bottom: 6px;">2. Timeline Control & Unlimited PiP Overlays</h3>
-                    <p style="font-size: 13px; color: #dcdde1; line-height: 1.6;">The timeline sits right underneath your video preview player, and its where youll do most of your editing. You can easily drag and drop your clips, line up your audio tracks, and make clean, frame by frame cuts to piece your video together.</p>
-                    <ul style="font-size: 13px; color: #dcdde1; line-height: 1.6; padding-left: 20px;">
-                        <li><strong>Video Track:</strong> Make clean, frame by frame cuts and chop out the mistakes. Then, just drag and drop your best shots to stitch your video together.</li>
-                        <li><strong>PiP Layering:</strong> Stack as many extra videos and photos on top of your main track as you want. It's perfect if you're adding a facecam for gaming videos, making reaction clips, or building a split screen collage.</li>
-                    </ul>
-                </section>
-
-                <!-- Section 3 -->
-                <section class="guide-section" style="margin-bottom: 20px;">
-                    <h3 style="font-size: 16px; color: #00f2fe; margin-bottom: 6px;">3. Dedicated Audio & Background Music Library</h3>
-                    <p style="font-size: 13px; color: #dcdde1; line-height: 1.6;">Add background music and sound effects using our built in audio library, or upload your own custom tracks.</p>
-                    <ul style="font-size: 13px; color: #dcdde1; line-height: 1.6; padding-left: 20px;">
-                        <li><strong>Local Track Import:</strong> Make your videos stand out by adding your own custom sound. You can pull voiceovers, music, or audio clips straight from your phone or computer. Whether youre dropping in a quick voice memo or layering a full track, just drag and drop the audio anywhere you want it on the timeline.</li>
-                        <li><strong>Cinematic Beats BGM:</strong> High impact, immersive background tracks and powerful sound design engineered to give your action sequences, travel vlogs, and blockbuster style trailers that dramatic cinematic elevation.</li>
-                        <li><strong>Corporate Info Music:</strong> Background tracks made specifically for business pitches, presentations, and tutorials. Clean, professional sound designed to keep the focus right where it belongs on your content.</li>
-                        <li><strong>Upbeat Vlog Sounds:</strong> Catchy, high energy tracks built to snap scrolling eyes right to your videos. Grab the perfect upbeat background music to keep people watching your Shorts, Reels, or TikToks.</li>
-                        <li><strong>Chill Lofi Loops:</strong> Relaxed, ambient lo fi beats perfect for a laid back vibe. Use these chill tracks to set a calm background mood for your aesthetic slow mosan cuts, vlogs, or voiceovers.</li>
-                    </ul>
-                </section>
-
-                <!-- Section 4 -->
-                <section class="guide-section" style="margin-bottom: 20px;">
-                    <h3 style="font-size: 16px; color: #00f2fe; margin-bottom: 6px;">4. Advanced Text & Smart AI Toolsets</h3>
-                    <ul style="font-size: 13px; color: #dcdde1; line-height: 1.6; padding-left: 20px;">
-                        <li><strong>Designer Text Overlays:</strong> Drop in titles, lower thirds, or captions. You can fully customize the text by tweaking the fonts, colors, and formatting to match your style.</li>
-                        <li><strong>Auto AI Subtitles:</strong> Skip the manual typing. Our smart tool listens to your audio and generates perfectly timed subtitles automatically. You can even create captions in different languages to share your videos with viewers all over the world.</li>
-                        <li><strong>i Info Trigger:</strong> Need help? Click the info button on any tool to get quick tips and step by step guides.</li>
-                        <li><strong>Background Denoise:</strong> Clean up your audio in seconds. Automatically remove background noise, fan hum, and wind interference with a single click.</li>
-                        <li><strong>Dynamic Font Styling:</strong> Swap your video's vibe instantly by switching between Modern, Neon, or Classic text looks to see how they look live.</li>
-                    </ul>
-                </section>
-
-                <!-- Section 5 -->
-                <section class="guide-section" style="margin-bottom: 20px;">
-                    <h3 style="font-size: 16px; color: #00f2fe; margin-bottom: 10px;">5. Master Editing Controls & Utility Matrix</h3>
-                    <div class="step-card-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px;">
-                        <div style="background: rgba(255,255,255,0.03); padding: 10px; border-radius: 6px; border: 1px solid #2f3542; font-size: 12px; color: #dcdde1; line-height: 1.5;"><strong>Undo / Redo:</strong> Effortlessly step backward or forward through your editing history states to safely correct accidental mistakes and experiment with different creative choices worry free.</div>
-                        <div style="background: rgba(255,255,255,0.03); padding: 10px; border-radius: 6px; border: 1px solid #2f3542; font-size: 12px; color: #dcdde1; line-height: 1.5;"><strong>Blur Mask:</strong> Hide sensitive info like faces, private details, or license plates anywhere in your video.</div>
-                        <div style="background: rgba(255,255,255,0.03); padding: 10px; border-radius: 6px; border: 1px solid #2f3542; font-size: 12px; color: #dcdde1; line-height: 1.5;"><strong>Split Clip:</strong> Chop up long video or audio tracks exactly where you want. Use it to cut out mistakes, reorder clips, or clear out dead space.</div>
-                        <div style="background: rgba(255,255,255,0.03); padding: 10px; border-radius: 6px; border: 1px solid #2f3542; font-size: 12px; color: #dcdde1; line-height: 1.5;"><strong>Crop Presets:</strong> Change your videos shape to fit anywhere. Weve got ready made sizes for YouTube, Shorts and TikTok , or Instagram.</div>
-                        <div style="background: rgba(255,255,255,0.03); padding: 10px; border-radius: 6px; border: 1px solid #2f3542; font-size: 12px; color: #dcdde1; line-height: 1.5;"><strong>Speed Modifier:</strong> Speed up your footage up to 2x for fast time lapses, or slow it down to 0.5x for clean slow motion on your video .</div>
-                        <div style="background: rgba(255,255,255,0.03); padding: 10px; border-radius: 6px; border: 1px solid #2f3542; font-size: 12px; color: #dcdde1; line-height: 1.5;"><strong>Fill & Fit Canvas:</strong> Ditch those ugly black bars on the sides. Easily stretch and resize your clips to fill up the whole screen.</div>
-                        <div style="background: rgba(255,255,255,0.03); padding: 10px; border-radius: 6px; border: 1px solid #2f3542; font-size: 12px; color: #dcdde1; line-height: 1.5;"><strong>Zoom In:</strong> Punch into specific parts of your video to highlight small details or create a tighter crop.</div>
-                        <div style="background: rgba(255,255,255,0.03); padding: 10px; border-radius: 6px; border: 1px solid #2f3542; font-size: 12px; color: #dcdde1; line-height: 1.5;"><strong>Opacity Adjustment:</strong> Fade graphics and overlays in or out, or blend layers together so they look natural.</div>
-                        <div style="background: rgba(255,255,255,0.03); padding: 10px; border-radius: 6px; border: 1px solid #2f3542; font-size: 12px; color: #dcdde1; line-height: 1.5;"><strong>Rotate & Flip:</strong> Spin your clips 90° or 180°, or mirror them horizontally or vertically to fix upside down footage.</div>
-                        <div style="background: rgba(255,255,255,0.03); padding: 10px; border-radius: 6px; border: 1px solid #2f3542; font-size: 12px; color: #dcdde1; line-height: 1.5;"><strong>Color Filters:</strong> Give your video an instant mood upgrade with movie-grade filters, warm looks, and vintage styles.</div>
-                        <div style="background: rgba(255,255,255,0.03); padding: 10px; border-radius: 6px; border: 1px solid #2f3542; font-size: 12px; color: #dcdde1; line-height: 1.5;"><strong>Chroma Key:</strong> Knock out green screen or blue screen backgrounds instantly and swap them for custom photos or video backdrops.</div>
-                        <div style="background: rgba(255,255,255,0.03); padding: 10px; border-radius: 6px; border: 1px solid #2f3542; font-size: 12px; color: #dcdde1; line-height: 1.5;"><strong>Direct Voiceover:</strong> Record your commentary or narration straight into the timeline while watching your video play back.</div>
-                        <div style="background: rgba(255,255,255,0.03); padding: 10px; border-radius: 6px; border: 1px solid #2f3542; font-size: 12px; color: #dcdde1; line-height: 1.5;"><strong>Review AI:</strong> Double check and tweak your auto generated subtitles or smart cuts before you export the final project.</div>
-                        <div style="background: rgba(255,255,255,0.03); padding: 10px; border-radius: 6px; border: 1px solid #2f3542; font-size: 12px; color: #dcdde1; line-height: 1.5;"><strong>Ask AI Assistant:</strong> Stuck on a tool? Get fast troubleshooting tips and editing suggestions from the built in helper.</div>
-                        <div style="background: rgba(255,255,255,0.03); padding: 10px; border-radius: 6px; border: 1px solid #2f3542; font-size: 12px; color: #dcdde1; line-height: 1.5;"><strong>Delete Element:</strong> Clear out unwanted clips, audio tracks, stickers, or text blocks from your timeline instantly.</div>
-                        <div style="background: rgba(255,255,255,0.03); padding: 10px; border-radius: 6px; border: 1px solid #2f3542; font-size: 12px; color: #dcdde1; line-height: 1.5;"><strong>Auto Session Restore:</strong> S Studio automatically saves your project locally. If your browser crashes or reloads, your hard work will still be right here.</div>
-                    </div>
-                </section>
-
-                <!-- Section 6: PIP Suite -->
-                <section class="guide-section pip-highlight" style="margin-bottom: 20px;">
-                    <h3 style="font-size: 16px; color: #00f2fe; margin-bottom: 6px;">6. PiP (Picture-in-Picture) Advanced Floating Control Suite</h3>
-                    <p style="font-size: 13px; color: #dcdde1; line-height: 1.6; margin-bottom: 10px;">Selecting any active PiP overlay unlocks a specialized tool floating utility bar:</p>
-                    <div class="pip-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px;">
-                        <span style="background: rgba(255,255,255,0.03); padding: 8px 10px; border-radius: 5px; border: 1px solid #2f3542; font-size: 12px; color: #dcdde1; line-height: 1.5;"><strong>Replace:</strong> Swap any video, image, or graphic with a new file without losing your original timing, applied effects, or screen position.</span>
-                        <span style="background: rgba(255,255,255,0.03); padding: 8px 10px; border-radius: 5px; border: 1px solid #2f3542; font-size: 12px; color: #dcdde1; line-height: 1.5;"><strong>Motion Animations:</strong> Add smooth entrance, exit, and transition effects to your text, stickers, and video clips to make them stand out.</span>
-                        <span style="background: rgba(255,255,255,0.03); padding: 8px 10px; border-radius: 5px; border: 1px solid #2f3542; font-size: 12px; color: #dcdde1; line-height: 1.5;"><strong>Keyframe Tracking:</strong> Animate text, facecam overlays, or graphics along custom paths so they move smoothly across the screen.</span>
-                        <span style="background: rgba(255,255,255,0.03); padding: 8px 10px; border-radius: 5px; border: 1px solid #2f3542; font-size: 12px; color: #dcdde1; line-height: 1.5;"><strong>Transform Lock:</strong> Lock elements in place on your screen so you do not accidentally move or resize them while editing other tracks.</span>
-                        <span style="background: rgba(255,255,255,0.03); padding: 8px 10px; border-radius: 5px; border: 1px solid #2f3542; font-size: 12px; color: #dcdde1; line-height: 1.5;"><strong>Duplicate Layer:</strong> Make an exact copy of any text block, sticker, or overlay including all its colors, effects, and settings with a single click.</span>
-                        <span style="background: rgba(255,255,255,0.03); padding: 8px 10px; border-radius: 5px; border: 1px solid #2f3542; font-size: 12px; color: #dcdde1; line-height: 1.5;"><strong>Precision Crop:</strong> Trim unwanted edges or borders off your footage to focus directly on the main subject in your frame.</span>
-                        <span style="background: rgba(255,255,255,0.03); padding: 8px 10px; border-radius: 5px; border: 1px solid #2f3542; font-size: 12px; color: #dcdde1; line-height: 1.5;"><strong>Duration Timer:</strong> Set the exact start and end times for your overlays down to the frame so they sync up perfectly with your audio.</span>
-                        <span style="background: rgba(255,255,255,0.03); padding: 8px 10px; border-radius: 5px; border: 1px solid #2f3542; font-size: 12px; color: #dcdde1; line-height: 1.5;"><strong>AI Cutout:</strong> Automatically isolate people or main objects from your footage and remove the background in just one step.</span>
-                        <span style="background: rgba(255,255,255,0.03); padding: 8px 10px; border-radius: 5px; border: 1px solid #2f3542; font-size: 12px; color: #dcdde1; line-height: 1.5;"><strong>Rotate & Flip:</strong> Spin your clips by 90° or 180°, or flip your footage upside down to fix awkward camera angles or create fun visual effects.</span>
-                        <span style="background: rgba(255,255,255,0.03); padding: 8px 10px; border-radius: 5px; border: 1px solid #2f3542; font-size: 12px; color: #dcdde1; line-height: 1.5;"><strong>Mirror Effect:</strong> Flip your video or image horizontally or vertically to create symmetrical patterns and split screen visual layouts.</span>
-                        <span style="background: rgba(255,255,255,0.03); padding: 8px 10px; border-radius: 5px; border: 1px solid #2f3542; font-size: 12px; color: #dcdde1; line-height: 1.5;"><strong>Auto Fit:</strong> Automatically resize any image or video clip so it fits your project canvas dimensions perfectly in one click.</span>
-                        <span style="background: rgba(255,255,255,0.03); padding: 8px 10px; border-radius: 5px; border: 1px solid #2f3542; font-size: 12px; color: #dcdde1; line-height: 1.5;"><strong>Layer Blur:</strong> Apply blur effects to your overlays to soften hard edges, create depth of field, or blend graphics into the background.</span>
-                        <span style="background: rgba(255,255,255,0.03); padding: 8px 10px; border-radius: 5px; border: 1px solid #2f3542; font-size: 12px; color: #dcdde1; line-height: 1.5;"><strong>Quick Purge:</strong> Remove unused video layers, stickers, and media clips from your project to keep your timeline organized and uncluttered.</span> 
-                    </div>
-                </section>
-
-                <!-- Section 7: Export -->
-                <section class="guide-section" style="margin-bottom: 20px;">
-                    <h3 style="font-size: 16px; color: #00f2fe; margin-bottom: 6px;">7. Export Engine & Lifetime Cloud Saving</h3>
-                    <ul style="font-size: 13px; color: #dcdde1; line-height: 1.6; padding-left: 20px;">
-                        <li><strong>Export Resolution:</strong> Let the app auto optimize your video for the best quality, or manually choose your own export settings up to a sharp 1440p (2K).</li>
-                        <li><strong>Smart File Sizes:</strong> Our built in compression keeps your video file sizes small and easy to share without losing any of your crisp picture quality.</li>
-                        <li><strong>Zero Watermarks:</strong> Export clean, professional videos without any annoying forced watermarks or hidden logos on your screen.</li>
-                        <li><strong>Free Cloud Saving & Tutorials:</strong> Log into your free account to back up your projects safely in the cloud so you can edit across devices. Plus, get instant access to our library of video tutorials and editing guides anytime.</li>
-                    </ul>
-                </section>
-
+            <div style="text-align: center; margin-top: 16px; font-size: 12.5px; color: #94a3b8;">
+                New creator? <a href="javascript:void(0)" onclick="switchAuthScreen('signup')" style="color: #00f2fe; font-weight: 700; text-decoration: none;">Sign Up</a>
             </div>
         </div>
 
-        <!-- INTEGRATED PHOTO EDITING SUITE SECTION -->
-        <section class="photo-feature-wrapper">
-            <div class="photo-feature-card">
-                <div class="photo-badge">Integrated Creative Suite</div>
-                <h2 class="photo-main-title">Why S Video Editor Includes Dedicated Photo Tools</h2>
-                
-                <p class="photo-lead-text">
-                    Video editing does not stop at raw video footage alone. In real-world content creation, working with images is just as essential—whether you are creating custom thumbnails, designing posters, or integrating image overlays and slides directly into your main timeline.
-                </p>
+        <!-- 2. SIGN UP VIEW -->
+        <div id="viewSignUp" style="display: none;">
+            <div style="margin-bottom: 12px;">
+                <label style="color: #cbd5e1; font-size: 12px; font-weight: 600; margin-bottom: 4px; display: block;">Full Name</label>
+                <input type="text" id="regFullName" placeholder="Enter your full name" style="width: 100%; padding: 10px 14px; background: #090c14; border: 1px solid #1f2738; border-radius: 8px; color: #ffffff; font-size: 13.5px; box-sizing: border-box; outline: none;">
+            </div>
 
-                <p class="photo-body-text">
-                    Instead of forcing creators to jump between different websites and standalone apps just to polish an image, S Studio (<a href="https://svideoeditor.com/" target="_blank" rel="noopener" class="photo-inline-link">svideoeditor.com</a>) integrates built-in, reliable Photo Editing tools right alongside our main video editor.
-                </p>
+            <div style="margin-bottom: 12px;">
+                <label style="color: #cbd5e1; font-size: 12px; font-weight: 600; margin-bottom: 4px; display: block;">Email Address</label>
+                <input type="email" id="regEmailAddress" placeholder="name@example.com" style="width: 100%; padding: 10px 14px; background: #090c14; border: 1px solid #1f2738; border-radius: 8px; color: #00f2fe; font-size: 13.5px; box-sizing: border-box; outline: none;">
+            </div>
 
-                <p class="photo-body-text">
-                    Some might wonder why a platform named S Video Editor includes comprehensive photo tools, but as creators, we knew having both capabilities in one seamless workspace was an absolute necessity.
-                </p>
-
-                <div class="photo-card-footer">
-                    <p class="photo-thank-you">Thank you for choosing S Studio!</p>
+            <div style="margin-bottom: 12px; position: relative;">
+                <label style="color: #cbd5e1; font-size: 12px; font-weight: 600; margin-bottom: 4px; display: block;">Password</label>
+                <div style="position: relative;">
+                    <input type="password" id="regPasswordInput" placeholder="Create password" style="width: 100%; padding: 10px 40px 10px 14px; background: #090c14; border: 1px solid #1f2738; border-radius: 8px; color: #ffffff; font-size: 13.5px; box-sizing: border-box; outline: none;">
+                    <span onclick="togglePasswordVisibility('regPasswordInput', this)" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #94a3b8; user-select: none;">👁️</span>
                 </div>
             </div>
-        </section>
+
+            <div style="margin-bottom: 18px; position: relative;">
+                <label style="color: #cbd5e1; font-size: 12px; font-weight: 600; margin-bottom: 4px; display: block;">Confirm Password</label>
+                <div style="position: relative;">
+                    <input type="password" id="regConfirmPasswordInput" placeholder="Re-enter password" style="width: 100%; padding: 10px 40px 10px 14px; background: #090c14; border: 1px solid #1f2738; border-radius: 8px; color: #ffffff; font-size: 13.5px; box-sizing: border-box; outline: none;">
+                    <span onclick="togglePasswordVisibility('regConfirmPasswordInput', this)" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #94a3b8; user-select: none;">👁️</span>
+                </div>
+            </div>
+
+            <button onclick="requestSignUpOtp()" id="btnSendSignUpOtp" style="width: 100%; padding: 12px; background: linear-gradient(135deg, #00f2fe, #4facfe); color: #000000; font-weight: 800; font-size: 14px; border: none; border-radius: 8px; cursor: pointer; box-shadow: 0 4px 15px rgba(0, 242, 254, 0.35);">
+                Submit to Verify OTP
+            </button>
+
+            <div style="text-align: center; margin-top: 14px; font-size: 12px; color: #94a3b8;">
+                Already registered? <a href="javascript:void(0)" onclick="switchAuthScreen('signin')" style="color: #00f2fe; font-weight: 700; text-decoration: none;">Sign In</a>
+            </div>
+        </div>
+
+        <!-- 3. OTP VERIFICATION VIEW -->
+        <div id="viewOtpVerification" style="display: none; text-align: center;">
+            <p style="color: #cbd5e1; font-size: 13px; margin: 0 0 16px 0;">Enter the 6-digit verification code sent to your email:</p>
+            
+            <div style="display: flex; justify-content: center; gap: 8px; margin-bottom: 22px;">
+                <input type="text" maxlength="1" class="studio-otp-digit" oninput="handleOtpStep(this, 0)" onkeydown="handleOtpBackspace(event, 0)">
+                <input type="text" maxlength="1" class="studio-otp-digit" oninput="handleOtpStep(this, 1)" onkeydown="handleOtpBackspace(event, 1)">
+                <input type="text" maxlength="1" class="studio-otp-digit" oninput="handleOtpStep(this, 2)" onkeydown="handleOtpBackspace(event, 2)">
+                <input type="text" maxlength="1" class="studio-otp-digit" oninput="handleOtpStep(this, 3)" onkeydown="handleOtpBackspace(event, 3)">
+                <input type="text" maxlength="1" class="studio-otp-digit" oninput="handleOtpStep(this, 4)" onkeydown="handleOtpBackspace(event, 4)">
+                <input type="text" maxlength="1" class="studio-otp-digit" oninput="handleOtpStep(this, 5)" onkeydown="handleOtpBackspace(event, 5)">
+            </div>
+
+            <button onclick="submitVerifyOtpCode()" id="btnVerifyOtpAction" style="width: 100%; padding: 12px; background: linear-gradient(135deg, #10ac84, #1dd1a1); color: #ffffff; font-weight: 800; font-size: 14px; border: none; border-radius: 8px; cursor: pointer; box-shadow: 0 4px 15px rgba(16, 172, 132, 0.4);">
+                Verify & Activate Account
+            </button>
+
+            <div style="margin-top: 15px; font-size: 12px; color: #94a3b8;">
+                Didn't get code? <a href="javascript:void(0)" onclick="requestSignUpOtp()" style="color: #00f2fe; text-decoration: none; font-weight: 600;">Resend OTP</a>
+            </div>
+        </div>
+
+        <!-- 4. ACCOUNT ACTIVATED SUCCESS VIEW -->
+        <div id="viewSuccessIdDisplay" style="display: none; text-align: center;">
+            <div style="font-size: 40px; margin-bottom: 8px;">🎉</div>
+            <h3 style="color: #1dd1a1; font-size: 18px; margin: 0 0 6px 0;">Account Activated!</h3>
+            <p style="color: #94a3b8; font-size: 12.5px; margin-bottom: 16px;">Your official S Studio Register ID:</p>
+            
+            <div style="background: rgba(0, 242, 254, 0.08); border: 2px dashed #00f2fe; border-radius: 12px; padding: 15px; margin-bottom: 20px;">
+                <span id="createdRegisterIdSpan" style="font-size: 26px; font-weight: 800; color: #00f2fe; letter-spacing: 2px;">SSTU-XXXX</span>
+            </div>
+
+            <button onclick="closeRegisterIdLoginModal()" style="width: 100%; padding: 12px; background: linear-gradient(135deg, #00f2fe, #4facfe); color: #000000; font-weight: 800; font-size: 14px; border: none; border-radius: 8px; cursor: pointer;">
+                Enter Studio Workspace
+            </button>
+        </div>
+
+        <div id="authStatusBanner" style="text-align: center; font-size: 12px; margin-top: 14px; min-height: 16px; font-weight: 600;"></div>
+    </div>
+</div>
+
 
         <!-- CONTINUOUS INNOVATION CARD -->
         <div class="innovation-rewards-card" style="background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(17, 24, 39, 0.98)); border: 2px solid #6c5ce7; border-radius: 16px; padding: 35px 30px; margin: 35px auto 25px auto; max-width: 980px; text-align: left; box-sizing: border-box; box-shadow: 0 12px 35px rgba(108, 92, 231, 0.2);">
@@ -290,90 +524,167 @@
             </div>
         </div>
 
-        <!-- Founder's Vision Card -->
-        <div class="founders-vision-card-large" style="background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(17, 24, 39, 0.98)); border: 2px solid #00f2fe; border-radius: 16px; padding: 35px 30px; margin: 35px auto 25px auto; max-width: 980px; text-align: left; box-sizing: border-box; box-shadow: 0 12px 35px rgba(0, 242, 254, 0.15);">
-            <div style="display: flex; align-items: center; gap: 18px; margin-bottom: 18px; border-bottom: 1px solid rgba(0, 242, 254, 0.2); padding-bottom: 18px; flex-wrap: wrap;">
-                <div style="width: 55px; height: 55px; background: rgba(0, 242, 254, 0.08); border: 1.5px solid #00f2fe; border-radius: 12px; display: flex; justify-content: center; align-items: center; padding: 5px; box-shadow: 0 0 15px rgba(0, 242, 254, 0.2); flex-shrink: 0;">
-                    <img src="https://lh3.googleusercontent.com/d/1F4GgiyEVVlRXOWlmJ_IGBYpiTJH6Yot-" alt="S Studio Logo" style="width: 100%; height: 100%; object-fit: contain;">
-                </div>
+        <!-- ========================================================================== -->
+<!-- 🌟 FOUNDER'S VISION CARD (ROYAL GOLD THEME WITH ORGANIC GROWTH ANIMATION) -->
+<!-- ========================================================================== -->
+<div class="founders-vision-card-large" style="background: linear-gradient(135deg, rgba(20, 18, 12, 0.96), rgba(15, 13, 8, 0.98)) !important; border: 2px solid #ffd700 !important; border-radius: 16px !important; padding: 35px 30px !important; margin: 35px auto 25px auto !important; max-width: 980px !important; text-align: left !important; box-sizing: border-box !important; box-shadow: 0 12px 40px rgba(0, 0, 0, 0.9), 0 0 25px rgba(255, 215, 0, 0.18) !important; position: relative !important; overflow: hidden !important;">
 
-                <div style="flex: 1; min-width: 250px;">
-                    <h2 style="color: #00f2fe; margin: 0; font-size: 23px; font-weight: 800; letter-spacing: -0.3px; line-height: 1.3;"> S Studio (svideoeditor.com) – Technology Belongs to Everyone!</h2>
-                    <p style="color: #38bdf8; font-size: 13.5px; margin: 5px 0 0 0; font-weight: 600;">An official digital initiative by Sriram Groups, keeping powerful tools 99% free for everyone.</p>
-                </div>
-            </div>
+    <!-- 🌿 COMPACT CORNER ANIMATION: WATERING & GROWING FRUIT-BEARING TREE -->
+    <div style="position: absolute; top: 12px; right: 18px; width: 110px; height: 110px; pointer-events: none; opacity: 0.92; z-index: 2;">
+        <svg viewBox="0 0 120 120" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <filter id="goldFruitGlow" x="-20%" y="-20%" width="140%" height="140%">
+                    <feGaussianBlur stdDeviation="2" result="blur" />
+                    <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                </filter>
+            </defs>
 
-            <div style="color: #e2e8f0; font-size: 14px; line-height: 1.8; font-family: system-ui, -apple-system, sans-serif;">
-                <p style="margin-bottom: 16px;">
-                    At <strong>Sriram Groups Official</strong>, We operate on one clear principle: keep our tools free, transparent, and easy to use: <em>poverty, financial difficulties, or a lack of expensive hardware should never restrict a passionate creators talent, vision, and extraordinary potential.</em>
-                </p>
+            <!-- Soil Base Mound -->
+            <path d="M 50 110 Q 80 102 110 110" stroke="#8d6e63" stroke-width="4" fill="none" stroke-linecap="round" />
 
-                <p style="margin-bottom: 16px;">
-                   High quality video has become essential for growing a brand, creating content, or marketing a business. But most professional editing software comes with heavy monthly subscription fees or requires expensive, high end computers that many creators simply can't afford. S Studio was built to solve that problem. We believe high performance shouldn't require a high end setup or a monthly bill, giving students, small business owners, and independent creators access to professional editing tools completely free.
-                </p>
+            <!-- Person: Arm & Watering Can (Tilting and Pouring) -->
+            <g>
+                <animateTransform attributeName="transform" type="rotate" values="0 30 50; 12 30 50; 0 30 50" dur="4s" repeatCount="indefinite" />
+                <!-- Arm -->
+                <path d="M 5 45 Q 20 40 32 52" stroke="#f1c40f" stroke-width="4" stroke-linecap="round" fill="none" />
+                <!-- Watering Can Body -->
+                <path d="M 28 50 L 44 48 L 41 64 L 26 64 Z" fill="#ffd700" stroke="#b7950b" stroke-width="1" />
+                <!-- Can Handle -->
+                <path d="M 26 52 Q 18 56 26 62" stroke="#d4ac0d" stroke-width="2" fill="none" />
+                <!-- Spout -->
+                <path d="M 44 54 L 54 44" stroke="#ffd700" stroke-width="3" stroke-linecap="round" />
+                <polygon points="52,41 57,43 54,48 50,45" fill="#f39c12" />
+            </g>
 
-                <p style="margin-bottom: 20px; background: rgba(0, 242, 254, 0.05); border-left: 4px solid #00f2fe; padding: 12px 16px; border-radius: 4px;">
-                    <strong>S Studio (svideoeditor.com)</strong> S Studio was built to bridge this gap. We run this platform not for profit, but as a free initiative to give every creator access to powerful, professional video editing tools. <strong>Philanthropic Digital Initiative</strong> offering 99% of its robust editing capabilities completely free to creators worldwide.
-                </p>
+            <!-- Falling Animated Water Droplets -->
+            <g fill="#00f2fe">
+                <circle cx="56" cy="49" r="1.5">
+                    <animate attributeName="cy" values="49;104" dur="1.3s" begin="0.3s" repeatCount="indefinite" />
+                    <animate attributeName="opacity" values="0;1;0" dur="1.3s" begin="0.3s" repeatCount="indefinite" />
+                </circle>
+                <circle cx="59" cy="51" r="1.2">
+                    <animate attributeName="cy" values="51;105" dur="1.3s" begin="0.7s" repeatCount="indefinite" />
+                    <animate attributeName="opacity" values="0;1;0" dur="1.3s" begin="0.7s" repeatCount="indefinite" />
+                </circle>
+                <circle cx="62" cy="50" r="1.4">
+                    <animate attributeName="cy" values="50;105" dur="1.3s" begin="1.0s" repeatCount="indefinite" />
+                    <animate attributeName="opacity" values="0;1;0" dur="1.3s" begin="1.0s" repeatCount="indefinite" />
+                </circle>
+            </g>
 
-                <h3 style="color: #ffffff; font-size: 16px; margin: 20px 0 10px 0;"> Why S Studio Stands Out:</h3>
-                <ul style="padding-left: 20px; color: #cbd5e1; margin-bottom: 25px; list-style: none;">
-                    <li style="margin-bottom: 10px;"> <strong>Zero Premium Paywalls:</strong> Get full access to all our editing tools for free no hidden fees, locked features, or surprise subscription costs.</li>
-                    <li style="margin-bottom: 10px;"> <strong>High End Studio Suite:</strong> Get full access to all our pro tools completely free. Take advantage of smart features like AI Subtitles, multi track editing, unlimited layers (PiP), and sharp 2K exports without spending a dime.</li>
-                    <li style="margin-bottom: 10px;"> <strong>Equal Technological Access:</strong> Democratizing content creation by allowing you to edit seamlessly on both entry level smartphones and desktop PCs through your web browser without performance bottlenecks.</li>
-                </ul>
+            <!-- 🌳 Tree Sprouting, Branching and Bearing Golden Fruits -->
+            <g id="growingSprout">
+                <!-- Growing Stem (Scaling up organically from ground) -->
+                <path d="M 80 106 Q 80 85 81 68 Q 82 52 83 40" stroke="#27ae60" stroke-width="3.5" fill="none" stroke-linecap="round">
+                    <animate attributeName="d" values="M 80 106 Q 80 100 80 95 Q 80 93 80 90; M 80 106 Q 80 85 81 68 Q 82 52 83 40; M 80 106 Q 80 85 81 68 Q 82 52 83 40" keyTimes="0; 0.55; 1" dur="4s" repeatCount="indefinite" />
+                </path>
 
-                <div style="background: rgba(108, 92, 231, 0.1); border: 1px solid rgba(108, 92, 231, 0.4); padding: 22px; border-radius: 12px; margin: 25px 0;">
-                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
-                        <span style="font-size: 20px;">💌</span>
-                        <h4 style="color: #a8a5ff; margin: 0; font-size: 16px; font-weight: 700;">Official Message from S. Purushotham (Founder & CEO, Sriram Groups):</h4>
-                    </div>
-                    <p style="color: #f1f5f9; font-style: italic; font-size: 14px; margin: 0; line-height: 1.7;">
-                        All you need is a good idea and the drive to start. You don't need expensive software or a big budget to create something great Sriram Groups is here to support you. We built svideoeditor.com to help you practice your skills, grow your brand, and bring your ideas to life completely free.
-                    </p>
-                </div>
-            </div>
+                <!-- Branches -->
+                <path d="M 81 72 Q 72 65 67 67" stroke="#2ecc71" stroke-width="2.5" fill="none" stroke-linecap="round">
+                    <animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.35;0.6;1" dur="4s" repeatCount="indefinite" />
+                </path>
+                <path d="M 82 58 Q 92 50 97 53" stroke="#2ecc71" stroke-width="2.5" fill="none" stroke-linecap="round">
+                    <animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.45;0.7;1" dur="4s" repeatCount="indefinite" />
+                </path>
 
-            <div style="display: flex; justify-content: center; align-items: center; margin-top: 20px; padding-top: 15px; border-top: 1px solid rgba(255, 255, 255, 0.1); text-align: center;">
-                <span style="color: #00f2fe; font-size: 14px; font-weight: 700;"> You bring the talent. Sriram Groups provides the power.</span>
-            </div>
+                <!-- Leaves Canopy (Soft Blossoming) -->
+                <circle cx="83" cy="38" r="9" fill="#2ecc71" opacity="0.9">
+                    <animate attributeName="r" values="0;0;9;9" keyTimes="0;0.4;0.75;1" dur="4s" repeatCount="indefinite" />
+                </circle>
+                <circle cx="67" cy="65" r="5" fill="#27ae60">
+                    <animate attributeName="r" values="0;0;5;5" keyTimes="0;0.45;0.75;1" dur="4s" repeatCount="indefinite" />
+                </circle>
+                <circle cx="97" cy="51" r="5" fill="#27ae60">
+                    <animate attributeName="r" values="0;0;5;5" keyTimes="0;0.5;0.8;1" dur="4s" repeatCount="indefinite" />
+                </circle>
+
+                <!-- 🍎 Fruit Blossoms (Glowing Golden Fruits) -->
+                <g filter="url(#goldFruitGlow)">
+                    <!-- Fruit 1 -->
+                    <circle cx="79" cy="40" r="3.2" fill="#ffd700">
+                        <animate attributeName="r" values="0;0;0;3.2;3.2" keyTimes="0;0.5;0.65;0.85;1" dur="4s" repeatCount="indefinite" />
+                    </circle>
+                    <!-- Fruit 2 -->
+                    <circle cx="89" cy="42" r="3" fill="#f39c12">
+                        <animate attributeName="r" values="0;0;0;3;3" keyTimes="0;0.55;0.7;0.9;1" dur="4s" repeatCount="indefinite" />
+                    </circle>
+                    <!-- Fruit 3 (Lower Branch) -->
+                    <circle cx="68" cy="70" r="2.8" fill="#ffd700">
+                        <animate attributeName="r" values="0;0;0;2.8;2.8" keyTimes="0;0.6;0.75;0.92;1" dur="4s" repeatCount="indefinite" />
+                    </circle>
+                    <!-- Fruit 4 (Right Branch) -->
+                    <circle cx="98" cy="56" r="2.8" fill="#ffd700">
+                        <animate attributeName="r" values="0;0;0;2.8;2.8" keyTimes="0;0.65;0.8;0.95;1" dur="4s" repeatCount="indefinite" />
+                    </circle>
+                </g>
+            </g>
+        </svg>
+    </div>
+
+    <!-- Header Section with Logo & Brand -->
+    <div style="display: flex; align-items: center; gap: 18px; margin-bottom: 18px; border-bottom: 1px solid rgba(255, 215, 0, 0.25); padding-bottom: 18px; flex-wrap: wrap;">
+        <div style="width: 55px; height: 55px; background: rgba(255, 215, 0, 0.08); border: 1.5px solid #ffd700; border-radius: 12px; display: flex; justify-content: center; align-items: center; padding: 5px; box-shadow: 0 0 15px rgba(255, 215, 0, 0.25); flex-shrink: 0;">
+            <img src="https://lh3.googleusercontent.com/d/1F4GgiyEVVlRXOWlmJ_IGBYpiTJH6Yot-" alt="S Studio Logo" style="width: 100%; height: 100%; object-fit: contain;">
         </div>
 
-        <!-- S STUDIO PHOTO SUITE FEATURE SECTION -->
-        <section class="photo-suite-wrapper">
-            <div class="photo-suite-content-box">
-                <div class="photo-suite-badge">Dedicated Image Workspace</div>
-                <h2 class="photo-suite-heading">Comprehensive Photo Editing Suite Built for Creators</h2>
-                
-                <p class="photo-suite-lead">
-                    Photo editing is an essential part of high-impact video creation. Whether creating YouTube thumbnails, PiP overlays, or visual assets, S Studio (<a href="https://svideoeditor.com/" target="_blank" rel="noopener" class="photo-suite-link">svideoeditor.com</a>) allows you to edit images effortlessly in one unified workspace.
-                </p>
+        <div style="flex: 1; min-width: 250px; padding-right: 90px;">
+            <h2 style="color: #ffd700; margin: 0; font-size: 23px; font-weight: 800; letter-spacing: -0.3px; line-height: 1.3; text-shadow: 0 0 12px rgba(255, 215, 0, 0.4);">
+                S Studio (svideoeditor.com) – Technology Belongs to Everyone!
+            </h2>
+            <p style="color: #f1c40f; font-size: 13.5px; margin: 5px 0 0 0; font-weight: 600;">
+                An official digital initiative by Sriram Groups, keeping powerful tools 99% free for everyone.
+            </p>
+        </div>
+    </div>
 
-                <h3 class="photo-suite-subheading">Core Capabilities Inside S Studio Photo Editing Suite:</h3>
-                <ul class="photo-suite-list">
-                    <li><strong>Adjustments:</strong> Fine-tune brightness, contrast, exposure, and color balance to enhance photo quality.</li>
-                    <li><strong>BG Remove:</strong> Instantly strip away photo backgrounds to replace them with custom scenes or green-screen overlays.</li>
-                    <li><strong>Filters:</strong> Apply cinematic color presets to elevate visual tone in a single click.</li>
-                    <li><strong>Pixel Eraser:</strong> Cleanly wipe away unwanted objects and minor background imperfections with pinpoint precision.</li>
-                    <li><strong>Crop:</strong> Re-frame dimensions and isolate key focal areas to fit exact aspect ratios.</li>
-                    <li><strong>Add Text:</strong> Insert rich typography with bold, italic, color gradients, and custom font styling.</li>
-                    <li><strong>Style / Borders:</strong> Add clean outlines, shadow effects, and stylized frames to make graphics pop.</li>
-                    <li><strong>Animate:</strong> Bring static photos to life using dynamic motion and entrance/exit animations.</li>
-                    <li><strong>Transparency:</strong> Adjust opacity levels to smoothly blend images over video backgrounds.</li>
-                    <li><strong>Position & Rotate:</strong> Align elements accurately and spin angles by 90°, 180°, or custom orientations.</li>
-                    <li><strong>Layers & Transform Lock:</strong> Stack multiple graphic elements and lock coordinates to prevent accidental displacement during edits.</li>
-                    <li><strong>Set Background:</strong> Easily assign background canvases, patterns, or solid colors behind transparent PNGs.</li>
-                    <li><strong>Image Tools & Stickers:</strong> Access creative stickers, design badges, and smart graphic assets.</li>
-                    <li><strong>Reset & Download:</strong> Revert adjustments instantly with 'Reset' or export crisp, high-resolution images via 'Download'.</li>
-                </ul>
+    <!-- Body Content in Complete Gold Palette -->
+    <div style="color: #fef08a; font-size: 14px; line-height: 1.85; font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+       <p style="margin-bottom: 16px;">
+    At <a href="https://sriramgroupsofficial.com/" target="_blank" rel="noopener noreferrer" style="color: #ffd700; font-weight: bold; text-decoration: underline; text-underline-offset: 3px; transition: all 0.25s ease;" onmouseover="this.style.color='#ffffff'; this.style.textShadow='0 0 10px #ffd700';" onmouseout="this.style.color='#ffd700'; this.style.textShadow='none';"><strong style="color: inherit;">Sriram Groups Official</strong></a>, We operate on one clear principle: keep our tools free, transparent, and easy to use: <em>poverty, financial difficulties, or a lack of expensive hardware should never restrict a passionate creators talent, vision, and extraordinary potential.</em>
+</p>
 
-                <div class="photo-suite-footer">
-                    <p class="photo-suite-closing">
-                        Explore <a href="https://svideoeditor.com/" target="_blank" rel="noopener" class="photo-suite-link">S Studio</a> today to experience these tools and streamline your creative workflow!
-                    </p>
-                </div>
+        <p style="margin-bottom: 16px; color: #fef9c3;">
+            High quality video has become essential for growing a brand, creating content, or marketing a business. But most professional editing software comes with heavy monthly subscription fees or requires expensive, high end computers that many creators simply can't afford. S Studio was built to solve that problem. We believe high performance shouldn't require a high end setup or a monthly bill, giving students, small business owners, and independent creators access to professional editing tools completely free.
+        </p>
+
+        <p style="margin-bottom: 20px; background: rgba(255, 215, 0, 0.08); border-left: 4px solid #ffd700; padding: 14px 18px; border-radius: 4px; color: #ffffff;">
+            <strong style="color: #ffd700;">S Studio (svideoeditor.com)</strong> S Studio was built to bridge this gap. We run this platform not for profit, but as a free initiative to give every creator access to powerful, professional video editing tools. <strong style="color: #ffd700;">Philanthropic Digital Initiative</strong> offering 99% of its robust editing capabilities completely free to creators worldwide.
+        </p>
+
+        <h3 style="color: #ffd700; font-size: 16.5px; margin: 22px 0 12px 0; font-weight: 700; text-shadow: 0 0 8px rgba(255, 215, 0, 0.3);">
+             Why S Studio Stands Out:
+        </h3>
+        <ul style="padding-left: 20px; color: #fef08a; margin-bottom: 25px; list-style: none;">
+            <li style="margin-bottom: 12px;">
+                <strong style="color: #ffffff; text-decoration: underline; text-decoration-color: #ffd700;">Zero Premium Paywalls:</strong> Get full access to all our editing tools for free no hidden fees, locked features, or surprise subscription costs.
+            </li>
+            <li style="margin-bottom: 12px;">
+                <strong style="color: #ffffff; text-decoration: underline; text-decoration-color: #ffd700;">High End Studio Suite:</strong> Get full access to all our pro tools completely free. Take advantage of smart features like AI Subtitles, multi track editing, unlimited layers (PiP), and sharp 2K exports without spending a dime.
+            </li>
+            <li style="margin-bottom: 12px;">
+                <strong style="color: #ffffff; text-decoration: underline; text-decoration-color: #ffd700;">Equal Technological Access:</strong> Democratizing content creation by allowing you to edit seamlessly on both entry level smartphones and desktop PCs through your web browser without performance bottlenecks.
+            </li>
+        </ul>
+
+        <!-- Founder Quote Box in Warm Gold Accent -->
+        <div style="background: rgba(255, 215, 0, 0.06); border: 1.5px solid rgba(255, 215, 0, 0.45); padding: 22px; border-radius: 12px; margin: 25px 0; box-shadow: inset 0 0 15px rgba(255, 215, 0, 0.05);">
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                <span style="font-size: 20px;"></span>
+                <h4 style="color: #ffd700; margin: 0; font-size: 16px; font-weight: 700;">Official Message from S. Purushotham (Founder & CEO, Sriram Groups):</h4>
             </div>
-        </section>
+            <p style="color: #ffffff; font-style: italic; font-size: 14.5px; margin: 0; line-height: 1.75;">
+                "All you need is a good idea and the drive to start. You don't need expensive software or a big budget to create something great Sriram Groups is here to support you. We built svideoeditor.com to help you practice your skills, grow your brand, and bring your ideas to life completely free."
+            </p>
+        </div>
+    </div>
+
+    <!-- Bottom Golden Accent Note -->
+    <div style="display: flex; justify-content: center; align-items: center; margin-top: 20px; padding-top: 15px; border-top: 1px solid rgba(255, 215, 0, 0.2); text-align: center;">
+        <span style="color: #ffd700; font-size: 14.5px; font-weight: 800; letter-spacing: 0.3px; text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);">
+             You bring the talent. Sriram Groups provides the power. 
+        </span>
+    </div>
+</div>
 
        <!-- 3-COLUMN FEATURE CARDS -->
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; max-width: 1200px; margin: 30px auto; padding: 0 15px; align-items: stretch;">
@@ -645,50 +956,6 @@
             </div>
         </div>
         
-        <!-- ========================================================================== -->
-        <!-- COMPREHENSIVE TECH UPGRADE GUIDE & AI WORKFLOWS (ON-PAGE CONTENT) -->
-        <!-- ========================================================================== -->
-        <section id="techGuideSection" style="max-width: 1200px; margin: 50px auto 30px auto; padding: 30px 24px; background: rgba(16, 20, 31, 0.7); border: 1px solid #232a3b; border-radius: 16px; scroll-margin-top: 30px;">
-            
-            <div style="border-bottom: 1px solid #2f3542; padding-bottom: 15px; margin-bottom: 25px;">
-                <h2 style="color: #a855f7; font-size: 24px; margin: 0 0 8px 0; font-weight: 800;">
-                    HOW TO STAY UPDATED IN FAST-MOVING TECHNOLOGY
-                </h2>
-                <p style="color: #94a3b8; font-size: 14px; margin: 0;">
-                    A practical guide on upgrading technical skills, adopting modern browser standards, and mastering media production workflows.
-                </p>
-            </div>
-
-            <!-- Part 1: Tech Upgrade Roadmap -->
-            <div style="margin-bottom: 30px;">
-                <h3 style="color: #ffffff; font-size: 17px; margin-bottom: 10px;">1. Continuous Learning & Architectural Shifts</h3>
-                <p style="color: #cbd5e1; font-size: 13.5px; line-height: 1.8; text-align: justify; margin-bottom: 12px;">
-                    Technology evolves rapidly from centralized server processing toward client-side computing. To keep pace with modern software standards, developers and creators must understand browser-native capabilities like HTML5 Canvas, WebAssembly (WASM), and the Web Audio API. Staying updated requires hands-on exploration of real-time sandbox execution where end users benefit from zero latency and complete privacy without third-party server dependencies.
-                </p>
-                <ul style="color: #94a3b8; font-size: 13px; padding-left: 20px; line-height: 1.8;">
-                    <li><strong>Master Core Standards:</strong> Deepen your understanding of JavaScript ES6+, responsive DOM handling, and progressive web application concepts.</li>
-                    <li><strong>Explore Client-Side Performance:</strong> Adopt local memory buffers and streaming blob pipelines to eliminate recurring server bandwidth costs.</li>
-                    <li><strong>Track Open Source Communities:</strong> Engage with active technical repositories, web developer forums, and open-source media utilities.</li>
-                </ul>
-            </div>
-
-            <!-- Part 2: Next-Gen AI Workflows -->
-            <div id="aiWorkflowSection" style="margin-bottom: 30px; scroll-margin-top: 30px;">
-                <h3 style="color: #c084fc; font-size: 17px; margin-bottom: 10px;">2. Integrating Modern AI & Automation Into Media Editing</h3>
-                <p style="color: #cbd5e1; font-size: 13.5px; line-height: 1.8; text-align: justify; margin-bottom: 12px;">
-                    Artificial Intelligence in creative platforms is no longer just a trend—it is a core productivity standard. In modern video and photo workflows, heuristic algorithms now assist with auto-caption generation, frame alignment, background removal, and aspect ratio adaptation for diverse social channels. Leveraging lightweight browser algorithms allows creators to automate time-consuming tasks while maintaining hands-on editorial control over the final export.
-                </p>
-            </div>
-
-            <!-- Part 3: Essential Editor Tips -->
-            <div id="editorTipsSection" style="margin-bottom: 10px; scroll-margin-top: 30px;">
-                <h3 style="color: #00f2fe; font-size: 17px; margin-bottom: 10px;">3. Pro Video & Photo Optimization Tips</h3>
-                <p style="color: #cbd5e1; font-size: 13.5px; line-height: 1.8; text-align: justify;">
-                    Always verify that your timeline cuts match standard display ratios (16:9 for YouTube desktop, 9:16 for vertical reels, and 1:1 for social feeds). When exporting high frame-rate content at 60 FPS, balancing bitrates between 6.0 Mbps and 8.0 Mbps ensures pristine clarity without causing excessive memory consumption on mobile devices.
-                </p>
-            </div>
-
-        </section>
 
         <!-- CLEAN FOOTER -->
         <footer style="width: 98%; max-width: 1280px; margin: 30px auto 10px auto; padding: 25px 20px; box-sizing: border-box; background: #0c0f15; border-top: 1px solid #2f3542; border-radius: 12px; color: #ffffff; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
@@ -714,7 +981,7 @@
     <div style="font-size: 12.5px; color: #94a3b8; line-height: 1.6; display: flex; flex-direction: column; gap: 8px;">
         <!-- Official Main Company Website Link -->
         <a href="https://sriramgroupsofficial.com/" target="_blank" rel="noopener noreferrer" style="color: #ffffff; font-weight: bold; text-decoration: none; display: inline-flex; align-items: center; gap: 5px; transition: color 0.2s;" onmouseover="this.style.color='#00f2fe'" onmouseout="this.style.color='#ffffff'">
-             Sriram Groups Official ↗
+             Sriram Groups Official 
         </a>
 
         <!-- About Us Modal Trigger -->
@@ -772,10 +1039,12 @@
 
             </div>
 
-            <!-- Full-width Bottom Centered Copyright Line -->
             <div style="width: 100%; text-align: center; margin-top: 25px; padding-top: 15px; border-top: 1px solid #1c2230; font-size: 12px; color: #64748b;">
-                © 2026 S studio | Sriram Groups Official. All Rights Reserved.
-            </div>
+    © 2026 S Studio | 
+    <a href="https://sriramgroupsofficial.com/" target="_blank" rel="noopener noreferrer" style="color: #94a3b8; text-decoration: none; font-weight: 600; transition: color 0.2s ease, text-shadow 0.2s ease;" onmouseover="this.style.color='#00f2fe'; this.style.textShadow='0 0 8px rgba(0, 242, 254, 0.6)';" onmouseout="this.style.color='#94a3b8'; this.style.textShadow='none';">
+        Sriram Groups Official
+    </a>. All Rights Reserved.
+</div>
         </footer>
 
     </div> <!-- End #introPage -->
@@ -799,7 +1068,7 @@
                 <button class="nav-btn" onclick="undoAction()">↩️ Undo</button>
                 <button class="nav-btn" onclick="redoAction()">↪️ Redo</button>
                 <button class="export-btn-main" onclick="toggleExportModal(true)">Export Video</button>
-                <button class="nav-btn" id="authNavBtn" onclick="toggleAuthModal(true)" style="background: rgba(255,255,255,0.05); color: white; border: 1px solid #2f3542; margin-left: 8px;">👤 Login</button>
+                <button class="nav-btn" id="authNavBtn" onclick="openRegisterIdLoginModal()" style="background: rgba(255,255,255,0.05); color: white; border: 1px solid #2f3542; margin-left: 8px;">👤 Login</button>
             </div>
         </header>
 
@@ -1116,7 +1385,9 @@
     <div id="visionModal" class="export-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.85); z-index: 999999; justify-content: center; align-items: center;">
         <div class="modal-content" style="max-width: 780px; width: 90%; max-height: 85vh; overflow-y: auto; background: #0f121d; border: 1px solid #00f2fe; border-radius: 12px; padding: 28px; text-align: left; box-shadow: 0 10px 30px rgba(0, 242, 254, 0.25);">
             <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #232a3b; padding-bottom: 12px; margin-bottom: 20px;">
-                <h3 style="color: #00f2fe; margin: 0; font-size: 20px;"> Theme & Vision of Sriram Groups Official</h3>
+                <h3 style="color: #00f2fe; margin: 0; font-size: 20px;"> Theme & Vision of <a href="https://sriramgroupsofficial.com/" target="_blank" rel="noopener noreferrer" style="color: #ffffff; font-weight: bold; text-decoration: none; display: inline-flex; align-items: center; gap: 5px; transition: color 0.2s;" onmouseover="this.style.color='#00f2fe'" onmouseout="this.style.color='#ffffff'">
+             Sriram Groups Official 
+        </a></h3>
                 <button onclick="toggleModal('visionModal', false)" style="background: none; border: none; color: #ff4757; font-size: 22px; cursor: pointer; font-weight: bold;">✕</button>
             </div>
             <div style="color: #cbd5e1; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 13.5px; line-height: 1.7;">
@@ -1449,105 +1720,6 @@
             <div style="padding: 6px; background: #0c0e16; text-align: center; font-size: 11px; color: #64748b;">
                 Official Support: <a href="mailto:sriramgroup.help@gmail.com" style="color: #00f2fe; text-decoration: none;">sriramgroup.help@gmail.com</a>
             </div>
-        </div>
-    </div>
-
-    <!-- USER AUTHENTICATION SYSTEM (LOGIN, SIGNUP, OTP & FORGOT PASSWORD) -->
-    <div id="authModal" class="export-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.85); z-index: 999999; justify-content: center; align-items: center; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
-        <div style="max-width: 440px; width: 92%; background: #0f121d; border: 1px solid #6c5ce7; border-radius: 16px; padding: 26px; text-align: left; box-shadow: 0 20px 50px rgba(108, 92, 231, 0.3); position: relative;">
-            <button onclick="toggleModal('authModal', false)" style="position: absolute; top: 16px; right: 18px; background: none; border: none; color: #ff4757; font-size: 22px; cursor: pointer; font-weight: bold;">✕</button>
-            <div style="text-align: center; margin-bottom: 20px;">
-                <h3 style="color: #00f2fe; margin: 0; font-size: 20px; font-weight: 800;">S Studio Account</h3>
-                <p id="authSubtitle" style="color: #94a3b8; font-size: 12.5px; margin: 4px 0 0 0;">Access your free browser workspace & cloud projects</p>
-            </div>
-
-            <!-- VIEW 1: LOGIN FORM -->
-            <form id="loginForm" onsubmit="handleLoginSubmit(event)">
-                <div style="margin-bottom: 14px;">
-                    <label style="display: block; color: #cbd5e1; font-size: 12px; margin-bottom: 5px; font-weight: 600;">Email Address</label>
-                    <input type="email" id="loginEmail" required placeholder="name@example.com" style="width: 100%; box-sizing: border-box; background: #161a26; border: 1px solid #283144; padding: 10px 12px; border-radius: 8px; color: #fff; font-size: 13.5px; outline: none;">
-                </div>
-                <div style="margin-bottom: 16px;">
-                    <label style="display: block; color: #cbd5e1; font-size: 12px; margin-bottom: 5px; font-weight: 600;">Password</label>
-                    <div style="position: relative; display: flex; align-items: center;">
-                        <input type="password" id="loginPassword" required placeholder="Enter password" style="width: 100%; box-sizing: border-box; background: #161a26; border: 1px solid #283144; padding: 10px 38px 10px 12px; border-radius: 8px; color: #fff; font-size: 13.5px; outline: none;">
-                        <span onclick="togglePasswordVisibility('loginPassword', this)" style="position: absolute; right: 10px; cursor: pointer; font-size: 16px; user-select: none; color: #94a3b8;">👁️</span>
-                    </div>
-                </div>
-                <button type="submit" style="width: 100%; background: linear-gradient(135deg, #00f2fe, #6c5ce7); color: #fff; font-weight: 800; font-size: 14px; border: none; padding: 11px; border-radius: 8px; cursor: pointer; margin-bottom: 16px;">
-                    🔒 Sign In
-                </button>
-                <div style="display: flex; justify-content: space-between; align-items: center; font-size: 12px; border-top: 1px solid #1e2535; padding-top: 14px;">
-                    <a href="javascript:void(0)" onclick="switchAuthView('signup')" style="color: #00f2fe; text-decoration: none; font-weight: 600;">Create Account</a>
-                    <a href="javascript:void(0)" onclick="switchAuthView('forgot')" style="color: #a8a5ff; text-decoration: none;">Forgot Password?</a>
-                </div>
-            </form>
-
-            <!-- VIEW 2: SIGNUP FORM -->
-            <form id="signupForm" style="display: none;" onsubmit="handleSendOtp(event)">
-                <div style="margin-bottom: 12px;">
-                    <label style="display: block; color: #cbd5e1; font-size: 12px; margin-bottom: 5px; font-weight: 600;">Full Name</label>
-                    <input type="text" id="signupName" required placeholder="Your full name" style="width: 100%; box-sizing: border-box; background: #161a26; border: 1px solid #283144; padding: 10px 12px; border-radius: 8px; color: #fff; font-size: 13.5px; outline: none;">
-                </div>
-                <div style="margin-bottom: 12px;">
-                    <label style="display: block; color: #cbd5e1; font-size: 12px; margin-bottom: 5px; font-weight: 600;">Email Address</label>
-                    <input type="email" id="signupEmail" required placeholder="name@example.com" style="width: 100%; box-sizing: border-box; background: #161a26; border: 1px solid #283144; padding: 10px 12px; border-radius: 8px; color: #fff; font-size: 13.5px; outline: none;">
-                </div>
-                <div id="otpInputGroup" style="display: none; margin-bottom: 14px;">
-                    <label style="display: block; color: #38bdf8; font-size: 12px; margin-bottom: 5px; font-weight: 600;">Enter 6-Digit OTP</label>
-                    <div style="display: flex; gap: 8px;">
-                        <input type="text" id="userEnteredOtp" maxlength="6" placeholder="123456" style="flex: 1; background: #161a26; border: 1px solid #38bdf8; padding: 10px 12px; border-radius: 8px; color: #fff; font-size: 14px; text-align: center; letter-spacing: 2px;">
-                        <button type="button" onclick="verifyOtpCode()" style="background: #10ac84; color: #fff; border: none; padding: 10px 14px; border-radius: 8px; font-weight: bold; cursor: pointer;">Verify</button>
-                    </div>
-                </div>
-                <button type="submit" id="sendOtpBtn" style="width: 100%; background: #6c5ce7; color: #fff; font-weight: 700; font-size: 13.5px; border: none; padding: 11px; border-radius: 8px; cursor: pointer; margin-bottom: 14px;">
-                    📩 Send Verification OTP
-                </button>
-                <div style="text-align: center; font-size: 12px; border-top: 1px solid #1e2535; padding-top: 12px;">
-                    <span style="color: #94a3b8;">Already have an account? </span>
-                    <a href="javascript:void(0)" onclick="switchAuthView('login')" style="color: #00f2fe; text-decoration: none; font-weight: 600;">Sign In</a>
-                </div>
-            </form>
-
-            <!-- VIEW 3: SET PASSWORD -->
-            <form id="setPasswordForm" style="display: none;" onsubmit="handleFinalSignup(event)">
-                <div style="background: rgba(16, 172, 132, 0.1); border: 1px solid #10ac84; color: #1dd1a1; padding: 8px 12px; border-radius: 6px; font-size: 12px; margin-bottom: 14px; text-align: center;">
-                    ✓ Email verified successfully! Set your password.
-                </div>
-                <div style="margin-bottom: 12px;">
-                    <label style="display: block; color: #cbd5e1; font-size: 12px; margin-bottom: 5px; font-weight: 600;">New Password</label>
-                    <div style="position: relative; display: flex; align-items: center;">
-                        <input type="password" id="newPassword" required placeholder="Minimum 6 characters" style="width: 100%; box-sizing: border-box; background: #161a26; border: 1px solid #283144; padding: 10px 38px 10px 12px; border-radius: 8px; color: #fff; font-size: 13.5px; outline: none;">
-                        <span onclick="togglePasswordVisibility('newPassword', this)" style="position: absolute; right: 10px; cursor: pointer; font-size: 16px; user-select: none; color: #94a3b8;">👁️</span>
-                    </div>
-                </div>
-                <div style="margin-bottom: 16px;">
-                    <label style="display: block; color: #cbd5e1; font-size: 12px; margin-bottom: 5px; font-weight: 600;">Re-enter Password</label>
-                    <div style="position: relative; display: flex; align-items: center;">
-                        <input type="password" id="confirmPassword" required placeholder="Re-type password" style="width: 100%; box-sizing: border-box; background: #161a26; border: 1px solid #283144; padding: 10px 38px 10px 12px; border-radius: 8px; color: #fff; font-size: 13.5px; outline: none;">
-                        <span onclick="togglePasswordVisibility('confirmPassword', this)" style="position: absolute; right: 10px; cursor: pointer; font-size: 16px; user-select: none; color: #94a3b8;">👁️</span>
-                    </div>
-                </div>
-                <button type="submit" style="width: 100%; background: linear-gradient(135deg, #10ac84, #00f2fe); color: #000; font-weight: 800; font-size: 14px; border: none; padding: 11px; border-radius: 8px; cursor: pointer;">
-                    🔒 Complete Sign Up & Login
-                </button>
-            </form>
-
-            <!-- VIEW 4: FORGOT PASSWORD -->
-            <form id="forgotForm" style="display: none;" onsubmit="handleForgotPassword(event)">
-                <p style="color: #cbd5e1; font-size: 12.5px; line-height: 1.5; margin-top: 0;">
-                    Enter your registered email address. We will send you a password reset link from our official support desk.
-                </p>
-                <div style="margin-bottom: 14px;">
-                    <input type="email" id="forgotEmail" required placeholder="name@example.com" style="width: 100%; box-sizing: border-box; background: #161a26; border: 1px solid #283144; padding: 10px 12px; border-radius: 8px; color: #fff; font-size: 13.5px; outline: none;">
-                </div>
-                <button type="submit" style="width: 100%; background: #6c5ce7; color: #fff; font-weight: 700; font-size: 13.5px; border: none; padding: 11px; border-radius: 8px; cursor: pointer; margin-bottom: 14px;">
-                    Send Reset Link
-                </button>
-                <div style="text-align: center; font-size: 12px;">
-                    <a href="javascript:void(0)" onclick="switchAuthView('login')" style="color: #00f2fe; text-decoration: none;">← Back to Sign In</a>
-                </div>
-            </form>
         </div>
     </div>
 
