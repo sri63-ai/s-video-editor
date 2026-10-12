@@ -1,5 +1,5 @@
 /* ==========================================================================
-   GLOBAL VARIABLES & CORE RESETS (PREMIUM DARK THEME)
+   GLOBAL VARIABLES & CORE RESETS (PREMIUM DARK THEME - PART 1/2)
    ========================================================================== */
 :root {
     --bg-main: #0d0e12;
@@ -35,6 +35,31 @@ html, body {
 
 .hidden {
     display: none !important;
+}
+
+/* ==========================================================================
+   🎬 PROFESSIONAL STUDIO OTP DIGIT BOXES & AUTH STYLES
+   ========================================================================== */
+.studio-otp-digit {
+    width: 46px !important;
+    height: 52px !important;
+    border-radius: 10px !important;
+    background: #090d16 !important;
+    border: 1.5px solid #1f2738 !important;
+    color: #00f2fe !important;
+    font-size: 22px !important;
+    font-weight: 800 !important;
+    text-align: center !important;
+    outline: none !important;
+    transition: all 0.25s ease !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6) !important;
+}
+
+.studio-otp-digit:focus {
+    border-color: #00f2fe !important;
+    box-shadow: 0 0 15px rgba(0, 242, 254, 0.5) !important;
+    background: #0e1322 !important;
+    transform: translateY(-2px);
 }
 
 /* ==========================================================================
@@ -396,7 +421,6 @@ html, body {
     overflow: hidden !important;
 }
 
-/* Hidden క్లాస్ ఉన్నప్పుడు కచ్చితంగా దాగి ఉండాలి */
 .hidden, #editorPage.hidden {
     display: none !important;
     visibility: hidden !important;
@@ -437,7 +461,6 @@ html, body {
     position: relative !important;
 }
 
-/* Subtitle & Status Overlays Integration */
 #sStudioLiveSubtitleOverlay {
     text-shadow: 0 2px 4px rgba(0,0,0,0.8);
     transition: all 0.15s ease-in-out;
@@ -484,7 +507,7 @@ html, body {
 .ctrl-nav-btn:active {
     transform: scale(0.90);
     background: #00f2fe;
-    color: #000;
+    color: #00f2fe;
 }
 
 .ctrl-play-btn {
@@ -507,14 +530,10 @@ html, body {
     box-shadow: 0 6px 20px rgba(0, 242, 254, 0.55);
 }
 
-/* ==========================================================================
-   🎮 PLAY/PAUSE INTERACTIVE STATES
-   ========================================================================== */
 .ctrl-play-btn:active {
     transform: scale(0.92);
 }
 
-/* Playing State (Video Running - Red Color) */
 .ctrl-play-btn.is-playing {
     background: linear-gradient(135deg, #ff4757, #ff6b81);
     box-shadow: 0 4px 15px rgba(255, 71, 87, 0.4);
@@ -1313,7 +1332,7 @@ html, body {
 }
 
 /* ==========================================================================
-   🎬 PROFESSIONAL TIMELINE TRACKS LAYOUT (HORIZONTAL SCROLL)
+   🎬 PROFESSIONAL TIMELINE TRACKS LAYOUT (HORIZONTAL SCROLL - PART 2/2)
    ========================================================================== */
 .timeline-tracks {
     display: flex !important;
@@ -2122,7 +2141,6 @@ html, body {
     100% { transform: rotate(360deg); }
 }
 
-/* Ensure Support Card is Always Visible */
 .support-channels-card, 
 .scroll-reveal-card {
     opacity: 1 !important;
@@ -2183,7 +2201,6 @@ html, body {
     margin: 0;
 }
 
-/* 99% Fluid Grid */
 .s-highlights-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -2193,7 +2210,6 @@ html, body {
     box-sizing: border-box;
 }
 
-/* Base Card Styling */
 .s-card-item {
     background: #141722;
     border: 1px solid #232936;
@@ -2220,7 +2236,6 @@ html, body {
     margin: 0;
 }
 
-/* Color Edge Accents */
 .card-purple { border-left: 4px solid #6c5ce7 !important; }
 .card-purple h3 { color: #a8a5ff; }
 
@@ -2247,7 +2262,6 @@ html, body {
     margin-bottom: 20px;
 }
 
-/* Bottom CTA Banner */
 .s-cta-banner {
     text-align: center;
     padding: 14px;
@@ -2324,7 +2338,6 @@ html, body {
     line-height: 1.6;
 }
 
-/* 99% Grid */
 .s-photo-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -2334,7 +2347,6 @@ html, body {
     box-sizing: border-box;
 }
 
-/* Photo Card Styles */
 .s-photo-card {
     background: #111a1e;
     border: 1px solid #1d2d33;
@@ -2361,7 +2373,6 @@ html, body {
     margin: 0;
 }
 
-/* Card Borders */
 .card-teal { border-left: 4px solid #1dd1a1 !important; }
 .card-teal h3 { color: #1dd1a1; }
 
@@ -2380,7 +2391,6 @@ html, body {
 .card-rose { border-left: 4px solid #ff4757 !important; }
 .card-rose h3 { color: #ff6b81; }
 
-/* Call to Action */
 .s-photo-cta {
     text-align: center;
     padding: 14px 18px;
@@ -2414,7 +2424,6 @@ html, body {
     float: none !important;
 }
 
-/* Sets all footer cards equally across columns */
 .footer-container, 
 .footer-columns-wrapper {
     display: grid !important;
@@ -2427,7 +2436,6 @@ html, body {
     box-sizing: border-box !important;
 }
 
-/* Ends the website cleanly with the footer without extra space or overlap */
 footer, .s-studio-master-footer {
     position: relative !important;
     margin-bottom: 0 !important;
@@ -2435,7 +2443,6 @@ footer, .s-studio-master-footer {
     z-index: 10 !important;
 }
 
-/* Sets the layer level for the editing toolbar */
 .bottom-tools-bar, 
 .editing-tools-dock,
 .action-buttons-bar,
@@ -2443,7 +2450,6 @@ footer, .s-studio-master-footer {
     z-index: 999 !important;
 }
 
-/* Keeps the editing toolbar inside the workspace instead of fixing it to the screen bottom */
 .editing-tools-toolbar,
 .bottom-tools-bar,
 .tools-action-dock {
@@ -2585,17 +2591,17 @@ html {
     scroll-behavior: smooth;
 }
 
-/* Sections Scroll-Margin Offset */
 #techGuideSection,
 #aiWorkflowSection,
 #editorTipsSection {
     scroll-margin-top: 40px;
 }
+
 /* ==========================================================================
-   🌐 100% FIXED STICKY TOP NAVIGATION BAR (SCROLL AYINA PINANE UNTUNDI)
+   🌐 100% FIXED STICKY TOP NAVIGATION BAR
    ========================================================================== */
 .home-sticky-navbar {
-    position: fixed !important; /* Sticky బదులు Fixed వాడటం వల్ల ఎప్పుడూ పైనే లాక్ అయి ఉంటుంది */
+    position: fixed !important;
     top: 0 !important;
     left: 0 !important;
     width: 100vw !important;
@@ -2603,13 +2609,12 @@ html {
     backdrop-filter: blur(16px) !important;
     -webkit-backdrop-filter: blur(16px) !important;
     border-bottom: 2px solid rgba(0, 242, 254, 0.35) !important;
-    z-index: 999999 !important; /* అన్నింటికంటే పైన ఉండేలా హైయెస్ట్ లేయర్ */
+    z-index: 999999 !important;
     box-shadow: 0 6px 25px rgba(0, 0, 0, 0.8), 0 0 20px rgba(0, 242, 254, 0.25) !important;
     padding: 10px 20px !important;
     box-sizing: border-box !important;
 }
 
-/* Navbar fixed గా ఉండటం వల్ల కింద కంటెంట్ దాని కిందకి వెళ్ళిపోకుండా టాప్ స్పేసింగ్ */
 #introPage {
     padding-top: 80px !important;
 }
@@ -2734,6 +2739,7 @@ html {
         padding-top: 110px !important;
     }
 }
+
 /* ==========================================================================
    🛠️ EDITOR FULL-FIT LAYOUT & VISIBLE TOOLBAR FIX
    ========================================================================== */
@@ -2745,7 +2751,6 @@ html {
     overflow: hidden !important;
 }
 
-/* వీడియో ప్రివ్యూ ఎత్తును నియంత్రించడం */
 .workspace {
     flex: 1 1 auto !important;
     display: flex !important;
@@ -2762,13 +2767,11 @@ html {
     aspect-ratio: 16 / 9 !important;
 }
 
-/* ప్లేయర్ కంట్రోల్స్ పరిమాణం తగ్గించడం */
 .player-controls {
     margin: 6px auto !important;
     padding: 6px 12px !important;
 }
 
-/* టైమ్‌లైన్ మరియు ఎడిటింగ్ టూల్ బటన్లు ఎల్లప్పుడూ కనిపించేలా స్థిరపరచడం */
 #timelineAreaBox {
     display: flex !important;
     visibility: visible !important;
@@ -2780,7 +2783,6 @@ html {
     padding: 6px 12px !important;
 }
 
-/* ఎడిటింగ్ బటన్ల కంటైనర్ స్పష్టంగా కనిపించడం */
 .timeline-controls {
     display: flex !important;
     flex-wrap: wrap !important;
@@ -2799,6 +2801,7 @@ html {
     display: inline-block !important;
     visibility: visible !important;
 }
+
 /* ==========================================================================
    📸 PHOTO EDITING DEDICATED TOOLBAR & SUB-PANELS
    ========================================================================== */
@@ -2934,6 +2937,7 @@ html {
     background: #00f2fe !important;
     color: #000000 !important;
 }
+
 :root {
   --tut-bg: #12141a;
   --tut-border: #262933;
@@ -3026,7 +3030,6 @@ html {
   transition: transform 0.25s ease;
 }
 
-/* Accordion Smooth Expand/Collapse */
 .tutorial-full-content {
   max-height: 0;
   overflow: hidden;
@@ -3071,4 +3074,86 @@ html {
 
 .specs-list strong {
   color: var(--tut-text);
+}
+
+/* ==========================================================================
+   🔐 AUTHENTICATION MODAL STYLES (NEON CYBER THEME)
+   ========================================================================== */
+.auth-modal-backdrop {
+    position: fixed !important;
+    top: 0; left: 0; width: 100vw; height: 100vh;
+    background: rgba(5, 7, 12, 0.85) !important;
+    backdrop-filter: blur(8px) !important;
+    z-index: 1000000 !important;
+    display: flex; align-items: center; justify-content: center;
+}
+
+.auth-modal-card {
+    background: #111420 !important;
+    border: 1.5px solid #00f2fe !important;
+    border-radius: 16px !important;
+    padding: 30px 25px !important;
+    width: 90% !important;
+    max-width: 400px !important;
+    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.9), 0 0 25px rgba(0, 242, 254, 0.25) !important;
+    position: relative !important;
+    box-sizing: border-box !important;
+}
+
+.auth-modal-close {
+    position: absolute; top: 14px; right: 18px;
+    color: #64748b; font-size: 18px; cursor: pointer;
+    transition: color 0.2s;
+}
+.auth-modal-close:hover { color: #ff4757; }
+
+.auth-input-group { margin-bottom: 12px; }
+.auth-input-group input {
+    width: 100%; padding: 11px 14px;
+    background: #090c14; border: 1px solid #1f2738;
+    border-radius: 8px; color: #ffffff; font-size: 13.5px;
+    box-sizing: border-box; outline: none;
+    transition: border-color 0.2s;
+}
+.auth-input-group input:focus {
+    border-color: #00f2fe;
+    box-shadow: 0 0 10px rgba(0, 242, 254, 0.3);
+}
+
+.auth-action-btn {
+    width: 100%; padding: 11px;
+    background: linear-gradient(135deg, #00f2fe, #4facfe);
+    color: #000000; font-weight: 800; font-size: 14px;
+    border: none; border-radius: 8px; cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0, 242, 254, 0.3);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+.auth-action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 242, 254, 0.5);
+}
+
+/* ==========================================================================
+   🎬 PROFESSIONAL STUDIO OTP DIGIT BOXES & AUTH STYLES
+   ========================================================================== */
+.studio-otp-digit {
+    width: 46px !important;
+    height: 52px !important;
+    border-radius: 10px !important;
+    background: #090d16 !important;
+    border: 1.5px solid #1f2738 !important;
+    color: #00f2fe !important;
+    font-size: 22px !important;
+    font-weight: 800 !important;
+    text-align: center !important;
+    outline: none !important;
+    transition: all 0.25s ease !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6) !important;
+}
+
+.studio-otp-digit:focus {
+    border-color: #00f2fe !important;
+    box-shadow: 0 0 15px rgba(0, 242, 254, 0.5) !important;
+    background: #0e1322 !important;
+    transform: translateY(-2px);
 }
