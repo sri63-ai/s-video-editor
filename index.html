@@ -18,7 +18,9 @@
 </head>
 <body style="background-color: #ffffff !important; color: #111827 !important; margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
 
-<!-- 🌐 STICKY TOP NAVIGATION BAR (WORKING DROPDOWNS) -->
+<!-- ========================================================================== -->
+<!-- 🌐 STICKY TOP NAVIGATION BAR -->
+<!-- ========================================================================== -->
 <nav class="home-sticky-navbar" style="position: fixed; top: 0; left: 0; width: 100vw; background: #ffffff; border-bottom: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0,0,0,0.05); z-index: 999999; padding: 12px 20px; box-sizing: border-box;">
     <div class="sticky-nav-inner" style="max-width: 1400px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between;">
         
@@ -62,7 +64,7 @@
              Blogs
         </a>
 
-        <!-- Terms & Conditions Dropdown -->
+        <!-- Terms & Policies Dropdown -->
         <div class="nav-dropdown-item" id="termsDropdown" style="position: relative; display: inline-block;">
             <button class="nav-link-btn" onclick="toggleNavDropdown('termsDropdown')" style="background: #ffffff; color: #111827; border: 1px solid #d1d5db; padding: 8px 16px; border-radius: 6px; font-weight: 600; cursor: pointer;">
                 Terms & Policies <span class="nav-arrow-icon" style="display: inline-block; transition: transform 0.2s;">▾</span>
@@ -91,53 +93,201 @@
 <!-- ========================================================================== -->
 <!-- 1. INTRO PAGE / WORKSPACE SELECTOR & LANDING CONTENT -->
 <!-- ========================================================================== -->
-<div id="introPage" style="background-color: #ffffff; color: #1f2937; padding-top: 90px; padding-bottom: 20px;">
+<div id="introPage" style="background-color: #ffffff; color: #1f2937; padding-top: 105px !important; padding-bottom: 20px;">
 
-    <!-- Top Header Bar: నావిగేషన్ బార్ కింద స్పష్టంగా కనిపించే Logo, Title మరియు Login బటన్ -->
-<div style="width: 98%; max-width: 1400px; margin-top: 95px !important; margin-bottom: 25px !important; margin-left: auto !important; margin-right: auto !important; display: flex !important; align-items: center !important; justify-content: space-between !important; padding: 12px 16px !important; box-sizing: border-box; background: transparent !important; position: relative !important; z-index: 10 !important;">
-    
-    <!-- ఎడమ వైపు: లోగో + టైటిల్ -->
-    <div style="display: flex !important; align-items: center !important; gap: 14px !important;">
-        <div style="width: 52px; height: 52px; min-width: 52px; border-radius: 8px; border: 1px solid #d1d5db; background: #ffffff; display: flex; align-items: center; justify-content: center; padding: 4px; box-sizing: border-box;">
-            <img src="https://lh3.googleusercontent.com/d/1F4GgiyEVVlRXOWlmJ_IGBYpiTJH6Yot-" alt="S Studio Logo" style="width: 100% !important; height: 100% !important; object-fit: contain !important; display: block !important;">
-        </div>
-        <div style="display: flex !important; flex-direction: column !important; justify-content: center !important;">
-            <h1 style="color: #111827 !important; font-size: 26px !important; margin: 0 !important; font-weight: 800 !important; line-height: 1.1 !important; letter-spacing: -0.5px !important; display: block !important;">S STUDIO</h1>
-            <p style="color: #4b5563 !important; font-size: 13px !important; margin: 3px 0 0 0 !important; font-weight: 600 !important; display: block !important;">
-    Powered by 
-    <a href="https://sriramgroupsofficial.com/" target="_blank" rel="noopener noreferrer" style="color: inherit !important; text-decoration: none !important; font-weight: inherit !important; cursor: pointer;">Sriram Groups Official</a>
-</p>
-        </div>
-    </div>
-
-    <!-- కుడి వైపు: లాగిన్ బటన్ -->
-    <div>
-        <button onclick="openRegisterIdLoginModal()" style="display: flex; align-items: center; gap: 8px; background: #ffffff; border: 1.5px solid #111827; color: #111827; padding: 8px 18px; border-radius: 6px; font-size: 13.5px; font-weight: 700; cursor: pointer;">
-            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
-                <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
-            </svg>
-            <span>Login</span>
-        </button>
-    </div>
-
-</div>
-
-    <!-- Workspace Choice Cards -->
-    <div class="workspace-choice-container" style="display: flex; gap: 20px; max-width: 1400px; margin: 0 auto 30px auto; width: 98%;">
-        <!-- Video Editing Card -->
-        <div class="choice-card active-studio" onclick="enterStudio('video')" style="flex: 1; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 25px; cursor: pointer; text-align: center;">
-            <span class="choice-icon" style="font-size: 32px; display: block; margin-bottom: 10px;">📽</span>
-            <h3 style="color: #111827; margin: 0 0 8px 0; font-size: 18px;">Video Editing</h3>
-            <p style="color: #6b7280; margin: 0; font-size: 13px; font-weight: 500;">ADVANCED AI REWIND AND SUBTITLES, PROFESSIONAL EDITING.</p>
-        </div>
+    <!-- Top Header Bar: Logo + S STUDIO Title + Clean Login Button -->
+    <div style="width: 98%; max-width: 1400px; margin: 15px auto 25px auto; display: flex !important; align-items: center !important; justify-content: space-between !important; padding: 10px 15px; box-sizing: border-box; background: transparent !important; position: relative; z-index: 10;">
         
+        <!-- Left Side: Logo + Title -->
+        <div style="display: flex !important; align-items: center !important; gap: 14px !important;">
+            <div style="width: 52px; height: 52px; min-width: 52px; border-radius: 8px; border: 1px solid #d1d5db; background: #ffffff; display: flex; align-items: center; justify-content: center; padding: 4px; box-sizing: border-box;">
+                <img src="https://lh3.googleusercontent.com/d/1F4GgiyEVVlRXOWlmJ_IGBYpiTJH6Yot-" alt="S Studio Logo" style="width: 100% !important; height: 100% !important; object-fit: contain !important; display: block !important;">
+            </div>
+            <div style="display: flex !important; flex-direction: column !important; justify-content: center !important;">
+                <h1 style="color: #111827 !important; font-size: 26px !important; margin: 0 !important; font-weight: 800 !important; line-height: 1.1 !important; letter-spacing: -0.5px !important; display: block !important;">S STUDIO</h1>
+                <p style="color: #4b5563 !important; font-size: 13px !important; margin: 3px 0 0 0 !important; font-weight: 600 !important; display: block !important;">
+                    Powered by 
+                    <a href="https://sriramgroupsofficial.com/" target="_blank" rel="noopener noreferrer" style="color: inherit !important; text-decoration: none !important; font-weight: inherit !important; cursor: pointer;">Sriram Groups Official</a>
+                </p>
+            </div>
+        </div>
+
+        <!-- Right Side: Login Button -->
+        <div>
+            <button onclick="openRegisterIdLoginModal()" style="display: flex; align-items: center; gap: 8px; background: #ffffff; border: 1.5px solid #111827; color: #111827; padding: 8px 18px; border-radius: 6px; font-size: 13.5px; font-weight: 700; cursor: pointer;">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+                    <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
+                </svg>
+                <span>Login</span>
+            </button>
+        </div>
+
+    </div>
+
+    <!-- ========================================================================== -->
+    <!-- 🎬 DYNAMIC AUTO-ROTATING SLIDESHOW CARDS (4 TOOLS EACH) -->
+    <!-- ========================================================================== -->
+    <div class="workspace-choice-container" style="display: flex; gap: 24px; max-width: 1400px; margin: 0 auto 35px auto; width: 98%; flex-wrap: wrap;">
+
+        <!-- 1. VIDEO EDITING SUITE CARD -->
+        <div class="choice-card active-studio" onclick="enterStudio('video')" style="flex: 1; min-width: 320px; background: #ffffff; border: 1.5px solid #e5e7eb; border-radius: 12px; padding: 24px; cursor: pointer; text-align: left; position: relative; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.03); transition: border-color 0.25s ease;" onmouseover="this.style.borderColor='#111827';" onmouseout="this.style.borderColor='#e5e7eb';">
+            
+            <div style="width: 100%; height: 145px; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; margin-bottom: 18px; position: relative; overflow: hidden; padding: 12px; box-sizing: border-box;">
+                
+                <!-- Slide 1: Razor Split & Cuts -->
+                <div class="v-slide v-slide-1" style="position: absolute; inset: 12px; display: flex; flex-direction: column; justify-content: space-between;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e5e7eb; padding-bottom: 4px;">
+                        <span style="font-size: 11px; font-weight: 700; color: #111827;">✂️ RAZOR SPLIT & CUT</span>
+                        <span style="font-size: 11px; color: #6b7280; font-family: monospace;">00:00:14:02</span>
+                    </div>
+                    <div style="display: flex; gap: 8px; height: 45px; align-items: center; margin: 6px 0;">
+                        <div style="flex: 1; height: 100%; background: #f3f4f6; border: 1px solid #d1d5db; border-radius: 4px; display: flex; align-items: center; justify-content: center; position: relative;">
+                            <span style="font-size: 10.5px; font-weight: 700; color: #374151;">Intro_Clip.mp4</span>
+                            <div style="position: absolute; right: 0; top: 0; width: 2px; height: 100%; background: #ef4444;"></div>
+                        </div>
+                        <div style="flex: 1.2; height: 100%; background: #f3f4f6; border: 1px dashed #9ca3af; border-radius: 4px; display: flex; align-items: center; justify-content: center;">
+                            <span style="font-size: 10.5px; font-weight: 700; color: #374151;">Trimmed_Body.mp4</span>
+                        </div>
+                    </div>
+                    <div style="font-size: 10.5px; color: #4b5563; border-top: 1px solid #e5e7eb; padding-top: 4px;">Frame-Accurate Slicing without Quality Loss</div>
+                </div>
+
+                <!-- Slide 2: Chroma Key -->
+                <div class="v-slide v-slide-2" style="position: absolute; inset: 12px; display: flex; flex-direction: column; justify-content: space-between;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e5e7eb; padding-bottom: 4px;">
+                        <span style="font-size: 11px; font-weight: 700; color: #111827;">🟢 CHROMA KEY COLOR KNOCKOUT</span>
+                        <span style="font-size: 11px; color: #15803d; font-weight: bold;">Threshold: 98%</span>
+                    </div>
+                    <div style="display: flex; gap: 8px; height: 45px; align-items: center; margin: 6px 0;">
+                        <div style="flex: 1; height: 100%; background: #dcfce7; border: 1px solid #86efac; border-radius: 4px; display: flex; align-items: center; justify-content: center;">
+                            <span style="font-size: 10.5px; font-weight: 700; color: #166534;">Green Backdrop Filter</span>
+                        </div>
+                        <div style="flex: 1; height: 100%; background: #ffffff; border: 1px solid #d1d5db; border-radius: 4px; display: flex; align-items: center; justify-content: center;">
+                            <span style="font-size: 10.5px; font-weight: 700; color: #111827;">Isolated Foreground</span>
+                        </div>
+                    </div>
+                    <div style="font-size: 10.5px; color: #4b5563; border-top: 1px solid #e5e7eb; padding-top: 4px;">Automatic Spill Suppression & Soft Feathering</div>
+                </div>
+
+                <!-- Slide 3: Audio Waveform -->
+                <div class="v-slide v-slide-3" style="position: absolute; inset: 12px; display: flex; flex-direction: column; justify-content: space-between;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e5e7eb; padding-bottom: 4px;">
+                        <span style="font-size: 11px; font-weight: 700; color: #111827;">🎵 AUDIO WAVEFORM & DENOISE</span>
+                        <span style="font-size: 11px; color: #6b7280;">Biquad DSP Filter</span>
+                    </div>
+                    <div style="display: flex; gap: 3px; align-items: flex-end; height: 45px; padding: 4px 0;">
+                        <div style="flex: 1; height: 35%; background: #111827; border-radius: 2px;"></div>
+                        <div style="flex: 1; height: 75%; background: #111827; border-radius: 2px;"></div>
+                        <div style="flex: 1; height: 100%; background: #111827; border-radius: 2px;"></div>
+                        <div style="flex: 1; height: 60%; background: #111827; border-radius: 2px;"></div>
+                        <div style="flex: 1; height: 85%; background: #111827; border-radius: 2px;"></div>
+                        <div style="flex: 1; height: 40%; background: #111827; border-radius: 2px;"></div>
+                        <div style="flex: 1; height: 90%; background: #111827; border-radius: 2px;"></div>
+                        <div style="flex: 1; height: 65%; background: #111827; border-radius: 2px;"></div>
+                        <div style="flex: 1; height: 30%; background: #111827; border-radius: 2px;"></div>
+                    </div>
+                    <div style="font-size: 10.5px; color: #4b5563; border-top: 1px solid #e5e7eb; padding-top: 4px;">Threshold Gating & Ambient Noise Cleansing</div>
+                </div>
+
+                <!-- Slide 4: Speed Ramp -->
+                <div class="v-slide v-slide-4" style="position: absolute; inset: 12px; display: flex; flex-direction: column; justify-content: space-between;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e5e7eb; padding-bottom: 4px;">
+                        <span style="font-size: 11px; font-weight: 700; color: #111827;">⚡ SPEED RAMP & SLOW MOTION</span>
+                        <span style="font-size: 11px; color: #b91c1c; font-weight: bold;">0.5x Slow-Mo</span>
+                    </div>
+                    <div style="display: flex; gap: 8px; height: 45px; align-items: center; margin: 6px 0;">
+                        <div style="flex: 1; height: 100%; background: #f3f4f6; border: 1px solid #d1d5db; border-radius: 4px; display: flex; align-items: center; justify-content: center;">
+                            <span style="font-size: 10.5px; font-weight: 700; color: #374151;">Normal Pace (1.0x)</span>
+                        </div>
+                        <div style="flex: 1; height: 100%; background: #fef2f2; border: 1px solid #fca5a5; border-radius: 4px; display: flex; align-items: center; justify-content: center;">
+                            <span style="font-size: 10.5px; font-weight: 700; color: #991b1b;">Pitch-Preserved Audio</span>
+                        </div>
+                    </div>
+                    <div style="font-size: 10.5px; color: #4b5563; border-top: 1px solid #e5e7eb; padding-top: 4px;">Optical Flow Motion Interpolation at 60 FPS</div>
+                </div>
+
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
+                <span style="font-size: 22px;">📽</span>
+                <h3 style="color: #111827; margin: 0; font-size: 20px; font-weight: 800;">Video Editing Studio</h3>
+            </div>
+            <p style="color: #6b7280; margin: 0; font-size: 13.5px; font-weight: 500; line-height: 1.6;">Precision Razor Cuts, Multi-Track Timeline, Green Screen Chroma Key & Subtitles.</p>
+        </div>
+
         <input type="file" id="videoInput" accept="video/*" onchange="loadVideo(event)" style="display: none;">
-        
-        <!-- Photo Editing Card -->
-        <div class="choice-card active-studio" onclick="enterStudio('photo')" style="flex: 1; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 25px; cursor: pointer; text-align: center;">
-            <span class="choice-icon" style="font-size: 32px; display: block; margin-bottom: 10px;">🏞️</span>
-            <h3 style="color: #111827; margin: 0 0 8px 0; font-size: 18px;">Photo Editing</h3>
-            <p style="color: #6b7280; margin: 0; font-size: 13px; font-weight: 500;">ADVANCED FILTERS, RETOUCHING & CREATIVE EDITING.</p>
+
+        <!-- 2. PHOTO EDITING SUITE CARD -->
+        <div class="choice-card active-studio" onclick="enterStudio('photo')" style="flex: 1; min-width: 320px; background: #ffffff; border: 1.5px solid #e5e7eb; border-radius: 12px; padding: 24px; cursor: pointer; text-align: left; position: relative; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.03); transition: border-color 0.25s ease;" onmouseover="this.style.borderColor='#111827';" onmouseout="this.style.borderColor='#e5e7eb';">
+            
+            <div style="width: 100%; height: 145px; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; margin-bottom: 18px; position: relative; overflow: hidden; padding: 12px; box-sizing: border-box;">
+                
+                <!-- Slide 1: BG Removal -->
+                <div class="p-slide p-slide-1" style="position: absolute; inset: 12px; display: flex; flex-direction: column; justify-content: space-between;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e5e7eb; padding-bottom: 4px;">
+                        <span style="font-size: 11px; font-weight: 700; color: #111827;">🪄 1-CLICK BG REMOVAL</span>
+                        <span style="font-size: 11px; color: #2563eb; font-weight: bold;">Alpha: 0.0</span>
+                    </div>
+                    <div style="height: 52px; width: 100%; border-radius: 4px; display: flex; align-items: center; justify-content: center; background-image: linear-gradient(45deg, #e5e7eb 25%, transparent 25%), linear-gradient(-45deg, #e5e7eb 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #e5e7eb 75%), linear-gradient(-45deg, transparent 75%, #e5e7eb 75%); background-size: 10px 10px; margin: 4px 0;">
+                        <div style="padding: 6px 14px; background: rgba(255, 255, 255, 0.9); border: 1px dashed #111827; border-radius: 4px;">
+                            <span style="font-size: 10.5px; font-weight: 700; color: #111827;">Transparent PNG Export</span>
+                        </div>
+                    </div>
+                    <div style="font-size: 10.5px; color: #4b5563; border-top: 1px solid #e5e7eb; padding-top: 4px;">Neural Edge Feathering & Hair Boundary Extraction</div>
+                </div>
+
+                <!-- Slide 2: Ratio Crop -->
+                <div class="p-slide p-slide-2" style="position: absolute; inset: 12px; display: flex; flex-direction: column; justify-content: space-between;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e5e7eb; padding-bottom: 4px;">
+                        <span style="font-size: 11px; font-weight: 700; color: #111827;">📐 PRECISION RATIO CROP</span>
+                        <span style="font-size: 11px; color: #6b7280;">16:9 / 9:16 / 1:1</span>
+                    </div>
+                    <div style="height: 52px; width: 100%; display: flex; align-items: center; justify-content: center; background: #f3f4f6; border: 1px solid #d1d5db; border-radius: 4px; margin: 4px 0; position: relative;">
+                        <div style="width: 60%; height: 80%; border: 1.5px solid #111827; display: flex; align-items: center; justify-content: center; background: #ffffff;">
+                            <span style="font-size: 10px; font-weight: bold; color: #111827;">Focal Center</span>
+                        </div>
+                    </div>
+                    <div style="font-size: 10.5px; color: #4b5563; border-top: 1px solid #e5e7eb; padding-top: 4px;">Smart Viewport Alignment for Social Media</div>
+                </div>
+
+                <!-- Slide 3: Color Grade -->
+                <div class="p-slide p-slide-3" style="position: absolute; inset: 12px; display: flex; flex-direction: column; justify-content: space-between;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e5e7eb; padding-bottom: 4px;">
+                        <span style="font-size: 11px; font-weight: 700; color: #111827;">🎨 PIXEL BUFFER COLOR GRADE</span>
+                        <span style="font-size: 11px; color: #111827; font-weight: bold;">LUT Active</span>
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 5px; justify-content: center; height: 52px; margin: 4px 0;">
+                        <div style="display: flex; justify-content: space-between; font-size: 10px; color: #374151;">
+                            <span>Exposure: +10%</span>
+                            <span>Contrast: +20%</span>
+                            <span>Warmth: 5500K</span>
+                        </div>
+                        <div style="width: 100%; height: 6px; background: #e5e7eb; border-radius: 3px; position: relative;">
+                            <div style="width: 65%; height: 100%; background: #111827; border-radius: 3px;"></div>
+                        </div>
+                    </div>
+                    <div style="font-size: 10.5px; color: #4b5563; border-top: 1px solid #e5e7eb; padding-top: 4px;">Direct ImageData Pixel Math Enhancement</div>
+                </div>
+
+                <!-- Slide 4: Object Retouch -->
+                <div class="p-slide p-slide-4" style="position: absolute; inset: 12px; display: flex; flex-direction: column; justify-content: space-between;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e5e7eb; padding-bottom: 4px;">
+                        <span style="font-size: 11px; font-weight: 700; color: #111827;">🧹 PIXEL ERASER & RETOUCH</span>
+                        <span style="font-size: 11px; color: #b91c1c;">Radius: 15px</span>
+                    </div>
+                    <div style="height: 52px; width: 100%; display: flex; align-items: center; justify-content: center; background: #f3f4f6; border: 1px dashed #9ca3af; border-radius: 4px; margin: 4px 0;">
+                        <span style="font-size: 10.5px; font-weight: 700; color: #111827;">Clean Object Removal Area</span>
+                    </div>
+                    <div style="font-size: 10.5px; color: #4b5563; border-top: 1px solid #e5e7eb; padding-top: 4px;">Seamless Blemish & Artifact Inpainting</div>
+                </div>
+
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
+                <span style="font-size: 22px;">🏞️</span>
+                <h3 style="color: #111827; margin: 0; font-size: 20px; font-weight: 800;">Photo Editing Suite</h3>
+            </div>
+            <p style="color: #6b7280; margin: 0; font-size: 13.5px; font-weight: 500; line-height: 1.6;">Transparent PNG Cutout, Precision Aspect Crop, Color Wheels & Retouching.</p>
         </div>
 
         <input type="file" id="photoInput" accept="image/*" style="display: none;" onchange="loadPhoto(event)">
@@ -158,7 +308,7 @@
                 <p style="font-size: 14.5px; color: #4b5563; line-height: 1.8; max-width: 1050px; margin: 0 auto;">Perform high end video editing workflows directly within your web browser. Edit seamlessly and completely free of cost, without installing heavy desktop software. S Studio is engineered as an all in one educational and professional creative hub, continuously updated to support modern content creators, students, and digital marketers.</p>
             </header>
 
-            <!-- Section 1 (No Left Line Color) -->
+            <!-- Section 1 -->
             <section class="guide-section" style="margin-bottom: 22px; padding: 18px 0; border-bottom: 1px solid #f3f4f6;">
                 <h3 style="font-size: 17px; color: #111827; margin: 0 0 8px 0; font-weight: 700;">1. How to Upload Media Files</h3>
                 <p style="font-size: 14px; color: #4b5563; line-height: 1.8; margin: 0;">Starting your project takes just a few clicks. Simply tap the Upload Video button to select your high resolution footage, screen recordings, or audio files directly from your phone or computer. As soon as your media is added, our complete suite of editing tools will instantly activate giving you everything you need to cut, trim, and enhance your content with full control.</p>
@@ -442,227 +592,76 @@
 
     </div>
 
-    <!-- 99% FULL-WIDTH KEY HIGHLIGHTS SECTION (CLEAN WHITE EDITORIAL) -->
-    <section class="s-highlights-full-section" style="width: 98% !important; max-width: 1400px !important; margin: 30px auto !important; padding: 30px 20px !important; box-sizing: border-box !important; background: #ffffff !important; border: 1px solid #e5e7eb !important; border-radius: 8px !important; color: #111827 !important; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important; box-shadow: none !important;">
-        <div class="s-highlights-header" style="text-align: center; margin-bottom: 26px;">
-            <span class="s-badge-highlight" style="background: #f3f4f6; color: #374151; border: 1px solid #d1d5db; font-size: 11px; font-weight: 700; padding: 4px 14px; border-radius: 4px; letter-spacing: 0.5px; text-transform: uppercase; display: inline-block; margin-bottom: 8px;">Fast, Simple & Powerful</span>
-            <h2 class="s-main-title" style="font-size: 24px; font-weight: 800; margin: 6px 0; color: #111827;">
-                Key Highlights of S Studio (<span class="s-cyan-text" style="color: #111827; text-decoration: underline;">svideoeditor.com</span>)
-            </h2>
-            <p class="s-subtitle" style="font-size: 14px; color: #4b5563; margin: 0;">
-                Everything you need to edit high-quality videos right in your browser with zero complexity.
-            </p>
-        </div>
-
-        <div class="s-highlights-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; width: 100%; margin-bottom: 16px; box-sizing: border-box;">
-            <div class="s-card-item" style="background: #ffffff; border: 1px solid #e5e7eb; padding: 18px 20px; border-radius: 8px; box-sizing: border-box;">
-                <h3 style="font-size: 16px; font-weight: 700; margin: 0 0 6px 0; color: #111827;"> Dedicated Text Suite</h3>
-                <p style="font-size: 13.5px; color: #4b5563; line-height: 1.6; margin: 0;">Add titles, captions, and text blocks easily. Change fonts, text colors, sizes, and position them anywhere on your screen.</p>
-            </div>
-
-            <div class="s-card-item" style="background: #ffffff; border: 1px solid #e5e7eb; padding: 18px 20px; border-radius: 8px; box-sizing: border-box;">
-                <h3 style="font-size: 16px; font-weight: 700; margin: 0 0 6px 0; color: #111827;"> Audio & Music Panel</h3>
-                <p style="font-size: 13.5px; color: #4b5563; line-height: 1.6; margin: 0;">Add background songs and sound effects. Trim music clips, change volume, and fade sounds in or out smoothly.</p>
-            </div>
-
-            <div class="s-card-item" style="background: #ffffff; border: 1px solid #e5e7eb; padding: 18px 20px; border-radius: 8px; box-sizing: border-box;">
-                <h3 style="font-size: 16px; font-weight: 700; margin: 0 0 6px 0; color: #111827;"> Picture-in-Picture (PiP)</h3>
-                <p style="font-size: 13.5px; color: #4b5563; line-height: 1.6; margin: 0;">Layer extra videos, reaction facecams, photos, or logos on top of your main video without any limits.</p>
-            </div>
-
-            <div class="s-card-item" style="background: #ffffff; border: 1px solid #e5e7eb; padding: 18px 20px; border-radius: 8px; box-sizing: border-box;">
-                <h3 style="font-size: 16px; font-weight: 700; margin: 0 0 6px 0; color: #111827;"> Full-Screen Preview Mode</h3>
-                <p style="font-size: 13.5px; color: #4b5563; line-height: 1.6; margin: 0;">Watch your video in a clean, full-screen playback window with one click to check every detail before saving.</p>
-            </div>
-
-            <div class="s-card-item" style="background: #ffffff; border: 1px solid #e5e7eb; padding: 18px 20px; border-radius: 8px; box-sizing: border-box;">
-                <h3 style="font-size: 16px; font-weight: 700; margin: 0 0 6px 0; color: #111827;"> Instant Undo & Redo</h3>
-                <p style="font-size: 13.5px; color: #4b5563; line-height: 1.6; margin: 0;">Made a mistake? Go back or step forward easily with simple undo and redo controls without losing your work.</p>
-            </div>
-
-            <div class="s-card-item" style="background: #ffffff; border: 1px solid #e5e7eb; padding: 18px 20px; border-radius: 8px; box-sizing: border-box;">
-                <h3 style="font-size: 16px; font-weight: 700; margin: 0 0 6px 0; color: #111827;"> Multi-Track Timeline</h3>
-                <p style="font-size: 13.5px; color: #4b5563; line-height: 1.6; margin: 0;">Keep your video, audio, text, and photos organized in clear rows. Zoom in and out of the timeline for exact cut points.</p>
-            </div>
-        </div>
-
-        <div class="s-card-item s-full-span-card" style="width: 100%; margin-bottom: 20px; background: #ffffff; border: 1px solid #e5e7eb; padding: 18px 20px; border-radius: 8px; box-sizing: border-box;">
-            <h3 style="font-size: 16px; font-weight: 700; margin: 0 0 6px 0; color: #111827;"> Direct Editing Toolbars</h3>
-            <p style="font-size: 13.5px; color: #4b5563; line-height: 1.6; margin: 0;">Find every tool right where you need it. Splitting, speed adjustment, green screen removal, blur masks, and filters are all easily accessible without confusing hidden menus.</p>
-        </div>
-
-        <div class="s-cta-banner" style="text-align: center; padding: 14px; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 6px; color: #111827; font-size: 13.5px; font-weight: 500;">
-            <span>Ready to edit? Visit <a href="https://svideoeditor.com/" target="_blank" rel="noopener" style="color: #111827; font-weight: 700; text-decoration: underline;">svideoeditor.com</a> to use all these features for free in your browser!</span>
-        </div>
-    </section>
-
-    <!-- 99% FULL-WIDTH PHOTO EDITING TOOLS HIGHLIGHTS (CLEAN WHITE EDITORIAL) -->
-    <section class="s-photo-tools-section" style="width: 98% !important; max-width: 1400px !important; margin: 30px auto !important; padding: 30px 20px !important; box-sizing: border-box !important; background: #ffffff !important; border: 1px solid #e5e7eb !important; border-radius: 8px !important; color: #111827 !important; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important; box-shadow: none !important;">
-        <div class="s-photo-header" style="text-align: center; margin-bottom: 26px;">
-            <span class="s-photo-badge" style="background: #f3f4f6; color: #374151; border: 1px solid #d1d5db; font-size: 11px; font-weight: 700; padding: 4px 14px; border-radius: 4px; letter-spacing: 0.5px; text-transform: uppercase; display: inline-block; margin-bottom: 8px;">All-in-One Studio Hub</span>
-            <h2 class="s-photo-title" style="font-size: 24px; font-weight: 800; margin: 6px 0; color: #111827;">
-                Photo Editing Tools Highlights – <span class="s-emerald-text" style="color: #111827; text-decoration: underline;">Explore More Tools</span>
-            </h2>
-            <p class="s-photo-subtitle" style="font-size: 14px; color: #4b5563; max-width: 900px; margin: 0 auto; line-height: 1.6;">
-                Usually, creators have to switch between different websites and apps just to rotate an image or remove a background. We solve this problem by bringing all these essential features together in one place on S Studio—completely free of charge.
-            </p>
-        </div>
-
-        <div class="s-photo-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; width: 100%; margin-bottom: 20px; box-sizing: border-box;">
-            <div class="s-photo-card" style="background: #ffffff; border: 1px solid #e5e7eb; padding: 18px 20px; border-radius: 8px; box-sizing: border-box;">
-                <h3 style="font-size: 16px; font-weight: 700; margin: 0 0 6px 0; color: #111827;"> 1-Click Background Removal</h3>
-                <p style="font-size: 13.5px; color: #4b5563; line-height: 1.6; margin: 0;">Cut out backgrounds cleanly in a single click with zero complicated manual masking or green screen requirements.</p>
-            </div>
-
-            <div class="s-photo-card" style="background: #ffffff; border: 1px solid #e5e7eb; padding: 18px 20px; border-radius: 8px; box-sizing: border-box;">
-                <h3 style="font-size: 16px; font-weight: 700; margin: 0 0 6px 0; color: #111827;"> Custom Rotation & Flip</h3>
-                <p style="font-size: 13.5px; color: #4b5563; line-height: 1.6; margin: 0;">Rotate photos by 90°, 180°, or fine-tune angles freely with horizontal and vertical mirror flipping controls.</p>
-            </div>
-
-            <div class="s-photo-card" style="background: #ffffff; border: 1px solid #e5e7eb; padding: 18px 20px; border-radius: 8px; box-sizing: border-box;">
-                <h3 style="font-size: 16px; font-weight: 700; margin: 0 0 6px 0; color: #111827;"> Color & Light Adjustments</h3>
-                <p style="font-size: 13.5px; color: #4b5563; line-height: 1.6; margin: 0;">Fine-tune brightness, contrast, saturation, and temperature to achieve crisp, professional-grade picture clarity.</p>
-            </div>
-
-            <div class="s-photo-card" style="background: #ffffff; border: 1px solid #e5e7eb; padding: 18px 20px; border-radius: 8px; box-sizing: border-box;">
-                <h3 style="font-size: 16px; font-weight: 700; margin: 0 0 6px 0; color: #111827;"> Transparency & Opacity</h3>
-                <p style="font-size: 13.5px; color: #4b5563; line-height: 1.6; margin: 0;">Control layer blending and transparency with smooth 0–200% opacity sliders for watermark and overlay integration.</p>
-            </div>
-
-            <div class="s-photo-card" style="background: #ffffff; border: 1px solid #e5e7eb; padding: 18px 20px; border-radius: 8px; box-sizing: border-box;">
-                <h3 style="font-size: 16px; font-weight: 700; margin: 0 0 6px 0; color: #111827;"> Precision Canvas Positioning</h3>
-                <p style="font-size: 13.5px; color: #4b5563; line-height: 1.6; margin: 0;">Align, scale, and snap images into exact positions across standard social dimensions (YouTube, Reels, Square).</p>
-            </div>
-
-            <div class="s-photo-card" style="background: #ffffff; border: 1px solid #e5e7eb; padding: 18px 20px; border-radius: 8px; box-sizing: border-box;">
-                <h3 style="font-size: 16px; font-weight: 700; margin: 0 0 6px 0; color: #111827;"> Many More Tools & Features</h3>
-                <p style="font-size: 13.5px; color: #4b5563; line-height: 1.6; margin: 0;">Crop presets, shape cutouts, color filters, sharpen boosts, and sticker layers are all built right into the suite.</p>
-            </div>
-        </div>
-
-        <div class="s-photo-cta" style="text-align: center; padding: 14px 18px; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 6px; color: #111827; font-size: 13.5px; line-height: 1.5;">
-            <span>Stop jumping between apps! Head over to the <strong>Photo Editing section on S Studio</strong> now and explore many more powerful tools to elevate your designs!</span>
-        </div>
-    </section>
-
-    <!-- HELP LINE & CUSTOMER SUPPORT CARD (OFFICIAL REAL BRAND SVG LOGOS) -->
-<div class="support-channels-card" style="background: #ffffff !important; border: 1px solid #e5e7eb !important; border-radius: 12px !important; padding: 32px 26px !important; max-width: 1400px !important; margin: 30px auto !important; color: #111827 !important; opacity: 1 !important; visibility: visible !important; display: block !important; box-shadow: 0 1px 3px rgba(0,0,0,0.04) !important; box-sizing: border-box !important;">
-    
-    <!-- Top Support Heading -->
-    <div style="text-align: center; margin-bottom: 28px;">
-        <h2 style="font-size: 24px; font-weight: 800; color: #111827; margin: 0 0 6px; letter-spacing: -0.3px;">Help Line & Customer Support</h2>
-        <p style="color: #6b7280; font-size: 14.5px; margin: 0;">Have a question or run into a technical issue? Send us a message — we are here to help.</p>
-    </div>
-
-    <!-- Official Email Desk Cards -->
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-bottom: 30px;">
-        <!-- Support Email -->
-        <div style="background: #f9fafb; border: 1px solid #e5e7eb; padding: 16px 18px; border-radius: 8px; display: flex; align-items: center; gap: 14px;">
-            <div style="width: 42px; height: 42px; min-width: 42px; background: #ffffff; border: 1px solid #e5e7eb; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
-                <svg viewBox="0 0 24 24" width="22" height="22" fill="#111827">
-                    <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
-                </svg>
-            </div>
-            <div>
-                <span style="display: block; font-size: 12px; color: #6b7280; font-weight: 600;">Support & Help Desk</span>
-                <a href="mailto:sriramgroup.help@gmail.com" style="color: #111827; font-size: 14px; font-weight: 700; text-decoration: none;">sriramgroup.help@gmail.com</a>
-            </div>
-        </div>
-
-        <!-- Official Inquiries Email -->
-        <div style="background: #f9fafb; border: 1px solid #e5e7eb; padding: 16px 18px; border-radius: 8px; display: flex; align-items: center; gap: 14px;">
-            <div style="width: 42px; height: 42px; min-width: 42px; background: #ffffff; border: 1px solid #e5e7eb; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
-                <svg viewBox="0 0 24 24" width="22" height="22" fill="#111827">
-                    <path d="M12 7V3H2v18h20V7H12zM6 19H4v-2h2v2zm0-4H4v-2h2v2zm0-4H4V9h2v2zm0-4H4V5h2v2zm4 12H8v-2h2v2zm0-4H8v-2h2v2zm0-4H8V9h2v2zm0-4H8V5h2v2zm10 12h-8v-2h2v-2h-2v-2h2v-2h-2V9h8v10zm-2-8h-2v2h2v-2zm0 4h-2v2h2v-2z"/>
-                </svg>
-            </div>
-            <div>
-                <span style="display: block; font-size: 12px; color: #6b7280; font-weight: 600;">Official Main Business & Inquiries</span>
-                <a href="mailto:sriramgroupsofficial@gmail.com" style="color: #111827; font-size: 14px; font-weight: 700; text-decoration: none;">sriramgroupsofficial@gmail.com</a>
-            </div>
-        </div>
-    </div>
-
-    <!-- Social Media Section Header -->
-    <h3 style="color: #111827; font-size: 16.5px; font-weight: 800; margin: 0 0 6px 0;">Connect With Us on Social Media</h3>
-    <p style="color: #6b7280; font-size: 13.5px; margin: 0 0 18px 0;">
-        Stay updated with the latest news, announcements, and platform releases by following our official social media handles:
-    </p>
-
-    <!-- Social Media Brand Cards with Real Vector Logos -->
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px; margin-bottom: 24px;">
+    <!-- HELP LINE & CUSTOMER SUPPORT (OFFICIAL REAL BRAND SVG LOGOS) -->
+    <div class="support-channels-card" style="background: #ffffff !important; border: 1px solid #e5e7eb !important; border-radius: 12px !important; padding: 32px 26px !important; max-width: 1400px !important; margin: 30px auto !important; color: #111827 !important; display: block !important; box-sizing: border-box !important;">
         
-        <!-- 1. Instagram Official Logo -->
-        <a href="https://www.instagram.com/sriramgroupsofficial?igsh=aXV4eGs4ejhxNW0y" target="_blank" rel="noopener noreferrer" style="background: #f9fafb; border: 1px solid #e5e7eb; padding: 14px 16px; border-radius: 8px; text-decoration: none; color: #111827; display: flex; align-items: center; gap: 12px; transition: border-color 0.2s ease;">
-            <div style="width: 38px; height: 38px; min-width: 38px; background: #ffffff; border: 1px solid #e5e7eb; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
-                <svg viewBox="0 0 24 24" width="22" height="22" fill="#E1306C">
-                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-                </svg>
-            </div>
-            <div>
-                <strong style="display: block; font-size: 13.5px; color: #111827;">Instagram</strong>
-                <span style="font-size: 12px; color: #6b7280;">Sriram Groups Official</span>
-            </div>
-        </a>
+        <div style="text-align: center; margin-bottom: 28px;">
+            <h2 style="font-size: 24px; font-weight: 800; color: #111827; margin: 0 0 6px; letter-spacing: -0.3px;">Help Line & Customer Support</h2>
+            <p style="color: #6b7280; font-size: 14.5px; margin: 0;">Have a question or run into a technical issue? Send us a message — we are here to help.</p>
+        </div>
 
-        <!-- 2. YouTube Official Logo -->
-        <a href="https://youtube.com/@sriramgroups-i7t?si=J_jklV3t-tU1qFT4" target="_blank" rel="noopener noreferrer" style="background: #f9fafb; border: 1px solid #e5e7eb; padding: 14px 16px; border-radius: 8px; text-decoration: none; color: #111827; display: flex; align-items: center; gap: 12px; transition: border-color 0.2s ease;">
-            <div style="width: 38px; height: 38px; min-width: 38px; background: #ffffff; border: 1px solid #e5e7eb; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
-                <svg viewBox="0 0 24 24" width="22" height="22" fill="#FF0000">
-                    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
-                </svg>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-bottom: 30px;">
+            <div style="background: #f9fafb; border: 1px solid #e5e7eb; padding: 16px 18px; border-radius: 8px; display: flex; align-items: center; gap: 14px;">
+                <div style="width: 42px; height: 42px; min-width: 42px; background: #ffffff; border: 1px solid #e5e7eb; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                    <svg viewBox="0 0 24 24" width="22" height="22" fill="#111827"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                </div>
+                <div>
+                    <span style="display: block; font-size: 12px; color: #6b7280; font-weight: 600;">Support & Help Desk</span>
+                    <a href="mailto:sriramgroup.help@gmail.com" style="color: #111827; font-size: 14px; font-weight: 700; text-decoration: none;">sriramgroup.help@gmail.com</a>
+                </div>
             </div>
-            <div>
-                <strong style="display: block; font-size: 13.5px; color: #111827;">YouTube</strong>
-                <span style="font-size: 12px; color: #6b7280;">Sriram Groups Official</span>
-            </div>
-        </a>
 
-        <!-- 3. Facebook Official Logo -->
-        <a href="https://www.facebook.com/share/1684AA7XhtV/" target="_blank" rel="noopener noreferrer" style="background: #f9fafb; border: 1px solid #e5e7eb; padding: 14px 16px; border-radius: 8px; text-decoration: none; color: #111827; display: flex; align-items: center; gap: 12px; transition: border-color 0.2s ease;">
-            <div style="width: 38px; height: 38px; min-width: 38px; background: #ffffff; border: 1px solid #e5e7eb; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
-                <svg viewBox="0 0 24 24" width="22" height="22" fill="#1877F2">
-                    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-                </svg>
+            <div style="background: #f9fafb; border: 1px solid #e5e7eb; padding: 16px 18px; border-radius: 8px; display: flex; align-items: center; gap: 14px;">
+                <div style="width: 42px; height: 42px; min-width: 42px; background: #ffffff; border: 1px solid #e5e7eb; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                    <svg viewBox="0 0 24 24" width="22" height="22" fill="#111827"><path d="M12 7V3H2v18h20V7H12zM6 19H4v-2h2v2zm0-4H4v-2h2v2zm0-4H4V9h2v2zm0-4H4V5h2v2zm4 12H8v-2h2v2zm0-4H8v-2h2v2zm0-4H8V9h2v2zm0-4H8V5h2v2zm10 12h-8v-2h2v-2h-2v-2h2v-2h-2V9h8v10zm-2-8h-2v2h2v-2zm0 4h-2v2h2v-2z"/></svg>
+                </div>
+                <div>
+                    <span style="display: block; font-size: 12px; color: #6b7280; font-weight: 600;">Official Main Business & Inquiries</span>
+                    <a href="mailto:sriramgroupsofficial@gmail.com" style="color: #111827; font-size: 14px; font-weight: 700; text-decoration: none;">sriramgroupsofficial@gmail.com</a>
+                </div>
             </div>
-            <div>
-                <strong style="display: block; font-size: 13.5px; color: #111827;">Facebook</strong>
-                <span style="font-size: 12px; color: #6b7280;">Sriram Groups Official</span>
-            </div>
-        </a>
+        </div>
 
-        <!-- 4. X (Twitter) Official Logo -->
-        <a href="https://x.com/sriramgroupsown" target="_blank" rel="noopener noreferrer" style="background: #f9fafb; border: 1px solid #e5e7eb; padding: 14px 16px; border-radius: 8px; text-decoration: none; color: #111827; display: flex; align-items: center; gap: 12px; transition: border-color 0.2s ease;">
-            <div style="width: 38px; height: 38px; min-width: 38px; background: #ffffff; border: 1px solid #e5e7eb; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
-                <svg viewBox="0 0 24 24" width="20" height="20" fill="#000000">
-                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-                </svg>
-            </div>
-            <div>
-                <strong style="display: block; font-size: 13.5px; color: #111827;">X (Twitter)</strong>
-                <span style="font-size: 12px; color: #6b7280;">@sriramgroupsown</span>
-            </div>
-        </a>
+        <h3 style="color: #111827; font-size: 16.5px; font-weight: 800; margin: 0 0 6px 0;">Connect With Us on Social Media</h3>
+        <p style="color: #6b7280; font-size: 13.5px; margin: 0 0 18px 0;">Stay updated with the latest news, announcements, and platform releases by following our official social media handles:</p>
 
-        <!-- 5. Official Website Globe Logo -->
-        <a href="https://sriramgroupsofficial.com" target="_blank" rel="noopener noreferrer" style="background: #f9fafb; border: 1px solid #e5e7eb; padding: 14px 16px; border-radius: 8px; text-decoration: none; color: #111827; display: flex; align-items: center; gap: 12px; transition: border-color 0.2s ease;">
-            <div style="width: 38px; height: 38px; min-width: 38px; background: #ffffff; border: 1px solid #e5e7eb; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
-                <svg viewBox="0 0 24 24" width="22" height="22" fill="#111827">
-                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
-                </svg>
-            </div>
-            <div>
-                <strong style="display: block; font-size: 13.5px; color: #111827;">Official Website</strong>
-                <span style="font-size: 12px; color: #6b7280;">sriramgroupsofficial.com</span>
-            </div>
-        </a>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px; margin-bottom: 24px;">
+            <a href="https://www.instagram.com/sriramgroupsofficial?igsh=aXV4eGs4ejhxNW0y" target="_blank" rel="noopener noreferrer" style="background: #f9fafb; border: 1px solid #e5e7eb; padding: 14px 16px; border-radius: 8px; text-decoration: none; color: #111827; display: flex; align-items: center; gap: 12px;">
+                <div style="width: 38px; height: 38px; min-width: 38px; background: #ffffff; border: 1px solid #e5e7eb; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                    <svg viewBox="0 0 24 24" width="22" height="22" fill="#E1306C"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                </div>
+                <div><strong style="display: block; font-size: 13.5px; color: #111827;">Instagram</strong><span style="font-size: 12px; color: #6b7280;">Sriram Groups Official</span></div>
+            </a>
+
+            <a href="https://youtube.com/@sriramgroups-i7t?si=J_jklV3t-tU1qFT4" target="_blank" rel="noopener noreferrer" style="background: #f9fafb; border: 1px solid #e5e7eb; padding: 14px 16px; border-radius: 8px; text-decoration: none; color: #111827; display: flex; align-items: center; gap: 12px;">
+                <div style="width: 38px; height: 38px; min-width: 38px; background: #ffffff; border: 1px solid #e5e7eb; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                    <svg viewBox="0 0 24 24" width="22" height="22" fill="#FF0000"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                </div>
+                <div><strong style="display: block; font-size: 13.5px; color: #111827;">YouTube</strong><span style="font-size: 12px; color: #6b7280;">Sriram Groups Official</span></div>
+            </a>
+
+            <a href="https://www.facebook.com/share/1684AA7XhtV/" target="_blank" rel="noopener noreferrer" style="background: #f9fafb; border: 1px solid #e5e7eb; padding: 14px 16px; border-radius: 8px; text-decoration: none; color: #111827; display: flex; align-items: center; gap: 12px;">
+                <div style="width: 38px; height: 38px; min-width: 38px; background: #ffffff; border: 1px solid #e5e7eb; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                    <svg viewBox="0 0 24 24" width="22" height="22" fill="#1877F2"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                </div>
+                <div><strong style="display: block; font-size: 13.5px; color: #111827;">Facebook</strong><span style="font-size: 12px; color: #6b7280;">Sriram Groups Official</span></div>
+            </a>
+
+            <a href="https://x.com/sriramgroupsown" target="_blank" rel="noopener noreferrer" style="background: #f9fafb; border: 1px solid #e5e7eb; padding: 14px 16px; border-radius: 8px; text-decoration: none; color: #111827; display: flex; align-items: center; gap: 12px;">
+                <div style="width: 38px; height: 38px; min-width: 38px; background: #ffffff; border: 1px solid #e5e7eb; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="#000000"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                </div>
+                <div><strong style="display: block; font-size: 13.5px; color: #111827;">X (Twitter)</strong><span style="font-size: 12px; color: #6b7280;">@sriramgroupsown</span></div>
+            </a>
+
+            <a href="https://sriramgroupsofficial.com" target="_blank" rel="noopener noreferrer" style="background: #f9fafb; border: 1px solid #e5e7eb; padding: 14px 16px; border-radius: 8px; text-decoration: none; color: #111827; display: flex; align-items: center; gap: 12px;">
+                <div style="width: 38px; height: 38px; min-width: 38px; background: #ffffff; border: 1px solid #e5e7eb; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                    <svg viewBox="0 0 24 24" width="22" height="22" fill="#111827"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+                </div>
+                <div><strong style="display: block; font-size: 13.5px; color: #111827;">Official Website</strong><span style="font-size: 12px; color: #6b7280;">sriramgroupsofficial.com</span></div>
+            </a>
+        </div>
     </div>
-
-    <!-- Bottom Footer Note -->
-    <div style="text-align: center; padding: 12px; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 6px;">
-        <span style="color: #374151; font-weight: 600; font-size: 13px;">Thank you for connecting with Sriram Groups!</span>
-    </div>
-</div>
 
     <!-- CLEAN WHITE FOOTER -->
     <footer style="width: 98%; max-width: 1400px; margin: 30px auto 10px auto; padding: 25px 20px; box-sizing: border-box; background: #ffffff; border-top: 1px solid #e5e7eb; border-radius: 8px; color: #111827; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
@@ -752,72 +751,54 @@
 </div> <!-- End #introPage -->
 
 <!-- ========================================================================== -->
-<!-- 2. MAIN EDITOR STUDIO WORKSPACE (HIDDEN INITIALLY) -->
+<!-- 2. MAIN EDITOR STUDIO WORKSPACE (COMPLETE DARK CINEMA THEME - ALL TOOLS RESTORED) -->
 <!-- ========================================================================== -->
-<div class="editor-container hidden" id="editorPage" style="background: #ffffff;">
-    <!-- Top Navbar -->
-    <header class="navbar" style="background: #ffffff; border-bottom: 1px solid #e5e7eb; padding: 10px 20px; display: flex; align-items: center; justify-content: space-between;">
+<div class="editor-container hidden" id="editorPage" style="display: none; background: #0b0e14 !important; color: #ffffff !important; min-height: 100vh; flex-direction: column; justify-content: space-between; position: relative; z-index: 1000000;">
+    
+    <!-- Top Dark Studio Navbar -->
+    <header class="navbar" style="background: #111420 !important; border-bottom: 1px solid #1f2738 !important; padding: 10px 20px; display: flex; align-items: center; justify-content: space-between;">
         <div class="brand" style="display: flex; align-items: center; gap: 8px;">
-            <span class="logo-s" onclick="resetToHome()" style="background: #111827; color: #fff; padding: 4px 10px; border-radius: 6px; cursor: pointer; font-weight: bold;">S</span>
-            <span class="logo-text" style="color: #111827; font-weight: 700; font-size: 18px;">Studio</span>
+            <span class="logo-s" onclick="resetToHome()" style="background: #ffffff; color: #111827; padding: 4px 10px; border-radius: 6px; cursor: pointer; font-weight: bold;">S</span>
+            <span class="logo-text" style="color: #ffffff !important; font-weight: 700; font-size: 18px;">Studio</span>
         </div>
-        <div class="menu-items">
-            <button class="nav-btn upload-trigger" id="mainUploadBtn" onclick="requestUploadPermission()" style="background: #111827; color: #ffffff; border: none; padding: 8px 16px; border-radius: 6px; font-weight: 600; cursor: pointer;">📥 Upload</button>
-            <button class="nav-btn" id="canvasCropBtn" onclick="openTopCanvasCropMenu()" style="background: #ffffff; border: 1px solid #d1d5db; color: #111827; font-weight: 600; padding: 8px 16px; border-radius: 6px; margin-left: 8px; cursor: pointer;">📐 S Crop</button>
+        <div class="menu-items" style="display: flex; gap: 10px;">
+            <button class="nav-btn upload-trigger" id="mainUploadBtn" onclick="requestUploadPermission()" style="background: #2563eb !important; color: #ffffff !important; border: none; padding: 8px 16px; border-radius: 6px; font-weight: 600; cursor: pointer;">📥 Upload</button>
+            <button class="nav-btn" id="canvasCropBtn" onclick="openTopCanvasCropMenu()" style="background: #181d2c !important; border: 1px solid #334155 !important; color: #cbd5e1 !important; font-weight: 600; padding: 8px 16px; border-radius: 6px; cursor: pointer;">📐 S Crop</button>
         </div>
-        <div class="action-group media-dependent hidden">
-            <button class="nav-btn" onclick="undoAction()" style="background: #ffffff; border: 1px solid #d1d5db; color: #111827; padding: 8px 14px; border-radius: 6px; cursor: pointer;">↩️ Undo</button>
-            <button class="nav-btn" onclick="redoAction()" style="background: #ffffff; border: 1px solid #d1d5db; color: #111827; padding: 8px 14px; border-radius: 6px; cursor: pointer;">↪️ Redo</button>
-            <button class="export-btn-main" onclick="toggleExportModal(true)" style="background: #111827; color: white; border: none; padding: 8px 16px; border-radius: 6px; font-weight: 600; cursor: pointer;">Export Video</button>
-            <button class="nav-btn" id="authNavBtn" onclick="openRegisterIdLoginModal()" style="background: #ffffff; color: #111827; border: 1px solid #d1d5db; padding: 8px 14px; border-radius: 6px; margin-left: 8px; cursor: pointer;">👤 Login</button>
+        <div class="action-group media-dependent" style="display: flex; gap: 8px; align-items: center;">
+            <button class="nav-btn" onclick="undoAction()" style="background: #181d2c !important; border: 1px solid #334155 !important; color: #cbd5e1 !important; padding: 8px 14px; border-radius: 6px; cursor: pointer;">↩️ Undo</button>
+            <button class="nav-btn" onclick="redoAction()" style="background: #181d2c !important; border: 1px solid #334155 !important; color: #cbd5e1 !important; padding: 8px 14px; border-radius: 6px; cursor: pointer;">↪️ Redo</button>
+            <button class="export-btn-main" onclick="toggleExportModal(true)" style="background: #dc2626 !important; color: white !important; border: none; padding: 8px 16px; border-radius: 6px; font-weight: 600; cursor: pointer;">Export Video</button>
+            <button class="nav-btn" id="authNavBtn" onclick="openRegisterIdLoginModal()" style="background: #181d2c !important; color: #cbd5e1 !important; border: 1px solid #334155 !important; padding: 8px 14px; border-radius: 6px; cursor: pointer;">👤 Login</button>
         </div>
     </header>
 
     <!-- Main Workspace Preview -->
-    <main class="workspace" style="padding: 20px 0; display: flex; justify-content: center; background: #ffffff;">
+    <main class="workspace" style="padding: 15px 0; display: flex; justify-content: center; background: #0b0e14 !important; flex: 1;">
         <div class="preview-window" style="width: 100%; display: flex; flex-direction: column; align-items: center;">
-            <div class="video-wrapper" id="videoWrapper" style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; max-width: 95%;">
-                <p id="placeholderText" style="color: #6b7280; font-size: 14px;">No media loaded. Click "Upload Video" to start.</p>
+            <div class="video-wrapper" id="videoWrapper" style="background: #000000 !important; border: 1px solid #1f2738 !important; border-radius: 8px; width: 85%; max-width: 900px; aspect-ratio: 16/9; display: flex; align-items: center; justify-content: center; position: relative;">
+                <p id="placeholderText" style="color: #64748b !important; font-size: 14px;">No media loaded. Click "Upload Video" to start.</p>
                 
                 <!-- Floating Text Customization Bar -->
-                <div id="floatingTextTools" class="hidden" style="position: absolute; z-index: 100; background: #ffffff; padding: 6px; border-radius: 6px; border: 1px solid #d1d5db; display: flex; gap: 6px; align-items: center; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-                    <input type="color" id="textColorPicker" value="#000000" onchange="changeTextColor(this.value)">
-                    <button class="control-btn" onclick="toggleTextBold()" style="padding: 2px 6px; font-weight: bold; background: #f3f4f6; border: 1px solid #d1d5db; color: #111827; border-radius: 4px;">B</button>
-                    <button class="control-btn" onclick="toggleTextItalic()" style="padding: 2px 6px; font-style: italic; background: #f3f4f6; border: 1px solid #d1d5db; color: #111827; border-radius: 4px;">I</button>
-                    <button class="control-btn" onclick="applyFontStyle('modern')" style="padding: 2px 6px; font-size: 11px; background: #f3f4f6; border: 1px solid #d1d5db; color: #111827; border-radius: 4px;">Modern</button>
-                    <button class="control-btn" onclick="applyFontStyle('neon')" style="padding: 2px 6px; font-size: 11px; background: #f3f4f6; border: 1px solid #d1d5db; color: #111827; border-radius: 4px;">Neon</button>
-                    <button class="control-btn" onclick="deleteActiveText()" style="padding: 2px 6px; background: #fee2e2; border: 1px solid #ef4444; color: #b91c1c; border-radius: 4px; cursor: pointer;">🗑️</button>
+                <div id="floatingTextTools" class="hidden" style="position: absolute; z-index: 100; background: #161a24; padding: 6px; border-radius: 6px; border: 1px solid #334155; display: flex; gap: 6px; align-items: center; box-shadow: 0 4px 12px rgba(0,0,0,0.4);">
+                    <input type="color" id="textColorPicker" value="#ffffff" onchange="changeTextColor(this.value)">
+                    <button class="control-btn" onclick="toggleTextBold()" style="padding: 2px 6px; font-weight: bold; background: #262f40; border: 1px solid #334155; color: #ffffff; border-radius: 4px;">B</button>
+                    <button class="control-btn" onclick="toggleTextItalic()" style="padding: 2px 6px; font-style: italic; background: #262f40; border: 1px solid #334155; color: #ffffff; border-radius: 4px;">I</button>
+                    <button class="control-btn" onclick="applyFontStyle('modern')" style="padding: 2px 6px; font-size: 11px; background: #262f40; border: 1px solid #334155; color: #ffffff; border-radius: 4px;">Modern</button>
+                    <button class="control-btn" onclick="applyFontStyle('neon')" style="padding: 2px 6px; font-size: 11px; background: #262f40; border: 1px solid #334155; color: #ffffff; border-radius: 4px;">Neon</button>
+                    <button class="control-btn" onclick="deleteActiveText()" style="padding: 2px 6px; background: #991b1b; border: 1px solid #ef4444; color: #ffffff; border-radius: 4px; cursor: pointer;">🗑️</button>
                 </div>
             </div>
         
             <!-- Mini Player Controls Below Video -->
-            <div class="player-controls media-dependent hidden" id="playerControlsBox" style="margin-top: 15px; display: flex; align-items: center; gap: 10px;">
-                <!-- 5 Sec Back Button -->
-                <button class="ctrl-nav-btn" type="button" onclick="videoBack()" title="Rewind 5s" style="background: #ffffff; border: 1px solid #d1d5db; color: #111827; padding: 6px 12px; border-radius: 6px; cursor: pointer;">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M11 18V6l-8.5 6 8.5 6zm.5-6l8.5 6V6l-8.5 6z"/>
-                    </svg>
+            <div class="player-controls media-dependent" id="playerControlsBox" style="margin-top: 15px; display: flex; align-items: center; gap: 10px; background: #111420; padding: 8px 18px; border-radius: 30px; border: 1px solid #1f2738;">
+                <button class="ctrl-nav-btn" type="button" onclick="videoBack()" title="Rewind 5s" style="background: #181d2c; border: 1px solid #334155; color: #cbd5e1; padding: 6px 12px; border-radius: 6px; cursor: pointer;">⏮️ 5s</button>
+                <button class="ctrl-play-btn" id="mainPlayPauseBtn" type="button" onclick="togglePlay()" title="Play / Pause" style="background: #2563eb; border: none; color: white; width: 44px; height: 44px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+                    <svg id="playIconSvg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                    <svg id="pauseIconSvg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="display: none;"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
                 </button>
-
-                <!-- Main Dynamic Play / Pause Button -->
-                <button class="ctrl-play-btn" id="mainPlayPauseBtn" type="button" onclick="togglePlay()" title="Play / Pause" style="background: #111827; border: none; color: white; padding: 8px 16px; border-radius: 6px; cursor: pointer;">
-                    <svg id="playIconSvg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M8 5v14l11-7z"/>
-                    </svg>
-                    <svg id="pauseIconSvg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="display: none;">
-                        <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
-                    </svg>
-                </button>
-
-                <!-- 5 Sec Forward Button -->
-                <button class="ctrl-nav-btn" type="button" onclick="videoForward()" title="Forward 5s" style="background: #ffffff; border: 1px solid #d1d5db; color: #111827; padding: 6px 12px; border-radius: 6px; cursor: pointer;">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M4 18l8.5-6L4 6v12zm9-12v12l8.5-6L13 6z"/>
-                    </svg>
-                </button> 
-
-                <!-- Start Presentation Mode Button -->
-                <button id="btnStartPresentation" type="button" onclick="launchPresentationMode()" style="background: #ffffff; border: 1px solid #d1d5db; color: #111827; padding: 8px 14px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; margin-left: 10px;">
+                <button class="ctrl-nav-btn" type="button" onclick="videoForward()" title="Forward 5s" style="background: #181d2c; border: 1px solid #334155; color: #cbd5e1; padding: 6px 12px; border-radius: 6px; cursor: pointer;">5s ⏭️</button> 
+                <button id="btnStartPresentation" type="button" onclick="launchPresentationMode()" style="background: #181d2c; border: 1px solid #334155; color: #cbd5e1; padding: 8px 14px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; margin-left: 10px;">
                     Start Presentation
                 </button>
             </div>
@@ -825,72 +806,79 @@
     </main>
 
     <!-- DRAGGABLE SCREEN RESIZER BAR -->
-    <div id="studioScreenResizerBar" style="width: 100%; height: 8px; background: #f3f4f6; border-top: 1px solid #e5e7eb; border-bottom: 1px solid #e5e7eb; cursor: row-resize; display: flex; align-items: center; justify-content: center;">
-        <div style="width: 30px; height: 2px; background: #9ca3af; border-radius: 2px;"></div>
+    <div id="studioScreenResizerBar" style="width: 100%; height: 8px; background: #161a24; border-top: 1px solid #1f2738; border-bottom: 1px solid #1f2738; cursor: row-resize; display: flex; align-items: center; justify-content: center;">
+        <div style="width: 30px; height: 2px; background: #475569; border-radius: 2px;"></div>
     </div>
 
     <!-- Bottom Timeline & Editing Controls Area -->
-    <div class="timeline-area" id="timelineAreaBox" style="background: #ffffff; border-top: 1px solid #e5e7eb;">
-        <div class="timeline-zoom-header" style="display: flex; align-items: center; gap: 8px; padding: 6px 16px; background: #f9fafb; border-bottom: 1px solid #e5e7eb;">
-            <label style="font-size: 11px; color: #4b5563;">🔍 Zoom:</label>
-            <input type="range" id="timelineZoomSlider" min="0.5" max="2.0" step="0.1" value="1.0" oninput="adjustTimelineZoom(this.value)" style="width: 100px; cursor: pointer;">
-            <span id="zoomValDisplay" style="color: #111827; font-size: 11px; font-weight: bold;">100%</span>
+    <div class="timeline-area" id="timelineAreaBox" style="background: #111420 !important; border-top: 1px solid #1f2738 !important; display: flex; flex-direction: column;">
+        <div class="timeline-zoom-header" style="display: flex; align-items: center; gap: 8px; padding: 6px 16px; background: #0e121a; border-bottom: 1px solid #1f2738;">
+            <label style="font-size: 11px; color: #94a3b8;">🔍 Zoom:</label>
+            <input type="range" id="timelineZoomSlider" min="0.5" max="2.0" step="0.1" value="1.0" oninput="adjustTimelineZoom(this.value)" style="width: 100px; cursor: pointer; accent-color: #2563eb;">
+            <span id="zoomValDisplay" style="color: #ffffff; font-size: 11px; font-weight: bold;">100%</span>
         </div>
 
         <!-- TIMELINE TRACKS CONTAINER -->
-        <div class="timeline-tracks" id="timelineTracksContainer" onclick="movePlayhead(event)" style="position: relative; overflow-x: auto; background: #ffffff;">
+        <div class="timeline-tracks" id="timelineTracksContainer" onclick="movePlayhead(event)" style="position: relative; overflow-x: auto; background: #0b0e14; padding: 8px 14px;">
             <div id="playhead"></div>
 
             <!-- Text Track -->
-            <div class="track-row text-track" style="border-bottom: 1px solid #f3f4f6;">
-                <div class="track-icon" onclick="event.stopPropagation(); addTextOverlay();" title="Add Text" style="cursor: pointer; background: #f9fafb; color: #111827; font-weight: bold; border-right: 1px solid #e5e7eb;">📝 +</div>
-                <div class="track-block" id="textTrackBlock"></div>
+            <div class="track-row text-track" style="border-bottom: 1px solid #1f2738; background: #161a24; border-radius: 4px; height: 36px; display: flex; align-items: center; margin-bottom: 4px;">
+                <div class="track-icon" onclick="event.stopPropagation(); addTextOverlay();" title="Add Text" style="cursor: pointer; background: #1f2738; color: #ffffff; font-weight: bold; border-right: 1px solid #334155; padding: 0 10px; height: 100%; display: flex; align-items: center;">📝 + Text</div>
+                <div class="track-block" id="textTrackBlock" style="flex: 1;"></div>
             </div>
 
             <!-- Audio Track -->
-            <div class="track-row audio-track" style="border-bottom: 1px solid #f3f4f6;">
-                <div class="track-icon" onclick="event.stopPropagation(); addMusicOverlay();" title="Add Music" style="cursor: pointer; background: #f9fafb; color: #111827; font-weight: bold; border-right: 1px solid #e5e7eb;">🎵 +</div>
-                <div class="track-block" id="audioTrackBlock"></div>
+            <div class="track-row audio-track" style="border-bottom: 1px solid #1f2738; background: #161a24; border-radius: 4px; height: 36px; display: flex; align-items: center; margin-bottom: 4px;">
+                <div class="track-icon" onclick="event.stopPropagation(); addMusicOverlay();" title="Add Music" style="cursor: pointer; background: #1f2738; color: #ffffff; font-weight: bold; border-right: 1px solid #334155; padding: 0 10px; height: 100%; display: flex; align-items: center;">🎵 + Audio</div>
+                <div class="track-block" id="audioTrackBlock" style="flex: 1;"></div>
             </div>
 
             <!-- PiP Track -->
-            <div class="track-row pip-track" style="border-bottom: 1px solid #f3f4f6;">
-                <div class="track-icon" onclick="event.stopPropagation(); triggerDirectPIPSelection();" title="Add Image / PiP" style="cursor: pointer; background: #f9fafb; color: #111827; font-weight: bold; border-right: 1px solid #e5e7eb;">🖼️ +</div>
-                <div class="track-block" id="pipTrackBlock"></div>
+            <div class="track-row pip-track" style="border-bottom: 1px solid #1f2738; background: #161a24; border-radius: 4px; height: 36px; display: flex; align-items: center; margin-bottom: 4px;">
+                <div class="track-icon" onclick="event.stopPropagation(); triggerDirectPIPSelection();" title="Add Image / PiP" style="cursor: pointer; background: #1f2738; color: #ffffff; font-weight: bold; border-right: 1px solid #334155; padding: 0 10px; height: 100%; display: flex; align-items: center;">🖼️ + PiP Layer</div>
+                <div class="track-block" id="pipTrackBlock" style="flex: 1;"></div>
             </div>
 
             <!-- Video Track -->
-            <div class="track-row video-track" style="border-bottom: 1px solid #f3f4f6;">
-                <div class="track-icon" style="cursor: default; background: #f9fafb; border-right: 1px solid #e5e7eb;">🎥</div>
-                <div class="track-block active-video-track" id="frameTimelineTrack">
+            <div class="track-row video-track" style="border-bottom: 1px solid #1f2738; background: #161a24; border-radius: 4px; height: 40px; display: flex; align-items: center;">
+                <div class="track-icon" style="cursor: default; background: #1f2738; border-right: 1px solid #334155; padding: 0 10px; height: 100%; display: flex; align-items: center; color: #94a3b8;">🎥 Main Track</div>
+                <div class="track-block active-video-track" id="frameTimelineTrack" style="flex: 1;">
                     <div id="framesContainer"></div>
                 </div>
             </div>
         </div>
 
-        <!-- Control Buttons Matrix -->
-        <div class="timeline-controls" style="display: flex !important; flex-wrap: wrap; gap: 8px; padding: 12px; background: #f9fafb; border-top: 1px solid #e5e7eb;">
-            <div class="control-group" style="display: inline-flex; align-items: center; gap: 6px; background: #ffffff; border: 1px solid #d1d5db; padding: 4px 8px; border-radius: 4px;">
-                <label style="font-size: 11px; color: #4b5563; white-space: nowrap;">▓▓ Blur:</label>
-                <input type="range" id="blurSlider" min="0" max="30" step="1" value="0" oninput="if(typeof changeVideoBlur==='function') changeVideoBlur(this.value); document.getElementById('blurDisplay').innerText = this.value+'px';" style="width: 70px;">
-                <span id="blurDisplay" style="font-size: 11px; color: #111827; min-width: 25px;">0px</span>
+        <!-- Master Video Editing Control Buttons Matrix (ALL TOOLS RESTORED + NEW TOOLS) -->
+        <div class="timeline-controls" style="display: flex !important; flex-wrap: wrap; gap: 8px; padding: 10px 16px; background: #0e121a; border-top: 1px solid #1f2738;">
+            <div class="control-group" style="display: inline-flex; align-items: center; gap: 6px; background: #181d2c; border: 1px solid #334155; padding: 4px 8px; border-radius: 4px;">
+                <label style="font-size: 11px; color: #cbd5e1; white-space: nowrap;">▓▓ Blur:</label>
+                <input type="range" id="blurSlider" min="0" max="30" step="1" value="0" oninput="if(typeof changeVideoBlur==='function') changeVideoBlur(this.value); document.getElementById('blurDisplay').innerText = this.value+'px';" style="width: 70px; accent-color: #2563eb;">
+                <span id="blurDisplay" style="font-size: 11px; color: #ffffff; min-width: 25px;">0px</span>
             </div>
 
-            <div class="tools-container" style="display: flex; flex-wrap: wrap; gap: 6px;">
-                <button class="tool-btn" onclick="executeTool('Split')" style="background: #ffffff; border: 1px solid #d1d5db; color: #111827; padding: 6px 12px; border-radius: 4px; font-weight: 500; cursor: pointer;">Split</button>
-                <button class="tool-btn" onclick="executeTool('Crop')" style="background: #ffffff; border: 1px solid #d1d5db; color: #111827; padding: 6px 12px; border-radius: 4px; font-weight: 500; cursor: pointer;">Crop Preset</button>
-                <button class="tool-btn" onclick="executeTool('Speed')" style="background: #ffffff; border: 1px solid #d1d5db; color: #111827; padding: 6px 12px; border-radius: 4px; font-weight: 500; cursor: pointer;">Video Speed</button> 
-                <button class="tool-btn" onclick="executeTool('Fill')" style="background: #ffffff; border: 1px solid #d1d5db; color: #111827; padding: 6px 12px; border-radius: 4px; font-weight: 500; cursor: pointer;">Fill / Fit</button>
-                <button class="tool-btn" onclick="executeTool('Zoom')" style="background: #ffffff; border: 1px solid #d1d5db; color: #111827; padding: 6px 12px; border-radius: 4px; font-weight: 500; cursor: pointer;">Zoom In</button>
-                <button class="tool-btn" onclick="executeTool('Opacity')" style="background: #ffffff; border: 1px solid #d1d5db; color: #111827; padding: 6px 12px; border-radius: 4px; font-weight: 500; cursor: pointer;">Opacity</button>
-                <button class="tool-btn" onclick="executeTool('Rotate')" style="background: #ffffff; border: 1px solid #d1d5db; color: #111827; padding: 6px 12px; border-radius: 4px; font-weight: 500; cursor: pointer;">Rotate</button>
-                <button class="tool-btn" onclick="executeTool('Filters')" style="background: #ffffff; border: 1px solid #d1d5db; color: #111827; padding: 6px 12px; border-radius: 4px; font-weight: 500; cursor: pointer;">Filters</button>
-                <button class="tool-btn chroma-btn" onclick="executeTool('Chroma Key')" style="background: #ffffff; border: 1px solid #d1d5db; color: #111827; padding: 6px 12px; border-radius: 4px; font-weight: 500; cursor: pointer;">Chroma Key</button>
-                <button class="tool-btn ai-btn" onclick="executeTool('Review AI')" style="background: #ffffff; border: 1px solid #d1d5db; color: #111827; padding: 6px 12px; border-radius: 4px; font-weight: 500; cursor: pointer;">Review AI</button>
-                <button class="tool-btn ai-btn" onclick="toggleModal('askAiModal', true)" style="background: #ffffff; border: 1px solid #d1d5db; color: #111827; padding: 6px 12px; border-radius: 4px; font-weight: 500; cursor: pointer;">
-                    Ask AI
-                </button>
-                <button class="tool-btn delete-btn" onclick="executeTool('Delete')" style="background: #fee2e2; border: 1px solid #ef4444; color: #b91c1c; padding: 6px 12px; border-radius: 4px; font-weight: 500; cursor: pointer;">Delete</button>
+            <div class="tools-container" style="display: flex !important; flex-wrap: wrap; gap: 6px;">
+                <!-- Primary Video Cut & Motion Tools -->
+                <button class="tool-btn" onclick="executeTool('Split')" style="background: #181d2c; border: 1px solid #334155; color: #f1f5f9; padding: 6px 12px; border-radius: 4px; font-weight: 500; cursor: pointer;">✂️ Split</button>
+                <button class="tool-btn" onclick="executeTool('Crop')" style="background: #181d2c; border: 1px solid #334155; color: #f1f5f9; padding: 6px 12px; border-radius: 4px; font-weight: 500; cursor: pointer;">📐 Crop Preset</button>
+                <button class="tool-btn" onclick="executeTool('Speed')" style="background: #181d2c; border: 1px solid #334155; color: #f1f5f9; padding: 6px 12px; border-radius: 4px; font-weight: 500; cursor: pointer;">⚡ Speed (0.5x-2x)</button> 
+                <button class="tool-btn" onclick="executeTool('Fill')" style="background: #181d2c; border: 1px solid #334155; color: #f1f5f9; padding: 6px 12px; border-radius: 4px; font-weight: 500; cursor: pointer;">↔️ Fill / Fit</button>
+                <button class="tool-btn" onclick="executeTool('Zoom')" style="background: #181d2c; border: 1px solid #334155; color: #f1f5f9; padding: 6px 12px; border-radius: 4px; font-weight: 500; cursor: pointer;">🔍 Zoom In</button>
+                <button class="tool-btn" onclick="executeTool('Opacity')" style="background: #181d2c; border: 1px solid #334155; color: #f1f5f9; padding: 6px 12px; border-radius: 4px; font-weight: 500; cursor: pointer;">🌓 Opacity</button>
+                <button class="tool-btn" onclick="executeTool('Rotate')" style="background: #181d2c; border: 1px solid #334155; color: #f1f5f9; padding: 6px 12px; border-radius: 4px; font-weight: 500; cursor: pointer;">🔄 Rotate 90°</button>
+                <button class="tool-btn" onclick="executeTool('Reverse')" style="background: #181d2c; border: 1px solid #334155; color: #f1f5f9; padding: 6px 12px; border-radius: 4px; font-weight: 500; cursor: pointer;">⏪ Reverse Video</button>
+                <button class="tool-btn" onclick="executeTool('Duplicate')" style="background: #181d2c; border: 1px solid #334155; color: #f1f5f9; padding: 6px 12px; border-radius: 4px; font-weight: 500; cursor: pointer;">📑 Duplicate</button>
+
+                <!-- Color, Green Screen & AI Tools -->
+                <button class="tool-btn" onclick="executeTool('Filters')" style="background: #181d2c; border: 1px solid #334155; color: #f1f5f9; padding: 6px 12px; border-radius: 4px; font-weight: 500; cursor: pointer;">🎨 Filters & LUTs</button>
+                <button class="tool-btn chroma-btn" onclick="executeTool('Chroma Key')" style="background: #166534; border: 1px solid #22c55e; color: #ffffff; padding: 6px 12px; border-radius: 4px; font-weight: 500; cursor: pointer;">🟢 Chroma Key</button>
+                <button class="tool-btn" onclick="executeTool('Denoise')" style="background: #181d2c; border: 1px solid #334155; color: #f1f5f9; padding: 6px 12px; border-radius: 4px; font-weight: 500; cursor: pointer;">🎙️ Denoise Audio</button>
+                <button class="tool-btn" onclick="executeTool('Subtitles')" style="background: #1e1b4b; border: 1px solid #6366f1; color: #c7d2fe; padding: 6px 12px; border-radius: 4px; font-weight: 600; cursor: pointer;">💬 Auto AI Subtitles</button>
+                <button class="tool-btn ai-btn" onclick="executeTool('Review AI')" style="background: #181d2c; border: 1px solid #334155; color: #60a5fa; padding: 6px 12px; border-radius: 4px; font-weight: 500; cursor: pointer;">✨ Review AI</button>
+                <button class="tool-btn ai-btn" onclick="toggleModal('askAiModal', true)" style="background: #181d2c; border: 1px solid #334155; color: #60a5fa; padding: 6px 12px; border-radius: 4px; font-weight: 500; cursor: pointer;">🤖 Ask AI</button>
+                
+                <!-- Destructive Delete Button -->
+                <button class="tool-btn delete-btn" onclick="executeTool('Delete')" style="background: #991b1b; border: 1px solid #ef4444; color: #ffffff; padding: 6px 12px; border-radius: 4px; font-weight: 500; cursor: pointer;">🗑️ Delete</button>
             </div>
         </div>
     </div>
@@ -899,25 +887,25 @@
 <!-- ========================================================================== -->
 <!-- 📸 PHOTO EDITING TOOLBAR DOCK (ACTIVE ONLY IN PHOTO MODE) -->
 <!-- ========================================================================== -->
-<div id="photoToolsToolbar" class="photo-tools-bar" style="display: none; background: #ffffff; border-top: 1px solid #e5e7eb; padding: 10px;">
-    <div class="photo-tools-inner" style="display: flex; gap: 8px; justify-content: center; flex-wrap: wrap;">
-        <button class="photo-tool-btn" onclick="openPhotoAdjustModal()" style="background: #ffffff; border: 1px solid #d1d5db; color: #111827; padding: 6px 12px; border-radius: 4px; font-weight: 500; cursor: pointer;">Adjust</button>
-        <button class="photo-tool-btn" onclick="openPhotoFiltersModal()" style="background: #ffffff; border: 1px solid #d1d5db; color: #111827; padding: 6px 12px; border-radius: 4px; font-weight: 500; cursor: pointer;">Filters</button>
-        <button class="photo-tool-btn" onclick="removePhotoBackground()" style="background: #ffffff; border: 1px solid #d1d5db; color: #111827; padding: 6px 12px; border-radius: 4px; font-weight: 500; cursor: pointer;">BG Remove</button>
-        <button class="photo-tool-btn" onclick="triggerPixelEraser()" style="background: #ffffff; border: 1px solid #d1d5db; color: #111827; padding: 6px 12px; border-radius: 4px; font-weight: 500; cursor: pointer;">Eraser</button>
-        <button class="photo-tool-btn" onclick="openTopCanvasCropMenu()" style="background: #ffffff; border: 1px solid #d1d5db; color: #111827; padding: 6px 12px; border-radius: 4px; font-weight: 500; cursor: pointer;">Crop</button>
-        <button class="photo-tool-btn" onclick="addPhotoTextOverlay()" style="background: #ffffff; border: 1px solid #d1d5db; color: #111827; padding: 6px 12px; border-radius: 4px; font-weight: 500; cursor: pointer;">Add Text</button>
-        <button class="photo-tool-btn" onclick="togglePhotoBorders()" style="background: #ffffff; border: 1px solid #d1d5db; color: #111827; padding: 6px 12px; border-radius: 4px; font-weight: 500; cursor: pointer;">Border/Style</button>
-        <button class="photo-tool-btn" onclick="openPhotoOpacitySlider()" style="background: #ffffff; border: 1px solid #d1d5db; color: #111827; padding: 6px 12px; border-radius: 4px; font-weight: 500; cursor: pointer;">Opacity</button>
-        <button class="photo-tool-btn" onclick="rotatePhotoCanvas(90)" style="background: #ffffff; border: 1px solid #d1d5db; color: #111827; padding: 6px 12px; border-radius: 4px; font-weight: 500; cursor: pointer;">Rotate 90°</button>
-        <button class="photo-tool-btn" onclick="flipPhotoHorizontal()" style="background: #ffffff; border: 1px solid #d1d5db; color: #111827; padding: 6px 12px; border-radius: 4px; font-weight: 500; cursor: pointer;">Flip H</button>
-        <button class="photo-tool-btn" onclick="openPhotoStickersModal()" style="background: #ffffff; border: 1px solid #d1d5db; color: #111827; padding: 6px 12px; border-radius: 4px; font-weight: 500; cursor: pointer;">Stickers</button>
-        <button class="photo-tool-btn reset-tool-btn" onclick="resetPhotoAdjustments()" style="background: #fee2e2; border: 1px solid #ef4444; color: #b91c1c; padding: 6px 12px; border-radius: 4px; font-weight: 500; cursor: pointer;">Reset</button>
-        <button class="photo-tool-btn download-tool-btn" onclick="downloadEditedPhoto()" style="background: #111827; color: white; border: none; padding: 6px 14px; border-radius: 4px; font-weight: 600; cursor: pointer;">Download Photo</button>
+<div id="photoToolsToolbar" class="photo-tools-bar" style="display: none; background: #ffffff; border-top: 1px solid #e5e7eb; padding: 12px 10px; position: fixed; bottom: 0; left: 0; width: 100vw; z-index: 9999999; box-shadow: 0 -4px 15px rgba(0,0,0,0.06);">
+    <div class="photo-tools-inner" style="display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; max-width: 1400px; margin: 0 auto;">
+        <button class="photo-tool-btn" onclick="openPhotoAdjustModal()" style="background: #ffffff; border: 1px solid #d1d5db; color: #111827; padding: 7px 14px; border-radius: 4px; font-weight: 600; cursor: pointer;">Adjust</button>
+        <button class="photo-tool-btn" onclick="openPhotoFiltersModal()" style="background: #ffffff; border: 1px solid #d1d5db; color: #111827; padding: 7px 14px; border-radius: 4px; font-weight: 600; cursor: pointer;">Filters</button>
+        <button class="photo-tool-btn" onclick="removePhotoBackground()" style="background: #ffffff; border: 1px solid #d1d5db; color: #111827; padding: 7px 14px; border-radius: 4px; font-weight: 600; cursor: pointer;">BG Remove</button>
+        <button class="photo-tool-btn" onclick="triggerPixelEraser()" style="background: #ffffff; border: 1px solid #d1d5db; color: #111827; padding: 7px 14px; border-radius: 4px; font-weight: 600; cursor: pointer;">Eraser</button>
+        <button class="photo-tool-btn" onclick="openTopCanvasCropMenu()" style="background: #ffffff; border: 1px solid #d1d5db; color: #111827; padding: 7px 14px; border-radius: 4px; font-weight: 600; cursor: pointer;">Crop</button>
+        <button class="photo-tool-btn" onclick="addPhotoTextOverlay()" style="background: #ffffff; border: 1px solid #d1d5db; color: #111827; padding: 7px 14px; border-radius: 4px; font-weight: 600; cursor: pointer;">Add Text</button>
+        <button class="photo-tool-btn" onclick="togglePhotoBorders()" style="background: #ffffff; border: 1px solid #d1d5db; color: #111827; padding: 7px 14px; border-radius: 4px; font-weight: 600; cursor: pointer;">Border/Style</button>
+        <button class="photo-tool-btn" onclick="openPhotoOpacitySlider()" style="background: #ffffff; border: 1px solid #d1d5db; color: #111827; padding: 7px 14px; border-radius: 4px; font-weight: 600; cursor: pointer;">Opacity</button>
+        <button class="photo-tool-btn" onclick="rotatePhotoCanvas(90)" style="background: #ffffff; border: 1px solid #d1d5db; color: #111827; padding: 7px 14px; border-radius: 4px; font-weight: 600; cursor: pointer;">Rotate 90°</button>
+        <button class="photo-tool-btn" onclick="flipPhotoHorizontal()" style="background: #ffffff; border: 1px solid #d1d5db; color: #111827; padding: 7px 14px; border-radius: 4px; font-weight: 600; cursor: pointer;">Flip H</button>
+        <button class="photo-tool-btn" onclick="openPhotoStickersModal()" style="background: #ffffff; border: 1px solid #d1d5db; color: #111827; padding: 7px 14px; border-radius: 4px; font-weight: 600; cursor: pointer;">Stickers</button>
+        <button class="photo-tool-btn reset-tool-btn" onclick="resetPhotoAdjustments()" style="background: #fee2e2; border: 1px solid #ef4444; color: #b91c1c; padding: 7px 14px; border-radius: 4px; font-weight: 600; cursor: pointer;">Reset</button>
+        <button class="photo-tool-btn download-tool-btn" onclick="downloadEditedPhoto()" style="background: #111827; color: white; border: none; padding: 7px 16px; border-radius: 4px; font-weight: 700; cursor: pointer;">Download Photo</button>
     </div>
 
-    <!-- Sub-Panels -->
-    <div id="photoAdjustSubPanel" class="photo-sub-panel" style="display: none; background: #ffffff; border: 1px solid #d1d5db; padding: 15px; border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+    <!-- Photo Sub-Panels -->
+    <div id="photoAdjustSubPanel" class="photo-sub-panel" style="display: none; background: #ffffff; border: 1px solid #d1d5db; padding: 15px; border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); max-width: 500px; margin: 10px auto 0 auto;">
         <div class="sub-panel-header" style="display: flex; justify-content: space-between; font-weight: bold; margin-bottom: 10px; color: #111827;">
             <span>Image Adjustments</span>
             <span onclick="this.parentElement.parentElement.style.display='none'" class="close-sub-panel" style="cursor: pointer;">✕</span>
@@ -938,7 +926,7 @@
         </div>
     </div>
 
-    <div id="photoFiltersSubPanel" class="photo-sub-panel" style="display: none; background: #ffffff; border: 1px solid #d1d5db; padding: 15px; border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+    <div id="photoFiltersSubPanel" class="photo-sub-panel" style="display: none; background: #ffffff; border: 1px solid #d1d5db; padding: 15px; border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); max-width: 500px; margin: 10px auto 0 auto;">
         <div class="sub-panel-header" style="display: flex; justify-content: space-between; font-weight: bold; margin-bottom: 10px; color: #111827;">
             <span>Presets & Filters</span>
             <span onclick="this.parentElement.parentElement.style.display='none'" class="close-sub-panel" style="cursor: pointer;">✕</span>
@@ -1261,12 +1249,13 @@
 <!-- CORE SCRIPTS -->
 <script src="script.js"></script>
 <script>
-function toggleModal(modalId, show) {
-    const modal = document.getElementById(modalId);
-    if (modal) {
-        modal.style.display = show ? 'flex' : 'none';
+    function toggleModal(modalId, show) {
+        const modal = document.getElementById(modalId);
+        if (modal) {
+            modal.style.display = show ? 'flex' : 'none';
+        }
     }
-}
+
     // డ్రాప్‌డౌన్ మెనూలను ఓపెన్ మరియు క్లోజ్ చేసే ఫంక్షన్
     function toggleNavDropdown(id) {
         const item = document.getElementById(id);
@@ -1299,8 +1288,54 @@ function toggleModal(modalId, show) {
         }
     });
 
-    function scrollToTopHome() {
+    // 🎬 STUDIO SWITCHER ENGINE (Fixes text overlay & opens tools properly)
+    function enterStudio(mode) {
+        const intro = document.getElementById('introPage');
+        if (intro) intro.style.display = 'none';
+
+        const editor = document.getElementById('editorPage');
+        if (editor) {
+            editor.classList.remove('hidden');
+            editor.style.display = 'flex';
+        }
+
+        document.querySelectorAll('.media-dependent').forEach(el => {
+            el.classList.remove('hidden');
+            el.style.display = 'flex';
+        });
+
+        const timelineArea = document.getElementById('timelineAreaBox');
+        const photoBar = document.getElementById('photoToolsToolbar');
+
+        if (mode === 'video') {
+            if (timelineArea) timelineArea.style.display = 'flex';
+            if (photoBar) photoBar.style.display = 'none';
+            const vInput = document.getElementById('videoInput');
+            if (vInput) vInput.click();
+        } else if (mode === 'photo') {
+            if (timelineArea) timelineArea.style.display = 'none';
+            if (photoBar) photoBar.style.display = 'block';
+            const pInput = document.getElementById('photoInput');
+            if (pInput) pInput.click();
+        }
+    }
+
+    function resetToHome() {
+        const editor = document.getElementById('editorPage');
+        if (editor) {
+            editor.classList.add('hidden');
+            editor.style.display = 'none';
+        }
+        const photoBar = document.getElementById('photoToolsToolbar');
+        if (photoBar) photoBar.style.display = 'none';
+
+        const intro = document.getElementById('introPage');
+        if (intro) intro.style.display = 'block';
         window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function scrollToTopHome() {
+        resetToHome();
     }
 
     function scrollToSupportChannels() {
@@ -1309,7 +1344,6 @@ function toggleModal(modalId, show) {
             support.scrollIntoView({ behavior: 'smooth' });
         }
     }
-
 </script>
 </body>
 </html>
