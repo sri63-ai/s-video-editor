@@ -11,21 +11,89 @@
             padding: 0;
         }
 
-        /* 📰 100% CLEAN WHITE EDITORIAL LEGAL THEME */
+        /* ⚖️ 100% CLEAN WHITE THEME WITH CONTINUOUS LEGAL SLIDESHOW BACKGROUND */
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
             color: #374151;
             line-height: 1.85;
-            background-color: #ffffff !important;
-            background: #ffffff !important;
+            background-color: #ffffff;
             min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
         }
 
-        .full-page-legal-wrapper {
+        /* Continuous Ambient Legal Image Slideshow */
+        .legal-bg-slideshow {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -2;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .legal-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
-            max-width: 1200px;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            filter: grayscale(100%) contrast(105%);
+            animation: legalFadeCycle 24s infinite;
+        }
+
+        /* 4-Image Legal Rotation: Courtroom Gavel, Scales of Justice, Law Library, Legal Documents */
+        .slide-1 {
+            background-image: url('https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=1920&q=80');
+            animation-delay: 0s;
+        }
+        .slide-2 {
+            background-image: url('https://images.unsplash.com/photo-1505664194779-8beaceb93744?auto=format&fit=crop&w=1920&q=80');
+            animation-delay: 6s;
+        }
+        .slide-3 {
+            background-image: url('https://images.unsplash.com/photo-1453733190371-0a9bedd82893?auto=format&fit=crop&w=1920&q=80');
+            animation-delay: 12s;
+        }
+        .slide-4 {
+            background-image: url('https://images.unsplash.com/photo-1450133064473-71024230f91b?auto=format&fit=crop&w=1920&q=80');
+            animation-delay: 18s;
+        }
+
+        @keyframes legalFadeCycle {
+            0% { opacity: 0; transform: scale(1); }
+            8% { opacity: 0.14; }
+            25% { opacity: 0.14; }
+            33% { opacity: 0; transform: scale(1.05); }
+            100% { opacity: 0; }
+        }
+
+        /* White Frosted Overlay for sharp Adsense reading clarity */
+        .legal-bg-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(255, 255, 255, 0.92);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* 🖥️ FULL-WIDTH EXPANDED CONTAINER */
+        .full-page-legal-wrapper {
+            width: 98%;
+            max-width: 1400px;
             margin: 0 auto;
-            padding: 30px 20px 80px 20px;
+            padding: 30px 1% 80px 1%;
+            position: relative;
+            z-index: 1;
+            box-sizing: border-box;
         }
 
         /* టాప్ నావిగేషన్ హెడర్ (క్లీన్ వైట్) */
@@ -34,17 +102,18 @@
             justify-content: space-between;
             align-items: center;
             padding: 16px 24px;
-            background: #ffffff;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(8px);
             border: 1px solid #e5e7eb;
             border-radius: 8px;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
             flex-wrap: wrap;
             gap: 15px;
         }
 
         .legal-top-navbar h1 {
             color: #111827;
-            font-size: 19px;
+            font-size: 20px;
             font-weight: 800;
             letter-spacing: -0.2px;
             text-transform: uppercase;
@@ -71,15 +140,18 @@
 
         /* పూర్తి పేజీ లీగల్ కంటెంట్ కంటైనర్ */
         .legal-main-sheet {
-            background: #ffffff;
+            background: rgba(255, 255, 255, 0.97);
             border: 1px solid #e5e7eb;
             border-radius: 8px;
             padding: 40px 35px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+            width: 100%;
+            box-sizing: border-box;
         }
 
         .document-timestamp {
             color: #6b7280;
-            font-size: 13px;
+            font-size: 13.5px;
             font-weight: 600;
             margin-bottom: 25px;
             border-bottom: 1px solid #e5e7eb;
@@ -93,13 +165,13 @@
             border-radius: 6px;
             margin-bottom: 35px;
             color: #111827;
-            font-size: 14px;
-            line-height: 1.7;
+            font-size: 14.5px;
+            line-height: 1.75;
         }
 
         .legal-main-sheet h2 {
             color: #111827;
-            font-size: 17px;
+            font-size: 18px;
             font-weight: 800;
             margin-top: 36px;
             margin-bottom: 12px;
@@ -111,7 +183,7 @@
         }
 
         .legal-main-sheet p {
-            font-size: 14.5px;
+            font-size: 15px;
             margin-bottom: 16px;
             color: #374151;
             text-align: justify;
@@ -121,7 +193,7 @@
             margin-bottom: 20px;
             padding-left: 28px;
             color: #4b5563;
-            font-size: 14px;
+            font-size: 14.5px;
         }
 
         .legal-main-sheet li {
@@ -154,14 +226,14 @@
         .full-accept-button {
             display: inline-block;
             width: 100%;
-            max-width: 550px;
+            max-width: 600px;
             background: #111827;
             color: #ffffff;
             text-decoration: none;
-            padding: 14px 24px;
+            padding: 15px 24px;
             border-radius: 6px;
             font-weight: 700;
-            font-size: 13.5px;
+            font-size: 14px;
             border: 1px solid #111827;
             transition: background 0.2s ease;
         }
@@ -173,6 +245,7 @@
         @media (max-width: 768px) {
             .full-page-legal-wrapper {
                 padding: 15px 10px;
+                width: 98%;
             }
             .legal-main-sheet {
                 padding: 24px 18px;
@@ -188,6 +261,63 @@
 </head>
 <body>
 
+    <!-- ⚖️ CONTINUOUS LEGAL PHOTOS AMBIENT ROTATION -->
+    <div class="legal-bg-slideshow">
+        <div class="legal-slide slide-1"></div>
+        <div class="legal-slide slide-2"></div>
+        <div class="legal-slide slide-3"></div>
+        <div class="legal-slide slide-4"></div>
+    </div>
+    <div class="legal-bg-overlay"></div>
+
+    <!-- 🌐 TOP STICKY NAVBAR -->
+    <nav class="home-sticky-navbar" style="background: rgba(255, 255, 255, 0.98) !important; border-bottom: 1px solid #e5e7eb !important; box-shadow: 0 1px 3px rgba(0,0,0,0.05) !important;">
+        <div class="sticky-nav-inner" style="max-width: 1400px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 12px 20px;">
+            <button class="nav-link-btn" onclick="window.location.href='index.html'" style="background: #ffffff !important; color: #111827 !important; border: 1px solid #d1d5db !important; padding: 8px 16px; border-radius: 6px; font-weight: 600; cursor: pointer;">
+                 Home
+            </button>
+
+            <div class="nav-dropdown-item" id="editorLaunchDropdown" style="position: relative; display: inline-block;">
+                <button class="nav-link-btn nav-btn-highlight" onclick="toggleNavDropdown('editorLaunchDropdown')" style="background: #111827 !important; color: #ffffff !important; border: 1px solid #111827 !important; padding: 8px 16px; border-radius: 6px; font-weight: 600; cursor: pointer;">
+                     Open Studio <span class="nav-arrow-icon">▾</span>
+                </button>
+                <div class="nav-sub-menu" style="display: none; position: absolute; top: calc(100% + 8px); left: 0; background: #ffffff !important; border: 1px solid #e5e7eb !important; border-radius: 6px; box-shadow: 0 8px 20px rgba(0,0,0,0.08); padding: 8px 0; min-width: 200px; z-index: 1000;">
+                    <a href="index.html" style="display: block; padding: 8px 16px; color: #374151 !important; text-decoration: none; font-weight: 600; font-size: 13px;">📽 Video Editing Studio</a>
+                    <a href="index.html" style="display: block; padding: 8px 16px; color: #374151 !important; text-decoration: none; font-weight: 600; font-size: 13px;">🏞️ Photo Editing Studio</a>
+                </div>
+            </div>
+
+            <div class="nav-dropdown-item" id="companyDropdown" style="position: relative; display: inline-block;">
+                <button class="nav-link-btn" onclick="toggleNavDropdown('companyDropdown')" style="background: #ffffff !important; color: #111827 !important; border: 1px solid #d1d5db !important; padding: 8px 16px; border-radius: 6px; font-weight: 600; cursor: pointer;">
+                    Company <span class="nav-arrow-icon">▾</span>
+                </button>
+                <div class="nav-sub-menu" style="display: none; position: absolute; top: calc(100% + 8px); left: 0; background: #ffffff !important; border: 1px solid #e5e7eb !important; border-radius: 6px; box-shadow: 0 8px 20px rgba(0,0,0,0.08); padding: 8px 0; min-width: 200px; z-index: 1000;">
+                    <a href="index.html" style="display: block; padding: 8px 16px; color: #374151 !important; text-decoration: none; font-weight: 600; font-size: 13px;">About Us</a>
+                    <a href="https://sriramgroupsofficial.com/" target="_blank" rel="noopener noreferrer" style="display: block; padding: 8px 16px; color: #374151 !important; text-decoration: none; font-weight: 600; font-size: 13px;">Sriram Groups Official ↗</a>
+                </div>
+            </div>
+
+            <a href="blog.html" class="nav-link-btn nav-anchor-link" style="background: #ffffff !important; color: #111827 !important; border: 1px solid #d1d5db !important; padding: 8px 16px; border-radius: 6px; font-weight: 600; text-decoration: none;">
+                 Blogs & Tutorials
+            </a>
+
+            <div class="nav-dropdown-item" id="termsDropdown" style="position: relative; display: inline-block;">
+                <button class="nav-link-btn" onclick="toggleNavDropdown('termsDropdown')" style="background: #ffffff !important; color: #111827 !important; border: 1px solid #d1d5db !important; padding: 8px 16px; border-radius: 6px; font-weight: 600; cursor: pointer;">
+                    Terms & Policies <span class="nav-arrow-icon">▾</span>
+                </button>
+                <div class="nav-sub-menu" style="display: none; position: absolute; top: calc(100% + 8px); right: 0; background: #ffffff !important; border: 1px solid #e5e7eb !important; border-radius: 6px; box-shadow: 0 8px 20px rgba(0,0,0,0.08); padding: 8px 0; min-width: 200px; z-index: 1000;">
+                    <a href="terms.html" style="display: block; padding: 8px 16px; color: #374151 !important; text-decoration: none; font-weight: 600; font-size: 13px;">Terms & Conditions</a>
+                    <a href="index.html" style="display: block; padding: 8px 16px; color: #374151 !important; text-decoration: none; font-weight: 600; font-size: 13px;">Privacy Policy</a>
+                    <a href="index.html" style="display: block; padding: 8px 16px; color: #374151 !important; text-decoration: none; font-weight: 600; font-size: 13px;">Disclaimer</a>
+                </div>
+            </div>
+
+            <button class="nav-link-btn" onclick="window.location.href='index.html'" style="background: #ffffff !important; color: #111827 !important; border: 1px solid #d1d5db !important; padding: 8px 16px; border-radius: 6px; font-weight: 600; cursor: pointer;">
+                 Connect
+            </button>
+        </div>
+    </nav>
+
     <div class="full-page-legal-wrapper">
         
         <!-- Top Navigation Bar -->
@@ -200,7 +330,7 @@
         <div class="legal-main-sheet">
             
             <div class="document-timestamp">
-                <strong>Platform:</strong> S Studio (svideoeditor.com) | <strong>Parent Entity:</strong> Sriram Groups Official | <strong>Effective Date:</strong> September 2026
+                <strong>Platform:</strong> S Studio (svideoeditor.com) | <strong>Parent Entity:</strong> Sriram Groups Official
             </div>
 
             <div class="statutory-alert-banner">
@@ -293,5 +423,116 @@
 
     </div>
 
+    <!-- ========================================================================== -->
+    <!--  S STUDIO MASTER 5-COLUMN FOOTER (CLEAN WHITE) -->
+    <!-- ========================================================================== -->
+    <footer style="width: 98%; max-width: 1400px; margin: 30px auto 10px auto; padding: 25px 20px; box-sizing: border-box; background: rgba(255, 255, 255, 0.98); border-top: 1px solid #e5e7eb; border-radius: 8px; color: #111827; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; position: relative; z-index: 1;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
+            
+            <!-- Col 1: Policies -->
+            <div>
+                <h4 style="color: #111827; margin: 0 0 12px 0; font-size: 14px; font-weight: 700;">S Studio Policies</h4>
+                <div style="display: flex; flex-direction: column; gap: 8px; font-size: 13px;">
+                    <a href="index.html" style="color: #4b5563; text-decoration: none; cursor: pointer;">Disclaimer</a>
+                    <a href="terms.html" style="color: #4b5563; text-decoration: none;">Terms & Conditions</a>
+                    <a href="index.html" style="color: #4b5563; text-decoration: none;">Privacy Policy</a>
+                    <a href="index.html" style="color: #4b5563; text-decoration: none;">Cookies Policy</a>
+                    <a href="index.html" style="color: #4b5563; text-decoration: none;">Copyright Policy</a>
+                </div>
+            </div>
+
+            <!-- Col 2: Company Details -->
+            <div>
+                <h4 style="color: #111827; margin: 0 0 12px 0; font-size: 14px; font-weight: 700;">Company Details</h4>
+                <div style="font-size: 13px; color: #4b5563; line-height: 1.6; display: flex; flex-direction: column; gap: 8px;">
+                    <a href="https://sriramgroupsofficial.com/" target="_blank" rel="noopener noreferrer" style="color: #111827; font-weight: bold; text-decoration: none;">
+                         Sriram Groups Official ↗
+                    </a>
+                    <span style="color: #4b5563;">Founder & CEO: S. Purushotham</span>
+                    <a href="index.html" style="color: #4b5563; text-decoration: none;">About Us</a>
+                    <a href="index.html" style="color: #4b5563; text-decoration: none;">Theme & Vision</a>
+                </div>
+            </div>
+
+            <!-- Col 3: Contact Us -->
+            <div>
+                <h4 style="color: #111827; margin: 0 0 12px 0; font-size: 14px; font-weight: 700;">Contact Us</h4>
+                <div style="font-size: 13px; color: #4b5563; line-height: 1.6; display: flex; flex-direction: column; gap: 6px;">
+                    <span>Support: <a href="mailto:sriramgroup.help@gmail.com" style="color: #111827; text-decoration: underline;">sriramgroup.help@gmail.com</a></span>
+                    <span>Official: <a href="https://sriramgroupsofficial.com" target="_blank" rel="noopener noreferrer" style="color: #111827; text-decoration: underline;">sriramgroupsofficial.com</a></span>
+                    <span>YouTube: <a href="https://youtube.com/@sriramgroups-i7t" target="_blank" rel="noopener noreferrer" style="color: #111827; text-decoration: underline;">Sriram Groups Official</a></span>
+                </div>
+            </div>
+
+            <!-- Col 4: Why Best & Support -->
+            <div>
+                <h4 style="color: #111827; margin: 0 0 12px 0; font-size: 14px; font-weight: 700;">Why Best & Support</h4>
+                <div style="font-size: 13px; color: #4b5563; line-height: 1.6; margin-bottom: 12px; display: flex; flex-direction: column; gap: 6px;">
+                    <a href="index.html" style="color: #4b5563; text-decoration: none;">Why S Studio is Best?</a>
+                    <a href="index.html" style="color: #4b5563; text-decoration: none;">FAQs & Documentation</a>
+                    <a href="blog.html" style="color: #111827; text-decoration: none; font-weight: bold;">Tutorials & Blog</a>
+                </div>
+                <a href="mailto:sriramgroup.help@gmail.com?subject=S%20Studio%20Bug%20Report" style="background: #111827; color: #fff; text-decoration: none; padding: 7px 14px; border-radius: 6px; font-size: 11.5px; font-weight: bold; display: inline-block; text-align: center;">
+                    Report a Bug & Get Reward!
+                </a>
+            </div>
+
+            <!-- Col 5: Tech & Updates -->
+            <div style="flex: 1; min-width: 180px; margin-bottom: 20px;">
+                <h4 style="color: #111827; margin: 0 0 12px 0; font-size: 14px; font-weight: 700; text-transform: uppercase;">Tech & Updates</h4>
+                <div style="font-size: 13px; color: #4b5563; line-height: 1.6; margin-bottom: 12px; display: flex; flex-direction: column; gap: 6px;">
+                    <span style="color: #4b5563; font-size: 12px;">Stay ahead with modern web tech trends:</span>
+                    <a href="index.html#techGuideSection" style="color: #111827; text-decoration: none; font-size: 13px;">Modern Tech Trends</a>
+                    <a href="index.html#aiWorkflowSection" style="color: #111827; text-decoration: none; font-size: 13px;">Next-Gen AI Workflows</a>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <a href="index.html#techGuideSection" style="background: #f9fafb; color: #111827; border: 1px solid #d1d5db; text-decoration: none; padding: 7px 12px; border-radius: 6px; font-size: 11px; font-weight: bold; text-align: center; display: block;">
+                        How to Update in Tech?
+                    </a>
+                    <a href="blog.html" style="background: #ffffff; border: 1px solid #d1d5db; color: #111827; text-decoration: none; padding: 6px 12px; border-radius: 6px; font-size: 11px; font-weight: bold; text-align: center; display: block;">
+                        View Tech Tips & Guides
+                    </a>
+                </div>
+            </div>
+
+        </div>
+
+        <div style="width: 100%; text-align: center; margin-top: 25px; padding-top: 15px; border-top: 1px solid #e5e7eb; font-size: 12px; color: #6b7280;">
+            © 2026 S Studio | Sriram Groups Official. All Rights Reserved.
+        </div>
+    </footer>
+
+    <!-- Dropdown Toggle Script -->
+    <script>
+        function toggleNavDropdown(id) {
+            const item = document.getElementById(id);
+            if (!item) return;
+            const subMenu = item.querySelector('.nav-sub-menu');
+            const arrow = item.querySelector('.nav-arrow-icon');
+            
+            const isAlreadyOpen = subMenu.style.display === 'block';
+            closeAllNavDropdowns();
+            
+            if (!isAlreadyOpen) {
+                subMenu.style.display = 'block';
+                if (arrow) arrow.style.transform = 'rotate(180deg)';
+            }
+        }
+
+        function closeAllNavDropdowns() {
+            document.querySelectorAll('.nav-sub-menu').forEach(menu => {
+                menu.style.display = 'none';
+            });
+            document.querySelectorAll('.nav-arrow-icon').forEach(arrow => {
+                arrow.style.transform = 'rotate(0deg)';
+            });
+        }
+
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.nav-dropdown-item')) {
+                closeAllNavDropdowns();
+            }
+        });
+    </script>
 </body>
 </html>
