@@ -7,39 +7,43 @@
     <link rel="stylesheet" href="style.css">
 
     <style>
-        /* 📰 CLEAN HUMAN-READABLE EDITORIAL THEME (NO RAINBOW COLORS, ADSENSE FRIENDLY) */
+        /* 📰 100% PURE WHITE EDITORIAL THEME (ZERO COLORS, ADSENSE FRIENDLY) */
         body {
-            background-color: #0b0e14 !important;
-            color: #d1d5db !important;
+            background-color: #ffffff !important;
+            color: #374151 !important;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
-            line-height: 1.8;
+            line-height: 1.85;
+            margin: 0;
+            padding: 0;
         }
 
         .blog-main-container {
             width: 96% !important;
-            max-width: 1200px !important;
+            max-width: 1300px !important;
             margin: 0 auto;
             padding: 30px 1% 80px 1%;
             box-sizing: border-box;
+            background-color: #ffffff !important;
         }
 
         .blog-hero-box {
             text-align: center;
             padding: 40px 20px 30px 20px;
-            border-bottom: 1px solid #1f2738;
+            border-bottom: 1px solid #e5e7eb;
             margin-bottom: 30px;
         }
 
         .blog-hero-box h1 {
-            color: #ffffff;
+            color: #111827 !important;
             font-size: 32px;
             font-weight: 800;
             margin-bottom: 12px;
             letter-spacing: -0.5px;
+            text-shadow: none !important;
         }
 
         .blog-hero-box p {
-            color: #94a3b8;
+            color: #4b5563 !important;
             font-size: 15.5px;
             max-width: 850px;
             margin: 0 auto;
@@ -56,90 +60,91 @@
         }
 
         .tutorial-item-card {
-            background: #111420;
-            border: 1px solid #1f2738;
-            border-left: 4px solid #475569 !important;
-            border-radius: 10px;
+            background: #ffffff !important;
+            border: 1px solid #e5e7eb !important;
+            border-left: 1px solid #e5e7eb !important; /* నో కలర్ లైన్ */
+            border-radius: 8px;
             overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+            box-shadow: none !important;
             position: relative;
             width: 100%;
             box-sizing: border-box;
         }
 
         .tutorial-item-card:hover {
-            border-color: #64748b;
-            border-left-color: #94a3b8 !important;
+            border-color: #d1d5db !important;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04) !important;
         }
 
         .tutorial-header-static {
             padding: 22px 26px 12px 26px;
-            background: rgba(255, 255, 255, 0.01);
-            border-bottom: 1px solid #1f2738;
+            background: #f9fafb !important;
+            border-bottom: 1px solid #e5e7eb;
         }
 
         .tut-badge {
             font-size: 11px;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.8px;
+            letter-spacing: 0.5px;
             display: inline-block;
             margin-bottom: 8px;
             padding: 3px 10px;
             border-radius: 4px;
-            color: #cbd5e1 !important;
-            background: #1a202c !important;
-            border: 1px solid #334155 !important;
+            color: #374151 !important;
+            background: #ffffff !important;
+            border: 1px solid #d1d5db !important;
         }
 
         .tut-title {
             font-size: 20px;
-            font-weight: 700;
+            font-weight: 800;
             margin: 4px 0 8px 0;
             line-height: 1.4;
-            color: #ffffff !important;
+            color: #111827 !important;
             text-shadow: none !important;
         }
 
         .tut-short-desc {
-            color: #94a3b8;
+            color: #6b7280 !important;
             font-size: 14px;
             margin: 0;
             line-height: 1.6;
         }
 
-        /*  нейтральный стиль текста статей */
+        /* పూర్తి సహజమైన ఆర్టికల్ టెక్స్ట్ స్టైలింగ్ */
         .tutorial-full-content-open {
             padding: 22px 26px 26px 26px;
-            color: #cbd5e1;
+            color: #374151 !important;
             font-size: 15px;
             line-height: 1.85;
-            background: transparent;
+            background: #ffffff !important;
         }
 
         .tutorial-full-content-open p {
             margin-bottom: 14px;
             text-align: justify;
+            color: #374151 !important;
         }
 
         .tutorial-full-content-open h4 {
-            color: #f8fafc;
+            color: #111827 !important;
             font-size: 16.5px;
             margin: 20px 0 10px 0;
             font-weight: 700;
         }
 
         .tutorial-full-content-open h5 {
-            color: #e2e8f0;
+            color: #1f2937 !important;
             font-size: 15px;
             margin: 16px 0 8px 0;
-            font-weight: 600;
+            font-weight: 700;
         }
 
         .tutorial-full-content-open ul {
             padding-left: 22px;
             margin-bottom: 16px;
-            color: #94a3b8;
+            color: #4b5563 !important;
         }
 
         .tutorial-full-content-open li {
@@ -147,27 +152,27 @@
         }
 
         .tutorial-full-content-open strong {
-            color: #ffffff;
+            color: #111827 !important;
         }
 
         .blog-intro-section {
-            background: #111420;
-            border: 1px solid #1f2738;
-            border-left: 4px solid #64748b !important;
-            border-radius: 10px;
+            background: #ffffff !important;
+            border: 1px solid #e5e7eb !important;
+            border-left: 1px solid #e5e7eb !important; /* నో కలర్ లైన్ */
+            border-radius: 8px;
             padding: 24px 26px;
-            color: #cbd5e1;
+            color: #374151 !important;
             font-size: 15px;
             line-height: 1.85;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+            box-shadow: none !important;
             width: 100%;
             box-sizing: border-box;
         }
 
         .blog-intro-section h2 {
-            color: #ffffff !important;
+            color: #111827 !important;
             font-size: 20px;
-            font-weight: 700;
+            font-weight: 800;
             margin-bottom: 12px;
             letter-spacing: -0.3px;
         }
@@ -175,12 +180,13 @@
         .blog-intro-section p {
             margin-bottom: 14px;
             text-align: justify;
+            color: #374151 !important;
         }
 
         .blog-intro-section ul {
             padding-left: 22px;
             margin-bottom: 14px;
-            color: #94a3b8;
+            color: #4b5563 !important;
         }
 
         .blog-intro-section li {
@@ -188,14 +194,14 @@
         }
 
         .blog-intro-section strong {
-            color: #ffffff;
+            color: #111827 !important;
         }
 
-        /* న్యూట్రల్ డివైడర్ బార్ */
+        /* గ్లో బార్ బదులుగా సింపుల్ న్యూట్రల్ లైన్ */
         .card-video-glow-bar {
             width: 100%;
             height: 1px;
-            background: #1f2738 !important;
+            background: #f3f4f6 !important;
             opacity: 1;
         }
     </style>
@@ -203,50 +209,50 @@
 <body>
 
     <!-- ========================================================================== -->
-    <!-- 🌐 STICKY HEADER NAVIGATION BAR -->
+    <!-- 🌐 STICKY HEADER NAVIGATION BAR (CLEAN WHITE) -->
     <!-- ========================================================================== -->
-    <nav class="home-sticky-navbar">
-        <div class="sticky-nav-inner">
-            <button class="nav-link-btn" onclick="window.location.href='index.html'">
+    <nav class="home-sticky-navbar" style="background: #ffffff !important; border-bottom: 1px solid #e5e7eb !important; box-shadow: 0 1px 3px rgba(0,0,0,0.05) !important;">
+        <div class="sticky-nav-inner" style="max-width: 1300px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 12px 20px;">
+            <button class="nav-link-btn" onclick="window.location.href='index.html'" style="background: #ffffff !important; color: #111827 !important; border: 1px solid #d1d5db !important; padding: 8px 16px; border-radius: 6px; font-weight: 600; cursor: pointer;">
                  Home
             </button>
 
-            <div class="nav-dropdown-item" id="editorLaunchDropdown">
-                <button class="nav-link-btn nav-btn-highlight" onclick="toggleNavDropdown('editorLaunchDropdown')">
+            <div class="nav-dropdown-item" id="editorLaunchDropdown" style="position: relative; display: inline-block;">
+                <button class="nav-link-btn nav-btn-highlight" onclick="toggleNavDropdown('editorLaunchDropdown')" style="background: #111827 !important; color: #ffffff !important; border: 1px solid #111827 !important; padding: 8px 16px; border-radius: 6px; font-weight: 600; cursor: pointer;">
                      Open Studio <span class="nav-arrow-icon">▾</span>
                 </button>
-                <div class="nav-sub-menu">
-                    <a href="index.html">📽 Video Editing Studio</a>
-                    <a href="index.html">🏞️ Photo Editing Studio</a>
+                <div class="nav-sub-menu" style="display: none; position: absolute; top: 100%; left: 0; background: #ffffff !important; border: 1px solid #e5e7eb !important; border-radius: 6px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); padding: 8px 0; min-width: 200px; z-index: 1000;">
+                    <a href="index.html" style="display: block; padding: 8px 16px; color: #374151 !important; text-decoration: none;">📽 Video Editing Studio</a>
+                    <a href="index.html" style="display: block; padding: 8px 16px; color: #374151 !important; text-decoration: none;">🏞️ Photo Editing Studio</a>
                 </div>
             </div>
 
-            <div class="nav-dropdown-item" id="companyDropdown">
-                <button class="nav-link-btn" onclick="toggleNavDropdown('companyDropdown')">
+            <div class="nav-dropdown-item" id="companyDropdown" style="position: relative; display: inline-block;">
+                <button class="nav-link-btn" onclick="toggleNavDropdown('companyDropdown')" style="background: #ffffff !important; color: #111827 !important; border: 1px solid #d1d5db !important; padding: 8px 16px; border-radius: 6px; font-weight: 600; cursor: pointer;">
                     Company <span class="nav-arrow-icon">▾</span>
                 </button>
-                <div class="nav-sub-menu">
-                    <a href="index.html">About Us</a>
-                    <a href="https://sriramgroupsofficial.com/" target="_blank" rel="noopener noreferrer">Sriram Groups Official</a>
+                <div class="nav-sub-menu" style="display: none; position: absolute; top: 100%; left: 0; background: #ffffff !important; border: 1px solid #e5e7eb !important; border-radius: 6px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); padding: 8px 0; min-width: 200px; z-index: 1000;">
+                    <a href="index.html" style="display: block; padding: 8px 16px; color: #374151 !important; text-decoration: none;">About Us</a>
+                    <a href="https://sriramgroupsofficial.com/" target="_blank" rel="noopener noreferrer" style="display: block; padding: 8px 16px; color: #374151 !important; text-decoration: none;">Sriram Groups Official</a>
                 </div>
             </div>
 
-            <a href="blog.html" class="nav-link-btn nav-anchor-link">
+            <a href="blog.html" class="nav-link-btn nav-anchor-link" style="background: #ffffff !important; color: #111827 !important; border: 1px solid #d1d5db !important; padding: 8px 16px; border-radius: 6px; font-weight: 600; text-decoration: none;">
                  Blogs & Tutorials
             </a>
 
-            <div class="nav-dropdown-item" id="termsDropdown">
-                <button class="nav-link-btn" onclick="toggleNavDropdown('termsDropdown')">
+            <div class="nav-dropdown-item" id="termsDropdown" style="position: relative; display: inline-block;">
+                <button class="nav-link-btn" onclick="toggleNavDropdown('termsDropdown')" style="background: #ffffff !important; color: #111827 !important; border: 1px solid #d1d5db !important; padding: 8px 16px; border-radius: 6px; font-weight: 600; cursor: pointer;">
                     Terms & Policies <span class="nav-arrow-icon">▾</span>
                 </button>
-                <div class="nav-sub-menu">
-                    <a href="terms.html">Terms & Conditions</a>
-                    <a href="index.html">Privacy Policy</a>
-                    <a href="index.html">Disclaimer</a>
+                <div class="nav-sub-menu" style="display: none; position: absolute; top: 100%; left: 0; background: #ffffff !important; border: 1px solid #e5e7eb !important; border-radius: 6px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); padding: 8px 0; min-width: 200px; z-index: 1000;">
+                    <a href="terms.html" style="display: block; padding: 8px 16px; color: #374151 !important; text-decoration: none;">Terms & Conditions</a>
+                    <a href="index.html" style="display: block; padding: 8px 16px; color: #374151 !important; text-decoration: none;">Privacy Policy</a>
+                    <a href="index.html" style="display: block; padding: 8px 16px; color: #374151 !important; text-decoration: none;">Disclaimer</a>
                 </div>
             </div>
 
-            <button class="nav-link-btn" onclick="window.location.href='index.html'">
+            <button class="nav-link-btn" onclick="window.location.href='index.html'" style="background: #ffffff !important; color: #111827 !important; border: 1px solid #d1d5db !important; padding: 8px 16px; border-radius: 6px; font-weight: 600; cursor: pointer;">
                  Connect
             </button>
         </div>
@@ -286,8 +292,8 @@
                         <li><strong>Memory & Thread Efficiency:</strong> Utilizing modern web APIs and blob streaming ensures that large data chunks flow seamlessly through browser memory pools without crashing the client heap space.</li>
                     </ul>
                     
-                    <div style="background: rgba(255, 255, 255, 0.03); padding: 15px; border-left: 3px solid #64748b; margin-top: 20px; border-radius: 4px;">
-                        <p style="margin: 0; font-size: 14px; color: #f1f5f9;"><strong>Creator Insight:</strong> For accurate adjustments in both online video and photo editors, combining high-speed client performance with an intuitive user interface ensures professional-grade output, making web tools equally powerful as traditional desktop installations.</p>
+                    <div style="background: #f9fafb; padding: 15px; border: 1px solid #e5e7eb; margin-top: 20px; border-radius: 4px;">
+                        <p style="margin: 0; font-size: 14px; color: #111827;"><strong>Creator Insight:</strong> For accurate adjustments in both online video and photo editors, combining high-speed client performance with an intuitive user interface ensures professional-grade output, making web tools equally powerful as traditional desktop installations.</p>
                     </div>
                 </div>
                 <div class="card-video-glow-bar"></div>
@@ -974,12 +980,12 @@
                 <div class="tutorial-full-content-open">
                     <p>Video editing does not stop at raw video footage alone. In real-world content creation, working with images is just as essential—whether you are creating custom thumbnails, designing posters, or integrating image overlays and slides directly into your main timeline.</p>
 
-                    <p>Instead of forcing creators to jump between different websites and standalone apps just to polish an image, S Studio (<a href="https://svideoeditor.com/" target="_blank" rel="noopener" style="color: #cbd5e1; text-decoration: underline; font-weight: 600;">svideoeditor.com</a>) integrates built-in, reliable Photo Editing tools right alongside our main video editor.</p>
+                    <p>Instead of forcing creators to jump between different websites and standalone apps just to polish an image, S Studio (<a href="https://svideoeditor.com/" target="_blank" rel="noopener" style="color: #111827; text-decoration: underline; font-weight: 600;">svideoeditor.com</a>) integrates built-in, reliable Photo Editing tools right alongside our main video editor.</p>
 
                     <p>Some might wonder why a platform named S Video Editor includes comprehensive photo tools, but as creators, we knew having both capabilities in one seamless workspace was an absolute necessity.</p>
 
-                    <div style="background: rgba(255, 255, 255, 0.03); padding: 14px 18px; border-left: 3px solid #64748b; margin-top: 18px; border-radius: 4px;">
-                        <p style="margin: 0; font-size: 14px; font-weight: 700; color: #ffffff;">Thank you for choosing S Studio!</p>
+                    <div style="background: #f9fafb; padding: 14px 18px; border: 1px solid #e5e7eb; margin-top: 18px; border-radius: 4px;">
+                        <p style="margin: 0; font-size: 14px; font-weight: 700; color: #111827;">Thank you for choosing S Studio!</p>
                     </div>
                 </div>
                 <div class="card-video-glow-bar"></div>
@@ -994,7 +1000,7 @@
                 </div>
                 
                 <div class="tutorial-full-content-open">
-                    <p>Photo editing is an essential part of high-impact video creation. Whether creating YouTube thumbnails, PiP overlays, or visual assets, S Studio (<a href="https://svideoeditor.com/" target="_blank" rel="noopener" style="color: #cbd5e1; text-decoration: underline; font-weight: 600;">svideoeditor.com</a>) allows you to edit images effortlessly in one unified workspace.</p>
+                    <p>Photo editing is an essential part of high-impact video creation. Whether creating YouTube thumbnails, PiP overlays, or visual assets, S Studio (<a href="https://svideoeditor.com/" target="_blank" rel="noopener" style="color: #111827; text-decoration: underline; font-weight: 600;">svideoeditor.com</a>) allows you to edit images effortlessly in one unified workspace.</p>
 
                     <h4>Core Capabilities Inside S Studio Photo Editing Suite:</h4>
                     <ul>
@@ -1014,9 +1020,9 @@
                         <li><strong>Reset & Download:</strong> Revert adjustments instantly with 'Reset' or export crisp, high-resolution images via 'Download'.</li>
                     </ul>
 
-                    <div style="background: rgba(255, 255, 255, 0.03); padding: 14px 18px; border-left: 3px solid #64748b; margin-top: 20px; border-radius: 4px;">
-                        <p style="margin: 0; font-size: 14px; color: #f1f5f9;">
-                            Explore <a href="https://svideoeditor.com/" target="_blank" rel="noopener" style="color: #cbd5e1; text-decoration: underline; font-weight: 700;">S Studio</a> today to experience these tools and streamline your creative workflow!
+                    <div style="background: #f9fafb; padding: 14px 18px; border: 1px solid #e5e7eb; margin-top: 20px; border-radius: 4px;">
+                        <p style="margin: 0; font-size: 14px; color: #111827;">
+                            Explore <a href="https://svideoeditor.com/" target="_blank" rel="noopener" style="color: #111827; text-decoration: underline; font-weight: 700;">S Studio</a> today to experience these tools and streamline your creative workflow!
                         </p>
                     </div>
                 </div>
@@ -1044,13 +1050,13 @@
                     </div>
 
                     <!-- Part 2: Next-Gen AI Workflows -->
-                    <div id="aiWorkflowSection" style="margin-bottom: 25px; border-top: 1px solid #1f2738; padding-top: 18px;">
+                    <div id="aiWorkflowSection" style="margin-bottom: 25px; border-top: 1px solid #e5e7eb; padding-top: 18px;">
                         <h4>2. Integrating Modern AI & Automation Into Media Editing</h4>
                         <p>Artificial Intelligence in creative platforms is no longer just a trend—it is a core productivity standard. In modern video and photo workflows, heuristic algorithms now assist with auto-caption generation, frame alignment, background removal, and aspect ratio adaptation for diverse social channels. Leveraging lightweight browser algorithms allows creators to automate time-consuming tasks while maintaining hands-on editorial control over the final export.</p>
                     </div>
 
                     <!-- Part 3: Essential Editor Tips -->
-                    <div id="editorTipsSection" style="border-top: 1px solid #1f2738; padding-top: 18px;">
+                    <div id="editorTipsSection" style="border-top: 1px solid #e5e7eb; padding-top: 18px;">
                         <h4>3. Pro Video & Photo Optimization Tips</h4>
                         <p>Always verify that your timeline cuts match standard display ratios (16:9 for YouTube desktop, 9:16 for vertical reels, and 1:1 for social feeds). When exporting high frame-rate content at 60 FPS, balancing bitrates between 6.0 Mbps and 8.0 Mbps ensures pristine clarity without causing excessive memory consumption on mobile devices.</p>
                     </div>
@@ -1062,72 +1068,72 @@
     </div>
 
     <!-- ========================================================================== -->
-    <!--  S STUDIO MASTER 5-COLUMN FOOTER (FULLY FUNCTIONAL IN BLOG) -->
+    <!--  S STUDIO MASTER 5-COLUMN FOOTER (CLEAN WHITE) -->
     <!-- ========================================================================== -->
-    <footer style="width: 98%; max-width: 1400px; margin: 30px auto 10px auto; padding: 25px 20px; box-sizing: border-box; background: #0c0f15; border-top: 1px solid #2f3542; border-radius: 12px; color: #ffffff; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+    <footer style="width: 98%; max-width: 1300px; margin: 30px auto 10px auto; padding: 25px 20px; box-sizing: border-box; background: #ffffff; border-top: 1px solid #e5e7eb; border-radius: 8px; color: #111827; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
             
             <!-- Col 1: Policies -->
             <div>
-                <h4 style="color: #ffffff; margin: 0 0 12px 0; font-size: 14px; font-weight: 700;">S Studio Policies</h4>
-                <div style="display: flex; flex-direction: column; gap: 8px; font-size: 12.5px;">
-                    <a href="index.html" style="color: #cbd5e1; text-decoration: none; cursor: pointer;">Disclaimer</a>
-                    <a href="terms.html" style="color: #94a3b8; text-decoration: none;">Terms & Conditions</a>
-                    <a href="index.html" style="color: #94a3b8; text-decoration: none;">Privacy Policy</a>
-                    <a href="index.html" style="color: #94a3b8; text-decoration: none;">Cookies Policy</a>
-                    <a href="index.html" style="color: #94a3b8; text-decoration: none;">Copyright Policy</a>
+                <h4 style="color: #111827; margin: 0 0 12px 0; font-size: 14px; font-weight: 700;">S Studio Policies</h4>
+                <div style="display: flex; flex-direction: column; gap: 8px; font-size: 13px;">
+                    <a href="index.html" style="color: #4b5563; text-decoration: none; cursor: pointer;">Disclaimer</a>
+                    <a href="terms.html" style="color: #4b5563; text-decoration: none;">Terms & Conditions</a>
+                    <a href="index.html" style="color: #4b5563; text-decoration: none;">Privacy Policy</a>
+                    <a href="index.html" style="color: #4b5563; text-decoration: none;">Cookies Policy</a>
+                    <a href="index.html" style="color: #4b5563; text-decoration: none;">Copyright Policy</a>
                 </div>
             </div>
 
             <!-- Col 2: Company Details -->
             <div>
-                <h4 style="color: #ffffff; margin: 0 0 12px 0; font-size: 14px; font-weight: 700;">Company Details</h4>
-                <div style="font-size: 12.5px; color: #94a3b8; line-height: 1.6; display: flex; flex-direction: column; gap: 8px;">
-                    <a href="https://sriramgroupsofficial.com/" target="_blank" rel="noopener noreferrer" style="color: #ffffff; font-weight: bold; text-decoration: none; display: inline-flex; align-items: center; gap: 5px;">
+                <h4 style="color: #111827; margin: 0 0 12px 0; font-size: 14px; font-weight: 700;">Company Details</h4>
+                <div style="font-size: 13px; color: #4b5563; line-height: 1.6; display: flex; flex-direction: column; gap: 8px;">
+                    <a href="https://sriramgroupsofficial.com/" target="_blank" rel="noopener noreferrer" style="color: #111827; font-weight: bold; text-decoration: none;">
                          Sriram Groups Official ↗
                     </a>
-                    <span style="color: #cbd5e1;">Founder & CEO: S. Purushotham</span>
-                    <a href="index.html" style="color: #94a3b8; text-decoration: none;">About Us</a>
-                    <a href="index.html" style="color: #94a3b8; text-decoration: none;">Theme & Vision</a>
+                    <span style="color: #4b5563;">Founder & CEO: S. Purushotham</span>
+                    <a href="index.html" style="color: #4b5563; text-decoration: none;">About Us</a>
+                    <a href="index.html" style="color: #4b5563; text-decoration: none;">Theme & Vision</a>
                 </div>
             </div>
 
             <!-- Col 3: Contact Us -->
             <div>
-                <h4 style="color: #ffffff; margin: 0 0 12px 0; font-size: 14px; font-weight: 700;">Contact Us</h4>
-                <div style="font-size: 12.5px; color: #94a3b8; line-height: 1.6; display: flex; flex-direction: column; gap: 6px;">
-                    <span>Support: <a href="mailto:sriramgroup.help@gmail.com" style="color: #cbd5e1; text-decoration: underline;">sriramgroup.help@gmail.com</a></span>
-                    <span>Official: <a href="https://sriramgroupsofficial.com" target="_blank" rel="noopener noreferrer" style="color: #cbd5e1; text-decoration: underline;">sriramgroupsofficial.com</a></span>
-                    <span>YouTube: <a href="https://youtube.com/@sriramgroups-i7t" target="_blank" rel="noopener noreferrer" style="color: #cbd5e1; text-decoration: underline;">Sriram Groups Official</a></span>
+                <h4 style="color: #111827; margin: 0 0 12px 0; font-size: 14px; font-weight: 700;">Contact Us</h4>
+                <div style="font-size: 13px; color: #4b5563; line-height: 1.6; display: flex; flex-direction: column; gap: 6px;">
+                    <span>Support: <a href="mailto:sriramgroup.help@gmail.com" style="color: #111827; text-decoration: underline;">sriramgroup.help@gmail.com</a></span>
+                    <span>Official: <a href="https://sriramgroupsofficial.com" target="_blank" rel="noopener noreferrer" style="color: #111827; text-decoration: underline;">sriramgroupsofficial.com</a></span>
+                    <span>YouTube: <a href="https://youtube.com/@sriramgroups-i7t" target="_blank" rel="noopener noreferrer" style="color: #111827; text-decoration: underline;">Sriram Groups Official</a></span>
                 </div>
             </div>
 
             <!-- Col 4: Why Best & Support -->
             <div>
-                <h4 style="color: #ffffff; margin: 0 0 12px 0; font-size: 14px; font-weight: 700;">Why Best & Support</h4>
-                <div style="font-size: 12.5px; color: #94a3b8; line-height: 1.6; margin-bottom: 12px; display: flex; flex-direction: column; gap: 6px;">
-                    <a href="index.html" style="color: #cbd5e1; text-decoration: none;">Why S Studio is Best?</a>
-                    <a href="index.html" style="color: #cbd5e1; text-decoration: none;">FAQs & Documentation</a>
-                    <a href="blog.html" style="color: #ffffff; text-decoration: none; font-weight: bold;">Tutorials & Blog</a>
+                <h4 style="color: #111827; margin: 0 0 12px 0; font-size: 14px; font-weight: 700;">Why Best & Support</h4>
+                <div style="font-size: 13px; color: #4b5563; line-height: 1.6; margin-bottom: 12px; display: flex; flex-direction: column; gap: 6px;">
+                    <a href="index.html" style="color: #4b5563; text-decoration: none;">Why S Studio is Best?</a>
+                    <a href="index.html" style="color: #4b5563; text-decoration: none;">FAQs & Documentation</a>
+                    <a href="blog.html" style="color: #111827; text-decoration: none; font-weight: bold;">Tutorials & Blog</a>
                 </div>
-                <a href="mailto:sriramgroup.help@gmail.com?subject=S%20Studio%20Bug%20Report" style="background: #27272a; color: #fff; text-decoration: none; padding: 7px 14px; border-radius: 6px; font-size: 11.5px; font-weight: bold; display: inline-block; text-align: center; border: 1px solid #3f3f46;">
+                <a href="mailto:sriramgroup.help@gmail.com?subject=S%20Studio%20Bug%20Report" style="background: #111827; color: #fff; text-decoration: none; padding: 7px 14px; border-radius: 6px; font-size: 11.5px; font-weight: bold; display: inline-block; text-align: center;">
                     Report a Bug & Get Reward!
                 </a>
             </div>
 
             <!-- Col 5: Tech & Updates -->
             <div style="flex: 1; min-width: 180px; margin-bottom: 20px;">
-                <h4 style="color: #ffffff; margin: 0 0 12px 0; font-size: 14px; font-weight: 700; text-transform: uppercase;">Tech & Updates</h4>
-                <div style="font-size: 12.5px; color: #94a3b8; line-height: 1.6; margin-bottom: 12px; display: flex; flex-direction: column; gap: 6px;">
-                    <span style="color: #cbd5e1; font-size: 12px;">Stay ahead with modern web tech trends:</span>
-                    <a href="index.html#techGuideSection" style="color: #94a3b8; text-decoration: none; font-size: 12.5px;">Modern Tech Trends</a>
-                    <a href="index.html#aiWorkflowSection" style="color: #94a3b8; text-decoration: none; font-size: 12.5px;">Next-Gen AI Workflows</a>
+                <h4 style="color: #111827; margin: 0 0 12px 0; font-size: 14px; font-weight: 700; text-transform: uppercase;">Tech & Updates</h4>
+                <div style="font-size: 13px; color: #4b5563; line-height: 1.6; margin-bottom: 12px; display: flex; flex-direction: column; gap: 6px;">
+                    <span style="color: #4b5563; font-size: 12px;">Stay ahead with modern web tech trends:</span>
+                    <a href="index.html#techGuideSection" style="color: #111827; text-decoration: none; font-size: 13px;">Modern Tech Trends</a>
+                    <a href="index.html#aiWorkflowSection" style="color: #111827; text-decoration: none; font-size: 13px;">Next-Gen AI Workflows</a>
                 </div>
                 <div style="display: flex; flex-direction: column; gap: 8px;">
-                    <a href="index.html#techGuideSection" style="background: #27272a; color: #ffffff; text-decoration: none; padding: 7px 12px; border-radius: 6px; font-size: 11px; font-weight: bold; text-align: center; display: block; border: 1px solid #3f3f46;">
+                    <a href="index.html#techGuideSection" style="background: #f9fafb; color: #111827; border: 1px solid #d1d5db; text-decoration: none; padding: 7px 12px; border-radius: 6px; font-size: 11px; font-weight: bold; text-align: center; display: block;">
                         How to Update in Tech?
                     </a>
-                    <a href="blog.html" style="background: #18181b; border: 1px solid #3f3f46; color: #ffffff; text-decoration: none; padding: 6px 12px; border-radius: 6px; font-size: 11px; font-weight: bold; text-align: center; display: block;">
+                    <a href="blog.html" style="background: #ffffff; border: 1px solid #d1d5db; color: #111827; text-decoration: none; padding: 6px 12px; border-radius: 6px; font-size: 11px; font-weight: bold; text-align: center; display: block;">
                         View Tech Tips & Guides
                     </a>
                 </div>
@@ -1135,8 +1141,8 @@
 
         </div>
 
-        <div style="width: 100%; text-align: center; margin-top: 25px; padding-top: 15px; border-top: 1px solid #1c2230; font-size: 12px; color: #64748b;">
-            © 2026 S studio | Sriram Groups Official. All Rights Reserved.
+        <div style="width: 100%; text-align: center; margin-top: 25px; padding-top: 15px; border-top: 1px solid #e5e7eb; font-size: 12px; color: #6b7280;">
+            © 2026 S Studio | Sriram Groups Official. All Rights Reserved.
         </div>
     </footer>
 
