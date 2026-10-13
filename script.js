@@ -538,6 +538,63 @@ function enterStudio(studioType) {
 }
 window.enterStudio = enterStudio;
 
+function enterStudio(mode) {
+    // 1. హోమ్‌పేజీ టెక్స్ట్ మొత్తం ఖచ్చితంగా దాచడం
+    const intro = document.getElementById('introPage');
+    if (intro) {
+        intro.style.display = 'none';
+    }
+
+    // 2. ఎడిటర్ పేజీని చూపించడం
+    const editor = document.getElementById('editorPage');
+    if (editor) {
+        editor.classList.remove('hidden');
+        editor.style.display = 'flex';
+    }
+
+    // 3. కట్, స్ప్లిట్, క్రోమా కీ, ప్లేయర్ బటన్లను ఫోర్స్ చేసి చూపించడం
+    document.querySelectorAll('.media-dependent').forEach(el => {
+        el.classList.remove('hidden');
+        el.style.display = 'flex';
+    });
+
+    const playerControls = document.getElementById('playerControlsBox');
+    if (playerControls) {
+        playerControls.classList.remove('hidden');
+        playerControls.style.display = 'flex';
+    }
+
+    const timelineArea = document.getElementById('timelineAreaBox');
+    const photoBar = document.getElementById('photoToolsToolbar');
+
+    if (mode === 'video') {
+        if (timelineArea) timelineArea.style.display = 'flex';
+        if (photoBar) photoBar.style.display = 'none';
+        
+        const vInput = document.getElementById('videoInput');
+        if (vInput) vInput.click();
+    } else if (mode === 'photo') {
+        if (timelineArea) timelineArea.style.display = 'none';
+        if (photoBar) photoBar.style.display = 'block';
+        
+        const pInput = document.getElementById('photoInput');
+        if (pInput) pInput.click();
+    }
+}
+
+function resetToHome() {
+    // Home ki vachinappudu editor hide chesi intro page chupinchali
+    const editor = document.getElementById('editorPage');
+    if (editor) {
+        editor.classList.add('hidden');
+        editor.style.display = 'none';
+    }
+    const intro = document.getElementById('introPage');
+    if (intro) {
+        intro.style.display = 'block';
+    }
+}
+
 // ==========================================================================
 // 📺 LARGE SCREEN VIDEO LOADER & INTERACTIVE RESIZER ENGINE
 // ==========================================================================
