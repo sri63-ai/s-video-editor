@@ -157,6 +157,13 @@ html, body {
 /* ==========================================================================
    INTRO LANDING PAGE
    ========================================================================== */
+   /* టాప్ నేవ్‌బార్ కిందకి రాకుండా సరైన ఖాళీ (Top Spacing) ఇచ్చేలా సెట్ చేయండి */
+#introPage {
+    padding-top: 100px !important; /* పాత 20px లేదా 80px ని 100px గా మార్చండి */
+    position: relative;
+    z-index: 1;
+}
+
 #introPage, .intro-container {
     width: 100% !important;
     max-width: 100vw !important;
