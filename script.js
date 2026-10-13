@@ -4398,3 +4398,61 @@ async function submitVerifyOtpCode() {
         showAuthBanner("Verification failed. Network issue.", false);
     }
 }
+// 🚀 Tech & Updates Popup Handler Function
+function openTechTrendsModal(type) {
+    const modal = document.getElementById('techTrendsPopupModal');
+    const titleEl = document.getElementById('techModalTitle');
+    const bodyEl = document.getElementById('techModalBody');
+
+    if (!modal || !titleEl || !bodyEl) return;
+
+    if (type === 'trends') {
+        titleEl.innerText = "⚡ Modern Tech Trends in Web Media";
+        bodyEl.innerHTML = `
+            <p><strong>Browser-Native Computing is the Future:</strong> Traditional editing software required 20GB+ desktop downloads and high-end hardware. Today's modern web standards have completely transformed digital media manipulation:</p>
+            <ul style="padding-left: 20px; margin: 10px 0;">
+                <li style="margin-bottom: 8px;"><strong>WebAssembly (WASM):</strong> Enables running C/C++ and Rust-level native performance directly inside your browser for instant video decoding and frame slicing.</li>
+                <li style="margin-bottom: 8px;"><strong>HTML5 Canvas & WebGL:</strong> Renders multi-layer 60 FPS video animations, overlays, and color adjustments using your device GPU.</li>
+                <li><strong>Zero-Server Privacy:</strong> Files stay 100% on your local device memory using secure blob pointers, preventing server data leaks.</li>
+            </ul>
+        `;
+    } else if (type === 'ai') {
+        titleEl.innerText = "🤖 Next-Gen AI Workflows";
+        bodyEl.innerHTML = `
+            <p><strong>Smart Automation Without Creative Limits:</strong> AI in modern creative pipelines is built to eliminate repetitive, tedious tasks:</p>
+            <ul style="padding-left: 20px; margin: 10px 0;">
+                <li style="margin-bottom: 8px;"><strong>Auto Speech-to-Text:</strong> Instantly converts spoken dialogue into synchronized, multi-language subtitle tracks down to milliseconds.</li>
+                <li style="margin-bottom: 8px;"><strong>Neural Foreground Extraction:</strong> Isolates humans, pets, and products from complex photo backgrounds without requiring green screens.</li>
+                <li><strong>DSP Audio Noise Gating:</strong> Automatically cleans background fan hum, ambient noise, and street traffic with one-click filtering.</li>
+            </ul>
+        `;
+    } else if (type === 'howTo') {
+        titleEl.innerText = "📚 How to Stay Updated in Tech?";
+        bodyEl.innerHTML = `
+            <p><strong>Continuous Growth Guide for Modern Creators & Developers:</strong></p>
+            <ol style="padding-left: 20px; margin: 10px 0;">
+                <li style="margin-bottom: 8px;"><strong>Hands-On Practice:</strong> Explore open browser utilities, test client-side tools, and build small interactive projects.</li>
+                <li style="margin-bottom: 8px;"><strong>Follow Web Standards:</strong> Keep track of W3C web standards, WebCodecs API, and progressive web applications (PWA).</li>
+                <li style="margin-bottom: 8px;"><strong>Focus on Privacy-First Tech:</strong> Prioritize learning and using software that respects user privacy and processes data locally.</li>
+                <li><strong>Read Official Masterclasses:</strong> Visit the <a href="blog.html" style="color: #111827; font-weight: bold; text-decoration: underline;">S Studio Blog</a> for in-depth tutorials and tech updates.</li>
+            </ol>
+        `;
+    }
+
+    modal.style.display = 'flex';
+}
+
+function closeTechTrendsModal() {
+    const modal = document.getElementById('techTrendsPopupModal');
+    if (modal) {
+        modal.style.display = 'none';
+    }
+}
+
+// బయట ఖాళీ స్పేస్ లో క్లిక్ చేసినప్పుడు మోడల్ క్లోజ్ అయ్యేలా చేయడం
+window.addEventListener('click', function(e) {
+    const modal = document.getElementById('techTrendsPopupModal');
+    if (e.target === modal) {
+        closeTechTrendsModal();
+    }
+});
