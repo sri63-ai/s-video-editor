@@ -11,103 +11,99 @@
             padding: 0;
         }
 
+        /* 📰 100% CLEAN WHITE EDITORIAL LEGAL THEME */
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            color: #cbd5e1;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            color: #374151;
             line-height: 1.85;
-            background-color: #07090e;
-            /* ప్రొఫెషనల్ డార్క్ లీగల్/కోర్టు బ్యాక్‌గ్రౌండ్ ఇమేజ్ విత్ హై-ఎండ్ ఓవర్‌లే */
-            background: linear-gradient(rgba(7, 9, 14, 0.88), rgba(7, 9, 14, 0.94)), 
-                        url('https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat fixed;
+            background-color: #ffffff !important;
+            background: #ffffff !important;
             min-height: 100vh;
         }
 
-        /* పూర్తి పేజీని కవర్ చేసే ఫుల్-విడ్త్ లేఅవుట్ */
         .full-page-legal-wrapper {
             width: 100%;
-            max-width: 1280px;
+            max-width: 1200px;
             margin: 0 auto;
-            padding: 40px 24px 80px 24px;
+            padding: 30px 20px 80px 20px;
         }
 
-        /* టాప్ నావిగేషన్ హెడర్ */
+        /* టాప్ నావిగేషన్ హెడర్ (క్లీన్ వైట్) */
         .legal-top-navbar {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 20px 30px;
-            background: rgba(16, 20, 31, 0.75);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(0, 242, 254, 0.2);
-            border-radius: 14px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
-            margin-bottom: 35px;
+            padding: 16px 24px;
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            margin-bottom: 30px;
             flex-wrap: wrap;
             gap: 15px;
         }
 
         .legal-top-navbar h1 {
-            color: #00f2fe;
-            font-size: 22px;
+            color: #111827;
+            font-size: 19px;
             font-weight: 800;
-            letter-spacing: 0.5px;
+            letter-spacing: -0.2px;
             text-transform: uppercase;
         }
 
         .home-return-button {
-            background: linear-gradient(135deg, #00f2fe, #4facfe);
-            color: #000000;
+            background: #111827;
+            color: #ffffff;
             text-decoration: none;
-            padding: 10px 22px;
-            font-weight: 800;
+            padding: 8px 18px;
+            font-weight: 600;
             font-size: 13px;
-            border-radius: 8px;
-            transition: all 0.25s ease;
+            border-radius: 6px;
             display: inline-flex;
             align-items: center;
             gap: 6px;
+            border: 1px solid #111827;
+            transition: background 0.2s ease;
         }
 
         .home-return-button:hover {
-            box-shadow: 0 0 20px rgba(0, 242, 254, 0.5);
-            transform: translateY(-2px);
+            background: #374151;
         }
 
         /* పూర్తి పేజీ లీగల్ కంటెంట్ కంటైనర్ */
         .legal-main-sheet {
-            background: rgba(14, 18, 28, 0.85);
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 18px;
-            padding: 50px 45px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.85);
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 40px 35px;
         }
 
         .document-timestamp {
-            color: #38bdf8;
+            color: #6b7280;
             font-size: 13px;
             font-weight: 600;
             margin-bottom: 25px;
-            border-bottom: 1px solid #1e293b;
-            padding-bottom: 10px;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 12px;
         }
 
         .statutory-alert-banner {
-            background: rgba(255, 71, 87, 0.12);
-            border-left: 5px solid #ff4757;
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
             padding: 18px 22px;
-            border-radius: 8px;
+            border-radius: 6px;
             margin-bottom: 35px;
-            color: #f8fafc;
+            color: #111827;
             font-size: 14px;
+            line-height: 1.7;
         }
 
         .legal-main-sheet h2 {
-            color: #ffffff;
-            font-size: 18px;
+            color: #111827;
+            font-size: 17px;
+            font-weight: 800;
             margin-top: 36px;
             margin-bottom: 12px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            border-bottom: 1px solid #f3f4f6;
             padding-bottom: 8px;
             display: flex;
             align-items: center;
@@ -117,14 +113,14 @@
         .legal-main-sheet p {
             font-size: 14.5px;
             margin-bottom: 16px;
-            color: #cbd5e1;
+            color: #374151;
             text-align: justify;
         }
 
         .legal-main-sheet ul, .legal-main-sheet ol {
             margin-bottom: 20px;
             padding-left: 28px;
-            color: #94a3b8;
+            color: #4b5563;
             font-size: 14px;
         }
 
@@ -133,25 +129,21 @@
         }
 
         .legal-main-sheet strong {
-            color: #e2e8f0;
+            color: #111827;
         }
 
         .contact-legal-grid {
             margin-top: 40px;
-            padding: 25px 30px;
-            background: rgba(0, 242, 254, 0.04);
-            border: 1px solid rgba(0, 242, 254, 0.2);
-            border-radius: 12px;
+            padding: 22px 26px;
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
         }
 
         .contact-legal-grid a {
-            color: #00f2fe;
-            text-decoration: none;
-            font-weight: bold;
-        }
-
-        .contact-legal-grid a:hover {
+            color: #111827;
             text-decoration: underline;
+            font-weight: 600;
         }
 
         .bottom-action-bar {
@@ -162,35 +154,34 @@
         .full-accept-button {
             display: inline-block;
             width: 100%;
-            max-width: 600px;
-            background: linear-gradient(135deg, #10ac84, #00f2fe);
-            color: #000000;
+            max-width: 550px;
+            background: #111827;
+            color: #ffffff;
             text-decoration: none;
-            padding: 15px 30px;
-            border-radius: 10px;
-            font-weight: 800;
-            font-size: 14px;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 20px rgba(16, 172, 132, 0.3);
+            padding: 14px 24px;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 13.5px;
+            border: 1px solid #111827;
+            transition: background 0.2s ease;
         }
 
         .full-accept-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 30px rgba(0, 242, 254, 0.5);
+            background: #374151;
         }
 
         @media (max-width: 768px) {
             .full-page-legal-wrapper {
-                padding: 20px 12px;
+                padding: 15px 10px;
             }
             .legal-main-sheet {
-                padding: 25px 18px;
+                padding: 24px 18px;
             }
             .legal-top-navbar {
-                padding: 15px 18px;
+                padding: 14px 16px;
             }
             .legal-top-navbar h1 {
-                font-size: 16px;
+                font-size: 15px;
             }
         }
     </style>
@@ -223,7 +214,7 @@
             <h2>2. 100% CLIENT-SIDE DATA SAFETY & ZERO-SERVER RETENTION</h2>
             <p>Unlike conventional cloud-based rendering engines that mandate transmitting high-resolution private media to centralized server arrays, S Studio functions under a strict <strong>Local-First Client Sandbox Architecture</strong>:</p>
             <ul>
-                <li><strong>No Remote Media Storage:</strong> Any video file, photo, audio asset, subtitle track, or overlay imported into S Studio is accessed locally through browser blob memory pointers (e.g., <code>URL.createObjectURL</code>). Your files are never uploaded, staged, processed, or backed up on external cloud servers.</li>
+                <li><strong>No Remote Media Storage:</strong> Any video file, photo, audio asset, subtitle track, or overlay imported into S Studio is accessed locally through browser blob memory pointers e.g., <code>URL.createObjectURL</code>. Your files are never uploaded, staged, processed, or backed up on external cloud servers.</li>
                 <li><strong>Browser Memory Evaporation:</strong> Once you refresh, close the active tab, or end your editing session, all active runtime memory pointers and canvas cache assets are automatically destroyed by your operating system’s browser garbage collector.</li>
                 <li><strong>No Surveillance or Data Scraping:</strong> We maintain zero mechanisms to monitor, analyze, parse, screen, or log the personal content of the files you import or export.</li>
             </ul>
@@ -256,7 +247,7 @@
             <p>To sustain server bandwidth, domain management, SSL infrastructure, and ongoing technical development without charging user subscriptions, S Studio may display advertisements mediated by third-party advertising networks, such as <strong>Google AdSense</strong>.</p>
             <ul>
                 <li>Third-party ad vendors, including Google, utilize cookies (such as the DoubleClick cookie) to serve ads based on a user's prior visits to this website or other internet websites.</li>
-                <li>Users can opt out of personalized advertising by visiting Google's Ads Settings (<a href="https://www.google.com/settings/ads" target="_blank" rel="noopener noreferrer">google.com/settings/ads</a>) or opting out of third-party vendor cookies via <a href="https://www.aboutads.info" target="_blank" rel="noopener noreferrer">aboutads.info</a>.</li>
+                <li>Users can opt out of personalized advertising by visiting Google's Ads Settings (<a href="https://www.google.com/settings/ads" target="_blank" rel="noopener noreferrer" style="color: #111827; text-decoration: underline;">google.com/settings/ads</a>) or opting out of third-party vendor cookies via <a href="https://www.aboutads.info" target="_blank" rel="noopener noreferrer" style="color: #111827; text-decoration: underline;">aboutads.info</a>.</li>
                 <li>S Studio maintains zero affiliation with, and accepts no legal responsibility for, the products, claims, services, or representations presented in external sponsored advertisements.</li>
             </ul>
 
@@ -281,7 +272,7 @@
 
             <!-- Corporate Contact & Entity Card -->
             <div class="contact-legal-grid">
-                <h3 style="color: #00f2fe; margin-top: 0; margin-bottom: 10px; font-size: 16px;">Corporate Entity & Regulatory Contact:</h3>
+                <h3 style="color: #111827; margin-top: 0; margin-bottom: 10px; font-size: 16px; font-weight: 700;">Corporate Entity & Regulatory Contact:</h3>
                 <p style="margin-bottom: 6px;">For formal inquiries, copyright concerns, DMCA correspondence, or technical partnership queries, contact our governance desk:</p>
                 <p style="margin-bottom: 0;">
                     <strong>Operating Platform:</strong> S Studio (<a href="https://svideoeditor.com">svideoeditor.com</a>)<br>
