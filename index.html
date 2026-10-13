@@ -18,27 +18,25 @@
 </head>
 <body style="background-color: #ffffff !important; color: #111827 !important; margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
 
-<!-- ========================================================================== -->
-<!--  STICKY TOP NAVIGATION BAR (CLEAN WHITE EDITORIAL) -->
-<!-- ========================================================================== -->
-<nav class="home-sticky-navbar" style="background: #ffffff !important; border-bottom: 1px solid #e5e7eb !important; box-shadow: 0 1px 3px rgba(0,0,0,0.05) !important;">
-    <div class="sticky-nav-inner" style="max-width: 1400px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 12px 20px;">
+<!-- 🌐 STICKY TOP NAVIGATION BAR (WORKING DROPDOWNS) -->
+<nav class="home-sticky-navbar" style="position: fixed; top: 0; left: 0; width: 100vw; background: #ffffff; border-bottom: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0,0,0,0.05); z-index: 999999; padding: 12px 20px; box-sizing: border-box;">
+    <div class="sticky-nav-inner" style="max-width: 1400px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between;">
         
         <!-- Home Link -->
-        <button class="nav-link-btn" onclick="scrollToTopHome()" style="background: #ffffff !important; color: #111827 !important; border: 1px solid #d1d5db !important; padding: 8px 16px; border-radius: 6px; font-weight: 600; cursor: pointer;">
+        <button class="nav-link-btn" onclick="scrollToTopHome()" style="background: #ffffff; color: #111827; border: 1px solid #d1d5db; padding: 8px 16px; border-radius: 6px; font-weight: 600; cursor: pointer;">
              Home
         </button>
 
         <!-- DIRECT STUDIO LAUNCHER (VIDEO & PHOTO EDITING) -->
         <div class="nav-dropdown-item" id="editorLaunchDropdown" style="position: relative; display: inline-block;">
-            <button class="nav-link-btn nav-btn-highlight" onclick="toggleNavDropdown('editorLaunchDropdown')" style="background: #111827 !important; color: #ffffff !important; border: 1px solid #111827 !important; padding: 8px 16px; border-radius: 6px; font-weight: 600; cursor: pointer;">
-                 Open Studio <span class="nav-arrow-icon">▾</span>
+            <button class="nav-link-btn nav-btn-highlight" onclick="toggleNavDropdown('editorLaunchDropdown')" style="background: #111827; color: #ffffff; border: 1px solid #111827; padding: 8px 16px; border-radius: 6px; font-weight: 600; cursor: pointer;">
+                 Open Studio <span class="nav-arrow-icon" style="display: inline-block; transition: transform 0.2s;">▾</span>
             </button>
-            <div class="nav-sub-menu" style="display: none; position: absolute; top: 100%; left: 0; background: #ffffff !important; border: 1px solid #e5e7eb !important; border-radius: 6px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); padding: 8px 0; min-width: 200px; z-index: 1000;">
-                <a href="javascript:void(0)" onclick="enterStudio('video'); closeAllNavDropdowns();" style="display: block; padding: 8px 16px; color: #374151 !important; text-decoration: none;">
+            <div class="nav-sub-menu" style="display: none; position: absolute; top: calc(100% + 8px); left: 0; background: #ffffff; border: 1px solid #e5e7eb; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); padding: 8px 0; min-width: 220px; z-index: 100000;">
+                <a href="javascript:void(0)" onclick="enterStudio('video'); closeAllNavDropdowns();" style="display: block; padding: 10px 16px; color: #111827; text-decoration: none; font-weight: 600; font-size: 13.5px;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='transparent'">
                     📽 Video Editing Studio
                 </a>
-                <a href="javascript:void(0)" onclick="enterStudio('photo'); closeAllNavDropdowns();" style="display: block; padding: 8px 16px; color: #374151 !important; text-decoration: none;">
+                <a href="javascript:void(0)" onclick="enterStudio('photo'); closeAllNavDropdowns();" style="display: block; padding: 10px 16px; color: #111827; text-decoration: none; font-weight: 600; font-size: 13.5px;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='transparent'">
                     🏞️ Photo Editing Studio
                 </a>
             </div>
@@ -46,34 +44,44 @@
 
         <!-- Company Dropdown -->
         <div class="nav-dropdown-item" id="companyDropdown" style="position: relative; display: inline-block;">
-            <button class="nav-link-btn" onclick="toggleNavDropdown('companyDropdown')" style="background: #ffffff !important; color: #111827 !important; border: 1px solid #d1d5db !important; padding: 8px 16px; border-radius: 6px; font-weight: 600; cursor: pointer;">
-                Company <span class="nav-arrow-icon">▾</span>
+            <button class="nav-link-btn" onclick="toggleNavDropdown('companyDropdown')" style="background: #ffffff; color: #111827; border: 1px solid #d1d5db; padding: 8px 16px; border-radius: 6px; font-weight: 600; cursor: pointer;">
+                Company <span class="nav-arrow-icon" style="display: inline-block; transition: transform 0.2s;">▾</span>
             </button>
-            <div class="nav-sub-menu" style="display: none; position: absolute; top: 100%; left: 0; background: #ffffff !important; border: 1px solid #e5e7eb !important; border-radius: 6px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); padding: 8px 0; min-width: 200px; z-index: 1000;">
-                <a href="javascript:void(0)" onclick="toggleModal('aboutModal', true); closeAllNavDropdowns();" style="display: block; padding: 8px 16px; color: #374151 !important; text-decoration: none;">About Us</a>
-                <a href="https://sriramgroupsofficial.com/" target="_blank" rel="noopener noreferrer" onclick="closeAllNavDropdowns();" style="display: block; padding: 8px 16px; color: #374151 !important; text-decoration: none;">Sriram Groups Official</a>
+            <div class="nav-sub-menu" style="display: none; position: absolute; top: calc(100% + 8px); left: 0; background: #ffffff; border: 1px solid #e5e7eb; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); padding: 8px 0; min-width: 220px; z-index: 100000;">
+                <a href="javascript:void(0)" onclick="toggleModal('founderModal', true); closeAllNavDropdowns();" style="display: block; padding: 10px 16px; color: #111827; text-decoration: none; font-weight: 600; font-size: 13.5px;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='transparent'">
+                    About Us
+                </a>
+                <a href="https://sriramgroupsofficial.com/" target="_blank" rel="noopener noreferrer" onclick="closeAllNavDropdowns();" style="display: block; padding: 10px 16px; color: #111827; text-decoration: none; font-weight: 600; font-size: 13.5px;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='transparent'">
+                    Sriram Groups Official ↗
+                </a>
             </div>
         </div>
 
         <!-- Blogs Button -->
-        <a href="blog.html" class="nav-link-btn nav-anchor-link" style="background: #ffffff !important; color: #111827 !important; border: 1px solid #d1d5db !important; padding: 8px 16px; border-radius: 6px; font-weight: 600; text-decoration: none;">
+        <a href="blog.html" class="nav-link-btn nav-anchor-link" style="background: #ffffff; color: #111827; border: 1px solid #d1d5db; padding: 8px 16px; border-radius: 6px; font-weight: 600; text-decoration: none;">
              Blogs
         </a>
 
         <!-- Terms & Conditions Dropdown -->
         <div class="nav-dropdown-item" id="termsDropdown" style="position: relative; display: inline-block;">
-            <button class="nav-link-btn" onclick="toggleNavDropdown('termsDropdown')" style="background: #ffffff !important; color: #111827 !important; border: 1px solid #d1d5db !important; padding: 8px 16px; border-radius: 6px; font-weight: 600; cursor: pointer;">
-                Terms & Policies <span class="nav-arrow-icon">▾</span>
+            <button class="nav-link-btn" onclick="toggleNavDropdown('termsDropdown')" style="background: #ffffff; color: #111827; border: 1px solid #d1d5db; padding: 8px 16px; border-radius: 6px; font-weight: 600; cursor: pointer;">
+                Terms & Policies <span class="nav-arrow-icon" style="display: inline-block; transition: transform 0.2s;">▾</span>
             </button>
-            <div class="nav-sub-menu" style="display: none; position: absolute; top: 100%; left: 0; background: #ffffff !important; border: 1px solid #e5e7eb !important; border-radius: 6px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); padding: 8px 0; min-width: 200px; z-index: 1000;">
-                <a href="terms.html" onclick="closeAllNavDropdowns();" style="display: block; padding: 8px 16px; color: #374151 !important; text-decoration: none;">Terms & Conditions</a>
-                <a href="javascript:void(0)" onclick="toggleModal('privacyModal', true); closeAllNavDropdowns();" style="display: block; padding: 8px 16px; color: #374151 !important; text-decoration: none;">Privacy Policy</a>
-                <a href="javascript:void(0)" onclick="showFullPageModal('disclaimer'); closeAllNavDropdowns();" style="display: block; padding: 8px 16px; color: #374151 !important; text-decoration: none;">Disclaimer & Other Terms</a>
+            <div class="nav-sub-menu" style="display: none; position: absolute; top: calc(100% + 8px); right: 0; background: #ffffff; border: 1px solid #e5e7eb; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); padding: 8px 0; min-width: 220px; z-index: 100000;">
+                <a href="terms.html" onclick="closeAllNavDropdowns();" style="display: block; padding: 10px 16px; color: #111827; text-decoration: none; font-weight: 600; font-size: 13.5px;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='transparent'">
+                    Terms & Conditions
+                </a>
+                <a href="javascript:void(0)" onclick="toggleModal('privacyModal', true); closeAllNavDropdowns();" style="display: block; padding: 10px 16px; color: #111827; text-decoration: none; font-weight: 600; font-size: 13.5px;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='transparent'">
+                    Privacy Policy
+                </a>
+                <a href="javascript:void(0)" onclick="showFullPageModal('disclaimer'); closeAllNavDropdowns();" style="display: block; padding: 10px 16px; color: #111827; text-decoration: none; font-weight: 600; font-size: 13.5px;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='transparent'">
+                    Disclaimer & Other Terms
+                </a>
             </div>
         </div>
 
         <!-- Connect Button -->
-        <button class="nav-link-btn" onclick="scrollToSupportChannels()" style="background: #ffffff !important; color: #111827 !important; border: 1px solid #d1d5db !important; padding: 8px 16px; border-radius: 6px; font-weight: 600; cursor: pointer;">
+        <button class="nav-link-btn" onclick="scrollToSupportChannels()" style="background: #ffffff; color: #111827; border: 1px solid #d1d5db; padding: 8px 16px; border-radius: 6px; font-weight: 600; cursor: pointer;">
              Connect
         </button>
 
@@ -1259,6 +1267,49 @@ function toggleModal(modalId, show) {
         modal.style.display = show ? 'flex' : 'none';
     }
 }
+    // డ్రాప్‌డౌన్ మెనూలను ఓపెన్ మరియు క్లోజ్ చేసే ఫంక్షన్
+    function toggleNavDropdown(id) {
+        const item = document.getElementById(id);
+        if (!item) return;
+        const subMenu = item.querySelector('.nav-sub-menu');
+        const arrow = item.querySelector('.nav-arrow-icon');
+        
+        const isAlreadyOpen = subMenu.style.display === 'block';
+        closeAllNavDropdowns();
+        
+        if (!isAlreadyOpen) {
+            subMenu.style.display = 'block';
+            if (arrow) arrow.style.transform = 'rotate(180deg)';
+        }
+    }
+
+    function closeAllNavDropdowns() {
+        document.querySelectorAll('.nav-sub-menu').forEach(menu => {
+            menu.style.display = 'none';
+        });
+        document.querySelectorAll('.nav-arrow-icon').forEach(arrow => {
+            arrow.style.transform = 'rotate(0deg)';
+        });
+    }
+
+    // బయట ఎక్కడైనా క్లిక్ చేసినప్పుడు మెనూ క్లోజ్ అయ్యేలా చేయడం
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.nav-dropdown-item')) {
+            closeAllNavDropdowns();
+        }
+    });
+
+    function scrollToTopHome() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function scrollToSupportChannels() {
+        const support = document.querySelector('.support-channels-card');
+        if (support) {
+            support.scrollIntoView({ behavior: 'smooth' });
+        }
+    }
+
 </script>
 </body>
 </html>
