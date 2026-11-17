@@ -1,0 +1,265 @@
+/* ==========================================================================
+   S STUDIO - VIDEO WORKSPACE & DUAL DOCK STYLES (videoworkspace.css)
+   ========================================================================== */
+
+/* 1. Slide-Up Sub-Tools Drawer */
+.tool-sub-drawer {
+    display: none;
+    background: #141824;
+    border-top: 1px solid #1e293b;
+    padding: 9px 16px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+/* 2. Dual Bottom Icon Docks (#mainVideoDock & #pipEditDock) */
+.svg-icon-dock {
+    background: #0d1019;
+    border-top: 1px solid #1e293b;
+    padding: 8px 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+
+.pip-studio-dock {
+    display: none;
+    background: #0c1322;
+    border-top: 1.5px solid #2563EB;
+}
+
+.dock-icon-btn {
+    background: transparent;
+    border: 1px solid transparent;
+    color: #94a3b8;
+    padding: 6px 10px;
+    border-radius: 8px;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    cursor: pointer;
+    font-size: 10.5px;
+    font-weight: 600;
+    min-width: 64px;
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+}
+
+.dock-icon-btn:hover {
+    background: #181d2c;
+    color: #f8fafc;
+}
+
+.dock-icon-btn.active-icon {
+    background: rgba(37, 99, 235, 0.16);
+    border-color: rgba(37, 99, 235, 0.5);
+    color: #2563EB !important;
+}
+
+/* 3. Compact Scrollable Multi-Track Timeline (Max-Height 165px) */
+.timeline-tracks-scroll {
+    position: relative;
+    max-height: 165px !important;
+    overflow-x: auto !important;
+    overflow-y: auto !important;
+    background: #0b0e14;
+    padding: 5px 0;
+}
+
+.track-row {
+    display: flex;
+    align-items: center;
+    background: #131722;
+    border-top: 1px solid #1e293b;
+    border-bottom: 1px solid #1e293b;
+    height: 24px;
+    margin-bottom: 2px;
+    min-width: 100%;
+    width: max-content;
+}
+
+.main-video-row {
+    height: 32px !important;
+    margin-bottom: 0;
+}
+
+.track-label {
+    position: sticky;
+    left: 0;
+    z-index: 40;
+    width: 110px;
+    min-width: 110px;
+    height: 100%;
+    background: #1a2030;
+    color: #e2e8f0;
+    font-size: 10px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    padding: 0 8px;
+    border-right: 1px solid #334155;
+    cursor: pointer;
+}
+
+.track-lane {
+    position: relative;
+    height: 100%;
+    min-width: 900px;
+    background: #0e121b;
+}
+
+/* 4. Ultra-Slim 18px Timeline Clip Bars & Filmstrip Thumbnails */
+.timeline-clip-bar {
+    position: absolute;
+    top: 2px;
+    height: 19px;
+    border-radius: 3px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    cursor: grab;
+    user-select: none;
+    overflow: hidden;
+    border: 1px solid #0f172a;
+}
+.timeline-clip-bar:active { cursor: grabbing; }
+
+.timeline-clip-bar.pip-clip-bar {
+    height: 19px !important;
+    top: auto !important;
+    background-color: #1e293b;
+    background-size: auto 100%;
+    background-repeat: repeat-x;
+    background-position: left center;
+    transition: bottom 0.14s ease;
+}
+
+.timeline-clip-bar.active-selected-clip {
+    border: 1.5px solid #38bdf8 !important;
+    box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.5) !important;
+    z-index: 30 !important;
+}
+
+.clip-corner-badge {
+    position: relative;
+    z-index: 5;
+    margin: 1px 0 0 2px;
+    font-size: 9px !important;
+    line-height: 1.1;
+    font-weight: 700;
+    color: #ffffff;
+    background: rgba(0, 0, 0, 0.72);
+    padding: 1px 4px;
+    border-radius: 2px;
+    max-width: 95px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    pointer-events: none;
+}
+
+.filmstrip-row {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.filmstrip-row img {
+    height: 100%;
+    width: auto;
+    object-fit: cover;
+    flex-shrink: 0;
+    border-right: 1px solid rgba(15, 23, 42, 0.45);
+}
+
+.clip-resize-handle {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 6px;
+    background: rgba(255, 255, 255, 0.45);
+    cursor: ew-resize;
+    z-index: 10;
+}
+
+/* 5. Preview Canvas 4-Corner Zoom Dots & Top Rotate Handle (↻) */
+.canvas-overlay-item {
+    overflow: visible !important;
+    border: 1.5px solid transparent;
+    transform-origin: center center;
+}
+
+.canvas-overlay-item.canvas-item-selected {
+    border: 2px solid #2563EB !important;
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.35), 0 8px 24px rgba(0, 0, 0, 0.55) !important;
+}
+
+.pip-corner-dot {
+    display: none;
+    position: absolute;
+    width: 11px;
+    height: 11px;
+    background: #ffffff;
+    border: 2px solid #2563EB;
+    border-radius: 50%;
+    z-index: 65;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+}
+.pip-dot-tl { top: -6px; left: -6px; cursor: nwse-resize; }
+.pip-dot-tr { top: -6px; right: -6px; cursor: nesw-resize; }
+.pip-dot-bl { bottom: -6px; left: -6px; cursor: nesw-resize; }
+.pip-dot-br { bottom: -6px; right: -6px; cursor: nwse-resize; }
+
+.pip-rotate-stem {
+    display: none;
+    position: absolute;
+    top: -22px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 2px;
+    height: 22px;
+    background: #2563EB;
+    z-index: 64;
+}
+
+.pip-rotate-knob {
+    display: none;
+    position: absolute;
+    top: -36px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #2563EB;
+    color: #ffffff;
+    border: 1.5px solid #ffffff;
+    font-size: 12px;
+    font-weight: 800;
+    align-items: center;
+    justify-content: center;
+    cursor: grab;
+    z-index: 66;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+}
+.pip-rotate-knob:active { cursor: grabbing; }
+
+.canvas-overlay-item.canvas-item-selected .pip-corner-dot,
+.canvas-overlay-item.canvas-item-selected .pip-rotate-stem {
+    display: block !important;
+}
+.canvas-overlay-item.canvas-item-selected .pip-rotate-knob {
+    display: flex !important;
+}
