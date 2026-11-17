@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S Photo Studio | Browser-Native Photo Editor</title>
+    <style>
+        * { box-sizing: border-box; user-select: none; }
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #090B10;
+            color: #F8FAFC;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* ==========================================================================
+           1. TOP BAR (CLEAN DARK WORKSPACE)
+           ========================================================================== */
+        .top-studio-bar {
+            height: 58px;
+            background: #11151E;
+            border-bottom: 1px solid #1E293B;
+            padding: 0 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            flex-shrink: 0;
+            z-index: 100;
+        }
+        .bar-section {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .brand-lockup {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0 6px;
+            cursor: pointer;
+        }
+        .brand-icon {
+            width: 28px;
+            height: 28px;
+            background: #2563EB;
+            color: #FFFFFF;
+            border-radius: 7px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 15px;
+        }
+        .brand-name {
+            font-weight: 800;
+            font-size: 15px;
+            letter-spacing: -0.2px;
+            color: #FFFFFF;
+        }
+        .save-pill {
+            font-size: 11px;
+            color: #34D399;
+            background: rgba(16, 185, 129, 0.12);
+            border: 1px solid rgba(16, 185, 129, 0.25);
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+        .top-btn {
+            background: #1E293B;
+            color: #E2E8F0;
+            border: 1px solid #334155;
+            padding: 7px 12px;
+            border-radius: 7px;
+            font-size: 12.5px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.15s ease;
+        }
+        .top-btn:hover { background: #334155; color: #FFFFFF; }
+        .top-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+        .btn-blue {
+            background: #2563EB;
+            border-color: #2563EB;
+            color: #FFFFFF;
+            font-weight: 700;
+        }
+        .btn-blue:hover { background: #1D4ED8; }
+        .btn-compare-active {
+            background: #F59E0B !important;
+            border-color: #F59E0B !important;
+            color: #090B10 !important;
+            font-weight: 800;
+        }
+
+        /* ==========================================================================
+           2. MAIN CANVAS STAGE (CENTER LARGE PREVIEW)
+           ========================================================================== */
+        .main-canvas-stage {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            padding: 18px;
+            background: radial-gradient(circle at center, #131824 0%, #090B10 100%);
+        }
+        .photo-stage-frame {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            max-width: 92%;
+            max-height: 100%;
+            overflow: hidden;
+            transition: border-radius 0.25s ease, box-shadow 0.25s ease, border 0.25s ease, padding 0.25s ease, background 0.25s ease;
+        }
+        .photo-stage-frame.transparent-grid {
+            background-image: linear-gradient(45deg, #1E293B 25%, transparent 25%),
+                              linear-gradient(-45deg, #1E293B 25%, transparent 25%),
+                              linear-gradient(45deg, transparent 75%, #1E293B 75%),
+                              linear-gradient(-45deg, transparent 75%, #1E293B 75%);
+            background-size: 20px 20px;
+            background-position: 0 0, 0 10px, 10px -10px, -10px 0;
+        }
+        #mainPhotoImg {
+            max-width: 100%;
+            max-height: calc(100vh - 210px);
+            display: block;
+            object-fit: contain;
+            pointer-events: none;
+            transition: filter 0.12s ease, transform 0.2s ease;
+        }
+        #interactiveDrawCanvas {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 15;
+        }
+        #interactiveDrawCanvas.drawing-enabled {
+            pointer-events: auto;
+            cursor: crosshair;
+        }
+        .bokeh-blur-overlay {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            backdrop-filter: blur(0px);
+            -webkit-mask-image: radial-gradient(circle at center, transparent 36%, black 75%);
+            mask-image: radial-gradient(circle at center, transparent 36%, black 75%);
+            z-index: 10;
+            display: none;
+        }
+        .empty-upload-box {
+            text-align: center;
+            padding: 46px 54px;
+            border: 1.5px dashed #334155;
+            border-radius: 16px;
+            background: rgba(17, 21, 30, 0.8);
+        }
+        .compare-badge-tag {
+            position: absolute;
+            top: 14px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(15, 23, 42, 0.88);
+            border: 1px solid #F59E0B;
+            color: #FBBF24;
+            padding: 5px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 800;
+            z-index: 60;
+            display: none;
+        }
+
+        /* Draggable Overlay Items (Text & Stickers) */
+        .stage-overlay-item {
+            position: absolute;
+            cursor: move;
+            z-index: 25;
+            padding: 4px 10px;
+            border: 1px dashed transparent;
+            border-radius: 6px;
+        }
+        .stage-overlay-item:hover, .stage-overlay-item.selected-layer {
+            border-color: #38BDF8;
+        }
+
+        /* ==========================================================================
+           3. IN-PLACE BOTTOM DOCK (SINGLE SVG ICONS BAR + IN-PLACE TOOL DRAWER)
+           ========================================================================== */
+        .bottom-dock-container {
+            background: #11151E;
+            border-top: 1px solid #1E293B;
+            flex-shrink: 0;
+            z-index: 100;
+        }
+        /* In-Place Active Tool Controls Strip */
+        .in-place-tool-drawer {
+            display: none;
+            padding: 12px 20px;
+            background: #161B26;
+            border-bottom: 1px solid #1E293B;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        .drawer-title-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 170px;
+        }
+        .drawer-title-group strong {
+            font-size: 13px;
+            color: #38BDF8;
+            letter-spacing: 0.2px;
+        }
+        .drawer-controls-area {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+        .drawer-close-btn {
+            background: #1E293B;
+            border: 1px solid #334155;
+            color: #94A3B8;
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 700;
+        }
+        .drawer-close-btn:hover { color: #FFFFFF; background: #334155; }
+
+        /* Slider & Option Chips inside In-Place Drawer */
+        .slider-unit {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            min-width: 125px;
+            font-size: 11.5px;
+            color: #CBD5E1;
+        }
+        .slider-unit input[type="range"] {
+            accent-color: #2563EB;
+            cursor: pointer;
+            height: 4px;
+        }
+        .opt-chip {
+            background: #1E293B;
+            border: 1px solid #334155;
+            color: #E2E8F0;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        .opt-chip:hover, .opt-chip.active-chip {
+            background: #2563EB;
+            border-color: #3B82F6;
+            color: #FFFFFF;
+        }
+
+        /* 14 SVG Icons Horizontal Strip */
+        .svg-icons-dock {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 6px;
+            padding: 8px 14px;
+            overflow-x: auto;
+            scrollbar-width: thin;
+            scrollbar-color: #334155 #11151E;
+        }
+        @media (min-width: 1280px) {
+            .svg-icons-dock { justify-content: center; }
+        }
+        .svg-tool-btn {
+            background: transparent;
+            border: 1px solid transparent;
+            color: #94A3B8;
+            min-width: 78px;
+            padding: 7px 8px;
+            border-radius: 9px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            flex-shrink: 0;
+        }
+        .svg-tool-btn svg {
+            width: 20px;
+            height: 20px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+        .svg-tool-btn span {
+            font-size: 10.5px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        .svg-tool-btn:hover {
+            background: #1E293B;
+            color: #F8FAFC;
+        }
+        .svg-tool-btn.active-tool {
+            background: rgba(37, 99, 235, 0.18);
+            border-color: #2563EB;
+            color: #60A5FA;
+        }
+
+        /* ==========================================================================
+           4. EXPORT PHOTO POP-UP MODAL
+           ========================================================================== */
+        .modal-backdrop {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(2, 6, 23, 0.78);
+            backdrop-filter: blur(4px);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+        }
+        .export-modal-card {
+            background: #11151E;
+            border: 1px solid #334155;
+            border-radius: 14px;
+            width: 100%;
+            max-width: 440px;
+            padding: 22px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+        }
+        .export-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #1E293B;
+            padding-bottom: 12px;
+            margin-bottom: 16px;
+        }
+        .export-modal-header h3 {
+            margin: 0;
+            font-size: 17px;
+            font-weight: 800;
+            color: #FFFFFF;
+        }
+        .export-group-label {
+            display: block;
+            font-size: 12px;
+            font-weight: 700;
+            color: #94A3B8;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+        .export-radio-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-bottom: 18px;
+        }
+        .export-choice-btn {
+            background: #1E293B;
+            border: 1.5px solid #334155;
+            color: #E2E8F0;
+            padding: 10px 8px;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 700;
+        }
+        .export-choice-btn small {
+            display: block;
+            font-size: 10px;
+            font-weight: 500;
+            color: #94A3B8;
+            margin-top: 3px;
+        }
+        .export-choice-btn.selected {
+            background: rgba(37, 99, 235, 0.2);
+            border-color: #2563EB;
+            color: #FFFFFF;
+        }
+        .export-choice-btn.selected small { color: #93C5FD; }
+    </style>
+</head>
+<body>
+
+    <!-- Hidden File Inputs -->
+    <input type="file" id="photoInput" accept="image/*" onchange="handlePhotoSelect(event)" style="display: none;">
+    <input type="file" id="overlayLogoInput" accept="image/*" onchange="handleOverlayImageUpload(event)" style="display: none;">
+    <input type="file" id="customBgInput" accept="image/*" onchange="handleCustomBgImage(event)" style="display: none;">
+
+    <!-- ==========================================================================
+         1. TOP BAR
+         ========================================================================== -->
+    <header class="top-studio-bar">
+        <div class="bar-section">
+            <button type="button" class="top-btn" onclick="savePhotoAndGoHome()">← Back to Home</button>
+            <div class="brand-lockup" onclick="savePhotoAndGoHome()">
+                <div class="brand-icon">S</div>
+                <span class="brand-name">S Photo Studio</span>
+            </div>
+            <span id="autoSaveBadge" class="save-pill">Auto-Save Ready</span>
+        </div>
+
+        <div class="bar-section">
+            <button type="button" class="top-btn btn-blue" onclick="document.getElementById('photoInput').click()">Upload Photo</button>
+            <a href="videoworkspace.html" class="top-btn">Switch to Video Studio</a>
+        </div>
+
+        <div class="bar-section">
+            <button type="button" id="undoBtn" class="top-btn" onclick="undoPhotoAction()" disabled>Undo</button>
+            <button type="button" id="redoBtn" class="top-btn" onclick="redoPhotoAction()" disabled>Redo</button>
+            <button type="button" id="compareBtn" class="top-btn"
+                    onmousedown="startCompareBefore()" onmouseup="endCompareBefore()" onmouseleave="endCompareBefore()"
+                    ontouchstart="startCompareBefore()" ontouchend="endCompareBefore()">
+                Compare (Hold)
+            </button>
+            <button type="button" class="top-btn btn-blue" onclick="openExportPhotoModal()">Export Photo</button>
+        </div>
+    </header>
+
+    <!-- ==========================================================================
+         2. MAIN CANVAS (LARGE CLEAN PREVIEW STAGE)
+         ========================================================================== -->
+    <main class="main-canvas-stage" id="mainCanvasStage">
+        <div id="compareBadgeTag" class="compare-badge-tag">ORIGINAL (BEFORE EDITING)</div>
+
+        <div class="photo-stage-frame" id="photoStageFrame">
+            <div id="placeholderText" class="empty-upload-box">
+                <h2 style="margin: 0 0 8px 0; font-size: 19px; color: #F8FAFC;">S Photo Studio Workspace</h2>
+                <p style="margin: 0 0 18px 0; font-size: 13.5px; color: #94A3B8;">Upload any JPG, PNG, or WebP photo to edit locally in your browser with zero quality loss.</p>
+                <button type="button" class="top-btn btn-blue" style="padding: 10px 20px; font-size: 13.5px;" onclick="document.getElementById('photoInput').click()">
+                    + Upload Photo
+                </button>
+            </div>
+
+            <img id="mainPhotoImg" src="" alt="" style="display: none;">
+            <div id="bokehBlurOverlay" class="bokeh-blur-overlay"></div>
+            <canvas id="interactiveDrawCanvas"></canvas>
+            <div id="overlaysContainer"></div>
+        </div>
+    </main>
+
+    <!-- ==========================================================================
+         3. IN-PLACE BOTTOM DOCK (ACTIVE DRAWER + 14 SVG TOOLS)
+         ========================================================================== -->
+    <footer class="bottom-dock-container">
+        
+        <!-- In-Place Dynamic Control Drawer (Opens right above the icon bar) -->
+        <div id="inPlaceToolDrawer" class="in-place-tool-drawer">
+            <div class="drawer-title-group">
+                <strong id="activeDrawerTitle">Tool Controls</strong>
+            </div>
+            <div id="activeDrawerControls" class="drawer-controls-area"></div>
+            <button type="button" class="drawer-close-btn" onclick="closeInPlaceDrawer()">✕</button>
+        </div>
+
+        <!-- 14 Essential Photo Editing SVG Tools -->
+        <div class="svg-icons-dock" id="photoSvgDock">
+            
+            <!-- 1. AI BG Remove -->
+            <button type="button" class="svg-tool-btn" data-tool="bgremove" onclick="selectPhotoTool('bgremove', this)">
+                <svg viewBox="0 0 24 24"><path d="M15 4V2m0 14v-2M8 9h2m10 0h2M17.8 11.8 19 13M17.8 6.2 19 5M3 21l9-9M12.2 6.2 11 5"/></svg>
+                <span>AI BG Remove</span>
+            </button>
+
+            <!-- 2. Crop & Resize -->
+            <button type="button" class="svg-tool-btn" data-tool="crop" onclick="selectPhotoTool('crop', this)">
+                <svg viewBox="0 0 24 24"><path d="M6 2v14a2 2 0 0 0 2 2h14"/><path d="M18 22V8a2 2 0 0 0-2-2H2"/></svg>
+                <span>Crop &amp; Resize</span>
+            </button>
+
+            <!-- 3. Adjust (Light & Color) -->
+            <button type="button" class="svg-tool-btn" data-tool="adjust" onclick="selectPhotoTool('adjust', this)">
+                <svg viewBox="0 0 24 24"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
+                <span>Adjust</span>
+            </button>
+
+            <!-- 4. Filters & LUTs -->
+            <button type="button" class="svg-tool-btn" data-tool="filters" onclick="selectPhotoTool('filters', this)">
+                <svg viewBox="0 0 24 24"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg>
+                <span>Filters &amp; LUTs</span>
+            </button>
+
+            <!-- 5. AI Retouch -->
+            <button type="button" class="svg-tool-btn" data-tool="retouch" onclick="selectPhotoTool('retouch', this)">
+                <svg viewBox="0 0 24 24"><path d="M12 2a5 5 0 0 1 5 5v2a5 5 0 0 1-10 0V7a5 5 0 0 1 5-5z"/><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/></svg>
+                <span>AI Retouch</span>
+            </button>
+
+            <!-- 6. AI Upscale / Enhance -->
+            <button type="button" class="svg-tool-btn" data-tool="upscale" onclick="selectPhotoTool('upscale', this)">
+                <svg viewBox="0 0 24 24"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z"/></svg>
+                <span>AI Upscale</span>
+            </button>
+
+            <!-- 7. Magic Eraser -->
+            <button type="button" class="svg-tool-btn" data-tool="eraser" onclick="selectPhotoTool('eraser', this)">
+                <svg viewBox="0 0 24 24"><path d="m7 21-4.3-4.3c-1-1-1-2.5 0-3.4l9.6-9.6c1-1 2.5-1 3.4 0l5.6 5.6c1 1 1 2.5 0 3.4L13 21"/><path d="M22 21H7"/><path d="m5 11 9 9"/></svg>
+                <span>Magic Eraser</span>
+            </button>
+
+            <!-- 8. Text & Typography -->
+            <button type="button" class="svg-tool-btn" data-tool="text" onclick="selectPhotoTool('text', this)">
+                <svg viewBox="0 0 24 24"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
+                <span>Text</span>
+            </button>
+
+            <!-- 9. Frames & Borders -->
+            <button type="button" class="svg-tool-btn" data-tool="frames" onclick="selectPhotoTool('frames', this)">
+                <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><rect x="7" y="7" width="10" height="10" rx="1"/></svg>
+                <span>Frames</span>
+            </button>
+
+            <!-- 10. Blur & Bokeh -->
+            <button type="button" class="svg-tool-btn" data-tool="blur" onclick="selectPhotoTool('blur', this)">
+                <svg viewBox="0 0 24 24"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+                <span>Blur &amp; Bokeh</span>
+            </button>
+
+            <!-- 11. Overlay / Stickers -->
+            <button type="button" class="svg-tool-btn" data-tool="overlay" onclick="selectPhotoTool('overlay', this)">
+                <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+                <span>Stickers / PiP</span>
+            </button>
+
+            <!-- 12. Draw / Pen -->
+            <button type="button" class="svg-tool-btn" data-tool="draw" onclick="selectPhotoTool('draw', this)">
+                <svg viewBox="0 0 24 24"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>
+                <span>Draw / Pen</span>
+            </button>
+
+            <!-- 13. Rotate & Flip -->
+            <button type="button" class="svg-tool-btn" data-tool="rotate" onclick="selectPhotoTool('rotate', this)">
+                <svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg>
+                <span>Rotate &amp; Flip</span>
+            </button>
+
+            <!-- 14. Layers Manager -->
+            <button type="button" class="svg-tool-btn" data-tool="layers" onclick="selectPhotoTool('layers', this)">
+                <svg viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+                <span>Layers</span>
+            </button>
+
+        </div>
+    </footer>
+
+    <!-- ==========================================================================
+         4. EXPORT PHOTO SETTINGS POP-UP MODAL
+         ========================================================================== -->
+    <div id="photoDownloadModal" class="modal-backdrop">
+        <div class="export-modal-card">
+            <div class="export-modal-header">
+                <h3>Export &amp; Download Photo</h3>
+                <button type="button" class="drawer-close-btn" onclick="closeExportPhotoModal()">✕</button>
+            </div>
+
+            <span class="export-group-label">1. File Format</span>
+            <div class="export-radio-grid" id="exportFormatGrid">
+                <div class="export-choice-btn selected" data-fmt="image/png" onclick="selectExportFormat(this)">
+                    PNG
+                    <small>Transparent / HQ</small>
+                </div>
+                <div class="export-choice-btn" data-fmt="image/jpeg" onclick="selectExportFormat(this)">
+                    JPG
+                    <small>Small Size</small>
+                </div>
+                <div class="export-choice-btn" data-fmt="image/webp" onclick="selectExportFormat(this)">
+                    WEBP
+                    <small>Fast Web</small>
+                </div>
+            </div>
+
+            <span class="export-group-label">2. Quality / Target File Size (KB / MB)</span>
+            <div class="export-radio-grid" id="exportQualityGrid">
+                <div class="export-choice-btn" data-qual="low" onclick="selectExportQuality(this)">
+                    Low (~100 KB)
+                    <small>Web Uploads</small>
+                </div>
+                <div class="export-choice-btn" data-qual="medium" onclick="selectExportQuality(this)">
+                    Medium (~500 KB)
+                    <small>Social Media</small>
+                </div>
+                <div class="export-choice-btn selected" data-qual="original" onclick="selectExportQuality(this)">
+                    Original (HD)
+                    <small>Full Resolution</small>
+                </div>
+            </div>
+
+            <div id="exportEstimatedInfo" style="background: #161B26; border: 1px solid #1E293B; border-radius: 8px; padding: 10px 12px; font-size: 12px; color: #94A3B8; margin-bottom: 16px; display: flex; justify-content: space-between;">
+                <span>Output Format: <strong id="expFmtLabel" style="color:#FFFFFF;">PNG</strong></span>
+                <span>Target Size: <strong id="expSizeLabel" style="color:#34D399;">Original Full HD</strong></span>
+            </div>
+
+            <button type="button" class="top-btn btn-blue" style="width: 100%; justify-content: center; padding: 12px; font-size: 14px;" onclick="executePhotoExport()">
+                Download Final Photo
+            </button>
+        </div>
+    </div>
+
+    <script src="dbsession.js"></script>
+    <script src="photoworkspace.js"></script>
+</body>
+</html>
